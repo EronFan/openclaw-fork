@@ -2703,6 +2703,18 @@ main 负责调度和对外沟通（发 PR、发评论、发 issue）。有不确
 - **sessions_send 超时**：多跳派单链路持续不可达
 - **GLM 模型配额**：上周 GLM-4.7/glm-5.1 耗尽（预计 4 月 6 日恢复），反馈检查受影响
 
+#### 📣 新增追踪项（2026-04-04 11:07 扫描）
+
+| 编号 | 标题 | 优先级 | 方向 |
+|------|------|--------|------|
+| #60656 | MCP stdio servers accumulate across turns (memory leak) — 180个进程/13.5GiB RSS，config reload 不清理 | P1 | 方向1 GitHub |
+| #60646 | Channels (Telegram/WhatsApp) not loading in v2026.4.2 — regression+bug，空表 | P1 | 方向1 GitHub |
+| #60639 | modelstudio (DashScope) API returns usage but session stores all zeros — GLM-5/Qwen3.5/Kimi-K2.5 均受影响 | P2 | 方向1 GitHub |
+| #60635 | AI ignores user interrupt signals during long-running tasks — Critical，chat.abort 不传播到 AI task，session 锁死 | P1 | 方向1 GitHub |
+| #60652 | Discord message tool never advertises upload-file/sendAttachment capability | P2 | 方向1 GitHub |
+| Tencent/weixin#23 | Bug: openclaw-weixin 无法获得引用消息，ref_msg type=8 时缺少 text_item | P2 | 方向4 插件 |
+| Tencent/weixin#18 | Feature Request: 支持发送语音消息 (VOICE type) 给微信用户 | P3 | 方向4 插件 |
+
 #### 项目事实来源
 - 本文件（OPENCLAW-PROJECT.md）已恢复完整历史（2026-03-17 ~ 2026-04-01 已从 backup 补回）
 - 每日日志：memory/YYYY-MM-DD.md
