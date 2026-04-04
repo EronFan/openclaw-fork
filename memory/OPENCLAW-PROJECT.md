@@ -2776,15 +2776,44 @@ main 负责调度和对外沟通(发 PR、发评论、发 issue)。有不确定�
 
 **优先级**: 🔴 P1
 
-**状态**: 已提交，待修复
+**状态**: ✅ PR 已提交
+
+**PR**: https://github.com/openclaw/openclaw/pull/60754
 
 **根因**: devices/pending.json 中有 stale repair 请求，导致所有 sessions_spawn/sessions_send 报 1008 pairing required
 
 **修复路径**:
-1. 防止重复 repair 请求（同设备已 paired 不应再发起 repair）
-2. 批准 repair 后自动清理 pending 条目
-3. gateway 自设备跳过 RPC pairing 检查
+1. ✅ 防止重复 repair 请求（同设备已 paired 不应再发起 repair）
+2. ✅ 批准 repair 后自动清理 pending 条目（已有此逻辑）
+3. ⚠️ gateway 自设备跳过 RPC pairing 检查（未实现，需要进一步调研）
 
 **当前 workaround**: `openclaw devices approve --latest`（已执行，立即生效）
 
 **aoao 任务**: 研究 gateway 源码中 repair 流程的入口点，提交 PR 修复上述 3 点
+
+**修复详情**:
+- 修改 `src/infra/device-pairing.ts`: 新增 `RequestDevicePairingResult` 类型，当设备已 paired 且无 pending 请求时返回 `status: "already-paired"`
+- 修改 `src/gateway/server/ws-connection/message-handler.ts`: 处理 `already-paired` 状态，直接放行连接
+- 注意：测试 "preserves existing token scopes when approving a repair without requested scopes" 需要更新以适应新行为
+
+---
+
+## 2026-04-04 晚间扫描新发现（18:52 xixi 报告）
+
+### 新增追踪
+
+| # | 标题 | 优先级 | 状态 |
+|---|------|--------|------|
+| #60799 | cron v2026.4.2 silent data loss（jobs.json plain-array 被覆盖） | 🔴 P0 | aoao 已派出，修复中 |
+| #60804 | Brave CDP attach fail on Debian 13 | 🔴 P0 | 待处理 |
+| #60813/#60812 | typed error routing + multi-channel extend | 🟡 P1 | 待处理 |
+| #60816 | edit tool concurrent identical edits → noop | 🟡 P1 | 待处理 |
+| #60795 | 模型切换状态残留 | 🟡 P2 | 待处理 |
+
+### 阻塞 / 进行中
+
+| 任务 | 状态 |
+|------|------|
+| #60754（sessions_spawn RPC 阻塞）修复 | PR 已开，待 maintainer 合并 |
+| #60799（cron data loss P0）修复 | aoao 派出，执行中 |
+| #60416（resolvePreferredOpenClawTmpDir SDK）修复 | aoao 派出，执行中 |
