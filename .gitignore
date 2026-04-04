@@ -1,0 +1,28 @@
+# Runtime state
+jobs.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Logs & temps
+*.log
+*.tmp
+*.cache
+*.bak
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Media / large artifacts (workspace may generate)
+*.png
+*.jpg
+*.jpeg
+*.mp4
+*.pdf
+*.gif

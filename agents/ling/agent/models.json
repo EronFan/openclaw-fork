@@ -1,0 +1,159 @@
+{
+  "providers": {
+    "arkcode": {
+      "baseUrl": "https://ark.cn-beijing.volces.com/api/coding",
+      "apiKey": "fa7741c9-d143-47c9-a86a-f0811800e8b8",
+      "api": "anthropic-messages",
+      "models": [
+        {
+          "id": "doubao-seed-2.0-code",
+          "name": "Doubao Seed 2.0 Code",
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "doubao-seed-2.0-pro",
+          "name": "Doubao Seed 2.0 Pro"
+        },
+        {
+          "id": "ark-code-latest",
+          "name": "ARK Code Latest",
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "doubao-seed-code",
+          "name": "Doubao Seed Code",
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "glm-4.7",
+          "name": "GLM-4.7"
+        },
+        {
+          "id": "deepseek-v3.2",
+          "name": "DeepSeek V3.2"
+        },
+        {
+          "id": "kimi-k2-thinking",
+          "name": "Kimi K2 Thinking"
+        },
+        {
+          "id": "kimi-k2.5",
+          "name": "Kimi K2.5",
+          "input": [
+            "text",
+            "image"
+          ]
+        }
+      ]
+    },
+    "openai-codex": {
+      "baseUrl": "https://chatgpt.com/backend-api",
+      "api": "openai-codex-responses",
+      "models": []
+    },
+    "doubao": {
+      "baseUrl": "https://ark.cn-beijing.volces.com/api/v3",
+      "apiKey": "fa7741c9-d143-47c9-a86a-f0811800e8b8",
+      "api": "openai-completions",
+      "models": [
+        {
+          "id": "doubao-seedream-5-0-260128",
+          "name": "Doubao Seedream 5.0"
+        }
+      ]
+    },
+    "hgapi": {
+      "baseUrl": "https://11531817.cc.cd/openai",
+      "apiKey": "sk-b79de257f650935b3f593b405f6448067a8b3ac208498d630f162777826b1dd2",
+      "api": "openai-completions",
+      "models": [
+        {
+          "id": "gpt-5.4",
+          "name": "GPT-5.4"
+        }
+      ]
+    },
+    "mimo": {
+      "baseUrl": "https://api.xiaomimimo.com/v1",
+      "apiKey": "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",
+      "api": "openai-completions",
+      "models": [
+        {
+          "id": "mimo-v2-pro",
+          "name": "MiMo-V2-Pro"
+        },
+        {
+          "id": "mimo-v2-omni",
+          "name": "MiMo-V2-Omni"
+        },
+        {
+          "id": "mimo-v2-flash",
+          "name": "MiMo-V2-Flash"
+        }
+      ]
+    },
+    "minimax": {
+      "baseUrl": "https://api.minimaxi.com/anthropic",
+      "apiKey": "sk-cp-S1MpCGKQIHvTSR9Fat-OfNL3DlK3g_Zk1UYgMRLpXSMwBIT5YTyXWcey70oibqXfGCAlUOVdjJmnFYlN2I59_p8bw3dWGmzfnA2wh888QBAVRaYNoZJ-qU4",
+      "api": "anthropic-messages",
+      "models": [
+        {
+          "id": "MiniMax-M2.7",
+          "name": "MiniMax M2.7"
+        },
+        {
+          "id": "MiniMax-M2.5",
+          "name": "MiniMax M2.5"
+        },
+        {
+          "id": "MiniMax-M2.5-highspeed",
+          "name": "MiniMax M2.5 Highspeed"
+        },
+        {
+          "id": "MiniMax-M2.5-Lightning",
+          "name": "MiniMax M2.5 Lightning"
+        },
+        {
+          "id": "MiniMax-M2.1",
+          "name": "MiniMax M2.1"
+        },
+        {
+          "id": "MiniMax-M2.1-lightning",
+          "name": "MiniMax M2.1 Lightning"
+        },
+        {
+          "id": "MiniMax-M2",
+          "name": "MiniMax M2"
+        }
+      ]
+    },
+    "bujing": {
+      "baseUrl": "http://49.235.186.189:3000",
+      "apiKey": "sk-17edde862da60e8a2e498163513964791195357050f22447dde6cfd2f671d64e",
+      "api": "anthropic-messages",
+      "models": [
+        {
+          "id": "claude-opus-4-6",
+          "name": "Claude Opus 4.6"
+        },
+        {
+          "id": "claude-sonnet-4-6",
+          "name": "Claude Sonnet 4.6"
+        },
+        {
+          "id": "claude-haiku-4-5-20251001",
+          "name": "Claude Haiku 4.5"
+        }
+      ]
+    }
+  }
+}
