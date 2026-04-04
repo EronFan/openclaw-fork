@@ -1,0 +1,20 @@
+
+--- 2026-03-26 18:17 (UTC) / 2026-03-27 02:17 (UTC+8) ---
+
+#54952 (issue): 无新动态。0 条评论。
+
+#54964 (issue): 无新动态。0 条评论。
+
+#55008 (PR): 有新动态。Greptile 自动化 review 1 条：
+  - 指出 PR 移除了 feishu 插件 manifest 中的 "skills": ["./skills"] 条目，但 ./skills 目录仍存在且包含4个 skill 定义（feishu-doc/drive/perm/wiki），会导致这些 skills 无法注册，属意外删除。建议 revert 两处文件。
+
+#55013 (PR): 有新动态。共3条评论：
+  - Greptile x2：指出 groupPolicy 是访问控制（决定消息是否被接受），而非 agent 选择，agent 由 defaultAccount 决定。两处文档措辞有误并给出修正建议。
+  - ChatGPT-Codex x1：同样指出 groupPolicy fallback 行为描述错误，agent 路由不使用 groupPolicy 做决策。
+
+=== 2026-03-27 08:56 (定时检查) ===
+- #54952: 0 条 maintainer 新评论
+- #54964: 0 条 maintainer 新评论
+- #55008: 0 条新 review
+- #55013: Codex 自动化信息帖（无实质反馈），无 maintainer review
+→ 无重要新反馈
