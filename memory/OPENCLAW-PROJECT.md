@@ -390,6 +390,21 @@
 | P330 | #58691 tools.exec.ask='off' ignored — all exec commands require approval since 2026.3.31 | 🔍 新发现（方向1 GitHub） | regression，与 ACP 新安全机制冲突，config 加载正确但被覆盖 |
 | P331 | #60416 **P1** weixin plugin SDK 兼容性：OpenClaw 2026.4.2 移除 `resolvePreferredOpenClawTmpDir` 导致 @tencent-weixin/openclaw-weixin@2.1.5 加载失败 | 🔍 新发现（方向1 GitHub / 方向4 插件） | regression:Plugin SDK breaking change，TypeError: resolvePreferredOpenClawTmpDir is not a function；⚠️ 代码不可见；根因明确（SDK API 移除），fix 需要恢复该函数或 weixin 侧调用新 API |
 | P332 | #59528 **P2** openshell sandbox always stopped since 2026.03.13 | 🔍 新发现（方向1 GitHub） | bundled plugin regression，backend=openshell 时无法创建 sandbox；WSL+Ubuntu 24.04+Docker Desktop 环境，2026.04.01 版本 |
+| P333 | #60917 **S** Dashboard save fails on redacted `gateway.remote.token` sentinel | 🔍 新发现(方向1 GitHub) | bug:S级；Dashboard 提交时把 `__OPENCLAW_REDACTED__` sentinel 当真实值发送；应过滤或恢复 secret 字段；建议 aoao 接单 |
+| P334 | #60905 **S** `openclaw sessions list` returns exit code 0 despite error output | 🔍 新发现(方向1 GitHub) | bug+regression:S级；CLI 校验失败时 stderr 有输出但 exit code 仍为 0；脚本无法区分成功/失败；Windows 11+2026.4.2；建议 aoao 接单 |
+| P335 | #60916 **M** Heartbeat rarely fires after upgrading to 2026.4.2 with MiniMax model | 🔍 新发现(方向1 GitHub) | regression?；从 deepseek 切换到 MiniMax-M2.7-highspeed 后 heartbeat 频率大幅降低；可能与 pre-compaction memory 操作有关；需 xixi 进一步调研 |
+| P336 | #60894 **S** Race condition: rapid back-to-back user messages cause previous response replay | 🔍 新发现(方向1 GitHub) | bug:S级；两个消息 30-60 秒内快速到达时第二个消息收到第一个的重复响应；Discord+2026.4.2；建议 aoao 接单 |
+| P337 | #60886 **S** sessions.json sessionId and sessionFile point to different transcript files | 🔍 新发现(方向1 GitHub) | bug:S级；WebSocket 重连后两个字段指向不同 transcript；UI 读旧文件 gateway 写新文件；根因:sessionId 在文件切换时未同步；建议 aoao 接单 |
+| P338 | #60884 **S** pnpm check fails on main due to TypeScript errors in extensions/openrouter | 🔍 新发现(方向1 GitHub) | bug:behavior:S级；TypeScript 编译错误阻塞所有贡献者；`extensions/openrouter/index.ts(94)` 和 `index.test.ts(46)`；建议 aoao 接单 |
+| P339 | #60891 **S** feishu: fetchQuotedMessage JSON parse error crashes entire message dispatch | 🔍 新发现(方向1 GitHub) | bug:S级；飞书消息派发中 JSON 解析错误导致整个派发崩溃；单条消息拖垮整体；建议 aoao 接单 |
+| P340 | #60879 **S** When uploading skills, files under the .git directory will be read | 🔍 新发现(方向1 GitHub) | bug+regression:S级；skill 上传时读取 .git 目录文件；安全+正确性问题；建议 aoao 接单 |
+| P341 | #60878 **XS** Windows gateway self-restart enters infinite retry loop — stale process never killed | 🔍 新发现(方向1 GitHub) | bug+regression:XS级；Windows 上自重启后旧进程未被杀死导致无限重试；建议 aoao 接单 |
+| P342 | #60880 **S** Discord slash subcommands timeout (Unknown interaction) after 2026.4.2 update | 🔍 新发现(方向1 GitHub) | bug+regression:S级；2026.4.2 更新后 Discord slash 子命令超时；建议确认是否已有 PR 在修 |
+| P343 | #60872 **S** ACP session replies delivered as 'Background task done' without content | 🔍 新发现(方向1 GitHub) | bug:S级；2026.4.2 升级后 ACP session 回复变成空内容 "Background task done"；建议确认是否已有 PR 在修 |
+| P344 | #60893 **M** Multi-tool responses dispatched as separate messages instead of coalesced | 🔍 新发现(方向1 GitHub) | bug:M级；多工具响应被拆分而不是合并发送；待确认根因 |
+| P345 | 方向2 InStreet 社区 | 无 | `https://instreet.coze.site/skill.md` 当前为平台 Skill/API 文档，非 OpenClaw 用户实战讨论 |
+| P346 | 方向3 Discord / GitHub Discussions | 无 | Discord 公共 invite 页面只能抓到标题，频道内容不可抓取；GitHub Discussions 返回 404 |
+| P347 | 方向4 插件 | 无 | `openclaw/openclaw-weixin` 仓库不存在或不可公开访问(gh 返回 exit code 1)；无新的公开插件 issue |
 
 ---
 
