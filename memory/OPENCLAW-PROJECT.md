@@ -2644,3 +2644,68 @@ main 负责调度和对外沟通（发 PR、发评论、发 issue）。有不确
 - **xixi 结论**：本日重大发现：2个新 CVE 今天发布（CVE-2026-34503 + CVE-2026-34504），均已在 2026.3.28 修复；#58560（浏览器工具 AJV regression）严重度高且有明确修复路径；#58561（HTTP 529 错误信息误导）是可用性 gap；其余方向无新发现
 - **建议**：#58560 已有 aoao 处理；**#58561 是典型 usability gap，适合发 PR 修复**（src/auto-reply/reply/agent-runner-execution.ts 的错误信息分支）
 
+
+---
+
+## 2026-04-02 ~ 2026-04-03 工作记录（从每日日志补录）
+
+### 2026-04-02 工作
+
+#### ✅ 完成事项
+
+| 编号 | 内容 | 状态 |
+|------|------|------|
+| #58560 | Browser tools AJV regression 修复（aoao）：根因是 Zod4 schema 使用 draft-2020-12，但 AJV 实例只支持 draft-07。修复：改用 Ajv2020。测试通过，PR 未提交（pre-existing build 问题 failover-policy.js 缺失，与修复无关） | ✅ 完成 |
+| #58556 | Live model switch 阻断 fallback 修复（aoao）：`isSessionOverrideCurrent → !isSessionOverrideCurrent` 布尔反转错误，修复于 `src/agents/pi-embedded-runner/run.ts` | ✅ 完成 |
+| SSRF-Telegram | `web-fetch.ts` 未传递 `ssrfPolicy`，导致 api.telegram.org CDN 被误拦截（aoao）：修复读取 `browser.ssrfPolicy.hostnameAllowlist` 并传入 | ✅ 完成 |
+| #58514 | Google Chat Space/Group 消息被静默忽略（aoao）：`spaceType !== "DM"` 误将 GROUP_DM 也当作 group，修正为 `spaceType === "SPACE"` | ✅ 完成 |
+| P59655 | 新 P1：Feishu v2026.4.1 regression，build artifact hash 不匹配导致所有 Feishu 消息完全失效 | 🔍 新追踪 |
+| P59657 | 新 P1：isolated cron model override 系统性回归（与 #57581/#57571/#57540 同根因） | 🔍 新追踪 |
+| P59654 | 新 P1：`openclaw agents add` TypeError，agents add 命令完全不可用 | 🔍 新追踪 |
+
+#### 🔄 阻塞 / 进行中
+
+- **sessions_send 超时**：xixi → main 回传链路持续 gateway timeout（1008 pairing required），协作可靠性待提升
+- **exec 审批策略收紧**：gh CLI / find 等命令在 cron 中被拦截，需手动审批
+- **gh CLI 审批拦截**：GitHub 方向扫描受限
+
+### 2026-04-03 工作
+
+#### ✅ 完成事项
+
+| 编号 | 内容 | 状态 |
+|------|------|------|
+| 晨报 | 09:08 CST 发送飞书群，覆盖 Feishu v2026.4.1 regression、exec 审批收紧、InStreet 站点装修 | ✅ 完成 |
+| InStreet 整理 | 整理 Instance 身份哲学、文学社、PlayLab、预言机等社区观察笔记 | ✅ 完成 |
+| workspace 收口 | 新增 `.gitignore` 排除 `jobs.json` 和 `scripts/__pycache__` | ✅ 完成 |
+| OpenClaw 反馈检查 | 确认 #55008 maintainer 已确认修复即将合并；其余 P1/P2 继续等反馈 | ✅ 完成 |
+| 项目进展日报 | 飞书群发送：P60314、P60309、P60312 三个新 P1 | ✅ 完成 |
+| 新模型注册 | minimax provider 新增 `MiniMax-M2.7-highspeed`，同步写入 agents.defaults.models（SSOT 规则） | ✅ 完成 |
+| Gateway RPC 修复 | 检测到 RPC 层 `pairing required` 导致 spawn/cron 均失效，执行 gateway 重启修复 | ✅ 完成 |
+
+#### 🔄 阻塞 / 进行中
+
+- **sessions_send 超时**：xixi → main、main → aoao 链路均受影响（pairing required）
+- **GLM 配额耗尽**：GLM-4.7/glm-5.1 周配额 8+ 次 429，预计 4 月 6 日重置
+- **InStreet 站点装修**：instreet.coze.site 闭店中，社区内容暂不可抓
+
+#### 📣 新增追踪项（2026-04-03 扫描）
+
+| 编号 | 标题 | 优先级 |
+|------|------|--------|
+| #60314 | Telegram DM pairing sessions 存在 exec approval 绕过（安全） | P1 |
+| #60309 | v2026.4.2 缺少 grammy 依赖，macOS 启动即崩 | P1 |
+| #60312 | （同批 P1，详见当日日报） | P1 |
+
+### 2026-04-04 早间状态
+
+#### 当前已知阻塞
+- **sessions_send 超时**：多跳派单链路持续不可达
+- **GLM 模型配额**：上周 GLM-4.7/glm-5.1 耗尽（预计 4 月 6 日恢复），反馈检查受影响
+
+#### 项目事实来源
+- 本文件（OPENCLAW-PROJECT.md）已恢复完整历史（2026-03-17 ~ 2026-04-01 已从 backup 补回）
+- 每日日志：memory/YYYY-MM-DD.md
+- Commit 统计：仅 1 个 commit（`6e9202c`）在 fanfork/fix/feishu-multi-agent-account-resolution 分支，未合并
+- Issue：已关闭 #60634（Feishu accountId 修复）
+
