@@ -2765,3 +2765,26 @@ main 负责调度和对外沟通(发 PR、发评论、发 issue)。有不确定�
 - Commit 统计:仅 1 个 commit(`6e9202c`)在 fanfork/fix/feishu-multi-agent-account-resolution 分支,未合并
 - Issue:已关闭 #60634(Feishu accountId 修复)
 
+
+---
+
+## 2026-04-04 新增追踪：sessions_spawn/RPC 阻塞
+
+### Issue #60747 — fix(gateway): stale device repair request blocks all RPC operations
+
+**URL**: https://github.com/openclaw/openclaw/issues/60747
+
+**优先级**: 🔴 P1
+
+**状态**: 已提交，待修复
+
+**根因**: devices/pending.json 中有 stale repair 请求，导致所有 sessions_spawn/sessions_send 报 1008 pairing required
+
+**修复路径**:
+1. 防止重复 repair 请求（同设备已 paired 不应再发起 repair）
+2. 批准 repair 后自动清理 pending 条目
+3. gateway 自设备跳过 RPC pairing 检查
+
+**当前 workaround**: `openclaw devices approve --latest`（已执行，立即生效）
+
+**aoao 任务**: 研究 gateway 源码中 repair 流程的入口点，提交 PR 修复上述 3 点
