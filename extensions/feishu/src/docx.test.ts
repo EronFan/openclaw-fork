@@ -372,6 +372,19 @@ describe("feishu_doc image fetch hardening", () => {
     consoleErrorSpy.mockRestore();
   });
 
+  it("write action with missing content returns success without crashing", async () => {
+    const feishuDocTool = resolveFeishuDocTool();
+
+    const result = await executeFeishuDocTool(feishuDocTool, {
+      action: "write",
+      doc_token: "doc_1",
+    });
+
+    expect(result.details.success).toBe(true);
+    expect(result.details.blocks_added).toBe(0);
+    expect(result.details.blocks_deleted).toBe(0);
+  });
+
   it("create grants permission only to trusted Feishu requester", async () => {
     const feishuDocTool = resolveFeishuDocTool({
       messageChannel: "feishu",

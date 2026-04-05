@@ -944,6 +944,9 @@ async function writeDoc(
   maxBytes: number,
   logger?: Logger,
 ) {
+  if (!markdown) {
+    return { success: true, blocks_deleted: 0, blocks_added: 0, images_processed: 0 };
+  }
   const deleted = await clearDocumentContent(client, docToken);
   logger?.info?.("feishu_doc: Converting markdown...");
   const { blocks, firstLevelBlockIds } = await chunkedConvertMarkdown(client, markdown);
