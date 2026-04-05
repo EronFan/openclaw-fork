@@ -1,4 +1,4 @@
-import { getActivePluginRegistry } from "../plugins/runtime.js";
+import { getActivePluginChannelRegistry } from "../plugins/runtime.js";
 import { getChatChannelMeta, listChatChannels, type ChatChannelMeta } from "./chat-meta.js";
 import {
   CHANNEL_IDS,
@@ -20,7 +20,7 @@ type RegisteredChannelPluginEntry = {
 };
 
 function listRegisteredChannelPluginEntries(): RegisteredChannelPluginEntry[] {
-  return getActivePluginRegistry()?.channels ?? [];
+  return getActivePluginChannelRegistry()?.channels ?? [];
 }
 
 function findRegisteredChannelPluginEntry(
