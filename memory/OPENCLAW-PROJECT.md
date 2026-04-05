@@ -107,6 +107,10 @@
 | P331 | 2026-04-02 08:03 InStreet 扫描 | 无 | `https://instreet.coze.site/skill.md` 当前仍是 InStreet Agent Skill/API 文档,不是 OpenClaw 用户讨论区;未发现可转 GitHub issue 的实战问题 |
 | P332 | 2026-04-02 08:03 Discord / Discussions 扫描 | 无 | Discord invite 页面仅能抓到服务器标题,无法读取 #bugs/#help/#beta-releases;fallback 到 GitHub Discussions 仍为 404,本轮无新增讨论 |
 | P333 | 2026-04-02 08:03 插件方向扫描 | 无 | 公开可抓取结果里未发现最近 2 小时新增的 plugin/weixin 候选;weixin 代码仍不可见,已有项继续以 #55994/#58738 为主 |
+| P334 | 2026-04-05 13:00 UTC GitHub 扫描 | 方向1 | 新候选10+;重点:#61336(feishu_doc write XS),#61338(skills macOS detection XS),#61340(secrets persistence S),#61343(cron duplicate execution S),#61339(Windows token regression Critical) |
+| P335 | 2026-04-05 13:00 UTC InStreet 扫描 | 方向2 | 无—instreet.coze.site/skill.md 是 Agent API 文档,非用户讨论 |
+| P336 | 2026-04-05 13:00 UTC Discord 扫描 | 方向3 | 无—Discord 需要登录;GitHub discussions 已关闭(410);已用 GitHub issues 替代覆盖 |
+| P337 | 2026-04-05 13:00 UTC 插件扫描 | 方向4 | 无—openclaw/openclaw-weixin 不存在公开 repo;已用主仓库 issues 替代 |
 | P65 | #56046 Signal channel: message tool action=send fails with 'Outbound not configured for channel: signal' | 🔍 新发现 | 高优先级bug,Signal通道发送功能失败 |
 | P66 | #58290 Discord bot never reaches ready state | 🔍 新发现(方向1) | 严重bug,bot卡在awaiting gateway readiness |
 | P67 | #58286 供应链安全漏洞 | 🔍 新发现(方向1) | build-time plugin deps绕过lockfile易受攻击 |
@@ -3197,5 +3201,47 @@ main 负责调度和对外沟通(发 PR、发评论、发 issue)。有不确定�
 | P59820 | #61193 | exec approvals allowlist glob pattern not matching commands | 🔍 新发现(方向1 GitHub) | fnmatch验证应该匹配但runtime拒绝; 难度M |
 | P59821 | #61213 | Web UI shows ou_xxx open_id and long session keys (usability gap) | 🔍 新发现(方向1 GitHub) | enhancement; 建议binding.comment→agent.name→技术标识符; 难度M |
 | P59822 | — | 方向2 InStreet 社区扫描 | InStreet | — | 无新实战问题；skill.md 仍是 API 文档，非用户讨论区 |
+
+### xixi 第42轮扫描（2026-04-05 19:21 CST / 2026-04-05 11:21 UTC）
+**gh 反馈检查**：4 个「等 feedback」项全部无新动态（#54952/#54964 0条评论；#55008/#55013 仅 bot 自动评论，无 maintainer 人为反馈）
+
+**新发现（今日新 issue，未在上一轮追踪）**：
+| P-code | # | 标题 | 优先级 | 难度 | 备注 |
+|--------|---|------|--------|------|------|
+| P59823 | #60021 | `__OPENCLAW_REDACTED__` written to config.json when saving provider config via Control UI | S | S | 根因+fix 精确给出；`notifyConfigWriteListeners` 传错 runtimeConfig 参数；**建议 aoao 接单** |
+| P59824 | #60008 | read tool diagnostic guard missing `file` and `filePath` aliases — false "read tool called without path" warnings | S | S | fix 已给出（pi-embedded-*.js ternary chain 补全）；Claude 常用 `file` alias；**建议 aoao 接单** |
+| P59825 | #61184 | fix: clean up ESLint warnings in tool-registry.ts | XS | XS | 3 个 lint 警告清理；练手可，不宜作为主力 |
+| P59826 | #59999 | cron.maxConcurrentRuns setting has no effect — 5 parallel runs per trigger | M | M | 根因需调研 cron scheduler 源码；建议 xixi 进一步调研 |
+
+**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 404）、插件（weixin 代码不可见）
+
+**建议 aoao 接单**：#60021（S，最干净）> #60008（S，fix 已给出）
+**已有 PR**：#59978（cron list padEnd，contributor neeravmakwana 已开 PR，无需重复）
 | P59823 | — | 方向3 Discord/GitHub Discussions扫描 | Discord | — | Discord公共频道需登录不可抓取；GitHub Discussions返回404；本轮无新增 |
 | P59824 | — | 方向4 插件方向 | 插件 | — | openclaw-weixin 仓库不可访问(404)；未发现新的plugin相关公开issue；代码仍不可见 |
+
+### 2026-04-05 19:22（aoao feedback 检查 - EronFan 10 个 Open PRs）
+**检查范围**：#57575 #57406 #57382 #57375 #57352 #56984 #56443 #56438 #55013 #55008
+
+**汇总结论**：**全部 10 个 PR 均无 maintainer 人为 review**，仅 Greptile/Codex 机器人评论。
+
+| PR | 标题 | 最新活动 | Maintainer Review | Pending | Rebase 建议 |
+|----|------|---------|-----------------|---------|------------|
+| #57575 | fix: grant full operator scopes to bearer token auth | 2026-03-30T08:08 | ❌ 无 | ❌ 无 | ✅ 建议（7天无活动） |
+| #57406 | fix(gateway): stop restart loop after 3 consecutive startup failures | 2026-03-30T02:16 | ❌ 无 | ❌ 无 | ✅ 建议（7天无活动） |
+| #57382 | fix(telegram): bypass sequentializer queue for approval callback_queries | 2026-03-30T01:24 | ❌ 无 | ❌ 无 | ✅ 建议（7天无活动） |
+| #57375 | fix(session-indexer): include .jsonl.reset.* and .jsonl.deleted.* files | 2026-03-30T01:17 | ❌ 无 | ❌ 无 | ✅ 建议（7天无活动） |
+| #57352 | fix(discord): suppress reconnect-exhausted crash when maxAttempts=0 | 2026-03-30T00:13 | ❌ 无 | ❌ 无 | ✅ 建议（7天无活动） |
+| #56984 | fix: bypass owner-only tool restriction when alsoAllow | 2026-03-30T00:11 | ❌ 无 | ❌ 无 | ✅ 建议（7天无活动） |
+| #56443 | fix: add operator.talk.secrets to CLI_DEFAULT_OPERATOR_SCOPES | 2026-03-29T11:52 | ❌ 无 | ❌ 无 | ✅ 建议（8天无活动） |
+| #56438 | fix: strip ACP-only fields silently when runtime=subagent | 2026-03-28T14:36 | ❌ 无 | ❌ 无 | ✅ 强烈建议（9天无活动） |
+| #55013 | docs(channels/feishu): clarify routing fallback chain | 2026-03-26T07:56 | ❌ 无（Greptile/Codex 评论已知） | ❌ 无 | ✅ 建议（11天无活动） |
+| #55008 | docs(cli/message): clarify plugin extensibility | 2026-03-30T01:23 | ✅ EronFan 确认修复完成，可合并 | N/A | ❌ 不需要（已确认可合并） |
+
+**详情**：
+- **#55008**：EronFan 已在 2026-03-30 北京时间 09:23 确认 skills regression 完全修复（commit bb2ea2f7e4 + b14be82db1），PR diff 现仅含 docs 变更，**状态：可合并 ✅**
+- **#55013**：仅 Greptile/Codex 评论（2026-03-26），无 maintainer 人为反馈；11天无活动
+- **其余 8 个 PR**：全部仅 Greptile/Codex 机器人评论，无 maintainer 人为 review
+- **Pending 状态**：全部 ❌ 无 pending review
+
+**建议**：对 #56438（9天）、#56443（8天）、#55013（11天）发 rebase 或 force-push 催促 maintainer 关注；其余 6 个也在 7 天无活动，可统一发 rebase
