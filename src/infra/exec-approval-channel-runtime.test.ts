@@ -433,4 +433,112 @@ describe("createExecApprovalChannelRuntime", () => {
       entries: [{ id: "abc" }],
     });
   });
+
+  it("marks approval as expired after repeated delivery failures", async () => {
+    const finalizeExpired = vi.fn(async () => undefined);
+    const deliverRequested = vi
+      .fn<() => Promise<Array<{ id: string }>>>()
+      .mockRejectedValue(new Error("deliver failed"));
+    const runtime = createExecApprovalChannelRuntime({
+      label: "test/delivery-failure",
+      clientDisplayName: "Test Delivery Failure",
+      cfg: {} as never,
+      nowMs: () => 1000,
+      isConfigured: () => true,
+      shouldHandle: () => true,
+      deliverRequested,
+      finalizeExpired,
+    });
+
+    // First delivery attempt fails
+    await expect(
+      runtime.handleRequested({
+        id: "abc",
+        request: { command: "echo abc" },
+        createdAtMs: 1000,
+        expiresAtMs: 2000,
+      }),
+    ).rejects.toThrow("deliver failed");
+    expect(finalizeExpired).not.toHaveBeenCalled();
+
+    // Second delivery attempt fails
+    await expect(
+      runtime.handleRequested({
+        id: "abc",
+        request: { command: "echo abc" },
+        createdAtMs: 1000,
+        expiresAtMs: 2000,
+      }),
+    ).rejects.toThrow("deliver failed");
+    expect(finalizeExpired).not.toHaveBeenCalled();
+
+    // Third delivery attempt - after MAX_DELIVERY_FAILURES, marks as expired
+    await expect(
+      runtime.handleRequested({
+        id: "abc",
+        request: { command: "echo abc" },
+        createdAtMs: 1000,
+        expiresAtMs: 2000,
+      }),
+    ).rejects.toThrow("deliver failed");
+    // The spawn() call is async, so we need to wait for it
+    await vi.waitFor(
+      () => {
+        expect(finalizeExpired).toHaveBeenCalledTimes(1);
+      },
+      { timeout: 5000 },
+    );
+  });
+
+  it("clears failure tracking on successful delivery", async () => {
+    const deliverRequested = vi
+      .fn<() => Promise<Array<{ id: string }>>>()
+      .mockRejectedValueOnce(new Error("deliver failed"))
+      .mockResolvedValueOnce([{ id: "abc" }])
+      .mockRejectedValueOnce(new Error("deliver failed"));
+    const finalizeResolved = vi.fn(async () => undefined);
+    const finalizeExpired = vi.fn(async () => undefined);
+    const runtime = createExecApprovalChannelRuntime({
+      label: "test/delivery-failure",
+      clientDisplayName: "Test Delivery Failure",
+      cfg: {} as never,
+      nowMs: () => 1000,
+      isConfigured: () => true,
+      shouldHandle: () => true,
+      deliverRequested,
+      finalizeResolved,
+      finalizeExpired,
+    });
+
+    // First attempt fails
+    await expect(
+      runtime.handleRequested({
+        id: "abc",
+        request: { command: "echo abc" },
+        createdAtMs: 1000,
+        expiresAtMs: 2000,
+      }),
+    ).rejects.toThrow("deliver failed");
+
+    // Second attempt succeeds - clears failure tracking
+    await runtime.handleRequested({
+      id: "abc",
+      request: { command: "echo abc" },
+      createdAtMs: 1000,
+      expiresAtMs: 2000,
+    });
+
+    // Third attempt fails again - but it's treated as first failure (tracking was cleared)
+    await expect(
+      runtime.handleRequested({
+        id: "abc",
+        request: { command: "echo abc" },
+        createdAtMs: 1000,
+        expiresAtMs: 2000,
+      }),
+    ).rejects.toThrow("deliver failed");
+
+    // Should NOT be marked as expired (only 1 failure after tracking was cleared)
+    expect(finalizeExpired).not.toHaveBeenCalled();
+  });
 });

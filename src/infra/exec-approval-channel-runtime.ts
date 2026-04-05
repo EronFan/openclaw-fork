@@ -68,10 +68,26 @@ export function createExecApprovalChannelRuntime<
   const nowMs = adapter.nowMs ?? Date.now;
   const eventKinds = new Set<ExecApprovalChannelRuntimeEventKind>(adapter.eventKinds ?? ["exec"]);
   const pending = new Map<string, PendingApprovalEntry<TPending, TRequest, TResolved>>();
+  /** Tracks how many times delivery has failed for each approval id. */
+  const deliveryFailureCount = new Map<string, number>();
   let gatewayClient: GatewayClient | null = null;
   let started = false;
   let shouldRun = false;
   let startPromise: Promise<void> | null = null;
+
+  const MAX_DELIVERY_FAILURES = 3;
+
+  /** Clear delivery failure tracking for an approval id. */
+  const clearDeliveryFailures = (approvalId: string): void => {
+    deliveryFailureCount.delete(approvalId);
+  };
+
+  /** Record a delivery failure and return true if we should stop retrying. */
+  const recordDeliveryFailure = (approvalId: string): boolean => {
+    const count = (deliveryFailureCount.get(approvalId) ?? 0) + 1;
+    deliveryFailureCount.set(approvalId, count);
+    return count >= MAX_DELIVERY_FAILURES;
+  };
 
   const spawn = (label: string, promise: Promise<void>): void => {
     void promise.catch((err: unknown) => {
@@ -125,10 +141,21 @@ export function createExecApprovalChannelRuntime<
     };
     pending.set(request.id, entry);
     let entries: TPending[];
+    let deliveryFailed = false;
     try {
       entries = await adapter.deliverRequested(request);
     } catch (err) {
-      if (pending.get(request.id) === entry) {
+      // If delivery keeps failing, mark as expired to avoid retry loops
+      // that can block socket initialization on restart.
+      // Note: we DON'T clear the pending entry here - handleExpired will do that.
+      const stopRetrying = recordDeliveryFailure(request.id);
+      if (stopRetrying) {
+        log.debug(
+          `delivery failed ${MAX_DELIVERY_FAILURES} times for ${request.id}; marking as expired`,
+        );
+        spawn("error handling approval expiration", handleExpired(request.id));
+      } else if (pending.get(request.id) === entry) {
+        // Only clear if we're not going to call handleExpired
         clearPendingEntry(request.id);
       }
       throw err;
@@ -138,13 +165,24 @@ export function createExecApprovalChannelRuntime<
       return;
     }
     if (!entries.length) {
+      // Delivery returned no entries - treat as a failed delivery for tracking
+      const stopRetrying = recordDeliveryFailure(request.id);
+      if (stopRetrying) {
+        log.debug(
+          `delivery returned empty entries ${MAX_DELIVERY_FAILURES} times for ${request.id}; marking as expired`,
+        );
+        spawn("error handling approval expiration", handleExpired(request.id));
+      }
       pending.delete(request.id);
       return;
     }
+    // Clear failure tracking on successful delivery
+    clearDeliveryFailures(request.id);
     entry.entries = entries;
     entry.delivering = false;
     if (entry.pendingResolution) {
       pending.delete(request.id);
+      clearDeliveryFailures(request.id);
       log.debug(`resolved ${entry.pendingResolution.id} with ${entry.pendingResolution.decision}`);
       await adapter.finalizeResolved({
         request: entry.request,
