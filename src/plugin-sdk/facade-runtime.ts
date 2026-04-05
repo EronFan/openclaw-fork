@@ -35,6 +35,7 @@ const CURRENT_MODULE_PATH = fileURLToPath(import.meta.url);
 const PUBLIC_SURFACE_SOURCE_EXTENSIONS = [".ts", ".mts", ".js", ".mjs", ".cts", ".cjs"] as const;
 const ALWAYS_ALLOWED_RUNTIME_DIR_NAMES = new Set([
   "image-generation-core",
+  "line",
   "media-understanding-core",
   "speech-core",
 ]);
