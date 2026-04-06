@@ -696,6 +696,11 @@ P453 | [#61524](https://github.com/openclaw/openclaw/issues/61524) **S** securit
 - **已更新**：OPENCLAW-PROJECT.md 新增 P453（#61524 security bypass）；last-processed-report.md 已更新
 - **已派出**：aoao sessions_spawn 接单 #61514（Canvas UI fix，runId 8466cbf3）和 #61524（security bypass，runId 89217cb8）
 
+### 2026-04-06 10:26（gh feedback 检查 + xixi 无新报告）
+- **gh 反馈**：4 issues (#54952 0条 / #54964 0条 / #55008 EronFan 确认 skills regression 修复已知 / #55013 Greptile review 已知) 全部无新动态
+- **xixi 状态**：latest-scan-report.md 仍为 06:01 CST 报告，last-processed-report.md 已同步，无更新的扫描报告
+- **结论**：无新反馈，无新 xixi 报告，正常继续
+
 ### 2026-04-06 02:55（xixi 第47轮扫描）
 - **xixi 4方向扫描**（2026-04-05 18:55 UTC / 2026-04-06 02:55 CST）：
   - **GitHub**：4个全新未追踪 issue（#61474 S / #61470 无标签 / #61465 S / #61455 bug:crash）；#61474（commentary 泄漏 regression）和 #61465（compaction fetch failed regression）为最高优先 aoao 接单候选；#61472（OpenRouter 404 fallback fix，S）和 #61463（phase-aware text extraction，M）值得 review
@@ -3455,6 +3460,13 @@ main 负责调度和对外沟通(发 PR、发评论、发 issue)。有不确定�
 | P59846 | #61499 | MLX LM Server tool calls 失败：finish_reason 'tool_call' 单数形式未识别 | GitHub | S | XS | `mapStopReason()` 只匹配 tool_calls（复数）；加一行 case 即可；**在 @mariozechner/pi-ai 外部包，非 openclaw 核心** |
 | P59847 | #61487 | LLM HTTP timeout hardcoded ~60s，忽略 agents.defaults.timeoutSeconds（Ollama/exo 用户必现） | GitHub | S | M | ⭐⭐ 多轮相关 issue 未解决（#59604/#46049/#43946）；所有本地模型用户受影响；直接 curl 正常但 OpenClaw 61s 超时 |
 | P59848 | #61516 | attach image 功能失效 (regression, v2026.4.2) | GitHub | M | ? | bug+regression 标签；但标题空白、steps N/A，信息量低；**需跟 reporter 确认细节** |
+| P59849 | #61680 | Delivery recovery retries permanent 4xx errors indefinitely on restart | GitHub(方向1) | S | S | delivery-queue 永久错误（400/413）被无限重试；应分类 transient vs permanent；**最高接单候选** |
+| P59850 | #61678 | Gateway ignores baseUrl for ollama2, routes all requests to first ollama port | GitHub(方向1) | M | M | 多 provider 配置下 baseUrl 被忽略；高严重度 |
+| P59851 | #61676 | openclaw onboard CLI fails: shouldNormalizeGoogleProviderConfig is not a function | GitHub(方向1) | S | S | CLI vs node dist 行为差异；regression；clear root cause |
+| P59852 | #61622 | No circuit breaker for model_cooldown — session retries indefinitely | GitHub(方向1) | S | M | model_cooldown 无 circuit breaker；sessions 完全不可用数小时；需架构层面 fix |
+| P59853 | #61645 | Raw tool_call shadow text leaks to Telegram & QQ Bot on baishan/GLM-5 (2026.4.2) | GitHub(方向1) | S | M | **#54964 同源回归，新增 QQ Bot + aishan/GLM-5 复现证据**；建议更新 #54964 备注 |
+| P59854 | #61636 | **已由 PR #61637 覆盖** | GitHub(方向1) | - | - | ✅ PR #61637 fix(agents): export normalizeDeliveryContext — skip |
+| P59855 | #61664 | **已由 PR #61670 覆盖** | GitHub(方向1) | - | - | ✅ PR #61670 fix(discord): recover forwarded referenced message — skip |
 
 **Active PRs 新增（勿重复修）**：
 - #61518 ✅ fix(web-fetch): honor HTTP proxy env（已 merge，覆盖 #61480）
@@ -3462,13 +3474,24 @@ main 负责调度和对外沟通(发 PR、发评论、发 issue)。有不确定�
 - #61515 fix(skills): resolve bundled runtime overlay paths（size:S）
 - #61512 fix: use Array.sort instead of toSorted（size:XS，覆盖 #61380）
 - #61493 Heartbeat scaffold 已 merged（覆盖 #61491）
+- #61637 ✅ fix(agents): export normalizeDeliveryContext and mergeDeliveryContext（size:XS，修复 #61636 build regression）
+- #61670 ✅ fix(discord): recover forwarded referenced message content（size:M，修复 #61664）
+- #61658 fix: stop implicit isolated cron delivery from mirroring to main（size:S）
+- #61675 feat: fire session reset hooks for daily and idle resets（size:M）
+- #61635 fix(agents): classify OpenRouter no-endpoints 404s（size:XS）
+- #61620 fix(subagents): centralize announce target resolution（size:M）
 
 **方向2 InStreet**：无（skill.md 仍是 API 文档，非用户讨论区）
 **方向3 Discord**：无（Discord 需登录，discussions 返回 410 Gone）
 **方向4 插件**：无（openclaw/openclaw-weixin 仓库 404，openclaw-plugin-template 不存在）
 
-**最高优先级**：#61514（UI regression，清晰 S，修复简单）> #61487（hardcoded timeout，多轮未解决）> #61509（exec allowlist wrapper）
-**建议**：aoao 接单顺序 #61514（UI fix 最快）→ #61487（timeout 根因调研）→ 确认 #61509 是否被 #61424 覆盖
+**最高优先级（xixi 第49轮，2026-04-06 12:26 CST）**：
+- **#61680**（delivery-queue 永久 4xx 错误无限重试，S级，清晰 fix）
+- **#61645**（#54964 同源回归，新增 QQ Bot + aishan/GLM-5 证据，建议更新 #54964 备注）
+- **#61676**（openclaw onboard CLI regression，S级，node vs CLI 差异）
+- **#61622**（model_cooldown 无 circuit breaker，S/M 级，需架构修复）
+
+**建议**：aoao 接单顺序 #61680（S级，最干净 fix，1-2小时可PR）→ 确认 #61645 是否与 #54964 同根因
 
 ---
 
@@ -3478,13 +3501,15 @@ main 负责调度和对外沟通(发 PR、发评论、发 issue)。有不确定�
 
 | Issue | 分支 | 修复内容 | 重试次数 | 最后尝试 | 状态 |
 |-------|------|---------|---------|---------|------|
-| #61453 | fix-61453-exec-approval-socket-block | exec-approval socket 重试循环阻塞修复 | 1 | 2026-04-05 | 🔄 待重试 |
-| #61218 | fix-line-bundled-origin | LINE channel bundled origin 注册修复 | 1 | 2026-04-05 | 🔄 待重试 |
-| 待查 | fix-discord-reconnect-exhausted-crash | Discord reconnect-exhausted crash 修复 | 1 | 2026-04-05 | 🔄 待确认 |
-| 待查 | fix-feishu-doc-write-null | Feishu doc write null 修复 | 1 | 2026-04-05 | 🔄 待确认 |
+| #61453 | fix-61453-exec-approval-socket-block | exec-approval socket 重试循环阻塞修复 | 2 | 2026-04-06 | ✅ 已 push + PR |
+| #61218 | fix-line-bundled-origin | LINE channel bundled origin 注册修复 | 2 | 2026-04-06 | ✅ 已 push + PR |
+| #61218 | fix-discord-reconnect-exhausted-crash | Discord reconnect-exhausted crash 修复 | 2 | 2026-04-06 | ✅ 已 push |
+| 待查 | fix-feishu-doc-write-null | Feishu doc write null 修复 | 2 | 2026-04-06 | ✅ 已 push |
+| #61514 | ✅ PR #2 已创建 | Canvas UI 图标与文字重叠 | - | 2026-04-06 | ✅ PR 创建成功 |
+| #61524 | 待 aoao 重做 | security: full + ask:off 仍触发混淆检测 | 0 | 2026-04-06 | ⚠️ 代码结构已变，需重新分析 |
 
-**阻塞原因**：GitHub token 缺少 `workflow` scope，无法 push 包含 `.github/workflows/` 的分支
-**解决方案**：范总去 GitHub → Settings → Developer settings → Personal access tokens → 勾选 `workflow`
+**阻塞原因**：GitHub token workflow scope 已修复 ✅
+**当前阻塞**：#61514/#61524 分支不存在（subagent 临时 workspace 未持久化），已重新派 aoao 执行
 
 ---
 
