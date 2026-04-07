@@ -66,6 +66,30 @@
 - 2026-03-23：用户反馈 GitHub 用户名已改为 `EronFan`（主页：`https://github.com/EronFan`）
 - 2026-03-26：确认 `fanfanssss` 与 `EronFan` 为同一账号（后者是改名后的）
 - 2026-03-26：P1 issue 已发布到 `openclaw/openclaw#54952`，使用 EronFan 账号
+- 2026-04-07：GitHub 提交身份改为 `EronFan <eronfan@qq.com>`（由范总指定）
+- 2026-04-07：所有 subagent/git commit 必须使用 `EronFan <eronfan@qq.com>`，禁止使用其他身份
+
+## 核心工作原则（铁律，违者必究）
+
+### 模型与 cron 可用性 — 最高优先级
+
+**发现即修复，不问，直接干。** 以下情况必须在 1 分钟内处理，禁止等待确认：
+- cron 任务失败（status=error）
+- 模型 API 报错（不支持该功能、限流、超时、404）
+- agent 或 cron 掉线
+- 项目停滞风险
+
+**具体规则**：
+1. `arkcode/deepseek-v3-1-terminus` 不支持 coding plan，禁止进入任何 cron 或 agent 的 fallback 链
+2. 所有 cron 任务默认模型：`minimax/MiniMax-M2.7`
+3. aoao subagent 默认模型：`minimax/MiniMax-M2.7`
+4. `bujing/claude-haiku-4-5-20251001` 额度已满（2026-04-06），禁止再作为 fallback 或直接调用
+5. 模型 fallback 链里出现 404/UnsupportedModel/额度耗尽 时，立即将该模型从 fallback 链移除，换成已知可靠的模型
+6. 每次修复后必须验证 cron 状态恢复正常（status=ok）
+
+**范总警告（2026-04-06）**：若因模型/cron 问题导致项目停滞超过 1 小时，main 将被销毁。
+
+---
 
 ## 当前长期项目目标
 - 2026-03-23：用户要求持续推进 OpenClaw 贡献项目，长期寻找 bug、提交改进与修复，并调配 xixi / aoao 协同执行
