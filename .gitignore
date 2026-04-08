@@ -1,6 +1,9 @@
 # Runtime state
 jobs.json
 
+# clawhub lock (runtime artifact)
+.clawhub/lock.json
+
 # Python
 __pycache__/
 *.py[cod]

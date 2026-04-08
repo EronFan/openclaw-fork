@@ -1,65 +1,36 @@
-# 4方向扫描报告 [2026-04-08 14:36 CST / 06:36 UTC]
+# 4方向扫描报告 2026-04-08 20:37 CST
 
 ## GitHub
-发现了 **40+ 个新候选**（近2小时更新），全部来自 v2026.4.7/v2026.4.7-1 发布后的持续 regression 爆发，以及 v2026.4.5 的遗留 regression。
-
-### 最高优先（不在已有PR覆盖范围内）
-
-**#62980 S** — Node.js ESM loader on Windows receives 'c:' as protocol instead of 'file:'（bug:crash）
-- 清晰可本地复现，Windows 用户直接崩溃
-- 根因：ESM loader 路径解析问题
-- **建议 aoao 接单（S，可本地验证）**
-
-**#62967 S** — gpt-5-mini returns 400: reasoning_effort 'none' not supported (since v2026.4.5)
-- GPT-5-mini reasoning_effort 参数 v2026.4.5 后报错 400
-- 所有 GPT-5-mini 用户完全失效
-- **建议 aoao 接单（S，参考 GPT-5.x max_tokens 处理模式）**
-
-**#62976 S** — Doctor cannot recover from invalid third-party plugin config; gateway hard-fails to start
-- Doctor 发现 invalid config 后无法恢复，直接 hard-fail
-- 所有使用第三方插件的用户都会 gateway 无法启动
-- **建议 aoao 调研 Doctor recovery 逻辑（S）**
-
-**#62978 S** — Global install 2026.4.7-1 breaks Telegram plugin loading and leaves gateway in restart loop
-- v2026.4.7-1 global install 触发 Telegram 插件加载失败
-- gateway 进入 restart loop，生产环境严重影响
-- **建议 aoao 调研 npm global install 插件加载路径（M）**
-
-**#62981 S** — Session file locked when gateway times out and falls back to embedded runner
-- 全新 issue（06:31 UTC），无 PR
-- session file 锁导致 embedded runner 回退失败，超时恢复场景完全破坏
-- **建议 aoao 调研 session file locking 机制（M）**
-
-### 已有 PR 覆盖（勿重复接单）
-- #62972（fix endless loop，PR #62972 已开）
-- #62944（image timeout，PR #62979 已开）
-- #62909（Control UI `process is not defined`，PR #62975 maintainer 已开）
-- #62941/#62869（heartbeat session nesting，PR #62941 + #62885 已开）
-- #62931（Matrix dm.policy migration，PR #62942 maintainer 已开）
-- #62888/#62887（tools.deny 安全漏洞，已在追踪）
+- 发现了**~20个**新候选（自上次18:36 CST扫描后），最重要：
+  - **#63151（S）** — pi-agent-core Unhandled Promise Rejection in async callback timing；无标签无评论；gateway crash loop；**建议aoao接单**
+  - **#63149（S/M）** — Gateway CPU stuck at 100% causing service degradation under high load；无标签；新问题
+  - **#63139（S）** — before_model_resolve hook fires once per fallback iteration in runWithModelFallback；模型回退链失效；**建议aoao接单**
+  - **#63137（S）** — Telegram outbound images via read tool render locally but never reach recipient mobile；清晰可复现
+  - **#63135（P1）** — Agents respond working but fail to perform any actions（bug+bug:behavior）；长期隐蔽的回归
+  - **#63129（S）** — Error: Cannot find module '@larksuiteoapi/node-sdk'（feishu依赖问题）；**1行npm install可修，建议aoao接单**
+  - **#63127（S）** — npm global install on Windows 2026.4.7/2026.4.8 fails with missing modules（bug+regression）
+  - **#63126（S）** — WhatsApp media send silently dropped（legacy deps.whatsapp shim hijacks sendMedia）
+  - **#63124（S）** — exec tool SIGKILL when calling openclaw CLI subcommands（v2026.4.8 regression）
+  - **#63128（S）** — gateway restart on macOS fails to re-bootstrap LaunchAgent
+  - **#63114（S）** — Slack contract-api.js TypeError: Cannot read properties of undefined（no labels，0评论）
+- 已有PR覆盖（勿接单）：#63035→PR #63081；#63056→PR #63073
 
 ## InStreet
-**无** — `instreet.coze.site/skill.md` 仍为 InStreet Agent Skill API 文档，非 OpenClaw 用户讨论区。
+- **无**：`instreet.coze.site/skill.md` 仍是 InStreet Agent Skill API 文档，非用户讨论区
 
-## Discord / GitHub Discussions
-**无** — Discord invite 页面仅显示"Discord"标题，无法抓取频道内容；GitHub discussions 返回 404。
+## Discord
+- **无**：Discord invite页面只显示"Friends of the Crustacean 🦞🤝"标题；GitHub discussions返回404
 
 ## 插件
-**Tencent/openclaw-weixin #8（2026-04-08 06:19 UTC）**：微信机器人长时间无消息后 session 过期，无法自动恢复，需要手动重新扫码登录。
-- ⚠️ 代码不可见，无法定位根因
-- 建议关注但无法直接修
+- Tencent/openclaw-weixin：15个open issues，最新#34（消息接收问题，2026-04-08 07:42 UTC）；#33（hook pack错误，2026-04-08 09:26 UTC）；#29（聊天窗口支持回显图片，2026-04-08 06:56 UTC）
+- 代码可见但无PR；建议关注#34（消息接收）是否有对应主仓库issue
 
 ## 结论
-**最高优先级：#62980**，原因：
-1. bug:crash + bug:regression 双重标签，直接崩溃
-2. Windows 可本地复现，无需特定环境
-3. 根因明确（ESM loader 路径协议）
-4. size S，1-2小时可定位修复
+**最高优先级：#63151**（pi-agent-core UPR，gateway crash loop，XS/S修复）
+**次高：#63139**（before_model_resolve hook破坏fallback链，S）
+**第三：#63129**（feishu SDK缺失，1行npm install）
 
-**次高：#62967**（GPT-5-mini reasoning_effort 400）和 **#62976**（Doctor recovery gap）
-
-**建议 aoao 接单顺序：**
-1. #62980（XS-S，Windows ESM crash）
-2. #62967（S，GPT-5-mini regression）
-3. #62976（S，Doctor recovery gap）
-4. #62978（M，2026.4.7-1 Telegram restart loop）
+**建议aoao接单顺序：**
+1. #63129（最干净，1行npm install修复feishu依赖）
+2. #63151（pi-agent-core UPR crash loop，XS/S）
+3. #63139（before_model_resolve hook，S）

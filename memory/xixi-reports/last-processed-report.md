@@ -1,19 +1,28 @@
-# Last Processed Xixi Scan Report
-
-Last processed scan report: 2026-04-08 14:36 CST / 06:36 UTC
+Last processed scan report: 2026-04-08 20:37 CST / 12:37 UTC
 Source file: /root/.openclaw/workspace/memory/xixi-reports/latest-scan-report.md
 
-## 扫描结论（2026-04-08 14:36 CST / 06:36 UTC）
-最高优先级：**#62980 S**（Node.js ESM loader on Windows 'c:' vs 'file:' protocol，Windows crash）
+## 扫描结论（2026-04-08 20:37 CST / 12:37 UTC）
 
-**最高优先 aoao 接单**：
-1. #62980（XS-S，Windows ESM crash）— **已派出 aoao runId c0b24f06**
-2. #62967（S，GPT-5-mini reasoning_effort 400 regression）
-3. #62976（S，Doctor recovery gap）
-4. #62978（S，2026.4.7-1 Telegram restart loop）
+**新发现（来自最新扫描）**：
+- **#63151 S** — pi-agent-core Unhandled Promise Rejection in async callback timing，gateway crash loop；**建议 aoao 接单**
+- **#63149 S/M** — Gateway CPU stuck at 100% under high load
+- **#63139 S** — before_model_resolve hook fires once per fallback iteration，model fallback chain broken；**建议 aoao 接单**
+- **#63137 S** — Telegram outbound images render locally but never reach recipient mobile
+- **#63135 P1** — Agents respond working but fail to perform any actions（bug:behavior）
+- **#63129 S** — Cannot find module '@larksuiteoapi/node-sdk'；**1行 npm install 可修，建议 aoao 接单**
+- **#63127 S** — npm global install on Windows 2026.4.7/2026.4.8 fails with missing modules（regression）
+- **#63126 S** — WhatsApp media send silently dropped
+- **#63124 S** — exec tool SIGKILL when calling openclaw CLI subcommands（v2026.4.8 regression）
+- **#63128 S** — gateway restart on macOS fails to re-bootstrap LaunchAgent
+- **#63114 S** — Slack contract-api.js TypeError: Cannot read properties of undefined
 
-**已有 PR 覆盖（勿重复接单）**：#62972/#62944/#62909/#62941/#62887
+Tencent/openclaw-weixin 新增 #34/#33/#29 — 代码可见，关注是否有对应主仓库 issue
 
-**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（discussions 404）、插件（weixin 代码不可见）
+**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 404）、插件（weixin 主仓库不可见）
 
-**注意**：xixi 第59轮（10:32 CST）已处理 #62827/#62835/#62850（#62850 ✅ PR #62866 已创建）
+**已有 PR 修复（勿接单）**：#63035→PR #63081；#63056→PR #63073
+
+**aoao 建议接单顺序：**
+1. #63129（最干净，1行 npm install 修复 feishu 依赖）
+2. #63151（pi-agent-core UPR crash loop，XS/S）
+3. #63139（before_model_resolve hook，S）

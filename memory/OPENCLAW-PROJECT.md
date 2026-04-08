@@ -576,6 +576,57 @@ P495 | [#62839](https://github.com/openclaw/openclaw/issues/62839) **S** opencla
 P496 | [#62837](https://github.com/openclaw/openclaw/issues/62837) **S** WhatsApp 群 @-Mention 检测失败（mentionedJids 返回 null）| 🔍 新发现（方向1 02:32 UTC） | bug；WhatsApp 群组 mention 检测失效；**建议 aoao 接单（S 级）**
 P497 | [#62834](https://github.com/openclaw/openclaw/issues/62834) **S** session 清理后 .jsonl transcript 文件残留（资源泄漏）| 🔍 新发现（方向1 02:32 UTC） | bug:behavior；session 清理不删除 transcript 文件；**建议 aoao 接单（S 级）**
 P498 | [#62833](https://github.com/openclaw/openclaw/issues/62833) **S** webchat ephemeral prependContext 泄露到用户可见消息 | 🔍 新发现（方向1 02:32 UTC） | bug:behavior+privacy；prependContext 内容泄漏到用户对话；**建议 aoao 接单（S 级）**
+P499 | [#63071](https://github.com/openclaw/openclaw/issues/63071) **S** Anthropic prompt cache regression — System prompt timestamp 注入导致始终 cache_creation 而非 cache_read | 🔍 新发现（方向1 09:32 CST） | bug+regression；timestamp 注入破坏 Anthropic prompt cache 效率，所有 Anthropic 用户受影响；**建议 aoao 接单**
+P500 | [#63076](https://github.com/openclaw/openclaw/issues/63076) **S** GPT-5 personality overlay 被 OpenRouter/OpenCode aggregator 跳过 | 🔍 新发现（方向1 09:32 CST） | bug；aggregator provider 透传导致 personality config 未应用到最终请求；OpenRouter/OpenCode 用户以为配置生效实际未生效；0标签0评论
+P501 | [#63069](https://github.com/openclaw/openclaw/issues/63069) **S** hell completion 在 ZDOTDIR/XDG_CONFIG_HOME 环境变量存在时写到错误 profile 路径 | 🔍 新发现（方向1 09:22 CST） | bug:behavior；环境变量影响 profile 路径解析
+P502 | [#63075](https://github.com/openclaw/openclaw/issues/63075) **S** Discord native=false 时 stale slash commands 仍可见 | 🔍 新发现（方向1 09:32 CST） | bug；`channels.discord.commands.native=false` 配置未生效
+P503 | [#63066](https://github.com/openclaw/openclaw/issues/63066) **S (regression)** gog Skill Gmail 搜索命令错误 | 🔍 新发现（方向1 09:21 CST） | bug+regression；gog Skill Gmail message search 命令参数错误
+P504 | [#63099](https://github.com/openclaw/openclaw/issues/63099) **P0 (regression)** | /reset 造成 session state 损坏 → session-recovery 死循环 → 所有消息无回复45分钟 | 🔍 新发现（方向1 10:30 CST） | bug+regression+P0；/reset 清除 conversation context 但未清理 in-progress thinking state；清晰复现+完整日志；**建议 main 立即分配**
+P505 | [#63083](https://github.com/openclaw/openclaw/issues/63083) **S** | fs.appendFile 静默吞掉写入失败 → session transcript 缺失消息 | 🔍 新发现（方向1 10:30 CST） | bug；AI 已定位 `dist/src-DWyil3X5.js`；修复：替换空 catch 为结构化日志+异步写队列
+P506 | [#63087](https://github.com/openclaw/openclaw/issues/63087) **S** | memory index 命令忽略 HTTP_PROXY/HTTPS_PROXY 环境变量 | 🔍 新发现（方向1 10:30 CST） | bug:behavior；macOS 代理用户完全无法索引；清晰 repro 步骤
+P507 | [#63103](https://github.com/openclaw/openclaw/issues/63103) **S** | 2026.4.8 dist 打包缺失 11 个模块导致全新安装启动 crash | 🔍 新发现（方向1 10:30 CST） | bug；package.json 依赖声明问题；workaround：手动 npm install 11个包到全局
+P508 | [#63085](https://github.com/openclaw/openclaw/issues/63085) **S (regression)** | Ollama 远程服务器 regression：所有 ollama/* 模型全部失败 | 🔍 新发现（方向1 10:30 CST） | bug+regression；February 更新后发生，需分析根因
+P509 | [#63100](https://github.com/openclaw/openclaw/issues/63100) **P1** | 14次/2天频繁 SIGTERM 自重启 + orphan delivers 静默失败 | 🔍 新发现（方向1 10:30 CST） | bug+P1；频繁重启用户体验差
+P510 | [#63102](https://github.com/openclaw/openclaw/issues/63102) **P2** | plugin tool name conflict qqbot_channel_api / qqbot_remind | 🔍 新发现（方向1 10:30 CST） | bug；每个消息都触发 tool name conflict
+P511 | [#63098](https://github.com/openclaw/openclaw/issues/63098) **S** | Discord voice：2026.4.5 更新后 bot 加入频道立即离开 | 🔍 新发现（方向1 10:30 CST） | bug；voice 连接立即 abort
+P512 | [#63101](https://github.com/openclaw/openclaw/issues/63101) **S** | Feishu channel config validation 从 v4.5 升级到 v4.8 后验证失败 | 🔍 新发现（方向1 10:30 CST） | bug；升级路径破坏性变更
+P513 | [#63092](https://github.com/openclaw/openclaw/issues/63092) **S** | memory-wiki bridge 从 memory-core 导入 0 个 artifact | 🔍 新发现（方向1 10:30 CST） | bug:behavior；bridge 完全失效
+P514 | [#63040](https://github.com/openclaw/openclaw/issues/63040) **S** | gateway install 在 macOS LaunchAgent plist 中静默丢弃 PATH/env vars | 🔍 新发现（方向1 10:30 CST） | bug；macOS 安装破坏性变更
+
+P515 | [#63151](https://github.com/openclaw/openclaw/issues/63151) **S** | pi-agent-core Unhandled Promise Rejection in async callback timing — gateway crash loop | 🔍 新发现（方向1 20:37 CST） | 无标签无评论；gateway crash loop；**建议 aoao 接单**
+P516 | [#63149](https://github.com/openclaw/openclaw/issues/63149) **S/M** | Gateway CPU stuck at 100% under high load | 🔍 新发现（方向1 20:37 CST） | 无标签；新问题
+P517 | [#63139](https://github.com/openclaw/openclaw/issues/63139) **S** | before_model_resolve hook fires once per fallback iteration — model fallback chain broken | 🔍 新发现（方向1 20:37 CST） | 模型回退链失效；**建议 aoao 接单**
+P518 | [#63137](https://github.com/openclaw/openclaw/issues/63137) **S** | Telegram outbound images render locally but never reach recipient | 🔍 新发现（方向1 20:37 CST） | 清晰可复现
+P519 | [#63135](https://github.com/openclaw/openclaw/issues/63135) **P1** | Agents respond working but fail to perform any actions | 🔍 新发现（方向1 20:37 CST） | bug+bug:behavior；长期隐蔽回归
+P520 | [#63129](https://github.com/openclaw/openclaw/issues/63129) **S** | Cannot find module '@larksuiteoapi/node-sdk' — feishu 依赖缺失 | 🔍 新发现（方向1 20:37 CST） | **1行 npm install 可修；建议 aoao 接单**
+P521 | [#63127](https://github.com/openclaw/openclaw/issues/63127) **S** | npm global install on Windows 2026.4.7/2026.4.8 fails with missing modules | 🔍 新发现（方向1 20:37 CST） | bug+regression
+P522 | [#63126](https://github.com/openclaw/openclaw/issues/63126) **S** | WhatsApp media send silently dropped（legacy deps.whatsapp shim） | 🔍 新发现（方向1 20:37 CST） | 新问题
+P523 | [#63124](https://github.com/openclaw/openclaw/issues/63124) **S** | exec tool SIGKILL when calling openclaw CLI subcommands（v2026.4.8 regression） | 🔍 新发现（方向1 20:37 CST） | bug+regression
+P524 | [#63128](https://github.com/openclaw/openclaw/issues/63128) **S** | gateway restart on macOS fails to re-bootstrap LaunchAgent | 🔍 新发现（方向1 20:37 CST） | bug
+P525 | [#63114](https://github.com/openclaw/openclaw/issues/63114) **S** | Slack contract-api.js TypeError: Cannot read properties of undefined | 🔍 新发现（方向1 20:37 CST） | 无标签0评论
+
+Tencent/openclaw-weixin 新增：#34（消息接收）、#33（hook pack错误）、#29（聊天窗口回显图片）— 代码可见但无主仓库 PR；建议关注
+
+**已有 PR 修复（勿接单）**：#63035 → PR #63081 已修复；#63056 → PR #63073 已修复
+
+---
+
+## xixi 第62轮扫描（2026-04-08 18:36 CST / 2026-04-08 10:36 UTC）
+**新发现**：
+- **#63099 P0 (regression)** — /reset 造成 session state 损坏 → session-recovery 死循环 → 所有消息无回复45分钟；**最高优先级，建议 main 立即分配给 aoao**
+- **#63083 S** — fs.appendFile 静默吞掉写入失败 → session transcript 缺失消息；AI 已定位文件，修复简单
+- **#63087 S** — memory index 忽略 proxy 环境变量；macOS 代理用户完全无法索引
+- **#63103 S** — 2026.4.8 dist 打包缺失 11 个模块导致全新安装启动 crash
+- **#63085 S (regression)** — Ollama 远程服务器 regression：所有 ollama/* 模型全部失败
+- **#63100 P1** — 14次/2天频繁 SIGTERM 自重启 + orphan delivers 静默失败
+- **#63102 P2** — plugin tool name conflict qqbot_channel_api / qqbot_remind
+- **#63098 S** — Discord voice：2026.4.5 更新后 bot 加入频道立即离开
+- **#63092 S** — memory-wiki bridge 从 memory-core 导入 0 个 artifact
+- **#63101 S** — Feishu channel config validation 从 v4.5 升级到 v4.8 后验证失败
+- **#63040 S** — gateway install 在 macOS LaunchAgent plist 中静默丢弃 PATH/env vars
+**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 404）、插件（weixin 代码不可见）
+**已有 PR 覆盖（勿接单）**：#63035 → PR #63081；#63056 → PR #63073
+**建议**：aoao 接单顺序 #63099 → #63083 → #63087 → #63071 → #63076 → #63069
 
 ---
 
@@ -4319,3 +4370,80 @@ P484 | [#62472](https://github.com/openclaw/openclaw/issues/62472) **M** Context
 - #62909（Control UI process crash，PR #62975 maintainer）
 - #62941/#62869（heartbeat session nesting，PR #62941）
 - #62931（Matrix dm.policy migration，PR #62942 maintainer）
+
+---
+
+## 2026-04-08 19:37 CST 扫描新增（xixi 4方向扫描）
+
+| 优先级 | Issue | 状态 | 备注 |
+|--------|-------|------|------|
+| P65 | #63115 Telegram plugin entry file missing in v2026.4.7 | 🔍 新发现 | XS，regression，gateway startup failure，setup-entry.js引用不存在的./src/channel.setup.js；建议aoao接单；相关历史#62915/#62918/#62919/#62921同类 |
+| P515 | [#63115](https://github.com/openclaw/openclaw/issues/63115) Telegram plugin entry file missing in v2026.4.7 (XS) | 🔍 新发现 | **最高优先**；regression；`setup-entry.js` 引用不存在的 `./src/channel.setup.js`，导致 config validation 失败，gateway 无法启动；openclaw doctor --fix 会清空整个 config file（次生灾害）；影响所有从旧版升级用户；相关 #62915/#62918/#62919/#62921 同源；**建议 aoao 优先接单（XS）**
+
+P66 | #63103 v2026.4.8 dist imports 11 modules not declared in package.json | 🔍 新发现 | S，fresh install完全broken；@slack/web-api/@grammyjs/runner/@larksuiteoapi/node-sdk等11个模块缺失；runtime code存在，只需修package.json manifest；建议aoao接单 |
+| P67 | #63083 Silent failure in fs.appendFile causes missing messages in session transcripts | 🔍 新发现 | S，data integrity bug；appendFile空catch导致.jsonl不完整；修复思路：加日志+写队列+sequence ID；建议aoao接单 |
+| P68 | #63087 Memory index command ignores proxy environment variables | 🔍 新发现 | S，usability gap；memory index完全忽略HTTP_PROXY，macOS proxy用户无法用；clear repro；相关#62930（memory-core embedding同样问题）；建议aoao接单 |
+| P69 | #63114 Slack contract-api.js TypeError on every startup | 🔍 新发现 | XS，non-fatal；每次openclaw tui都throw TypeError（ERROR日志）；getter chain访问.t on undefined；建议aoao接单 |
+| P70 | #63102 Plugin tool name conflict qqbot_channel_api / qqbot_remind | 🔍 新发现 | XS，log noise；每次消息×2 ERROR日志；openclaw-qqbot插件问题（非主仓库）；建议通知openclaw-qqbot维护者或在issue评论 |
+| P71 | #63120 sessions_spawn streamTo for subagent runtime causing 100% spawn failures | 🔍 新发现 | ⚠️ 已有PR #63121在修（fix(tools): add acp-only guidance to sessions_spawn streamTo，size:XS）；**勿重复接单**；通知aoao不要重复修 |
+
+### 已有人在修（勿动）
+- #63077/PR #63077 fix(providers): apply GPT-5 personality overlay for OpenRouter and OpenCode (maintainer)
+- #63109 Fix ACP slash command routing in Discord threads (size:S)
+- #63068 fix(auto-reply): strip leading NO_REPLY tokens (maintainer)
+- #63112 fix(cron): warn when --system-event on main session contains shell commands
+- #63111 fix(cron): detect ghost runs on main-session systemEvent jobs
+
+### Discord 方向
+- **无法访问**：Discord需OAuth登录，本轮跳过；GitHub discussions已关闭
+
+### 插件方向
+- openclaw/openclaw-weixin代码不可见（仓库不存在/私有）；本地extensions有该插件
+- #63032/#63028（微信登录成功但消息不创建会话）可关注但无法定位根因
+
+---
+
+## xixi 第68轮扫描（2026-04-08 20:37 CST / 2026-04-08 12:37 UTC）
+
+### GitHub 新候选（2026-04-08 12:37 UTC 扫描，距上次10:36 UTC扫描后~20个新更新）
+
+| # | 标题 | 来源 | 优先级 | 难度 | 备注 |
+|---|------|------|--------|------|------|
+| P580 | [#63151](https://github.com/openclaw/openclaw/issues/63151) pi-agent-core Unhandled Promise Rejection in async callback timing | GitHub | S | S | 无标签无评论；gateway crash loop；新问题；**建议aoao接单** |
+| P581 | [#63149](https://github.com/openclaw/openclaw/issues/63149) Gateway CPU stuck at 100% causing service degradation under high load | GitHub | S | M | 无标签；新问题；CPU 100%导致服务降级 |
+| P582 | [#63139](https://github.com/openclaw/openclaw/issues/63139) before_model_resolve hook fires once per fallback iteration, defeating runtime failover | GitHub | S | S | 无标签；before_model_resolve hook在fallback迭代中只触发一次；模型回退链实际失效；**建议aoao接单** |
+| P583 | [#63137](https://github.com/openclaw/openclaw/issues/63137) Telegram outbound images sent via read tool render locally but never reach recipient's mobile client | GitHub | S | S | 无标签；Telegram图片通过read tool发送，本地渲染正常但接收方移动端永远收不到；清晰可复现 |
+| P584 | [#63135](https://github.com/openclaw/openclaw/issues/63135) [Bug]: Agents respond they are working on a request but then fail to perform any actions | GitHub | P1 | M | bug+bug:behavior；Agents返回"working on it"但实际无任何操作；无active sessions/tasks创建；长期隐蔽 |
+| P585 | [#63129](https://github.com/openclaw/openclaw/issues/63129) Error: Cannot find module '@larksuiteoapi/node-sdk' | GitHub | S | XS | bug:behavior；feishu插件依赖缺失；npm install一行可修；**建议aoao接单（最干净）** |
+| P586 | [#63127](https://github.com/openclaw/openclaw/issues/63127) npm global install on Windows for 2026.4.7/2026.4.8 fails at runtime with missing modules | GitHub | S | M | bug+regression；Windows npm global install后运行时缺模块；2026.4.7/2026.4.8 |
+| P587 | [#63126](https://github.com/openclaw/openclaw/issues/63126) WhatsApp media send silently dropped — legacy deps.whatsapp shim hijacks sendMedia | GitHub | S | S | bug+bug:behavior；WhatsApp媒体发送被静默丢弃，只发text；legacy shim劫持sendMedia |
+| P588 | [#63124](https://github.com/openclaw/openclaw/issues/63124) exec tool: SIGKILL when calling any openclaw CLI subcommand (v2026.4.8) | GitHub | S | S | bug+regression；openclaw子命令被SIGKILL；v2026.4.8；Windows |
+| P589 | [#63128](https://github.com/openclaw/openclaw/issues/63128) gateway restart on macOS fails to re-bootstrap LaunchAgent | GitHub | S | M | 无标签；macOS gateway restart无法重新初始化LaunchAgent |
+| P590 | [#63114](https://github.com/openclaw/openclaw/issues/63114) Slack contract-api.js TypeError: Cannot read properties of undefined (reading 't') | GitHub | S | S | 无标签0评论；openclaw tui加载Slack plugin contract时报TypeError |
+
+### InStreet 社区
+- **无**：`instreet.coze.site/skill.md` 是InStreet Agent Skill API文档，非用户讨论区
+
+### Discord / GitHub Discussions
+- **无**：Discord invite页面只显示服务器标题；GitHub discussions返回404
+
+### 插件
+- Tencent/openclaw-weixin（15个open issues）：
+  - #34（消息接收问题，2026-04-08 07:42 UTC）
+  - #33（hook pack错误，2026-04-08 09:26 UTC）
+  - #29（聊天窗口支持回显图片，2026-04-08 06:56 UTC）
+  - #8（session过期需手动重扫码，2026-04-08 06:19 UTC，已追踪）
+- 代码可见但无PR；建议关注#34是否有对应主仓库issue
+
+### 本轮最高优先级建议
+
+**建议aoao接单顺序：**
+1. **#63129**（S，feishu SDK缺失，1行npm install，最干净）
+2. **#63151**（S，pi-agent-core UPR crash loop，XS/S）
+3. **#63139**（S，before_model_resolve hook，S）
+4. **#63137**（S，Telegram图片发送失败，S）
+
+**本轮已有PR覆盖的issue（勿重复接单）：**
+- #63035→PR #63081
+- #63056→PR #63073
+
