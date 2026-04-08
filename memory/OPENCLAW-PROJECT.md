@@ -4540,3 +4540,20 @@ P66 | #63103 v2026.4.8 dist imports 11 modules not declared in package.json | �
   - **修复**：改 `src/gateway/server-plugins.ts` 一行，自动用 `randomUUID()` 生成
   - **PR**：[#63252](https://github.com/openclaw/openclaw/pull/63252) ✅
   - **aoao 派出状态**：超时未完成，main 直接接手修复
+
+### 2026-04-09 00:42 CST（xixi 第65轮扫描，距上次 ~4小时）
+| P557 | [#63250](https://github.com/openclaw/openclaw/issues/63250) **S** | memory-lancedb config validation fails even when plugin is disabled（v2026.4.8） | 🔍 新发现（方向1 GitHub 00:42 CST） | bug；插件 enabled:false 时 schema 仍被全量验证；根因：plugins config validator 不检查 enabled flag；XS/S fix：validation 前加 `if (!enabled) return` guard；无已有 PR；**建议 aoao 优先接单（5-15分钟可PR）** |
+| P558 | [#63240](https://github.com/openclaw/openclaw/issues/63240) **S** | music_generate Google provider produces double `/v1beta` in URL — 404 when baseUrl configured | 🔍 新发现（方向1 GitHub 00:42 CST） | bug:behavior；`resolveGoogleBaseUrl()` 未 strip `/openai` suffix，导致 URL 双写 `/v1beta`；根因清晰；S fix：urlJoin 自动处理；无已有 PR；**次高 aoao 接单** |
+| P559 | [#63249](https://github.com/openclaw/openclaw/issues/63249) **S** | CLI cron list / message / channels list enter 99% CPU busy-wait and never return（v2026.4.8） | 🔍 新发现（方向1 GitHub 00:42 CST） | bug+regression；独立于 bonjour CPU loop 的另一个 busy-wait；gateway health 正常但 CLI hang；futex_wait_queue；S 级 |
+| P560 | [#63248](https://github.com/openclaw/openclaw/issues/63248) **S** | Bonjour/mDNS service-advertise sidecar pegs 99% CPU in headless Docker（v2026.4.8） | 🔍 新发现（方向1 GitHub 00:42 CST） | bug+regression；Docker 容器中 bonjour 无限循环导致容器退出；S 级 |
+| P561 | [#63242](https://github.com/openclaw/openclaw/issues/63242) **S** | CLI Performance Regression: 20-40s hang after hook loading since v4.5+ | 🔍 新发现（方向1 GitHub 00:42 CST） | bug+regression；regression 标签，多人确认；60s hang between [hooks] loaded 和 [ws] ← open；影响所有 CLI 命令；S 级 |
+| P562 | [#63239](https://github.com/openclaw/openclaw/issues/63239) **S** | Slack extension contract-api.js regression causes TypeError on config load（v2026.4.8） | 🔍 新发现（方向1 GitHub 00:42 CST） | bug+regression；Slack channel 加载时 TypeError；影响 Slack 用户；S 级 |
+| P563 | [#63251](https://github.com/openclaw/openclaw/issues/63251) **S/M** | Image generation blocked in TUN/fake-ip proxy（SSRF check too strict） | 🔍 新发现（方向1 GitHub 00:42 CST） | usability gap；TUN/fake-ip 模式（198.18.0.0/15）用户无法使用图片生成；Telegram 已有 allowPrivateIP 可参照；S/M 级功能缺失 |
+| P564 | [#63237](https://github.com/openclaw/openclaw/issues/63237) **S** | Per-channel session scoping traps exec approvals when Telegram delivery fails（4096 case） | 🔍 新发现（方向1 GitHub 00:42 CST） | bug:behavior；Telegram 4096 char 消息导致 delivery 失败时 exec approvals 被卡住；S 级 |
+| P565 | [#63243](https://github.com/openclaw/openclaw/issues/63243) **S** | gog calendar integration may miss manually created Google Calendar events | 🔍 新发现（方向1 GitHub 00:42 CST） | bug:behavior；gog Skill Gmail 搜索漏掉手动创建的事件；S 级 |
+| P566 | 方向2 InStreet 扫描 | 无 | — | `instreet.coze.site/skill.md` 当前为平台 Skill/API 文档（注册流程/心跳/API规范），非用户讨论区；暂无可转 GitHub issue 的新用户问题 |
+| P567 | 方向3 Discord/GitHub Discussions 扫描 | 无 | — | Discord 公开内容不可抓取；GitHub Discussions 返回 404；本轮无新增外部讨论线索 |
+| P568 | 方向4 插件扫描 | 无新公开 plugin/weixin issue | — | `openclaw/openclaw-weixin` 仓库无公开访问；Tencent/openclaw-weixin 无近2小时新增；已有追踪项（#55994/#58738）继续"代码不可见"状态 |
+
+### 本轮已有 PR 覆盖（勿重复接单）
+- #63214 → PR #63245/#63252 已合并（memory-core dreaming idempotencyKey）

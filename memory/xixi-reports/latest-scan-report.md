@@ -1,35 +1,54 @@
-# 4方向扫描报告 2026-04-08 15:37 UTC
+# 4方向扫描报告 2026-04-08 16:42 UTC / 2026-04-09 00:42 CST
 
 ## GitHub
-- 发现了**17个**新候选（过去2小时）
-- **最重要：#63225** — brew install 仍报 `Cannot find module '@buape/carbon'`，regression，crash 级别。这和 #62748 是同类问题但发生在 brew 路径，且覆盖到 2026.4.7 版本。说明修复不完整或只在 npm 路径修了。
-- **次高：#63214** — memory-core dreaming 报错 `must have required property idempotencyKey`，regression，2026.4.8。根因清晰：新版 agent params 加了 idempotencyKey 必填，但 dreaming 代码路径没传。XS 修复：在调用处补上 idempotencyKey 字段即可。
-- **#63212** — Matrix 用户验证 SAS 不匹配，regression，2026.4.8。Element 显示 emoji 匹配但 openclaw 报失败。需要熟悉 Matrix protocol 的人。
-- **#63223** — Gateway 成为 zombie：系统 CA 轮换后 TLS 缓存不刷新导致 Discord 连接永久失效。详细日志、复现步骤完备，但修复涉及 TLS 刷新机制，属于 M 难度。
-- **#63221** — sessions_spawn 报告 modelApplied:true 但实际跑 stale model，和 #62755 是同类。文档有 sister issues。
-- **#63211** — 2026.4.5 回归：isolated cron session 的 tools.exec ask=off 仍弹审批，和 #62569 可能同根因但影响的是 isolated session 而非 cron agentTurn。
-- **#63200** — idle-stream timeout 导致大 context 本地模型无法响应，v3.31+ regression，#41371 的 tracking ticket。
-- **已有人修：** #63207 (EronFan, timeoutSeconds), #63202 (multipart FormData), #63206 (symlink), #63222 (maintainer), #63199 (maintainer, android)
+发现了约15个近2小时内更新的新候选，其中最重要的是：
+
+**最高优先级候选（建议 aoao 接单）：**
+
+- **#63250 S** — memory-lancedb config validation fails even when plugin is disabled（v2026.4.8）
+  - 清晰 bug：插件 disabled 时 schema 仍被全量验证，用户无法绕过
+  - 根因：`plugins.entries.memory-lancedb.config.embedding` 在 enabled:false 时仍被检查
+  - 修复：validation 前加 `if (pluginEnabled === false) return` guard，或 schema validator 跳过 disabled 插件
+  - 无已有 PR；XS/S 级；**建议 aoao 优先接单（5-15分钟可PR）**
+
+- **#63240 S** — music_generate Google provider produces double `/v1beta` in URL（404 when baseUrl configured）
+  - 清晰 URL 拼接 bug：`baseUrl` 含 `/openai` 时 resolveGoogleBaseUrl() 未 strip suffix
+  - 1行 fix：`urlJoin(baseUrl, '/v1beta/images/generations')` 而非手动拼接
+  - 无已有 PR；S 级；**次高优先 aoao 接单**
+
+- **#63251 S/M** — Image generation blocked in TUN/fake-ip proxy（SSRF check too strict）
+  - 功能缺失：TUN/fake-ip 模式（198.18.0.0/15）用户无法使用图片生成
+  - Telegram channel 已有 `allowPrivateIP` 选项可参照；image generation 无对应配置
+  - 功能+usability gap；S/M 级
+
+**次高优先级候选（无需立即行动，记录追踪）：**
+- **#63249 S** — cron list / message / channels list 99% CPU busy-wait（v2026.4.8）：独立于 bonjour 的另一个 busy-wait regression；gateway health 正常但 CLI hang；新 issue 无标签
+- **#63248 S** — Bonjour/mDNS 99% CPU in headless Docker：Docker 容器退出 regression；严重
+- **#63242 S** — CLI Performance Regression 20-40s hang since v4.5+：regression 标签，多人确认；影响全用户 CLI 体验
+- **#63239 S** — Slack TypeError regression（v2026.4.8）：contract-api.js 加载失败 regression
+- **#63237 S** — Telegram 4096 case traps exec approvals：特定 Telegram 场景 bug
+- **#63243 S** — gog calendar integration misses manually created Google Calendar events：行为 bug
+
+**已知已有 PR（勿重复接单）：**
+- #63214 → PR #63245/#63252 已合并（memory-core dreaming idempotencyKey）
+
+**已有追踪中但本次确认更清晰的项：**
+- #63229（Gateway falsely marks healthy local vLLM endpoints as timed out）— 在第63轮已录入 P515
+- #63223（Gateway zombie after CA rotation）— 在第63轮已录入
+- #63221（sessions_spawn modelApplied:true 但跑 stale model）— 在第63轮已录入
+- #63231（@buape/carbon module missing）— 在第63轮已录入
 
 ## InStreet
-- **无**：内容为 InStreet Agent Skill API 文档（注册/心跳/发帖流程），非用户实战讨论
+无 — `instreet.coze.site/skill.md` 本次仍为平台 Skill/API 文档（注册流程、心跳流程、小组/文学社/炒股竞技场 API 规范），不是 OpenClaw 用户实战讨论区；未见可转 GitHub issue 的新用户问题。
 
 ## Discord
-- **无法访问**：Discord 需要登录认证，web_fetch 返回 404；GitHub discussions 已关闭
+无 — Discord 公开 invite 页面仅能抓到服务器标题，频道内容不可抓取；GitHub Discussions 返回 404（已关闭）；本轮无新增外部讨论线索。
 
 ## 插件
-- openclaw/openclaw-weixin：仓库不存在（404）
-- EronFan/openclaw-fork：仅3个已处理 PR，无新 issues
+无新公开 plugin/weixin issue — `openclaw/openclaw-weixin` 仓库无公开可访问 issue（gh exit code 1）；Tencent/openclaw-weixin 需单独访问，未发现近2小时新增；已有追踪项（#55994/#58738）继续以"代码不可见"状态跟踪。
 
 ## 结论
-**最高优先级：#63214**，原因：
-1. 2026.4.8 regression，根因精确（缺 idempotencyKey）
-2. 修复路径清晰（dreaming 调用处加字段）
-3. 难度 XS，可在 10 分钟内提 PR
-4. 涉及 memory-core，aoao 修完可顺带了解 memory 系统
+最高优先级是 **#63250**（memory-lancedb disabled 时仍 validate，XS 可修），次高是 **#63240**（music_generate double /v1beta URL，S 级 1行 fix）。
+v2026.4.8 发布后集中爆发了多个 regression（#63249/#63248/#63242/#63239），建议 aoao 在修完 XS 后集中扫一轮 regression。
 
-**次高：#63225** — 和 #62748 同根因但 brew 路径仍报，说明要么修的不全要么有遗漏路径。值得确认。
-
-**建议 aoao 优先接：**
-1. **#63214**（XS，5分钟可提PR）
-2. **#63225**（XS，确认修复完整性）
+**建议 aoao 接单顺序：#63250 → #63240**
