@@ -1,28 +1,21 @@
-Last processed scan report: 2026-04-08 20:37 CST / 12:37 UTC
+Last processed scan report: 2026-04-08 23:37 CST / 15:37 UTC
 Source file: /root/.openclaw/workspace/memory/xixi-reports/latest-scan-report.md
 
-## 扫描结论（2026-04-08 20:37 CST / 12:37 UTC）
+## 扫描结论（2026-04-08 23:37 CST / 15:37 UTC）
 
 **新发现（来自最新扫描）**：
-- **#63151 S** — pi-agent-core Unhandled Promise Rejection in async callback timing，gateway crash loop；**建议 aoao 接单**
-- **#63149 S/M** — Gateway CPU stuck at 100% under high load
-- **#63139 S** — before_model_resolve hook fires once per fallback iteration，model fallback chain broken；**建议 aoao 接单**
-- **#63137 S** — Telegram outbound images render locally but never reach recipient mobile
-- **#63135 P1** — Agents respond working but fail to perform any actions（bug:behavior）
-- **#63129 S** — Cannot find module '@larksuiteoapi/node-sdk'；**1行 npm install 可修，建议 aoao 接单**
-- **#63127 S** — npm global install on Windows 2026.4.7/2026.4.8 fails with missing modules（regression）
-- **#63126 S** — WhatsApp media send silently dropped
-- **#63124 S** — exec tool SIGKILL when calling openclaw CLI subcommands（v2026.4.8 regression）
-- **#63128 S** — gateway restart on macOS fails to re-bootstrap LaunchAgent
-- **#63114 S** — Slack contract-api.js TypeError: Cannot read properties of undefined
+- **#63225 S** — brew install 仍报 `Cannot find module '@buape/carbon'`，regression crash 级别，和 #62748 同根因但 brew 路径未修
+- **#63214 S** — memory-core dreaming 报 `must have required property idempotencyKey`，2026.4.8 regression；根因精确：缺 idempotencyKey 字段；XS 修复，5-10分钟可PR
+- **#63212 S** — Matrix 用户验证 SAS 不匹配，2026.4.8 regression
+- **#63223 M** — Gateway zombie：系统 CA 轮换后 TLS 缓存不刷新导致 Discord 连接永久失效
+- **#63221 S** — sessions_spawn modelApplied:true 但实际跑 stale model
+- **#63211 S** — isolated cron session tools.exec ask=off 仍弹审批 regression
+- **#63200 M** — idle-stream timeout 导致大 context 本地模型无法响应，v3.31+ regression
 
-Tencent/openclaw-weixin 新增 #34/#33/#29 — 代码可见，关注是否有对应主仓库 issue
+**已有 PR 勿重复接单**：#63207（EronFan）/#63202/#63206/#63222（maintainer）/#63199（maintainer）
 
-**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 404）、插件（weixin 主仓库不可见）
+**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 404）、插件（weixin 仓库404）
 
-**已有 PR 修复（勿接单）**：#63035→PR #63081；#63056→PR #63073
-
-**aoao 建议接单顺序：**
-1. #63129（最干净，1行 npm install 修复 feishu 依赖）
-2. #63151（pi-agent-core UPR crash loop，XS/S）
-3. #63139（before_model_resolve hook，S）
+**建议 aoao 接单顺序**：
+1. #63214（最干净 XS，5-10分钟可PR）
+2. #63225（确认修复完整性）

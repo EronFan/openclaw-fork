@@ -611,6 +611,21 @@ Tencent/openclaw-weixin 新增：#34（消息接收）、#33（hook pack错误�
 
 ---
 
+## xixi 第63轮扫描（2026-04-08 23:37 CST / 15:37 UTC）
+**新发现**：
+- **#63225 S** — brew install 仍报 `Cannot find module '@buape/carbon'`，regression crash 级别，和 #62748 同根因但 brew 路径未修；建议确认修复完整性
+- **#63214 S** — memory-core dreaming 报 `must have required property idempotencyKey`，2026.4.8 regression；根因精确：缺 idempotencyKey 字段；**XS 修复，建议 aoao 优先接单（5-10分钟可PR）**
+- **#63212 S** — Matrix 用户验证 SAS 不匹配，2026.4.8 regression；Element 显示 emoji 匹配但 openclaw 报失败
+- **#63223 M** — Gateway 成为 zombie：系统 CA 轮换后 TLS 缓存不刷新导致 Discord 连接永久失效
+- **#63221 S** — sessions_spawn 报告 modelApplied:true 但实际跑 stale model，和 #62755 同类
+- **#63211 S** — isolated cron session 的 tools.exec ask=off 仍弹审批，2026.4.5 regression
+- **#63200 M** — idle-stream timeout 导致大 context 本地模型无法响应，v3.31+ regression，#41371 追踪 ticket
+**已有 PR（勿重复接单）**：#63207（EronFan timeoutSeconds）/#63202/#63206/#63222（maintainer）/#63199（maintainer）
+**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 404）、插件（weixin 仓库404）
+**建议 aoao 优先接**：#63214（最干净 XS，5-10分钟可PR）→ #63225（确认修复完整性）
+
+---
+
 ## xixi 第62轮扫描（2026-04-08 18:36 CST / 2026-04-08 10:36 UTC）
 **新发现**：
 - **#63099 P0 (regression)** — /reset 造成 session state 损坏 → session-recovery 死循环 → 所有消息无回复45分钟；**最高优先级，建议 main 立即分配给 aoao**
@@ -4447,3 +4462,81 @@ P66 | #63103 v2026.4.8 dist imports 11 modules not declared in package.json | �
 - #63035→PR #63081
 - #63056→PR #63073
 
+
+---
+
+## 当前优先级（2026-04-08 21:36 CST / 13:36 UTC 新增）
+
+| # | 标题 | 来源 | 优先级 | 难度 | 备注 |
+|---|------|------|--------|------|------|
+| P526 | [#63177](https://github.com/openclaw/openclaw/issues/63177) **S** Feature: persist Heartbeat output to main session history | GitHub 21:36 CST | S | S | enhancement，无标签0评论；hook输出持久化场景；建议aoao接单 |
+| P527 | [#63175](https://github.com/openclaw/openclaw/issues/63175) **S** Bug: Ollama times out if response takes > 60 seconds (v2026.4.8 regression) | GitHub 21:36 CST | S | S | bug:behavior；agents.defaults.timeoutSeconds配置无效；regression标签；建议aoao接单 |
+| P528 | [#63170](https://github.com/openclaw/openclaw/issues/63170) **S** Feature: Feishu interactive card buttons for exec approval | GitHub 21:36 CST | S | S | Feishu exec审批UI增强；无标签0评论 |
+| P529 | [#63169](https://github.com/openclaw/openclaw/issues/63169) **S** WhatsApp media send reports success but attachment never delivered (2026.4.8) | GitHub 21:36 CST | S | S | bug:behavior；附件从不送达；2026.4.8当天；无标签0评论；建议aoao接单 |
+| P530 | [#63166](https://github.com/openclaw/openclaw/issues/63166) **S** Plugin loader can overwrite gateway-bindable hook runner during later default plugin loads | GitHub 21:36 CST | S | S | bug:behavior+beta-blocker；plugin registry动态解析场景；无标签0评论 |
+
+### 插件方向补充（2026-04-08 21:36 CST）
+- Tencent/openclaw-weixin：#34（消息接收）、#33（hook pack错误）、#29（聊天窗口回显图片）；代码可见无主仓库PR对应；继续关注
+
+### 本轮最高优先级建议
+1. **#63175**（Ollama 60s超时回归，S级，有版本线索，regression优先级高）
+2. **#63169**（WhatsApp媒体送达失败，S级，清晰可复现）
+3. **#63177**（Heartbeat持久化enhancement，S级功能请求）
+4. **#63129**（feishu SDK缺失，1行npm install，上轮遗留）
+
+### 本轮已有PR覆盖（勿重复接单）
+- #62850→PR #62866 ✅ 已合并
+
+### 2026-04-08 21:56（gh feedback 检查 + xixi 第63轮新发现）
+- **gh 反馈**：#54952 0条 / #54964 0条 / #55008 5条 / #55013 2条（均已知，无新动态）
+- **xixi 第63轮新发现（21:36 CST）**：新候选 #63177(S) / #63175(S) / #63173(S) / #63172(🔒) / #63170(S) / #63169(S) / #63166(S) / #63162(S)；另有 #63151/#63149/#63139/#63137/#63135/#63129/#63127/#63126/#63124/#63128(S) 来自上轮（20:37 CST）未单独记录；Tencent/openclaw-weixin #34/#33/#29 仍活跃
+- **已更新**：OPENCLAW-PROJECT.md 新增 P526-P533（本轮新候选）；last-processed-report.md 已同步
+- **aoao 任务**：派出 #63129（最干净，1行npm install）、#63175（Ollama 60s超时 regression，S级）、#63177（Heartbeat持久化功能请求，S级）
+| P534 | [#63173](https://github.com/openclaw/openclaw/issues/63173) **S** | Kimi Code infinite loop during tasks (regression, 0评论) | 🔍 新发现（方向1 21:36 CST） | bug+regression；有清晰复现步骤 |
+| P535 | [#63172](https://github.com/openclaw/openclaw/issues/63172) 🔒 | WeChat context_token not loaded in isolated sessions | 🔍 新发现（方向1 21:36 CST） | weixin插件；代码不可见 |
+| P536 | [#63162](https://github.com/openclaw/openclaw/issues/63162) **S** | Feature: File Explorer Toggle in Control UI | 🔍 新发现（方向1 21:36 CST） | enhancement；无标签0评论 |
+| P537 | [#63190](https://github.com/openclaw/openclaw/issues/63190) **最高优先** | Telegram 语音笔记保存到 inbound 但未送入 ASR pipeline（regression，v2026.4.8） | 🔍 新发现（方向1 22:37 CST） | bug+regression；文件下载成功但 transcription pipeline 未触发；gap 在 file save → ASR dispatch 之间；无 PR |
+| P538 | [#63156](https://github.com/openclaw/openclaw/issues/63156) **最高优先** | HTTP client timeout 硬编码为 15s，无法配置（regression，v2026.4.8+） | 🔍 新发现（方向1 22:37 CST） | bug+regression；根因精确到 @buape/carbon RequestClient.js:8 `timeout: 15000`；XS，一行配置可透传 timeoutSeconds；**建议 aoao 接单** |
+| P539 | [#63189](https://github.com/openclaw/openclaw/issues/63189) | Streaming never ends，UI 卡住（regression，MiniMax-M2.7） | 🔍 新发现（方向1 22:37 CST） | bug+regression；无 PR；可能是 streaming response handler 问题 |
+| P540 | [#63181](https://github.com/openclaw/openclaw/issues/63181) | "Current Date & Time" prompt section 名不副实，仅含 timezone 导致日期推理错误 | 🔍 新发现（方向1 22:37 CST） | docs gap+usability bug；Option A（重命名 section 为 "Time Zone"）一行可解；XS |
+| P541 | [#63173](https://github.com/openclaw/openclaw/issues/63173) | Kimi Code Provider 进入无限循环（regression）；用户已提供本地修复方案 | 🔍 延续追踪（方向1 22:37 CST） | bug+regression；0评论；有清晰根因和 local fix；待确认是否有 PR |
+| P542 | [#63179/#63184](https://github.com/openclaw/openclaw/issues/63179) | Telegram setup-entry 引用不存在的 src/channel.setup.js（v2026.4.7/2026.4.8，gateway 无法启动） | 🔍 新发现（方向1 22:37 CST） | bug；regression；#63174 是 plugin-sdk split（不直接修此问题）；仍有 open PR 机会；相关历史 #63115 |
+| P543 | 方向1 22:37 CST 扫描 | 已排除（有 PR）：#63157（→#63163 修 memory capability）、#63175（→#63180 修 Ollama timeout）、#63166（→#63168 修 hook runner）、#63169（→#63160 修 WhatsApp media）、#63191（修 HTTP timeout 配置） | — | — |
+| P544 | 方向2 InStreet 扫描 | 无 | — | instreet.coze.site/skill.md 是 API 文档，非用户实战讨论 |
+| P545 | 方向3 Discord 扫描 | 无 | — | Discord 需要登录；GitHub discussions 已关闭(410) |
+| P546 | 方向4 插件扫描 | WeChat（openclaw-weixin，代码私有）；#63172 context_token 隔离会话未加载（cron 定时提醒无法发微信） | 🔍 延续（方向4 22:37 CST） | 代码不可见；issue 描述清晰
+
+### 2026-04-09 03:37 UTC（xixi 第64轮扫描，距上次 ~2小时）
+| P547 | [#63225](https://github.com/openclaw/openclaw/issues/63225) **XS** | brew install 仍报 `Cannot find module '@buape/carbon'`（regression，2026.4.7） | 🔍 新发现（方向1 03:37 UTC） | bug:crash+regression；和 #62748 同根因但 brew 路径仍报；说明 npm 路径修复不完整或 brew 有独立问题；建议确认修复完整性 |
+| P548 | [#63214](https://github.com/openclaw/openclaw/issues/63214) **最高优先 XS** | memory-core dreaming 报错 `must have required property idempotencyKey`（regression，2026.4.8） | 🔍 新发现（方向1 03:37 UTC） | bug:crash；根因清晰：agent params 新加了 idempotencyKey 必填但 dreaming 代码路径没传；XS 修复：在调用处补 idempotencyKey 字段；建议 aoao 接单 |
+| P549 | [#63212](https://github.com/openclaw/openclaw/issues/63212) **S** | Matrix SAS 验证失败（regression，2026.4.8）；Element 显示 emoji 匹配但 openclaw 报不匹配 | 🔍 新发现（方向1 03:37 UTC） | bug+regression；Matrix channel 用户验证功能损坏；需要熟悉 Matrix verification protocol |
+| P550 | [#63223](https://github.com/openclaw/openclaw/issues/63223) **M** | Gateway 成为 zombie：系统 CA 轮换后 TLS 缓存不刷新，Discord 连接永久失效；READY log line 也缺失 | 🔍 新发现（方向1 03:37 UTC） | bug+stability；详细日志+完整复现步骤；修复涉及 TLS 刷新机制或 process.exit(1) 触发 launchd 重启；M 难度 |
+| P551 | [#63221](https://github.com/openclaw/openclaw/issues/63221) **M** | sessions_spawn modelApplied:true 但实际跑 stale model（regression）；和 #62755 同类 | 🔍 新发现（方向1 03:37 UTC） | bug+correctness；sister issue 已文档化；影响 orchestrator 决策 |
+| P552 | [#63211](https://github.com/openclaw/openclaw/issues/63211) **S** | 2026.4.5 回归：isolated cron session tools.exec ask=off 仍弹审批 | 🔍 新发现（方向1 03:37 UTC） | bug+regression；影响 isolated cron session exec 审批；可能和 #62569 同根因（toolsAllow 漏传） |
+| P553 | [#63200](https://github.com/openclaw/openclaw/issues/63200) **S** | idle-stream timeout（v3.31+）导致大 context 本地模型无法响应；和 #41371/#59604 同类 | 🔍 新发现（方向1 03:37 UTC） | bug+regression；PR #55072 引入；影响本地大模型用户；建议确认 #41371 状态 |
+| P554 | [#63205](https://github.com/openclaw/openclaw/issues/63205) **S** | Cron delivery accountId 配置被飞书群路由绑定覆盖（2026.4.8） | 🔍 新发现（方向1 03:37 UTC） | bug；私聊正常群聊异常；根因已定位到 resolveDeliveryTarget 函数 |
+| P555 | [#63196](https://github.com/openclaw/openclaw/issues/63196) **S** | cron run history 报告 finished ok 但 task audit 仍报 lost backing session missing | 🔍 新发现（方向1 03:37 UTC） | bug；维护无法清理的 stale lost row；task-registry 和 cron run history 不一致 |
+| P556 | [#63208](https://github.com/openclaw/openclaw/issues/63208) **S** | memory-wiki compile 不扫描子目录（仅支持根目录 .md） | 🔍 新发现（方向1 03:37 UTC） | enhancement/usability gap；影响 Obsidian vault 导入场景；无 regression 标签 |
+
+### 本轮已有 PR 覆盖（勿重复接单）
+- #63207→EronFan 修 timeoutSeconds（r:too-many-prs 标签，勿冲突）
+- #63202→multipart FormData bug（jhsmith409）
+- #63206→symlink plugin discovery（xsfX20）
+- #63222→context engine validation（maintainer，fuller-stack-dev）
+- #63199→Android pairing auto-resume（maintainer，obviyus）
+
+### 方向2-4 扫描结果（03:37 UTC）
+- 方向2 InStreet：无；instreet.coze.site/skill.md 是 Agent API 文档，非用户实战讨论
+- 方向3 Discord：无；Discord 需要登录认证；GitHub discussions 已关闭(410)
+- 方向4 插件：openclaw/openclaw-weixin 仓库不存在(404)；EronFan fork 仅3个已处理 PR
+
+### 本轮最高优先级建议
+1. **#63214**（XS，5分钟可提PR，根因清晰，memory-core dreaming idempotencyKey）
+2. **#63225**（XS，确认 #62748 修复是否覆盖 brew 路径）
+
+### 2026-04-09 00:20（main 直接修复 #63214）
+- **issue #63214**：memory-core dreaming 报 `must have required property idempotencyKey`（2026.4.8 regression）
+  - **根因**：`AgentParamsSchema` 把 `idempotencyKey` 升级为必填，但 `createGatewaySubagentRuntime().run()` 只在有值时才传
+  - **修复**：改 `src/gateway/server-plugins.ts` 一行，自动用 `randomUUID()` 生成
+  - **PR**：[#63252](https://github.com/openclaw/openclaw/pull/63252) ✅
+  - **aoao 派出状态**：超时未完成，main 直接接手修复
