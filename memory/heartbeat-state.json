@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-04-06T12:18:00Z",
+  "updatedAt": "2026-04-08T11:27:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": null,
-  "note": "晚间心跳。20:18 CST。xixi第49轮已完成(12:33 CST)，#61680等已转发。模型分配已修正(haiku额度满→移除)。反馈检查/memory-daily-create已重启。晚间无主动提醒必要。"
+  "note": "heartbeat-state.json 更新逻辑已修复：HEARTBEAT.md 新增自动 git commit 规则，移除所有询问确认步骤，确保 heartbeat 干完活后正确持久化状态。"
 }

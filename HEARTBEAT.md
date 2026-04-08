@@ -28,18 +28,25 @@
 - 没有任何新增信息
 - 只是重复旧提醒
 
-## 记账规则
-每次 heartbeat 完成后，更新 `memory/heartbeat-state.json`：
-- 对应检查项的时间戳
-- `updatedAt`
-- 如果有主动提醒，再更新 `lastProactiveReachoutAt`
+## 记账规则（必须执行）
+每次 heartbeat 完成后，**必须**更新 `memory/heartbeat-state.json`：
+1. 读取当前 `memory/heartbeat-state.json`
+2. 更新 `updatedAt` 为当前 UTC 时间（格式：`2026-04-08T12:30:00Z`）
+3. 如果有检查 calendar/email/mentions/weather，更新对应时间戳
+4. 如果有主动提醒，更新 `lastProactiveReachoutAt`
+5. 写入文件（**直接执行，不询问**）
 
-## 顺手可做的事
-如果不需要主动提醒，可以低成本做这些：
-- 整理当天 `memory/YYYY-MM-DD.md`
-- 从最近 daily notes 提炼长期记忆到 `MEMORY.md`
-- 检查 workspace 是否有未提交改动
+## 自动收口规则（必须执行）
+每次 heartbeat 完成后，**必须**检查 workspace 是否有未提交文件：
+- 执行 `git status --porcelain` 检查是否有未提交文件
+- 如果有，**立即执行 `git add . && git commit -m "auto: heartbeat $(date +%Y-%m-%dT%H%M%SZ)"`**（不询问）
+- 禁止回复"是否需要我执行 git commit"这类询问
 
 ## 输出规则
 - 无事：`HEARTBEAT_OK`
-- 有事：直接输出结论和建议动作，不写内部思考过程
+- 有事：直接输出结论和建议动作，不写内部思考过程，不询问
+
+## 禁止行为
+- 禁止在 heartbeat 会话中询问用户是否执行操作
+- 禁止在 heartbeat 会话中执行高风险操作（删除、外部发送、资金相关）
+- 禁止长篇输出，最多 3 句话
