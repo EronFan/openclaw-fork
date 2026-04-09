@@ -605,6 +605,24 @@ P523 | [#63124](https://github.com/openclaw/openclaw/issues/63124) **S** | exec 
 P524 | [#63128](https://github.com/openclaw/openclaw/issues/63128) **S** | gateway restart on macOS fails to re-bootstrap LaunchAgent | 🔍 新发现（方向1 20:37 CST） | bug
 P525 | [#63114](https://github.com/openclaw/openclaw/issues/63114) **S** | Slack contract-api.js TypeError: Cannot read properties of undefined | 🔍 新发现（方向1 20:37 CST） | 无标签0评论
 
+## xixi 第68轮扫描（2026-04-09 20:18 CST / 12:18 UTC）
+**新发现**：
+- **#63727 S** — `qa/scenarios/` scaffold 缺失 → CLI startup 完全崩溃 (2026.4.9 regression)；try/catch fallback 修复已有；**最高优先 aoao 接单（XS，runId fa59fba2）**
+- **#63729 S** — echoTranscript Telegram delivery 静默失败；根因：Telegram outbound 结构嵌套；**次高 aoao 接单（S，runId 0f6c961f）**
+- **#63730 S+Security** — Crontab trigger 未清理 → 升级后未授权浏览器自动化；**安全+regression，建议 aoao 接单（S）**
+- **#63722 S** — image tool 忽略 provider `defaultModels.image`
+- **#63719 S** — npm global update 后 bin symlink 残留导致 `openclaw` command 消失
+- **#63707 S** — exec allowlist 在长 session 中静默失败（race condition）
+- **#63706 S** — Discord voice-note 处理不一致 (regression 2026.4.9)
+- **#63704 S** — Control UI Config 页面 Form→Raw mode 切换崩溃 (SyntaxError)
+- **#63701 M** — Gateway cron schema 编译错误导致 stack overflow
+- **#63699 M** — exec stderr 在 agent run 结束后触发 unhandled rejection crash
+**刚合并 PR（勿重复接单）**：PR #63480/#62783/#62506/#62493
+**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 404）、插件（weixin 代码不可见）
+**建议 aoao 接单顺序**：#63727 → #63729 → #63730
+
+**aoao 接单顺序建议**：#63727 → #63729 → #63730
+
 ## xixi 第67轮扫描（2026-04-09 18:01 CST / 10:01 UTC）
 **新发现**：
 - **#63677 S** — WhatsApp DM voice notes bypass STT pipeline（regression）；根因极清晰（2026.3.31 commit 影响 WhatsApp DM STT，#61008 修复 Telegram DM 但遗漏 WhatsApp）；fix 路径参考 #61008 PR 加 preflight transcriber；**最高优先 aoao 接单候选**
@@ -629,6 +647,16 @@ P540 | [#63661](https://github.com/openclaw/openclaw/issues/63661) **S** | Conte
 P541 | [#63664](https://github.com/openclaw/openclaw/issues/63664) **S** | Session flush 完全阻止 write tool | 🔍 新发现（方向1 18:01 CST） | bug:behavior；flush 期间 write tool 只能写 memory 文件，非 memory 文件被锁定；**建议 aoao 接单（S 级）**
 P542 | [#63645](https://github.com/openclaw/openclaw/issues/63645) **S** | NO RESPONSE while many requests（regression，minimax provider） | 🔍 新发现（方向1 18:01 CST） | regression；heartbeat everywhere，用户发消息无响应；可能与并发/请求去重逻辑有关
 P543 | [#63673](https://github.com/openclaw/openclaw/issues/63673) **S** | Keychat Bridge 2026.4.8 inbound 消息接收失败 | 🔍 新发现（方向1 18:01 CST） | regression；代码不可见；**建议关注**
+P544 | [#63727](https://github.com/openclaw/openclaw/issues/63727) **XS** | `qa/scenarios/` scaffold 缺失 → CLI startup 完全崩溃 (2026.4.9 regression) | 🔍 新发现（方向1 20:18 CST） | **最高优先 aoao 接单（runId fa59fba2）**；npm 包缺 `qa/scenarios/index.md`，module top-level 直接 throw；影响所有 2026.4.9 用户；修复：try/catch 兜住 fallback 数组
+P545 | [#63729](https://github.com/openclaw/openclaw/issues/63729) **S** | echoTranscript Telegram delivery 静默失败 | 🔍 新发现（方向1 20:18 CST） | **次高 aoao 接单（runId 0f6c961f）**；`createPluginHandler` 检查 `outbound.sendText` 但 Telegram 用 `outbound.attachedResults.sendText`（嵌套结构）；fix：同时支持两种结构
+P546 | [#63730](https://github.com/openclaw/openclaw/issues/63730) **S+Security** | Crontab trigger 未清理 → 升级后未授权浏览器自动化 | 🔍 新发现（方向1 20:18 CST） | security+regression；task stop 时 crontab 未删除，`.pending_fetch` 文件触发旧任务；fix：stop 时清理 crontab
+P547 | [#63722](https://github.com/openclaw/openclaw/issues/63722) **S** | image tool 忽略 provider `defaultModels.image`，MiniMax-VL-01 不生效 | 🔍 新发现（方向1 20:18 CST） | bug；image tool 不读 provider defaultModels 配置
+P548 | [#63719](https://github.com/openclaw/openclaw/issues/63719) **S** | npm global update 后 bin symlink 残留导致 `openclaw` command 消失 | 🔍 新发现（方向1 20:18 CST） | bug；npm global update 残留 stale symlink
+P549 | [#63707](https://github.com/openclaw/openclaw/issues/63707) **S** | exec allowlist 在长 session 中静默失败（race condition） | 🔍 新发现（方向1 20:18 CST） | bug:behavior；长 session 中 allowlist 检查竞态条件
+P550 | [#63706](https://github.com/openclaw/openclaw/issues/63706) **S** | Discord voice-note 处理不一致 (regression 2026.4.9) | 🔍 新发现（方向1 20:18 CST） | regression；2026.4.9 更新后 Discord 语音笔记处理退化
+P551 | [#63704](https://github.com/openclaw/openclaw/issues/63704) **S** | Control UI Config 页面 Form→Raw mode 切换崩溃 (SyntaxError) | 🔍 新发现（方向1 20:18 CST） | bug；Form→Raw 模式切换时 SyntaxError
+P552 | [#63701](https://github.com/openclaw/openclaw/issues/63701) **M** | Gateway cron schema 编译错误导致 stack overflow | 🔍 新发现（方向1 20:18 CST） | bug；schema 编译递归导致栈溢出
+P553 | [#63699](https://github.com/openclaw/openclaw/issues/63699) **M** | exec stderr 在 agent run 结束后触发 unhandled rejection crash | 🔍 新发现（方向1 20:18 CST） | bug；agent run 结束后 stderr 触发 unhandled rejection
 P544 | [#63265](https://github.com/openclaw/openclaw/issues/63265) **S** | `openclaw doctor --fix` 在 `/root/.openclaw/` 创建最小配置，静默覆盖真实配置，破坏 elevated permissions | 🔍 新发现（方向1 01:43 CST） | bug+security；`--fix` 自动写入默认 config 时未检查是否已有配置；无已有 PR；**建议 aoao 接单（S 级）**
 P527 | [#63269](https://github.com/openclaw/openclaw/issues/63269) **S** | Mattermost: group/public channel messages not received via WebSocket（v2026.4.8 regression） | 🔍 新发现（方向1 01:43 CST） | bug+regression；2026.4.8 后 Mattermost WebSocket 接收失效；影响所有 Mattermost 群组/公共频道用户；0评论；**建议 aoao 接单（S 级）**
 P528 | [#63261](https://github.com/openclaw/openclaw/issues/63261) **S** | Discord owner auth ignores `channels.discord.allowFrom`，隐藏 owner-only 工具 | 🔍 新发现（方向1 01:43 CST） | bug+bug:behavior；owner 鉴权绕过了 allowFrom 白名单，安全+权限问题；**建议 aoao 接单（S 级）**
@@ -923,6 +951,12 @@ P539 | [#63214](https://github.com/openclaw/openclaw/issues/63214) **XS** | memo
 - **xixi 第67轮新发现（18:01 CST）**：6个新 S 级候选；最高优先 #63677（WhatsApp DM STT bypass，根因极清晰，fix 参考 #61008 PR）；其他 #63674/#63664/#63661/#63645/#63673
 - **已更新**：OPENCLAW-PROJECT.md 新增 P538-P543（6个新候选）+ 第67轮扫描记录；last-processed-report.md 已同步
 - **已派出**：aoao sessions_spawn 接单 #63677（runId da0cb03b，最高优先 S）
+
+### 2026-04-09 13:10（gh feedback 检查 + xixi 第68轮全新发现）
+- **gh 反馈**：#54952 0条 / #54964 0条 / #55008（skills regression 已修复 + EronFan 确认已知）/ #55013（Greptile 5/5 safe-to-merge + EronFan 确认 groupPolicy 修复已知）— 无新重要反馈
+- **xixi 第68轮全新发现（20:18 CST / 12:18 UTC）**：14+个新候选；最高优先 **#63727**（XS，CLI startup 崩溃，try/catch fallback 已有）；次高 **#63729**（S，echoTranscript Telegram delivery 静默失败）+ **#63730**（S+Security，Crontab trigger 未清理）
+- **已派出**：aoao sessions_spawn 接单 #63727（runId fa59fba2，XS 最高优先）+ #63729（runId 0f6c961f，S 级）
+- **已更新**：OPENCLAW-PROJECT.md 新增 P544-P553（第68轮新候选）+ 第68轮扫描记录；last-processed-report.md 已同步
 
 ### 2026-04-08 00:31（gh feedback 检查 + xixi 第58轮新发现）
 - **gh 反馈**：#54952 0条 / #54964 0条 / #55008 / #55013 均无新动态（已知）
@@ -4781,3 +4815,9 @@ P555 | [#63699](https://github.com/openclaw/openclaw/issues/63699) **M** | exec 
 - **xixi 第68轮新发现（20:18 CST）**：10个新候选；最高 #63727（qa/scenarios scaffold 缺失导致 CLI 崩溃，XS 最干净）+ #63729（echoTranscript Telegram）+ #63730（Security crontab）
 - **已更新**：OPENCLAW-PROJECT.md 新增 P546-P555（10个新候选）+ 第68轮扫描记录；last-processed-report.md 已更新
 - **已派出**：aoao sessions_spawn 接单 #63727（runId pending，最高优先 XS，10-20分钟可PR）
+
+### 2026-04-09 21:09 CST（#63727 修复完成）
+- **aoao subagent 成功**：issue #63727（`qa/scenarios/` scaffold 缺失导致 CLI startup 崩溃）修复完成
+- **PR**：https://github.com/openclaw/openclaw/pull/63744
+- **改动**：`extensions/qa-lab/src/discovery-eval.ts`（1文件，+14/-1）
+- **修复**：用 try/catch 兜住 `readRequiredDiscoveryRefs()` 调用，catch 回退到硬编码 fallback 数组

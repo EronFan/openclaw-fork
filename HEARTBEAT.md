@@ -8,12 +8,13 @@
 
 1. 看 `memory/heartbeat-state.json`
 2. **【必须】检查 subagent 失败状态**（见下方规则）
-3. 优先检查距离上次最久、且最有价值的项目：
+3. **【必须】检查 xixi 扫描状态**（见下方规则）
+4. 优先检查距离上次最久、且最有价值的项目：
    - calendar
    - email
    - mentions
    - weather
-4. 如果没有可检查项、或不适合打扰，就直接 `HEARTBEAT_OK`
+5. 如果没有可检查项、或不适合打扰，就直接 `HEARTBEAT_OK`
 
 ## 主动提醒条件
 只在下面情况主动发消息：
@@ -37,6 +38,25 @@
 5. 正常结束（done）的 subagent 也要记录到 `subagentSuccesses[]`
 
 **硬规则**：subagent 失败 = 必须立即处理，不等、不拖、不忽略。
+
+## Xixi 扫描监控规则（必须执行）
+
+**每次 heartbeat 必须检查 xixi 扫描工作是否正常：**
+
+1. 读取 `xixi-reports/latest-scan-report.md` 的时间戳（文件头部或第一行时间）
+2. 读取 `memory/OPENCLAW-PROJECT.md` 中最近一轮 xixi 扫描记录的时间
+3. 检查 xixi 扫描是否超过以下阈值：
+   - 超过 **3小时** 无新扫描报告 → 立即通知范总（xixi 可能掉线）
+   - 超过 **6小时** 无新扫描 → 立即手动触发 xixi 重新扫描
+4. 检查 `OPENCLAW-PROJECT.md` 中是否有未处理的 xixi 建议（建议 aoao 接单的项）
+   - 有未处理的高优先级建议 → 立即派出 aoao 接单
+   - 有未处理的低优先级建议 → 记录在 heartbeat-state.json 待处理队列
+5. 如果 xixi 超过 **12小时** 无任何扫描活动：派 xixi 立即执行一轮扫描
+
+**与 subagent 失败监控的关系**：
+- xixi sessions_spawn 任务走 subagent 失败规则
+- xixi cron 任务走本规则（检查扫描报告文件时间戳）
+- 两者独立，都必须检查
 
 ## 不打扰条件
 出现任一情况，优先 `HEARTBEAT_OK`：
