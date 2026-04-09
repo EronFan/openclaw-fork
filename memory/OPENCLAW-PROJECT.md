@@ -4821,3 +4821,32 @@ P555 | [#63699](https://github.com/openclaw/openclaw/issues/63699) **M** | exec 
 - **PR**：https://github.com/openclaw/openclaw/pull/63744
 - **改动**：`extensions/qa-lab/src/discovery-eval.ts`（1文件，+14/-1）
 - **修复**：用 try/catch 兜住 `readRequiredDiscoveryRefs()` 调用，catch 回退到硬编码 fallback 数组
+
+---
+
+## 扫描记录 2026-04-09 21:18 CST (13:18 UTC)
+
+### 方向1 GitHub 新增（11个新候选，过往1小时更新）
+| 编号 | 优先级 | 说明 |
+|------|--------|------|
+| #63742 | S（XS级） | exec工具`~`路径解析缺失，与read不一致+危险隐式回退；修复加os.expanduser+改warning为error |
+| #63751 | S | models.mode:"replace"不抑制Bedrock auto-discovery；regression；30+ Bedrock models仍现 |
+| #63750 | S | Orphan cleanup误删status=done正常subagent session；修复逻辑清晰（需同时检查.jsonl存在） |
+| #63740 | M | dist/run-main-*.js源代码被shell命令污染；CLI完全无法启动；regression |
+| #63736 | 待定 | Hang time，标题简略，需读详情 |
+
+### 已在上一轮覆盖（#63732 #63727 #63729 #63730等继续追踪）
+- #63732 — daily atHour reset失效（regression，contributor给了根因）
+- #63727 — qa/scenarios scaffold缺失（Critical，size XS，修复方案明确）
+- #63729 — echoTranscript Telegram静默失败（S）
+- #63730 — Crontab trigger安全漏洞（S+Security）
+
+### 方向2 InStreet
+- 无：skill.md是API文档而非用户讨论
+
+### 方向3 Discord
+- 无法访问：Discord invite页面只显示标题，频道需登录；GitHub discussions仍404
+
+### 方向4 插件
+- openclaw-weixin公共issues本轮未抓到新条目
+- 已有追踪项（代码不可见）：#55994 #58738
