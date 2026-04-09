@@ -1,54 +1,93 @@
-# 4方向扫描报告 2026-04-08 16:42 UTC / 2026-04-09 00:42 CST
+# 4方向扫描报告 2026-04-09 10:39 CST (02:39 UTC)
 
 ## GitHub
-发现了约15个近2小时内更新的新候选，其中最重要的是：
 
-**最高优先级候选（建议 aoao 接单）：**
+**发现了约25个在过去2小时内更新的 open issues**（不含已追踪项），重点候选：
 
-- **#63250 S** — memory-lancedb config validation fails even when plugin is disabled（v2026.4.8）
-  - 清晰 bug：插件 disabled 时 schema 仍被全量验证，用户无法绕过
-  - 根因：`plugins.entries.memory-lancedb.config.embedding` 在 enabled:false 时仍被检查
-  - 修复：validation 前加 `if (pluginEnabled === false) return` guard，或 schema validator 跳过 disabled 插件
-  - 无已有 PR；XS/S 级；**建议 aoao 优先接单（5-15分钟可PR）**
+### 🔴 最高优先级
 
-- **#63240 S** — music_generate Google provider produces double `/v1beta` in URL（404 when baseUrl configured）
-  - 清晰 URL 拼接 bug：`baseUrl` 含 `/openai` 时 resolveGoogleBaseUrl() 未 strip suffix
-  - 1行 fix：`urlJoin(baseUrl, '/v1beta/images/generations')` 而非手动拼接
-  - 无已有 PR；S 级；**次高优先 aoao 接单**
+**#63496 — WhatsApp creds.json corruption every ~30 minutes (non-atomic write)** ⭐NEW
+- 严重度高：49次损坏/24小时，每次触发 WhatsApp 重连 → 消息延迟/丢失
+- 根因明确：`fs.writeFileSync(credsPath, ...)` 非原子写入 → 文件损坏
+- 修复方案明确：write to tmp → rename()
+- 可修性：**S** — 代码位置明确（auth-store/Baileys session persistence），修复模式标准
+- 建议：aoao 接单
 
-- **#63251 S/M** — Image generation blocked in TUN/fake-ip proxy（SSRF check too strict）
-  - 功能缺失：TUN/fake-ip 模式（198.18.0.0/15）用户无法使用图片生成
-  - Telegram channel 已有 `allowPrivateIP` 选项可参照；image generation 无对应配置
-  - 功能+usability gap；S/M 级
+**#63489 — [Bug][regression] Cron isolated session first LLM call times out in 2026.4.2** ⭐NEW
+- regression 标签；0 comments
+- 影响：cron 触发的 isolated session 第一次 LLM 调用必然超时
+- 可修性：**M** — 需确认是 isolated session 特有的 timeout 配置问题还是有其他根因
 
-**次高优先级候选（无需立即行动，记录追踪）：**
-- **#63249 S** — cron list / message / channels list 99% CPU busy-wait（v2026.4.8）：独立于 bonjour 的另一个 busy-wait regression；gateway health 正常但 CLI hang；新 issue 无标签
-- **#63248 S** — Bonjour/mDNS 99% CPU in headless Docker：Docker 容器退出 regression；严重
-- **#63242 S** — CLI Performance Regression 20-40s hang since v4.5+：regression 标签，多人确认；影响全用户 CLI 体验
-- **#63239 S** — Slack TypeError regression（v2026.4.8）：contract-api.js 加载失败 regression
-- **#63237 S** — Telegram 4096 case traps exec approvals：特定 Telegram 场景 bug
-- **#63243 S** — gog calendar integration misses manually created Google Calendar events：行为 bug
+**#63493 — message tool silently drops local file paths and external URLs in media field** ⭐NEW
+- PR #63497（fix agents: support media://inbound URIs）已开，但 reporter 描述的是**本地文件路径**场景：`/Users/rootzeye/.openclaw/media/...`
+- 两者可能不完全重叠（URL/本地路径 vs media://inbound URI）
+- 严重度：功能完全失效，WhatsApp 媒体完全不发
+- 可修性：**S** — 需确认 PR #63497 是否覆盖本地路径，不覆盖则可接
 
-**已知已有 PR（勿重复接单）：**
-- #63214 → PR #63245/#63252 已合并（memory-core dreaming idempotencyKey）
+### 🟡 中等优先级
 
-**已有追踪中但本次确认更清晰的项：**
-- #63229（Gateway falsely marks healthy local vLLM endpoints as timed out）— 在第63轮已录入 P515
-- #63223（Gateway zombie after CA rotation）— 在第63轮已录入
-- #63221（sessions_spawn modelApplied:true 但跑 stale model）— 在第63轮已录入
-- #63231（@buape/carbon module missing）— 在第63轮已录入
+**#63214 — memory-core: dreaming narrative generation fails with 'must have required property idempotencyKey' in 2026.4.8** ⭐NEW
+- 0 labels；v2026.4.8 regression
+- 根因清晰：dreaming light/REM 阶段 narrative generation 调用 agent params 缺少 `idempotencyKey`
+- 症状明确：`invalid agent params: must have required property 'idempotencyKey'`
+- 可修性：**XS/S** — 添加缺失字段即可；memory-core 代码应可读
+
+**#63463 — MLX routing fails: model_not_found + fallback despite direct MLX API success** ⭐NEW
+- 0 labels, 0 comments
+- 根因线索：`provider/model normalization mismatch in MLX adapter path (mlx/ prefix)`
+- 直接 curl MLX API 成功，排除 provider 端问题
+- 可修性：**M** — 需定位 MLX lane-specific resolver 代码
+
+**#63349 — v2026.4.8: Telegram voice notes reach agent as raw .ogg, no transcript echo** ⭐NEW
+- PR #63472（fix media: use default STT model）已合并
+- 但 reporter 在 PR 合并后仍报问题未解决
+- 需确认是否 #63472 完全覆盖
+
+**#63486 — Matrix interaction is unresponsive** ⭐NEW
+- 0 labels, 0 comments
+- 无详情；需读取更多
+
+### ⚠️ 已有进展 / 勿重复接
+
+- **#63475 (Feishu multi-account probe timeout)** → PR #63481 已合并 ✅
+- **#63450 (Gateway channel startup WS block ~80s)** → PR #63480 已合并 ✅
+- **#63366 (WhatsApp dmPolicy allowlist 再次失效)** → PR #63466 已合 ✅
+- **#62967 (gpt-5-mini reasoning_effort 'none')** → ⚠️ 已在文件中（#54844 相关？）
+- **#61421 (Docs mention Dreaming, but not exposed in 2026.4.2)** → 已在追踪
+
+---
 
 ## InStreet
-无 — `instreet.coze.site/skill.md` 本次仍为平台 Skill/API 文档（注册流程、心跳流程、小组/文学社/炒股竞技场 API 规范），不是 OpenClaw 用户实战讨论区；未见可转 GitHub issue 的新用户问题。
+
+**无**：`instreet.coze.site/skill.md` 本轮仍是 InStreet Agent API 文档（注册/心跳/Skill 规范），非 OpenClaw 用户实战讨论区。
+
+---
 
 ## Discord
-无 — Discord 公开 invite 页面仅能抓到服务器标题，频道内容不可抓取；GitHub Discussions 返回 404（已关闭）；本轮无新增外部讨论线索。
+
+**无法访问**：Discord invite 页面仅返回服务器标题，无频道内容；GitHub Discussions 返回 404（已关闭）；本轮无替代数据源。
+
+---
 
 ## 插件
-无新公开 plugin/weixin issue — `openclaw/openclaw-weixin` 仓库无公开可访问 issue（gh exit code 1）；Tencent/openclaw-weixin 需单独访问，未发现近2小时新增；已有追踪项（#55994/#58738）继续以"代码不可见"状态跟踪。
+
+**无新发现**：`openclaw/openclaw-weixin` 无公开 repo；主仓库 issues 已通过方向1覆盖；本轮未见新 plugin repo candidates。
+
+---
 
 ## 结论
-最高优先级是 **#63250**（memory-lancedb disabled 时仍 validate，XS 可修），次高是 **#63240**（music_generate double /v1beta URL，S 级 1行 fix）。
-v2026.4.8 发布后集中爆发了多个 regression（#63249/#63248/#63242/#63239），建议 aoao 在修完 XS 后集中扫一轮 regression。
 
-**建议 aoao 接单顺序：#63250 → #63240**
+**最高优先级是 #63496**（WhatsApp creds.json 非原子写入导致每30分钟损坏），原因：
+1. 极高频复现（49次/天），每次导致消息延迟/丢失
+2. 根因和修复方案都明确（write→tmp→rename）
+3. 代码位置清晰（S级别）
+4. 0 comments，刚发布，竞争者少
+
+**次高：#63214**（memory-core dreaming idempotencyKey 缺失）— v2026.4.8 regression，症状清晰，XS/S 难度
+
+**第三：#63493**（message tool 静默丢弃 media 路径）— 需确认 PR #63497 覆盖范围，不覆盖则可接
+
+**建议 aoao 优先接：**
+1. **#63496**（S，WhatsApp 非原子写入）
+2. **#63214**（XS/S，memory-core idempotencyKey）
+3. **#63493**（S，确认 PR 覆盖范围后决定）

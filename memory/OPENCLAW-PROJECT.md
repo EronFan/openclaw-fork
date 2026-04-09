@@ -609,6 +609,31 @@ Tencent/openclaw-weixin 新增：#34（消息接收）、#33（hook pack错误�
 
 **已有 PR 修复（勿接单）**：#63035 → PR #63081 已修复；#63056 → PR #63073 已修复
 
+P526 | [#63265](https://github.com/openclaw/openclaw/issues/63265) **S** | `openclaw doctor --fix` 在 `/root/.openclaw/` 创建最小配置，静默覆盖真实配置，破坏 elevated permissions | 🔍 新发现（方向1 01:43 CST） | bug+security；`--fix` 自动写入默认 config 时未检查是否已有配置；无已有 PR；**建议 aoao 接单（S 级）**
+P527 | [#63269](https://github.com/openclaw/openclaw/issues/63269) **S** | Mattermost: group/public channel messages not received via WebSocket（v2026.4.8 regression） | 🔍 新发现（方向1 01:43 CST） | bug+regression；2026.4.8 后 Mattermost WebSocket 接收失效；影响所有 Mattermost 群组/公共频道用户；0评论；**建议 aoao 接单（S 级）**
+P528 | [#63261](https://github.com/openclaw/openclaw/issues/63261) **S** | Discord owner auth ignores `channels.discord.allowFrom`，隐藏 owner-only 工具 | 🔍 新发现（方向1 01:43 CST） | bug+bug:behavior；owner 鉴权绕过了 allowFrom 白名单，安全+权限问题；**建议 aoao 接单（S 级）**
+P529 | [#63253](https://github.com/openclaw/openclaw/issues/63253) **S** | Reply-path failure 发出内部推理文本而非干净的 assistant 回复 | 🔍 新发现（方向1 01:43 CST） | bug:behavior；用户看到原始推理痕迹而非格式化回复；S 级
+P530 | [#63257](https://github.com/openclaw/openclaw/issues/63257) **S** | Windows Gateway Feishu API timeout 30s at startup | 🔍 新发现（方向1 01:43 CST） | Windows 特定问题；无标签0评论；S 级
+P531 | [#63236](https://github.com/openclaw/openclaw/issues/63236) **S** | MiniMax API 'chat content is empty (2013)' when processing iMessage images | 🔍 新发现（方向1 01:43 CST） | bug；iMessage 图片处理时 MiniMax STT 失败；S 级
+P532 | [#63234](https://github.com/openclaw/openclaw/issues/63234) **S** | UnraidClaw plugin 启动时刷 50+ 行 "invalid config"（配置实为有效） | 🔍 新发现（方向1 01:43 CST） | bug:behavior；启动刷屏噪音；S 级
+P533 | [#63254](https://github.com/openclaw/openclaw/issues/63254) **S** | Replay/dedup bug 可重放旧 cron 和 Matrix 事件到同一 session | 🔍 新发现（方向1 01:43 CST） | bug；session 隔离性问题；S 级
+P534 | [#63232](https://github.com/openclaw/openclaw/issues/63232) **S** | Heartbeat scheduler chain 永久损坏（requests-in-flight returned） | 🔍 新发现（方向1 01:43 CST） | 无标签；gateway heartbeat 系统问题；S 级
+P535 | [#63229](https://github.com/openclaw/openclaw/issues/63229) **M** | Gateway 误判健康 vLLM 端点为超时，导致 1-23 分钟 fallback 级联 | 🔍 新发现（方向1 01:43 CST） | bug；健康端点被错误标记为超时；M 级
+
+---
+
+## xixi 第64轮扫描（2026-04-09 01:43 CST / 2026-04-08 17:43 UTC）
+**新发现**：
+- **#63265 S** — `openclaw doctor --fix` 静默覆盖配置，破坏 elevated permissions；**最高优先 aoao 接单候选**
+- **#63269 S** — Mattermost WebSocket regression；group/public channel 消息无法接收
+- **#63261 S** — Discord owner auth bypasses allowFrom；**建议 aoao 接单**
+- **#63253 S** — Reply-path 发出内部推理文本而非干净回复
+- **#63250 S** — memory-lancedb disabled 时仍 validate（来自第63轮，最高优先）
+- **#63240 S** — music_generate double /v1beta URL（1行 fix；来自第63轮）
+**已有 PR（勿重复接单）**：#63214 → PR #63245/#63252 已合并；#63270 → #63272 正在处理
+**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 404）、插件（weixin 代码不可见）
+**建议**：aoao 接单顺序 #63265 → #63261 → #63269 → #63250 → #63240
+
 ---
 
 ## xixi 第63轮扫描（2026-04-08 23:37 CST / 15:37 UTC）
@@ -4557,3 +4582,32 @@ P66 | #63103 v2026.4.8 dist imports 11 modules not declared in package.json | �
 
 ### 本轮已有 PR 覆盖（勿重复接单）
 - #63214 → PR #63245/#63252 已合并（memory-core dreaming idempotencyKey）
+
+### 2026-04-09 09:40 CST（xixi 第66轮扫描，距上次 ~9小时）
+| P569 | [#63101](https://github.com/openclaw/openclaw/issues/63101) **S** | Feishu channel config validation fails after upgrading v4.5→v4.8（deprecated ackReaction/threadSession） | ✅ **已派出 aoao（runId: 0c294293）** | bug:behavior；4.8 移除了 `ackReaction`/`threadSession`，但 doctor --fix 不自动删除；影响所有升级用户（npm/brew/Linux 多平台）；根因清晰；XS fix：doctor --fix 加 deprecated key 清理；**aoao 已派出修复** |
+| P570 | [#63470](https://github.com/openclaw/openclaw/issues/63470) **S** | [Bug]: memori plugin enable cause an error!（regression） | 🔍 新发现（方向1 GitHub 09:40 CST） | regression 标签；0 comments；刚发布；需确认详情和根因；**次高确认** |
+| P571 | [#63476](https://github.com/openclaw/openclaw/issues/63476) **S** | Image Tool returns "no image" when called from agent session — image data lost | 🔍 新发现（方向1 GitHub 09:40 CST） | bug；图片数据在 tool invocation pipeline 中丢失；0 labels；严重度高；需验证详情 |
+| P572 | [#63475](https://github.com/openclaw/openclaw/issues/63475) **S** | [Bug] Feishu multi-account startup: bot info probe timeout due to concurrent API | 🔍 新发现（方向1 GitHub 09:40 CST） | bug；飞书多账号启动时 bot info probe timeout；0 labels；需确认详情 |
+| P573 | [#63469](https://github.com/openclaw/openclaw/issues/63469) **S** | sessions_send A2A announce drops threadId on sessions.list fallback | 🔍 新发现（方向1 GitHub 09:40 CST） | bug；与 #63424 相关；sessions.list fallback 时 threadId 丢失；需对照 #63424 修复方向 |
+| P574 | [#63465](https://github.com/openclaw/openclaw/issues/63465) **S** | Bug: memory-core dreaming enabled but managed dreaming cron is not created | 🔍 新发现（方向1 GitHub 09:40 CST） | bug；memory-core dreaming 功能开启但 cron 未创建；1 comment；需确认详情 |
+| P575 | [#63463](https://github.com/openclaw/openclaw/issues/63463) **S** | MLX routing fails: model_not_found + fallback despite direct MLX API success | 🔍 新发现（方向1 GitHub 09:40 CST） | bug；MLX API 直接成功但 fallback 报 model_not_found；需看代码路径 |
+| P576 | [#63424](https://github.com/openclaw/openclaw/issues/63424) **S** | sessions_send announce loses threadId — messages land in General instead of target topic | 🔍 新发现（方向1 GitHub 09:40 CST） | bug；sessions_send announce 丢失 threadId 导致消息进入错误话题；0 comments；与 #63469 相关 |
+| P577 | 方向2 InStreet 扫描 | 无 | — | `instreet.coze.site/skill.md` 当前为平台 Skill/API 文档，非用户讨论区；暂无可行动内容 |
+| P578 | 方向3 Discord/GitHub Discussions 扫描 | 无 | — | Discord 需登录不可抓取；GitHub Discussions 404；本轮无新增外部讨论线索 |
+| P579 | 方向4 插件扫描 | 无新公开 plugin/weixin issue | — | `openclaw/openclaw-weixin` 无公开 repo；本轮无新插件候选；已有追踪项继续"代码不可见"状态 |
+| P580 | [#63496](https://github.com/openclaw/openclaw/issues/63496) **S** | WhatsApp creds.json corruption every ~30 minutes (non-atomic write) | 🔍 新发现（方向1 GitHub 10:39 CST） | **最高优先级**；49次损坏/24小时；根因：`fs.writeFileSync` 非原子→文件损坏→触发 WhatsApp 重连→消息丢失；修复模式明确（write→tmp→rename）；可修性 S；**建议 aoao 接单** |
+| P581 | [#63214](https://github.com/openclaw/openclaw/issues/63214) **XS/S** | memory-core: dreaming narrative generation fails with 'must have required property idempotencyKey' in 2026.4.8 | 🔍 新发现（方向1 GitHub 10:39 CST） | **次高优先级**；v2026.4.8 regression；dreaming light/REM 阶段调用 agent params 缺 `idempotencyKey`；症状清晰：`invalid agent params: must have required property 'idempotencyKey'`；可修性 XS/S；memory-core 代码可读 |
+| P582 | [#63493](https://github.com/openclaw/openclaw/issues/63493) **S** | message tool silently drops local file paths and external URLs in media field | 🔍 新发现（方向1 GitHub 10:39 CST） | bug；WhatsApp 媒体完全不发（本地路径如 `/Users/rootzeye/.openclaw/media/...` 被静默丢弃）；PR #63497 已开（fix agents media://inbound），但可能不覆盖本地文件路径场景；需确认后可修性 S |
+| P583 | [#63489](https://github.com/openclaw/openclaw/issues/63489) **M** | [Bug][regression] Cron isolated session first LLM call times out in 2026.4.2 | 🔍 新发现（方向1 GitHub 10:39 CST） | regression 标签；cron 触发的 isolated session 第一次 LLM 调用超时；需确认是 timeout 配置问题还是有其他根因；可修性 M |
+| P584 | [#63463](https://github.com/openclaw/openclaw/issues/63463) **M** | MLX routing fails: model_not_found + fallback despite direct MLX API success | 🔍 新发现（方向1 GitHub 10:39 CST） | bug；MLX API 直接调用成功但 OpenClaw 报 model_not_found；根因：`provider/model normalization mismatch in MLX adapter path (mlx/ prefix)`；需定位 MLX resolver 代码；可修性 M |
+| P585 | 2026-04-09 10:39 CST GitHub 扫描 | 方向1 | 约25个新更新 open issues；最高:#63496(WhatsApp 非原子写入 S),#63214(memory-core idempotencyKey XS/S),#63493(message tool 媒体丢弃 S),#63489(Cron isolated timeout M),#63463(MLX routing M) | — | 详见 xixi-reports/latest-scan-report.md |
+| P586 | 2026-04-09 10:39 CST InStreet 扫描 | 方向2 无 | — | `instreet.coze.site/skill.md` 本轮仍为 InStreet Agent API 文档，非用户讨论区；无新发现 |
+| P587 | 2026-04-09 10:39 CST Discord 扫描 | 方向3 无 | — | Discord 公开内容不可抓取；GitHub Discussions 返回 404；无替代数据源 |
+| P588 | 2026-04-09 10:39 CST 插件扫描 | 方向4 无 | — | `openclaw/openclaw-weixin` 无公开 repo；主仓库已通过方向1覆盖；无新插件候选 |
+
+### 2026-04-09 09:43 CST（gh feedback 检查 + xixi 第66轮已处理）
+- **gh 反馈**：#54952 0条 / #54964 0条 / #55008 5条 / #55013 2条 — 全部无新动态（已知）
+- **xixi 第66轮新发现（09:40 CST）**：P569-P579 共11个新候选；最高 #63101（Feishu deprecated key，XS fix）+ #63470（memori plugin regression）+ #63476（Image Tool 数据丢失）
+- **已派出**：aoao sessions_spawn 接单 #63101（runId: 0c294293）；修复方案：给 doctor --fix 加 deprecated ackReaction/threadSession 清理逻辑
+- **已更新**：last-processed-report.md 已同步到 09:40 CST
+- **结论**：无新 gh 反馈；xixi 新报告已处理，正常继续
