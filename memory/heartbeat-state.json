@@ -1,9 +1,35 @@
 {
-  "updatedAt": "2026-04-08T16:44:00Z",
+  "updatedAt": "2026-04-09T13:07:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": null,
-  "note": "heartbeat-state.json 更新逻辑已修复：HEARTBEAT.md 新增自动 git commit 规则，移除所有询问确认步骤，确保 heartbeat 干完活后正确持久化状态。"
+  "note": "heartbeat-state.json 更新逻辑已修复：HEARTBEAT.md 新增自动 git commit 规则，移除所有询问确认步骤，确保 heartbeat 干完活后正确持久化状态。",
+  "subagentFailures": [
+    {
+      "issue": "#63265",
+      "runId": "9bec1ac5-babe-411f-ad1e-f423608de8b7",
+      "failedAt": "2026-04-09T03:00:00Z",
+      "reason": "静默失败，未知原因",
+      "retryCount": 1,
+      "status": "replaced_by_new_run"
+    },
+    {
+      "issue": "#63269",
+      "runId": "ae270f0c-10af-43ca-bbed-998bb8edae35",
+      "failedAt": "2026-04-09T03:00:00Z",
+      "reason": "静默失败，未知原因",
+      "retryCount": 1,
+      "status": "replaced_by_new_run"
+    }
+  ],
+  "subagentSuccesses": [
+    {
+      "issue": "#63261",
+      "runId": "669c9722-2b2f-4401-b4c2-762190fdb6a0",
+      "mergedAt": "2026-04-09T03:10:00Z",
+      "pr": "https://github.com/openclaw/openclaw/pull/63515"
+    }
+  ]
 }
