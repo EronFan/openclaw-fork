@@ -1,31 +1,29 @@
-# Runtime state
-jobs.json
 
-# clawhub lock (runtime artifact)
-.clawhub/lock.json
-
-# Python
-__pycache__/
-*.py[cod]
-*.pyc
-
-# Logs & temps
-*.log
-*.tmp
-*.cache
 *.bak
-
-# OS
+*.cache
+.clawhub/lock.json
+# clawhub lock (runtime artifact)
 .DS_Store
-Thumbs.db
-
+*.gif
+jobs.json
+*.jpeg
+*.jpg
+.learnings/
+*.log
+# Logs & temps
+# Media / large artifacts (workspace may generate)
+*.mp4
 # Node
 node_modules/
-
-# Media / large artifacts (workspace may generate)
-*.png
-*.jpg
-*.jpeg
-*.mp4
+openclaw_temp/
+# OS
 *.pdf
-*.gif
+*.png
+*.pyc
+__pycache__/
+*.py[cod]
+# Python
+repos/
+# Runtime state
+Thumbs.db
+*.tmp
