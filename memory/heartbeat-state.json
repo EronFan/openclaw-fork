@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-10T13:36:07Z",
+  "updatedAt": "2026-04-10T13:44:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": null,
-  "note": "2026-04-10 21:36 CST heartbeat: checked subagents, no failed runs in last 120m; confirmed xixi latest scan report still 2026-04-10 12:36 UTC and active aoao follow-up on #64292/#64293/#64299/#64272/#64288.",
+  "note": "2026-04-10 21:44 CST heartbeat: no subagents in last 120m, no failed runs. xixi latest scan report file missing at workspace root path expected by HEARTBEAT.md; OPENCLAW-PROJECT latest visible entries remain active and no new unassigned high-priority xixi handoff was confirmed in this check.",
   "subagentFailures": [
     {
       "issue": "#63265",

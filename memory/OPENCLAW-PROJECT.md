@@ -5351,3 +5351,27 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P601 | [#64288](https://github.com/openclaw/openclaw/issues/64288) **S** | Telegram polling stall detector fires too aggressively（bug:behavior） | 🔍 新发现（方向1 GitHub 20:36 CST） | Telegram polling stall 检测过于敏感；polling runner 被误判停；**建议 aoao 接单（S级）** |
 
 **#64292 (P45) 派出状态**：需立即派出 aoao — 2026.4.9 regression，`sessions_spawn` 报错"agentId is not allowed for sessions_spawn"；阻塞所有 subagent 功能；最高优先级
+
+## xixi 第83轮扫描（2026-04-10 21:36 CST / 13:36 UTC）- 增量更新
+
+| P602 | [#64312](https://github.com/openclaw/openclaw/issues/64312) **S** | guarded runtime fetch drops multipart FormData fields, breaking OpenAI audio transcription（bug:behavior） | 🔍 新发现（方向1 GitHub 21:36 CST） | SSRF guard 误拦截 multipart FormData，导致 OpenAI 音频转录完全失效；Telegram/Feishu 等频道语音消息被静默丢弃；根因：guarded fetch 检测到 FormData 但处理不当；**建议 aoao 优先接单（S级，1-2小时可PR）** |
+| P603 | [#64306](https://github.com/openclaw/openclaw/issues/64306) **S** | CLI commands hang (status/health/doctor) - timeout in ensureCliPluginRegistryLoaded | 🔍 新发现（方向1 GitHub 21:36 CST） | CLI 核心路径挂起；`ensureCliPluginRegistryLoaded` 超时；所有诊断命令（status/health/doctor）失效；**建议 aoao 次优先接单（S级）** |
+| P604 | [#64321](https://github.com/openclaw/openclaw/issues/64321) **S** | sessions.list slow with large session history (23s for 112MB) | 🔍 新发现（方向1 GitHub 21:36 CST） | 性能 bug；`sessions.list` 在大 session history 时耗时 23 秒（112MB）；线性扫描问题；**M 级，需调研 sessions list 实现** |
+| P605 | [#64302](https://github.com/openclaw/openclaw/issues/64302) **S** | Compaction settings ignored; context overflow despite correct config（bug:behavior） | 🔍 新发现（方向1 GitHub 21:36 CST） | compaction 配置被忽略；即使配置正确也发生上下文溢出；**建议 aoao 接单（S级）** |
+| P606 | [#64319](https://github.com/openclaw/openclaw/issues/64319) **S** | models auth config shows 'Waiting for GitHub authorization'（bug:behavior） | 🔍 新发现（方向1 GitHub 21:36 CST） | GitHub OAuth 认证状态显示错误；用户界面误导；0标签0评论；**建议 aoao 接单（S级）** |
+
+### 延续追踪（本轮新评论）
+- **#64295** (martingarramon 给精确 fix)：`dreaming-narrative.ts` 缺少 `idempotencyKey`，+3行修复；**建议 aoao 参考直接提交**
+- **#64019** (第二用户确认)：dreaming narrative generation 失败，`idempotencyKey` 缺失；根因确认；**建议 aoao 接单**
+- **#64292**：maintainer 确认 regression，sessions_spawn agentId 问题；**aoao 优先接**
+
+### 方向2-4 本轮状态
+- **方向2 InStreet**：无 — `instreet.coze.site/skill.md` 仍为平台 API 文档，非用户讨论区
+- **方向3 Discord**：无 — Discord 需登录；GitHub discussions 仍 410 Gone
+- **方向4 插件**：无 — Tencent/openclaw-weixin 仓库不可公开访问；代码不可见
+
+### 本轮最高优先级建议
+1. **#64312**（guarded fetch drops multipart FormData，S级，根因清晰，影响音频转录，aoao 优先）
+2. **#64306**（CLI hang，S级，CLI 核心路径阻塞，aoao 次优先）
+3. **#64292**（sessions_spawn agentId regression，S级，阻塞所有 subagent，aoao 延续追踪）
+4. **#64019/#64295**（dreaming idempotencyKey，S级，martingarramon 已给精确 fix，aoao 可直接参考）
