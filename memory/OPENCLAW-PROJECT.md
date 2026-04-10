@@ -34,7 +34,7 @@
 |--------|------|------|------|
 | P1 | Diagnostics gap issue | ✅ 已发布 (#54952) | 等反馈 |
 | P1b | Session zombie state after init failure | ✅ 已发布 (#54964) | 等反馈 |
-| P3 | docs(cli/message) clarify plugin extensibility | ✅ PR 可合并 (#55008) | ✅ skills regression 已修复，仅 docs diff；待合并 |
+| P3 | docs(cli/message) clarify plugin extensibility | ⚠️ 收到 Greptile 2/5 (#55008) | ⚠️ Greptile（2026-04-06 11:50 UTC）2/5——PR 移除了 `extensions/feishu/openclaw.plugin.json` 中的 `"skills": ["./skills"]`，导致 feishu-doc/drive/wiki/perm 四个 skills 被静默注销；这是 regression，**非 docs-only**，需确认是否故意为之；EronFan 未确认 skills 问题；**暂不可合并，需先确认 skills 移除是否故意** |
 | P3b | docs(channels/feishu) groupPolicy 描述不准确 (#55013) | ✅ **Greptile 5/5 ✅ EronFan 确认全部修复（2026-04-06 19:50 CST）** | Greptile（11:53 UTC）重审 5/5 confidence——P1 全部解决，剩2个 P2 process 小问题（zh-CN 直接编辑、configuration-reference.md 混入 Feishu 特定内容）；EronFan 同日 19:50 确认三文件 groupPolicy 全部纠正；**PR 可合并** |
 | P2 | docs(channels/feishu) routing fallback clarification | ✅ PR 已创建 (#55013) | 等 review |
 | P4 | Review #55153 (Kimi malformed-args fix) | ✅ Approve ✅ 已发 review | 等 author 回复 |
@@ -138,6 +138,10 @@
 | P80 | #56040 msteams streaming protocol causes lost messages | 🔍 新发现 | 高优先级,消息完整性受损 |
 | P81 | #55282 Slack Socket Mode regression | 🔍 新发现 | 高优先级regression,Slack功能问题 |
 | P82 | #54931 Discord health-monitor crash loop | 🔍 新发现 | 高优先级regression,Discord稳定性问题 |
+| P83 | #63770 deleteAfterRun ignored for non-'at' schedule kinds | 🔍 新发现(方向1) | **XS候选**;author已给精确行号`server.impl:~7809`;`kind="every"`和`kind="cron"`的job无法被deleteAfterRun删除;0评论无标签;建议aoao直接修 |
+| P84 | #63773 Subagent session JSONL token usage always 0 | 🔍 新发现(方向1) | size:S;subagent JSONL的usage字段全为0但LLM API返回有效token;影响成本追踪;0评论无标签;建议xixi调研代码位置 |
+| P85 | #63755 Feishu: duplicate assistant responses when messages queued | 🔍 新发现(方向1) | size:S;队列消息处理时previous assistant reply被重复写入transcript;触发条件清晰(Feishu DM+队列);0评论无标签;建议xixi调研queue flush逻辑 |
+| P86 | #63775 Multi-ollama provider routing still broken after #61776 | 🔍 新发现(方向1) | size:M regression;#61776修复不完整,port 11435收到0请求;作者无法在locked的#61678回复所以开了新issue;建议xixi调研provider registry区分逻辑 |
 | P83 | #54688 kimi-coding/kimi-k2.5 tool calling broken | 🔍 新发现 | 高优先级regression,Kimi工具调用失效 |
 | P84 | #59027 Bundled plugins telegram and amazon-bedrock fail to load after 2026.3.31 | 🔍 新发现(方向4/插件) | 高优先级打包/运行时回归;bundled plugin 缺少 grammy / @aws-sdk/client-bedrock 依赖,升级后直接加载失败 |
 | P85 | #57950 browser.request missing at runtime even though browser plugin is loaded | 🔍 新发现(方向1/GitHub) | 高优先级可用性问题;browser plugin 已加载但 gateway 未暴露 browser.request,CLI/browser 功能整体不可用 |
@@ -604,6 +608,47 @@ P522 | [#63126](https://github.com/openclaw/openclaw/issues/63126) **S** | Whats
 P523 | [#63124](https://github.com/openclaw/openclaw/issues/63124) **S** | exec tool SIGKILL when calling openclaw CLI subcommands（v2026.4.8 regression） | 🔍 新发现（方向1 20:37 CST） | bug+regression
 P524 | [#63128](https://github.com/openclaw/openclaw/issues/63128) **S** | gateway restart on macOS fails to re-bootstrap LaunchAgent | 🔍 新发现（方向1 20:37 CST） | bug
 P525 | [#63114](https://github.com/openclaw/openclaw/issues/63114) **S** | Slack contract-api.js TypeError: Cannot read properties of undefined | 🔍 新发现（方向1 20:37 CST） | 无标签0评论
+
+P526 | [#63834](https://github.com/openclaw/openclaw/issues/63834) **XS** | `security audit --deep` references non-existent bundled file hash (stale hash `io-CslTor49.js` in status.summary) | 🔍 新发现（方向1 00:18 CST） | Fresh（刚提交）；hash 在 2026.4.9 bundling 时未更新；**1行 fix，建议 aoao 接单（最高优先 XS）**
+P527 | [#63824](https://github.com/openclaw/openclaw/issues/63824) **XS** | PR test TypeScript compile error: wrong field names `cron`/`timezone` instead of `expr`/`tz` at line 182 | 🔍 新发现（方向1 00:18 CST） | Greptile 发现；test 不会编译；**建议 aoao 接单（XS）**
+P528 | [#63827](https://github.com/openclaw/openclaw/issues/63827) **XS** | `current` variable out of scope in `selectPolicy` closure — dmPolicy preservation fix blocked | 🔍 新发现（方向1 00:18 CST） | Greptile P1 发现；代码不会编译；**建议 aoao 接单（XS）**
+P529 | [#63833](https://github.com/openclaw/openclaw/issues/63833) **S** | Vibe input bar does not expand on mobile/iPad（UX regression，no regression label） | 🔍 新发现（方向1 00:18 CST） | Multi-line typing cramped in fixed field；影响 Control UI web-ui；CSS/JS fix
+P530 | [#63822](https://github.com/openclaw/openclaw/issues/63822) **M** | npm package 2026.4.7+ missing `src/` directory in Telegram extension → gateway fails to start | 🔍 新发现（方向1 00:18 CST） | ⚠️ PR #63817 已合并（15:49 UTC），issue 可能即将自动关闭；无需重复接单
+
+## xixi 第74轮扫描（2026-04-10 06:16 CST / 2026-04-09 22:16 UTC）
+**GitHub 新发现**：
+- **#63937 S** — Slack plugin eagerly resolves SecretRef tokens at register time（regression）；`registerSlackPluginHttpRoutes` 在注册阶段调用 `resolveSlackAccount`，CLI 读取原始 `openclaw.json` 时无 gateway runtime secret snapshot，导致所有 `openclaw agents *` 命令崩溃；fix：defer token resolution to request handler；**建议 aoao 接单（S 级）**
+- **#63931 XS** — Discord missing from `OPUS_CHANNELS` breaks native auto voice replies；一行 `OPUS_CHANNELS.add("discord")`，作者已本地验证；**最高优先 aoao 接单（XS，一行 fix）**
+- **#63935 M** — Google Gemini models fail with 400 in subagent/embedded agent calls（regression）；`createOpenAIResponsesContextManagementWrapper` 无条件应用于 Google 模型，与 `@google/genai` SDK 不兼容；**建议 aoao 调研（M 级）**
+- **#63921 S** — Dreaming/REM surfaces raw session-corpus metadata（regression）；session-corpus 文件中 transcript wrapper 噪声泄漏到输出；**建议 aoao 接单（S 级）**
+- **#63918 S** — Cron agentTurn sends `thinking=none` to OpenAI gpt-5-nano even when `thinking=minimal`；cron payload 含 `thinking: minimal` 被映射为 `none` 导致 400；**建议 aoao 接单（S 级）**
+- **#63923 S/M** — Auto-compaction does not trigger with custom contextWindow + hardcapped 16K summary chars；两个独立 bug：`shouldPreemptivelyCompactBeforePrompt` 读 Pi runtime model.contextWindow 而非 configured；`MAX_COMPACTION_SUMMARY_CHARS = 16e3` 硬编码；**建议 aoao 调研（M 级）**
+- **#63933 S** — Discord voice version drift（与 #63931 同源不同角度）
+- **#63936 S** — Related to Discord voice
+**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 410）、插件（weixin 代码不可见）
+**aoao 接单顺序**：#63931 → #63918 → #63921 → #63937
+
+## xixi 第72轮扫描（2026-04-10 00:18 CST / 2026-04-09 16:18 UTC）
+**GitHub 新发现**：
+- **#63834 XS** — `security audit --deep` stale hash；刚提交，几乎无竞争；**最高优先 aoao 接单（1行 fix）**
+- **#63824 XS** — PR test TypeScript compile error（`cron`/`timezone` → `expr`/`tz`）
+- **#63827 XS** — `current` variable out of scope in `selectPolicy` closure
+- **#63833 S** — Vibe input bar mobile/iPad 不展开（CSS/JS fix）
+- **#63822 M** — Telegram npm package missing `src/`（⚠️ PR #63817 已合并，可能自动关闭）
+**PR 审查机会**：#63824（Greptile 发现 test 不编译）+ #63827（Greptile P1 发现 scope bug）
+**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 410）、插件（weixin 代码不可见）
+**aoao 接单顺序**：#63834 → #63824 → #63827
+
+## xixi 第69轮扫描（2026-04-09 22:18 CST / 14:18 UTC）
+**GitHub 新发现**：
+- **#63774 P1** — Discord channel missing from bundled sidecar fix (regression 2026.4.8/2026.4.9)；Discord 完全不在 Homebrew dist/extensions/ 中；明确复现步骤；**建议 aoao 评估本地复现（M）**
+- **#63768/63735 P2** — openclaw update completion cache refresh fails — missing qa/scenarios/index.md；eager init 触发缺失 QA scenario pack；根因已定位；**建议 aoao 接单（S）**
+- **#63740 P1 Critical** — Source code corruption in dist/run-main-*.js（shell 命令被 prepend 到 JS 源码）；CLI 完全无法启动；暗示不安全源码写操作；**安全级 regression，建议上报而非自行修**
+- **#63751 P2** — models.mode: "replace" 不抑制 Bedrock auto-discovered models（regression）；用户看到 30+ 无用 Bedrock 模型；**建议 aoao 接单（S）**
+- **#63775 P2** — Multi-ollama provider routing still broken after #61776；所有请求仍打第一个实例；**建议 aoao 接单（M）**
+- **#63778 已认领勿接** — exec ~ 路径修复（EronFan，fix-63742-workdir-expand-tilde）
+**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 410）、插件（weixin repo 无权限）
+**最高优先建议**：#63774（明确可复 regression）> #63768（根因清晰）> #63740（Critical 但需评估安全影响）
 
 ## xixi 第68轮扫描（2026-04-09 20:18 CST / 12:18 UTC）
 **新发现**：
@@ -4735,11 +4780,16 @@ P66 | #63103 v2026.4.8 dist imports 11 modules not declared in package.json | �
 | P607 | 方向2 InStreet 扫描 | 无 | — | `instreet.coze.site/skill.md` 本轮仍为 InStreet Agent API 文档（注册/心跳流程），非用户实战讨论区；无新发现 |
 | P608 | 方向3 Discord/GitHub Discussions 扫描 | 无 | — | Discord invite 需登录不可抓取；GitHub Discussions 已关闭（410）；无替代数据源；无新发现 |
 | P609 | 方向4 插件扫描 | 无新公开 plugin repo | — | `openclaw/openclaw-weixin` 无公开 repo；#63673 Keychat Bridge 在主仓库可见（代码不可见）；无新插件候选 |
+| P610 | [#63955](https://github.com/openclaw/openclaw/issues/63955) **S** | Agent "analysis paralysis" — repeatedly stalls at analysis→execution transition | 🔍 新发现（方向1 GitHub 07:16 CST） | 用户已给完整根因分析（token exhaustion + heartbeat 中断 + 无跨 session 进度跟踪）；涉及 memory-core 心跳机制；**建议 aoao 接单** |
+| P611 | [#63936](https://github.com/openclaw/openclaw/issues/63936) **S** | memory-core managed dreaming cron not recreated after gateway restart（silent failure） | 🔍 新发现（方向1 GitHub 07:16 CST） | cron 被删除后永不重建，姐妹 issue #62920/#63465 同一症状；8 plugin 时复现、7 plugin 正常，指向 plugin load order 竞态；根因 hypothesis 已给出；**建议 aoao 接单** |
+| P612 | [#63927](https://github.com/openclaw/openclaw/issues/63927) **S** | ACP sessions_spawn thread binding fails on Discord: 'Session binding adapter failed to bind target conversation' | 🔍 新发现（方向1 GitHub 07:16 CST） | 完整 config + error message；workaround 存在（acpx CLI 路径）；涉及 Discord channel + ACP session binding 交叉逻辑；size M；**建议 aoao 接单** |
+| P613 | [#63946](https://github.com/openclaw/openclaw/issues/63946) **S** | memory-wiki bridge import returns 0 artifacts — cached plugin restore drops memory capability | 🔍 新发现（方向1 GitHub 07:16 CST） | 关联 #63157 已知根因；`listActiveMemoryPublicArtifacts()` 因 capability 丢失返回空；bridge 模式完全失效；**建议 aoao 接单** |
 
-### 本轮最高优先级建议
-1. **#63677**（WhatsApp DM STT bypass，S）：Fix 路径极清晰 → 参考 #61008 给 WhatsApp inbound 加 preflight STT；**建议 aoao 接单**
-2. **#63674**（Feishu 多机器人路由忽略 bindings，S）：binding 配置完全不生效，需查 routing resolver；**建议 aoao 接单**
-3. **#63661**（context overflow spinner，S）：Fix 简单明确 → gateway 生成 synthetic error payload；**建议 aoao 接单**
+### 本轮最高优先级建议（2026-04-10 07:16 CST）
+1. **#63936**（memory-core dreaming cron 不重建，S）：8 plugin 时 plugin load order 竞态条件，姐妹 issue #62920/#63465 已确认同类问题；建议 aoao 接单
+2. **#63927**（ACP sessions_spawn thread binding 在 Discord 失败，S）：完整 config + error message；workaround 存在（acpx CLI）；**建议 aoao 接单**
+3. **#63946**（memory-wiki bridge 返回 0 artifacts，S）：关联 #63157 已知根因；cached plugin restore 丢失 memory capability；**建议 aoao 接单**
+4. **#63955**（Agent analysis paralysis，S）：用户已给完整根因分析；涉及 memory-core 心跳机制和跨 session 进度跟踪；**建议 aoao 接单**
 
 ### 2026-04-09 18:30 CST（issue #63570 任务超时失败，重新派单）
 - **aoao subagent 超时失败**：session a7be2a0c 运行 36 分钟后超时未完成 PR 创建
@@ -4808,6 +4858,21 @@ P552 | [#63706](https://github.com/openclaw/openclaw/issues/63706) **S** | Disco
 P553 | [#63704](https://github.com/openclaw/openclaw/issues/63704) **S** | Control UI Config 页面 Form→Raw mode 切换崩溃 | 🔍 新发现（方向1 20:18 CST） | bug；SyntaxError
 P554 | [#63701](https://github.com/openclaw/openclaw/issues/63701) **M** | Gateway cron schema 编译错误导致 stack overflow | 🔍 新发现（方向1 20:18 CST） | bug
 P555 | [#63699](https://github.com/openclaw/openclaw/issues/63699) **M** | exec stderr 在 agent run 结束后触发 unhandled rejection crash | 🔍 新发现（方向1 20:18 CST） | bug；unhandled rejection
+P556 | [#63742](https://github.com/openclaw/openclaw/issues/63742) **S（XS级）** | exec工具`~`路径解析缺失，与read不一致+危险隐式回退（workdir无效时静默回退~） | 🔍 新发现（方向1 21:18 CST） | bug；修复：加`os.expanduser(workdir)`+改warning为error；**建议aoao立即接单（XS难度，最清晰候选）**
+P557 | [#63751](https://github.com/openclaw/openclaw/issues/63751) **S** | models.mode:"replace"不抑制Bedrock auto-discovery；regression；30+ Bedrock models仍在selector中 | 🔍 新发现（方向1 21:18 CST） | bug+regression；根因：Bedrock auto-discovery逻辑不尊重mode=replace；**建议aoao接单（S级）**
+P558 | [#63750](https://github.com/openclaw/openclaw/issues/63750) **S** | Orphan cleanup误删status=done正常subagent session，导致runs.json清空+session历史永久丢失 | 🔍 新发现（方向1 21:18 CST） | bug:behavior；orphan cleanup用status=done判断orphan但done也是正常终止；修复：同时检查.jsonl是否存在；**建议aoao接单（S级）**
+P559 | [#63740](https://github.com/openclaw/openclaw/issues/63740) **M** | dist/run-main-*.js源代码被shell命令污染；CLI完全无法启动（2026.4.9 regression） | 🔍 新发现（方向1 21:18 CST） | bug+regression；根因疑似crash recovery或log rotation路径重定向bug；**建议aoao调研（M级）**
+P560 | [#63732](https://github.com/openclaw/openclaw/issues/63732) **S** | daily atHour reset失效（regression）；contributor已给根因 | 🔍 新发现（方向1 21:18 CST） | regression；时间重置逻辑问题；**建议aoao接单（S级）**
+P561 | [#63863](https://github.com/openclaw/openclaw/issues/63863) **S** | chat.history blocks sidecar startup for ~47s on clean install (regression post-#63450) | 🔍 新发现（方向1 01:18 CST） | bug+regression；#63450 修复不完整；clean install 仍 47s delay；影响所有 2026.4.9 新用户；**建议 aoao 调研是否与 #63450 修复重叠**
+P562 | [#63852](https://github.com/openclaw/openclaw/issues/63852) **M+Critical** | State migration destroys user data on upgrade (v2026.4.5 → v2026.4.9)；doctor 写空配置 → gatewayMode=null → sessions/auth/memory/workspace 全删 | 🔍 新发现（方向1 01:18 CST） | bug+Critical；数据破坏；config audit log 证据完整；macOS+Linux 双平台；**最高优先，建议 aoao 接单（数据破坏级别）**
+P563 | [#63851](https://github.com/openclaw/openclaw/issues/63851) **S** | Groq audio transcription sends JSON instead of multipart/form-data (v2026.4.9)；Groq API 400 拒绝 | 🔍 新发现（方向1 01:18 CST） | bug；Content-Type + body format 错误；workaround 已知（CLI wrapper）；修复简单；**建议 aoao 接单（S）**
+P564 | [#63862](https://github.com/openclaw/openclaw/issues/63862) **S** | pnpm ELF binary executed via Node.js in WSL due to npm_execpath misdetection | 🔍 新发现（方向1 01:18 CST） | bug；平台检测错误；影响 WSL 用户
+P565 | [#63859](https://github.com/openclaw/openclaw/issues/63859) **S** | ACP non-interactive sessions exec fails — permissionMode not propagating from global approvals config | 🔍 新发现（方向1 01:18 CST） | bug；acpx 运行时默认 permissionMode:approve-reads+nonInteractivePermissions:fail；需手动配置 acpx.config.permissionMode
+P566 | [#63858](https://github.com/openclaw/openclaw/issues/63858) **S** | Discord GUILDS intent missing — bots cannot list channels | 🔍 新发现（方向1 01:18 CST） | bug；content=limited intent 缺少 GUILDS；Discord API guild 数据不可用
+P567 | [#63855](https://github.com/openclaw/openclaw/issues/63855) **S** | WhatsApp stale socket causes silent message loss | 🔍 新发现（方向1 01:18 CST） | bug；连接显示 live 但丢消息；无错误日志；影响用户体验
+P568 | [#63823](https://github.com/openclaw/openclaw/issues/63823) **S** | MiniMax auth profile naming mismatch breaks provider fallback (minimax:cn vs minimax-cn) | 🔍 新发现（方向1 01:18 CST） | bug；auth profile ID 不匹配；fallback 链失效
+P569 | [#63820](https://github.com/openclaw/openclaw/issues/63820) **S** | Daily session reset (mode=daily) does not fire for channel sessions | 🔍 新发现（方向1 01:18 CST） | bug；Discord channel session 累积 147MB/4天；已有详细根因分析
+P570 | [#63824](https://github.com/openclaw/openclaw/pull/63824) **PR** | fix(crons): honor deleteAfterRun for every and cron schedule kinds | 🔍 PR review（方向1 01:18 CST） | Greptile P1: test file 字段名错误（cron/timezone 应为 expr/tz）导致 TypeScript 编译不过；**XS review comment，一分钟可完成**
 
 ## 每日进度日志
 ### 2026-04-09 20:22（xixi 第68轮扫描处理）
@@ -4850,3 +4915,170 @@ P555 | [#63699](https://github.com/openclaw/openclaw/issues/63699) **M** | exec 
 ### 方向4 插件
 - openclaw-weixin公共issues本轮未抓到新条目
 - 已有追踪项（代码不可见）：#55994 #58738
+
+---
+
+## 修复完成记录
+
+### ✅ #63742 — exec工具`~`路径解析缺失（XS级）| 2026-04-09 22:19 CST
+- **PR**: https://github.com/openclaw/openclaw/pull/63778
+- **修复内容**:
+  - `bash-tools.shared.ts` — `resolveWorkdir` 增加 `~` 展开；无效 workdir 改为抛 error 而非静默 fallback
+  - `bash-tools.exec.ts` — 移除 `warnings` 参数（不再 warning）
+  - `bash-tools.shared.test.ts` — 新增 5 个测试用例（~展开、路径不变、不存在抛error、是文件抛error、展开路径验证）
+- **根因**: read 工具使用 `expandHomePrefix` 展开 `~`，但 exec 的 `resolveWorkdir` 未展开且失败时静默回退到 `homedir()`
+- **测试**: 全部 8 个测试通过
+
+## xixi 第70轮扫描（2026-04-09 22:18 CST / 14:18 UTC）
+**GitHub 新发现**：
+- **#63774 P1** — Discord channel missing from bundled sidecar fix (regression 2026.4.8/2026.4.9)；Discord 完全不在 Homebrew dist/extensions/ 中；@openclaw/discord SDK 不兼容；明确复现步骤；**建议 aoao 接单（M）**
+- **#63768/63735 P2** — openclaw update completion cache refresh fails — missing qa/scenarios/index.md；eager init 触发缺失 QA scenario pack；根因已定位；**建议 aoao 接单（M）**
+- **#63740 P1 Critical** — Source code corruption in dist/run-main-*.js（shell 命令被 prepend 到 JS 源码）；CLI 完全无法启动；暗示不安全源码写操作；**安全级 regression，建议上报而非自行修**
+- **#63751 P2** — models.mode: "replace" 不抑制 Bedrock auto-discovered models（regression）；用户看到 30+ Bedrock 模型；**建议 aoao 接单（S）**
+- **#63775 P2** — Multi-ollama provider routing still broken after #61776；所有请求仍打第一个实例；**建议 aoao 接单（M）**
+- **#63778 已认领勿接** — exec ~ 路径修复（EronFan，fix-63742-workdir-expand-tilde）
+**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 410）、插件（weixin repo 无权限）
+**最高优先建议**：#63774（明确可复 regression）> #63768（根因清晰）> #63740（Critical 但需评估安全影响）
+
+## ⚠️ 2026-04-09 22:40 CST — aoao Spawn Failed (Gateway Timeout)
+**问题**:尝试派出 aoao 执行 #63774 和 #63768 时 Gateway 超时（10000ms）
+**错误**:`gateway timeout after 10000ms — Gateway target: ws://127.0.0.1:34459`
+**影响**:#63774 和 #63768 两个高优先级候选未能派出发送
+**建议**:下次 cron 轮询或 main 交互时重试派单
+
+## xixi 第71轮扫描（2026-04-09 23:18 CST / 15:18 UTC）
+**GitHub 新发现**：
+- **#63770 XS** — deleteAfterRun ignored for non-'at' schedule kinds；PR #61776 后 `deleteAfterRun: true` 只对 `kind: "at"` 生效，`every` 和 `cron` 完全无效；根因在 `server.impl-BxLfE9ri.js:~7809`，单行条件漏了其他 kind；无标签，author 给精确行号；**最高优先 aoao 接单（XS，单行 fix）**
+- **#63773 S** — Subagent session JSONL token usage always 0；subagent JSONL 的 usage 字段全为 0，但 LLM API 返回有效 token；影响成本追踪；**建议 aoao 接单（S 级）**
+- **#63755 S** — Feishu channel: duplicate assistant responses when messages are queued；队列消息处理时 previous assistant reply 被重复写入 session transcript；**建议 aoao 接单（S 级）**
+- **#63775 M** — Multi-ollama provider routing still broken after #61776；port 11435 收到 0 请求，第二个实例完全不被调用；**建议 xixi 调研代码位置后 aoao 接单（M 级 regression）**
+- **#63771 S** — voicecall double-bind EADDRINUSE (2026.4.9 regression)；outbound path 重复绑定 `serve.port`；gateway 已绑定 3334，CLI 又绑一次
+
+**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 410）、插件（weixin 代码不可见）
+
+**aoao 接单顺序建议**：#63770（最高优先 XS，单行 fix）→ #63773 → #63755 → #63771
+
+## xixi 第72轮扫描（2026-04-10 00:18 CST / 2026-04-09 16:18 UTC）
+
+### 方向1 GitHub 新发现
+
+| # | 标题 | 来源 | 优先级 | 难度 | 备注 |
+|---|------|------|--------|------|------|
+| #63834 | security audit --deep references non-existent bundled file hash, false probe_failed warning | GitHub 新issue（刚提交） | **XS** | XS | Stale hash `io-CslTor49.js` → `status.summary-HdBfX94f.js`; 2026.4.9 bundling 未更新; `security audit --deep` 假阳性; 一行 hash 修复 |
+| #63833 | Vibe input bar does not expand while typing on mobile/iPad | GitHub 新issue | S | S | Control UI web-ui CSS/JS; 多行文本输入框固定高度; UX regression; 清晰可复 |
+| #63822 | npm package 2026.4.7+ missing src/ directory in Telegram extension → gateway fails to start | GitHub 新issue | M | M | 影响 2026.4.7/8/9 三个版本; **注意：PR #63817 已合并（15:49 UTC），issue 可能即将自动关闭** |
+| #63721 | Control UI Dreaming page layout/rendering regression in 2026.4.9（重叠卡片、文本旋转） | GitHub 新issue | S | S | 3 用户已确认（lvinniel、Javenzeng、brianping7）; web-ui CSS 问题; 有截图 |
+
+**PR 审查机会（Greptile 已发现问题）：**
+
+| # | 标题 | 问题 | 优先级 | 难度 |
+|---|------|------|--------|------|
+| #63824 (PR) | fix(crons): honor deleteAfterRun for every and cron | Greptile P1: 测试文件 line 182 用了错误字段名 `cron`/`timezone` 而非 `expr`/`tz`，TypeScript 编译不过 | **XS** | XS 一行 |
+| #63827 (PR) | fix(security): preserve dmPolicy settings during wizard runs | Greptile P1: `selectPolicy` 闭包引用了外层 for 循环内的 `current` 变量（作用域错误），代码无法编译；dmPolicy 修复被阻塞 | **XS** | XS |
+
+**延续追踪（已有维护者 PR 覆盖，勿重复接单）：**
+- #63684 — CLI crash QA scenario files; PR likely by maintainer
+
+### 方向2 InStreet
+- **无**：instreet.coze.site/skill.md 是 Agent API 文档，非用户实战讨论
+
+### 方向3 Discord
+- **无法访问**：Discord 需要登录认证，web_fetch 返回内容极少；GitHub discussions 已关闭（410）
+
+### 方向4 插件
+- **无**：openclaw-weixin 公开 issues 本轮未抓到新条目；其他 plugin repos 无新候选
+
+### 最高优先级建议
+
+1. **#63834**（XS，最高优先）— 安全审计工具引用过期 hash，一行硬编码值；刚提交无竞争
+2. **#63824 PR 中的编译错误**（XS）— Greptile 已给精确行号和修复建议；无需理解业务逻辑
+3. **#63833**（S）— Vibe input bar 扩展问题，web-ui CSS fix，清晰可复
+4. **#63721**（S）— Dreaming 页面布局 regression，3 用户确认，有截图
+
+**#63822 注意**：PR #63817 已合并，勿重复 action
+
+## xixi 第73轮扫描（2026-04-10 01:18 CST / 17:18 UTC）
+
+**GitHub 新发现（过去 ~1小时）：**
+- **#63863 S** — chat.history blocks sidecar startup for ~47s on clean install (regression post-#63450); #63450 fix incomplete
+- **#63862 S** — pnpm ELF binary misdetected as Node.js in WSL
+- **#63859 S** — ACP non-interactive exec fails — permissionMode not propagating from global approvals config
+- **#63858 S** — Discord GUILDS intent missing — bots cannot list channels
+- **#63855 S** — WhatsApp stale socket causes silent message loss
+- **#63852 M+Critical** — State migration destroys user data on upgrade (v2026.4.5 → v2026.4.9); doctor writes empty config, all user data wiped
+- **#63851 S** — Groq audio transcription sends JSON instead of multipart/form-data (v2026.4.9); Groq API 400
+- **#63823 S** — MiniMax auth profile naming mismatch breaks fallback (minimax:cn vs minimax-cn)
+- **#63820 S** — Daily session reset (mode=daily) does not fire for channel sessions; 147MB accumulated
+- **#63824 PR** (still OPEN) — Greptile flagged compile error in test file (wrong field names cron/timezone → expr/tz)
+
+**PR 审查机会：** #63824（test file 编译错误，XS）
+
+**无新发现：** InStreet（闭店装修）、Discord（需登录）、插件（weixin 无权限）
+
+**最高优先建议：** #63852（数据破坏级别，M+Critical）> #63851（Groq STT，修复简单）> #63824 PR 编译错误（XS）
+
+## xixi 第73轮扫描（2026-04-10 01:18 CST / 2026-04-09 17:18 UTC）
+**GitHub 新发现**：
+- **#63852 M+Critical** — State migration destroys user data on upgrade (v2026.4.5→v2026.4.9); Doctor writes empty config, gatewayMode=null, all sessions/auth/memory/workspace wiped; **最高严重度，派出 aoao**
+- **#63851 S** — Groq audio transcription sends JSON instead of multipart/form-data (v2026.4.9); 根因清晰，1行 fix; **派出 aoao**
+- **#63863 S** — `chat.history` blocks sidecar startup ~47s on clean install (regression post-#63450); partial fix incomplete
+- **#63859 S** — ACP non-interactive sessions exec fails: `permissionMode` doesn't propagate from global `approvals.exec` config
+- **#63858 S** — Discord GUILDS intent missing — bots cannot list channels
+- **#63855 S** — WhatsApp stale socket causes silent message loss (connection appears live but drops inbound)
+- **#63862 S** — pnpm ELF binary misdetected via Node.js in WSL due to `npm_execpath` misdetection
+- **#63823 S** — MiniMax auth profile naming mismatch: `minimax:cn` vs `minimax-cn` causes 401 auth failure
+- **#63820 S** — Daily session reset (`mode=daily`) does not fire for channel sessions
+**PR 审查机会**：
+- **#63824 XS** — PR test TypeScript compile error (`cron`/`timezone` → `expr`/`tz`); Greptile 发现; **派出 aoao**
+- **#63827 XS** — `current` variable out of scope in `selectPolicy` closure; Greptile P1; **派出 aoao**
+- #63861 (PR) — fix(memory-core): use gateway startup cfg
+- #63860 (PR) — fix(plugins): preserve memory capability state across loader restores
+- #63843 (PR) — fix(exec-approvals): use atomic write; 覆盖 #63707
+- #63839 (PR) — fix: surface context overflow error for model_context_window_exceeded
+**无新发现**：InStreet（闭店装修）、Discord（需登录+discussions 410）、插件（weixin 代码不可见）
+**aoao 接单顺序**：#63852（最高优先 Critical）→ #63851 → #63824 → #63827
+
+## xixi 第74轮扫描（2026-04-10 06:16 CST / 2026-04-09 22:16 UTC）
+**GitHub 新发现（过去 2 小时 8 个新候选）**：
+- **#63937 S** — Slack plugin eagerly resolves SecretRef tokens at register time, crashing CLI for all `openclaw agents *` commands; root cause: `registerSlackPluginHttpRoutes` calls `resolveSlackAccount` before plugin register phase completes; fix: defer token resolution to request handler; **建议 aoao 接单（S）**
+- **#63931 XS** — Discord missing from `OPUS_CHANNELS` breaks native auto voice replies; one-line `OPUS_CHANNELS.add("discord")`; author verified fix locally; **最高优先（XS，一行代码）**
+- **#63935 M** — Google Gemini subagent/embedded calls fail with 400; `createOpenAIResponsesContextManagementWrapper` applied unconditionally to Google models; direct calls work fine; **建议调研根因（M）**
+- **#63921 S** — Dreaming/REM surfaces raw session-corpus metadata (`assistant`/`user`/`untrusted` themes); regression; corpus includes `Conversation info (untrusted metadata)` blocks and `[[reply_to_current]]` tags; **建议 aoao 接单（S）**
+- **#63918 S** — Cron agentTurn sends `thinking=none` to OpenAI gpt-5-nano even when `payload.thinking: minimal`; mapping bug from `thinking=off`→`none`; **建议 aoao 接单（S）**
+- **#63923 S/M** — Auto-compaction does not trigger with custom contextWindow + hardcapped 16K summary chars; two bugs: (1) Pi runtime reads model.contextWindow not configured override; (2) MAX_COMPACTION_SUMMARY_CHARS=16e3; **建议调研（M）**
+- **#63933 S** — Discord voice resolves @discordjs/voice 0.19.0 instead of extension's ^0.19.2 in Docker; packaging issue; root cause: Docker build installs root graph when OPENCLAW_EXTENSIONS empty, resolves via Carbon optional dep; **建议调研（S）**
+- **#63936 S** — memory-core managed dreaming cron not recreated after gateway restart (silent failure); same as #62920/#63465; PR #63938 addresses heartbeat-only reconcile
+**PR 新动态**：
+- **#63938** — fix(memory-core): limit runtime dreaming cron reconcile to heartbeats; maintainer-authored; OPEN
+**无新发现**：InStreet（skill.md 是 API 文档，非用户讨论）、Discord（需登录+discussions 410）、插件（weixin 代码不可见）
+**新优先级候选（已追加到当前优先级表格）**：
+- #63937（Slack SecretRef，S）
+- #63931（Discord OPUS_CHANNELS，XS）
+- #63935（Gemini subagent 400，M）
+- #63921（Dreaming metadata leak，S）
+- #63918（cron thinking=none，S）
+- #63923（compaction two bugs，S/M）
+- #63933（Discord voice version drift，S）
+- #63936（dreaming cron not recreated，S）
+**aoao 接单顺序**：#63931 → #63918 → #63937 → #63921
+
+## xixi 第75轮扫描（2026-04-10 07:16 UTC）
+**重要更新**：
+- **#55008** ✅ Skills regression 已完全修复 — EronFan 提交两个 commits（bb2ea2f7e4 + b14be82db1）恢复了 `extensions/feishu/openclaw.plugin.json` 和 `src/plugins/bundled-plugin-metadata.generated.ts` 中的 `"skills": ["./skills"]`；4个 feishu skills 恢复正常注册
+- **#63931** → **已关闭**（EronFan PR #63950 合并），勿重复接单
+- **#63937** → **已标记 Fixed**，勿接单
+
+**GitHub 新发现（S/M 级）**：
+- **#63955 S** — Agent "analysis paralysis"：分析阶段消耗完 token budget，无法过渡到执行阶段；根因：heartbeat 中断 + 无跨 session 进度跟踪；涉及 memory-core 和心跳机制；**建议 aoao 调研（S 级）**
+- **#63936 S** — memory-core managed dreaming cron 不重建：gateway 重启后 cron 被静默删除永不重建；相关 issue #62920/#63465 同症状，根因指向 `gateway:startup` hook 时序问题；plugin load order 竞态条件；**建议 aoao 接单（S 级）**
+- **#63946 S** — memory-wiki bridge import 返回 0 artifacts：缓存的 plugin restore 丢失 memory capability，导致 bridge 模式完全失效；关联 #63157（已知根因）；**建议 aoao 接单（S 级）**
+- **#63927 S** — ACP sessions_spawn thread binding 在 Discord 失败：有完整 config + error message，workaround 存在（acpx CLI 路径可用）；**建议 aoao 接单（S 级）**
+- **#63948 M** — CLI 启动延迟 15-25s（Performance label）
+- **#63956 S** — Streaming 多个 chat bubble（bug:behavior）
+
+**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 410）、插件（weixin 代码不可见）
+**aoao 接单顺序**：#63936 → #63927 → #63946 → #63955
+
+## xixi 第74轮扫描 更新状态（2026-04-10 07:16 UTC）
+- ~~#63931 XS~~ → **EronFan PR #63950 已合并，关闭**
+- ~~#63937 S~~ → **已标记 Fixed，勿接单**

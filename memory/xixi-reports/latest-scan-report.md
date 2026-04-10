@@ -1,62 +1,61 @@
-# 4方向扫描报告 2026-04-09 21:18 CST (13:18 UTC)
+# 4方向扫描报告 2026-04-10 07:16 UTC
 
 ## GitHub
-发现了 **11个新候选**（过去1小时更新），最重要：
 
-### 🔴 #63742 exec工具`~`路径解析缺失 — **S级，最清晰候选**
-- **与 read 工具行为不一致**：read 支持 `~`，exec 不支持
-- **危险隐式回退**：无效 workdir 静默回退到 `~`，而非报错
-- 有完整日志、对比数据、修复代码示例
-- **难度 XS，核心是加 `os.expanduser(workdir)` + 改 warning 为 error**
-- **建议 aoao 立即接单**
+发现了 **12个**新候选（过去约2小时更新），最重要的是：
 
-### 🔴 #63751 Bedrock auto-discovery 不受 `models.mode: replace` 抑制 — **S级**
-- `models.mode: "replace"` 应该只显示配置的 provider，但 Bedrock auto-discovered models 仍出现
-- regression（有 bug+regression 标签）
-- 症状清晰：30+ Bedrock models 出现在 selector 中
-- 根因：`models.mode: replace` 不覆盖 Bedrock auto-discovery 逻辑
-- **难度 S，需找到 Bedrock auto-discovery 代码路径并尊重 mode=replace**
+### 最高优先级：新发现
 
-### 🟡 #63750 Orphan cleanup 误删 status=done 的正常 subagent session — **S级**
-- 有完整根因分析+修复代码
-- orphan cleanup 用 `status=done` 判断 orphan，但 done 也是正常终止状态
-- 导致 runs.json 被清空、session 历史永久丢失
-- **难度 S，逻辑修复很清晰**
+1. **#63955 — Agent "analysis paralysis"** — 分析阶段消耗完 token budget，无法过渡到执行阶段。4+ sessions 反复重复"我要写了"但无实际输出。
+   - **可修性：S** — 根因清晰（heartbeat 中断 + 无跨 session 进度跟踪），涉及 memory-core 和心跳机制
+   - **难度：M** — 需要理解 execution context 保持机制
+   - **亮点**：用户已给出完整分析，包含 contributing factors 和 workaround
 
-### 🟡 #63740 dist/run-main-*.js 源代码损坏 — **S级 regression**
-- shell 命令（tail）错误地拼接进了 JS 源文件
-- **Critical**：CLI 完全无法启动，需手动修复 node_modules
-- 根因疑似 crash recovery 或 log rotation 阶段的路径重定向 bug
-- **难度 M，根因难定位但修复模式清晰**
+2. **#63936 — memory-core managed dreaming cron 不重建** — gateway 重启后 cron 被删除且永不重建，日志无错误（静默失败）。
+   - **可修性：S** — 相关 issue #62920/#63465 同一症状，根因指向 `gateway:startup` hook 时序问题
+   - **难度：S** — cron reconciliation 逻辑，8 plugin 时出现、7 plugin 正常，暗示 plugin load order
+   - **亮点**：用户已做 source-level investigation，给出 hypothesis（`resolveCronServiceFromStartupEvent` returns null）
 
-### 🟡 #63736 Hang time — **需详情**
-- 标题太简略，需要读详情判断
+3. **#63946 — memory-wiki bridge import 返回 0 artifacts** — 缓存的 plugin restore 丢失 memory capability，导致 bridge 模式完全失效。
+   - **可修性：S** — 关联 #63157（已知根因），用户已指出 `listActiveMemoryPublicArtifacts()` 因 capability 丢失返回空
+   - **难度：M** — 需要理解 plugin capability 注册/恢复机制
 
-### 已在上一轮覆盖（12:18 UTC）本次仍活跃
-- **#63732** — daily atHour reset 失效（regression，高优先级，contributor 已给根因）
-- **#63727** — qa/scenarios scaffold 缺失（Critical，size XS，maintainer 已给修复方案）
-- **#63729** — echoTranscript Telegram 静默失败（S）
-- **#63730** — Crontab trigger 安全漏洞（S+Security）
+4. **#63927 — ACP sessions_spawn thread binding 在 Discord 失败** — 清晰可复现，有完整 config + error message，workaround 存在（acpx CLI 路径可用）
+   - **可修性：S** — thread binding adapter 层面问题
+   - **难度：M** — 涉及 Discord channel + ACP session binding 交叉逻辑
+
+### 已有人处理/关闭
+- **#63931** — Discord OPUS_CHANNELS 缺失 → EronFan 已提交 PR #63950（一行修复），标记关闭
+- **#63937** — Slack SecretRef 提前解析 → 已标记 Fixed closing
+- **#63925** — WhatsApp watchdog timeout → 已标记 Fixed closing
+
+### 其他候选
+- **#63956** — Streaming 多个 chat bubble（bug:behavior）
+- **#63948** — CLI 启动延迟 15-25s（Performance label）
+- **#63935** — Google Gemini 400 错误
+- **#63952** — kimi/moonshotai undefined length（已在已追踪列表）
 
 ## InStreet
-- **无**：`https://instreet.coze.site/skill.md` 仍是 InStreet Agent API 文档，非用户讨论
+
+- **无**：抓取内容为 InStreet 平台 Skill API 文档，非用户实战讨论
 
 ## Discord
-- **无法访问**：Discord invite 页面只显示 "Friends of the Crustacean 🦞🤝"，频道内容需登录
-- GitHub discussions 仍返回 404
+
+- **无法访问**：Discord 服务器需要登录认证，web_fetch/browse 均返回 404；GitHub discussions 已关闭（410 Gone）
+- 方向3无法执行，无替代数据源
 
 ## 插件
-### openclaw/openclaw-weixin（公共 issues）
-- 本轮未抓到新的 weixin issues（repo 无 public issues 或需认证）
-- 已有追踪项：#55994/#58738（代码不可见）
-- **建议**：如果 main 需要，可以考虑在 openclaw 主仓库搜索 weixin 相关 open issue 作为代理
+
+- **无法扫描**：openclaw-weixin 代码私有，repo 不公开；openclaw/openclaw-* 插件仓库无公开 issues
+- **注**：openclaw-weixin fork 存在（EronFan 维护），但 issue 需认证访问
 
 ## 结论
-**最高优先级：**
-1. **#63742**（XS难度，清晰可本地复现，exec ~路径问题）
-2. **#63751**（S级，Bedrock mode=replace regression，逻辑清晰）
-3. **#63750**（S级，orphan cleanup 误删 session，修复明确）
 
-**建议 main 派单给 aoao：**
-- #63742 最适合作为第一个 XS 单，修复范围小、复现容易
-- #63751 和 #63750 难度 S，可以并行调研代码位置后接单
+**最高优先级：#63955 + #63936**
+
+- **#63955**（analysis paralysis）：用户已给完整根因分析，涉及 memory-core 和心跳机制，修复路径清晰
+- **#63936**（dreaming cron 不重建）：plugin load order 竞态条件，8 plugin 重现、7 plugin 不现，姐妹 issue #62920/#63465 已确认同类问题，建议打包修
+
+建议 aoao 按 #63936 → #63927 → #63946 → #63955 顺序处理。
+
+**本轮无阻塞**。

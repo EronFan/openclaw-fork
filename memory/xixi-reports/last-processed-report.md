@@ -1,30 +1,27 @@
-# Last Processed Xixi Scan Report
+# xixi Scan - Last Processed Report
 
-**扫描时间**: 2026-04-09 20:18 CST / 12:18 UTC
-**来源文件**: /root/.openclaw/workspace/memory/xixi-reports/latest-scan-report.md
+**Scan time**: 2026-04-10 07:16 UTC
+**Processed at**: 2026-04-10 07:26 CST
+**Source**: /root/.openclaw/workspace/memory/xixi-reports/latest-scan-report.md
 
-## 扫描结论
+## 结论
 
-**新发现（来自第68轮扫描）**：
-- **#63727 XS** — `qa/scenarios/` scaffold 缺失 → CLI startup 完全崩溃 (2026.4.9 regression)；try/catch fallback 方案已有；**最高优先 aoao 接单（runId fa59fba2）**
-- **#63729 S** — echoTranscript Telegram delivery 静默失败；根因：Telegram outbound 结构嵌套（`outbound.attachedResults.sendText` vs `outbound.sendText`）；**次高 aoao 接单（runId 0f6c961f）**
-- **#63730 S+Security** — Crontab trigger 未清理 → 升级后未授权浏览器自动化；安全+regression，建议 aoao 接单
-- **#63722 S** — image tool 忽略 provider `defaultModels.image`
-- **#63719 S** — npm global update 后 bin symlink 残留导致 `openclaw` command 消失
-- **#63707 S** — exec allowlist 在长 session 中静默失败（race condition）
-- **#63706 S** — Discord voice-note 处理不一致 (regression 2026.4.9)
-- **#63704 S** — Control UI Config 页面 Form→Raw mode 切换崩溃 (SyntaxError)
-- **#63701 M** — Gateway cron schema 编译错误导致 stack overflow
-- **#63699 M** — exec stderr 在 agent run 结束后触发 unhandled rejection crash
+**GitHub 新发现（xixi 第75轮扫描）**：
+- **#63955 S** — Agent "analysis paralysis"；根因涉及 memory-core 和心跳机制；**建议 aoao 调研**
+- **#63936 S** — memory-core managed dreaming cron 不重建；静默失败，gateway 重启后 cron 永不重建；与 #62920/#63465 同症状；**建议 aoao 接单**
+- **#63946 S** — memory-wiki bridge import 返回 0 artifacts；plugin capability 丢失导致 bridge 完全失效；关联 #63157；**建议 aoao 接单**
+- **#63927 S** — ACP sessions_spawn thread binding 在 Discord 失败；**建议 aoao 接单**
+- **#63948 M** — CLI 启动延迟 15-25s
+- **#63956 S** — Streaming 多个 chat bubble
 
-**刚合并 PR（勿重复接单）**：PR #63480（channels before WS handlers）/#62783（cron auth）/#62506（tasks cancel）/#62493（session context limits）
+**重要更新**：
+- **#55008** ✅ Skills regression 已完全修复（EronFan 提交两个 commits）
+- **#63931** → **EronFan PR #63950 已合并，关闭**
+- **#63937** → **已标记 Fixed，勿接单**
 
-**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 404）、插件（weixin 代码不可见）
+**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 410）、插件（weixin 代码不可见）
 
-**aoao 接单顺序建议**：#63727 → #63729 → #63730
+## 建议
 
-**GH 反馈检查（本轮）**：
-- #54952: 0条评论，无新动态
-- #54964: 0条评论，无新动态
-- #55008: 6条评论（skills regression 已修复，EronFan 已确认；Greptile review 已知）
-- #55013: 2条评论（Greptile 5/5 safe-to-merge；EronFan 04-06 确认 groupPolicy 全部纠正）— 全部已知
+1. **aoao 接单顺序**：#63936 → #63927 → #63946 → #63955
+2. **gh 反馈检查**：#55008 Skills regression 已修复；#55013 Greptile 确认 groupPolicy 描述纠正正确
