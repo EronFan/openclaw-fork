@@ -5342,3 +5342,12 @@ P594 | [#64274](https://github.com/openclaw/openclaw/issues/64274) **S** | Agent
 P595 | [#64272](https://github.com/openclaw/openclaw/issues/64272) **S** | TTS Regression in v2026.4.9（bug+regression）| 🔍 新发现（方向1 GitHub） | 2026.4.9 regression；TTS 生成音频成功但从不交付到 Telegram；STT 也完全失效；ElevenLabs+Telegram 配置完整；0评论无标签；**S 级，S 难度，建议 aoao 接单**
 P596 | [#64251](https://github.com/openclaw/openclaw/issues/64251) **S** | CLI-backed model fails in follow-up path（codex-cli/gpt-5.4）（bug+bug:behavior）| 🔍 新发现（方向1 GitHub） | 首次调用成功（cli exec provider=codex-cli），同 session 后续调用失败 Unknown model；说明 CLI backend 首次可用但 session 状态管理 follow-up path 有问题；1评论；**S 级，S 难度，建议 aoao 接单**
 P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_HOST_UNAVAILABLE — nodes canvas a2ui push unauthorized（bug）| 🔍 新发现（方向1 GitHub） | 2026.4.9；`openclaw nodes canvas a2ui push` → unauthorized error；节点 push auth 鉴权失败；0评论无标签；**S 级，M 难度，建议 aoao 接单**
+
+## xixi 第82轮扫描（2026-04-10 20:36 CST / 12:36 UTC）- 增量更新
+
+| P598 | [#64293](https://github.com/openclaw/openclaw/issues/64293) **S** | Heartbeat runs despite heartbeat:{} config (2M+ tokens/day, 2026.4.9 regression) | 🔍 新发现（方向1 GitHub 20:36 CST） | 配置`heartbeat:{}`被忽略；~150K tokens/次，每30分钟一次；约$6/天；根因：config merge时空对象语义丢失；**高成本regression，建议 aoao 接单（S级）** |
+| P599 | [#64299](https://github.com/openclaw/openclaw/issues/64299) **S** | feishu_doc write/append return 400 on valid markdown（bug:behavior） | 🔍 新发现（方向1 GitHub 20:36 CST） | `update_block` 正常但 `write`/`append` 失败；API body 构造路径不同；扩展代码可见；影响 Feishu 用户批量写入文档；**建议 aoao 接单（S级）** |
+| P600 | [#64272](https://github.com/openclaw/openclaw/issues/64272) **S** | TTS Regression in v2026.4.9（bug+regression） | 🔍 新发现（方向1 GitHub 20:36 CST） | TTS 生成成功但从不交付到 Telegram；STT 也完全失效；ElevenLabs+Telegram 配置完整；0评论无标签；**建议 aoao 接单（S级）** |
+| P601 | [#64288](https://github.com/openclaw/openclaw/issues/64288) **S** | Telegram polling stall detector fires too aggressively（bug:behavior） | 🔍 新发现（方向1 GitHub 20:36 CST） | Telegram polling stall 检测过于敏感；polling runner 被误判停；**建议 aoao 接单（S级）** |
+
+**#64292 (P45) 派出状态**：需立即派出 aoao — 2026.4.9 regression，`sessions_spawn` 报错"agentId is not allowed for sessions_spawn"；阻塞所有 subagent 功能；最高优先级
