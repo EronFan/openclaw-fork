@@ -614,6 +614,26 @@ P527 | [#63824](https://github.com/openclaw/openclaw/issues/63824) **XS** | PR t
 P528 | [#63827](https://github.com/openclaw/openclaw/issues/63827) **XS** | `current` variable out of scope in `selectPolicy` closure — dmPolicy preservation fix blocked | 🔍 新发现（方向1 00:18 CST） | Greptile P1 发现；代码不会编译；**建议 aoao 接单（XS）**
 P529 | [#63833](https://github.com/openclaw/openclaw/issues/63833) **S** | Vibe input bar does not expand on mobile/iPad（UX regression，no regression label） | 🔍 新发现（方向1 00:18 CST） | Multi-line typing cramped in fixed field；影响 Control UI web-ui；CSS/JS fix
 P530 | [#63822](https://github.com/openclaw/openclaw/issues/63822) **M** | npm package 2026.4.7+ missing `src/` directory in Telegram extension → gateway fails to start | 🔍 新发现（方向1 00:18 CST） | ⚠️ PR #63817 已合并（15:49 UTC），issue 可能即将自动关闭；无需重复接单
+P531 | [#64036](https://github.com/openclaw/openclaw/issues/64036) **S** | chunkTextByBreakResolver final chunk trailing whitespace（bug:behavior） | 🔍 新发现（方向1 第75轮 12:01 CST） | PBT 发现；根因：`src/shared/text-chunking.ts` line 31 final chunk 未 trimEnd()；修复：`chunks.push(remaining.trimEnd())`，加 `if (finalChunk.length > 0)` guard；**XS 难度，最干净 PR 候选，5 分钟可提，建议 aoao 接单**
+P532 | [#64047](https://github.com/openclaw/openclaw/issues/64047) **S** | Feishu /new command delivered=false（regression） | 🔍 新发现（方向1 第75轮 12:01 CST） | `/new` via Feishu DM → `delivered=false`，消息完全丢失；正常对话正常；与 #53559/#42803/#49915 同模式；**国内用户高频场景，建议 aoao 接单（S 级）**
+P533 | [#64032](https://github.com/openclaw/openclaw/issues/64032) **S** | UI console upgrade fails, leaves system broken | 🔍 新发现（方向1 第75轮 12:01 CST） | upgrade button → gateway stop → UI 本身也停 → upgrade 脚本中断；`openclaw` 命令消失，系统无法启动；workaround：`openclaw update` CLI 正常；**建议 aoao 接单（S 级）**
+P534 | [#64040](https://github.com/openclaw/openclaw/issues/64040) **S** | Subagent failover duplicate completion announce → double Telegram messages | 🔍 新发现（方向1 第75轮 12:01 CST） | timeout → failover retry → 两个 completion announce → 两条相同 Telegram 消息；根因：announce/failover pipeline 无 subagent slot 去重；**S/M 难度，建议 aoao 接单**
+P535 | [#64038](https://github.com/openclaw/openclaw/issues/64038) **S** | Telegram sendMessage retry 无 idempotency key → 永久重复消息 | 🔍 新发现（方向1 第75轮 12:01 CST） | 重试无幂等性 key 导致重复消息；**建议 aoao 接单**
+P536 | [#64068](https://github.com/openclaw/openclaw/issues/64068) **S/M** | memory-core dreaming recallCount 每次都被 normalize step 重置为 0，promotion 永久无法触发 | 🔍 新发现（方向1 第75轮 12:01 CST） | recallCount 重置导致 dreaming promotion 失效；**建议 aoao 调研根因（M 级）**
+P537 | [#64025](https://github.com/openclaw/openclaw/issues/64025) **M** | ClawHub CLI 搜不到 plugins（只搜 skills，plugins 是独立 catalog） | 🔍 新发现（方向1 第75轮 12:01 CST） | CLI bug；**建议 aoao 接单**
+P538 | [#64034](https://github.com/openclaw/openclaw/issues/64034) **M** | 2026.4.9 multi-channel 三路 regression（Discord/Telegram/webchat） | 🔍 新发现（方向1 第75轮 12:01 CST） | regression；同时影响三个渠道；**建议 aoao 接单（M 级）**
+P539 | [#64117](https://github.com/openclaw/openclaw/issues/64117) **S** | voice-call tool/CLI 100% EADDRINUSE（regression v2026.4.9） | 🔍 新发现（方向1 14:07 CST 第76轮） | 根因：gateway 启动时 webhook server 成功绑定，但 tool/CLI 在独立 module evaluation context 里 runtime=null 再次创建第二个 server；ensureRuntime() 缓存机制跨模块边界失效；**100% reproducible，难度 S，建议 aoao 接单**
+P540 | [#64111](https://github.com/openclaw/openclaw/issues/64111) **S** | Ollama vision models not accessible via `image` tool（regression） | 🔍 新发现（方向1 14:07 CST 第76轮） | Ollama plugin 只注册 memoryEmbeddingProviders + webSearchProviders，不注册 image/mediaUnderstanding contract；image 工具走独立 lookup path 找不到 Ollama；根因：openclaw.plugin.json 合约缺失；**建议 aoao 接单（S 级）**
+P541 | [#64118](https://github.com/openclaw/openclaw/issues/64118) **S** | CLI 极慢 Windows 11（30-60s）v2026.4.9 | 🔍 新发现（方向1 14:07 CST 第76轮） | v2026.4.2 正常；CLI module loading/initialization 劣化；gateway API 正常；**难度 M，建议 aoao 调研 CLI 启动链路**
+P542 | [#64103](https://github.com/openclaw/openclaw/issues/64103) **S** | Session status 字段误导导致 orchestrator 重复 spawn（bug:behavior） | 🔍 新发现（方向1 14:07 CST 第76轮） | status:"failed"/"timeout"/"done" 暗示 session 已死；实际仍可 sessions_send；造成 2-4x token 浪费 + context 丢失；Option B+D 方案（加 resumable 字段 + 系统提示）；**建议 aoao 接单（S 级）**
+P543 | [#64129](https://github.com/openclaw/openclaw/issues/64129) **S** | Google Gemini key 配置后静默将 heartbeat 转为付费 API 调用 | 🔍 新发现（方向1 14:07 CST 第76轮） | 配置 key → plugin enabled → default model 切换 → heartbeat 继承付费 Gemini；未告知用户；真实账单暴露；**建议 aoao 接单（S 级）**
+P544 | [#64132](https://github.com/openclaw/openclaw/issues/64132) **S** | WhatsApp --media 不发送音频/图片（regression 2026.4.9） | 🔍 新发现（方向1 14:07 CST 第76轮） | --media MP3 文件完全丢失，只发文字；信息量偏低需追问；**建议先等 reporter 提供更多详情**
+
+## ⚠️ 反馈检查（2026-04-10 13:28 CST）
+- **#54952**：open，0 comments — 无新反馈
+- **#54964**：open，0 comments — 无新反馈
+- **#55008**：open，5 comments（最新 2026-03-30 EronFan 确认 skills 修复）— 无需 action
+- **#55013**：open，2 comments（最新 2026-04-06 EronFan 确认 groupPolicy 修复）— 无需 action
 
 ## xixi 第74轮扫描（2026-04-10 06:16 CST / 2026-04-09 22:16 UTC）
 **GitHub 新发现**：
@@ -5082,3 +5102,233 @@ P570 | [#63824](https://github.com/openclaw/openclaw/pull/63824) **PR** | fix(cr
 ## xixi 第74轮扫描 更新状态（2026-04-10 07:16 UTC）
 - ~~#63931 XS~~ → **EronFan PR #63950 已合并，关闭**
 - ~~#63937 S~~ → **已标记 Fixed，勿接单**
+
+P571 | [#63998](https://github.com/openclaw/openclaw/issues/63998) **Critical** | Session transcript doomloop: crash-restart cycle inflates transcript until gateway OOMs | 🔍 新发现（方向1 10:48 CST） | Critical；session transcript 31MB → context overflow → crash → restart → 加载同一 transcript → 再次 crash → 死循环；每次 restart 追加 bootstrap-context:full 条目（1,635 条）；required Time Machine 恢复；**最高优先，main 立即分配 aoao（Critical + 数据丢失）**
+
+P572 | [#64032](https://github.com/openclaw/openclaw/issues/64032) **S** | UI console upgrade fails, leaving openclaw command missing (bug:behavior) | 🔍 新发现（方向1 10:48 CST） | bug:behavior；UI upgrade 停在 gateway service 上，gateway 停止后 UI 也停止，upgrade script 无法继续 → 旧文件已删新文件未装 → 系统 broken；CLI `openclaw update` 无此问题；**建议 aoao 接单（S 级）**
+
+P573 | [#63971](https://github.com/openclaw/openclaw/issues/63971) **S** | workspaceAccess: "rw" updates Docker bind mount but leaves gateway read proxy pointing at stale sandboxes/ (regression) | 🔍 新发现（方向1 10:48 CST） | bug+regression；Docker bind mount 正确挂载 live workspace，但 host 侧 read proxy 始终解析 sandboxes/<container-id>/ snapshot，从未更新；静默数据过时；**建议 aoao 接单（S 级）**
+
+P574 | [#64006](https://github.com/openclaw/openclaw/issues/64006) **S** | Cron announce delivery reports 'delivered' but messages never reach Telegram | 🔍 新发现（方向1 10:48 CST） | bug；deliveryStatus="delivered" 撒谎；runner 完成并写 delivered 但 channel 层静默断开；curl sendMessage 直接成功；gateway 运行数小时后发生；**建议 aoao 接单（S 级）**
+
+P575 | [#63968](https://github.com/openclaw/openclaw/issues/63968) **S** | Packaging regression: missing qa/scenarios/index.md breaks `openclaw qa` (regression) | 🔍 新发现（方向1 10:48 CST） | bug+regression；v2026.4.9 npm 包缺 qa/scenarios/index.md，导致所有 `openclaw qa --help` 失败；Amazon Linux 2023 可复现；**建议 aoao 接单（S 级，1行加文件或 try/catch fallback）**
+
+P576 | [#64025](https://github.com/openclaw/openclaw/issues/64025) **S** | ClawHub CLI cannot search/inspect/install plugins — skills and plugins are disconnected | 🔍 新发现（方向1 10:48 CST） | bug；clawhub CLI 只查询 skills registry，但 plugins 在 /plugins/ tab；API /api/v1/plugins/* 返回 404；skills 和 plugins 完全断开；**建议 aoao 接单（S 级）**
+
+P577 | [#64016](https://github.com/openclaw/openclaw/issues/64016) **S** | heartbeat fires duplicate runs when external wake events arrive during scheduled heartbeat | 🔍 新发现（方向1 10:48 CST） | bug；heartbeat-wake.ts coalescing 机制在 heartbeat 运行时收到外部 wake 则 queuing，heartbeat 完成后立即触发第二次；生产环境 7 runs in 19 min；**建议 aoao 接单（S 级）**
+
+P578 | [#64024](https://github.com/openclaw/openclaw/issues/64024) **S** | Discord channel repeats previous response after LLM idle timeout | 🔍 新发现（方向1 10:48 CST） | bug；LLM idle timeout 60s 后 gateway 重试并发送上一条缓存响应而非新生成响应；消息去重机制失效；**建议 aoao 接单（S 级）**
+
+P579 | [#64019](https://github.com/openclaw/openclaw/issues/64019) **S** | memory-core dreaming narrative generation fails — missing idempotencyKey in subagent.run() | 🔍 新发现（方向1 10:48 CST） | bug；dreaming-narrative 模块调用 subagent.run() 缺少 idempotencyKey；与 #63214/#64003 同根因（#63214 PR 已合并但 dreaming 模块漏修）；**建议 aoao 接单（S 级）**
+
+P580 | [#64003](https://github.com/openclaw/openclaw/issues/64003) **S** | memory-core plugin missing idempotencyKey property causes REM dreaming to fail (regression) | 🔍 新发现（方向1 10:48 CST） | bug+regression；与 #64019 同根因（sister issue）；**建议与 #64019 一起修复**
+
+## xixi 第76轮扫描（2026-04-10 10:48 CST / 2026-04-10 02:48 UTC）
+**GitHub 新发现**：
+- **#63998 Critical** — Session transcript doomloop → OOM crash（31MB transcript 死循环）；**最高优先，main 立即分配 aoao**
+- **#64032 S** — UI console upgrade 停在 gateway 上导致 openclaw command 消失
+- **#63971 S** — workspaceAccess:rw 但 read proxy 指向 stale sandboxes/
+- **#64006 S** — Cron announce delivery 报告 delivered 但 Telegram 从未收到
+- **#63968 S** — qa/scenarios/index.md 缺失破坏 `openclaw qa`
+- **#64025 S** — ClawHub CLI 只能搜 skills 找不到 plugins
+- **#64016 S** — heartbeat 重复触发 duplicate runs
+- **#64024 S** — Discord idle timeout 后重复发送上一条响应
+- **#64019/#64003 S** — memory-core dreaming idempotencyKey 缺失（#63214 漏修）
+**InStreet**：无（skill.md 仍是 API 文档）
+**Discord**：无（公开内容不可抓取，GitHub discussions 404）
+**插件**：Tencent/openclaw-weixin #34（间歇性消息接收，S）、#44（524 超时，S）、#40（Docker 启动挂起，S）；代码不可见
+**aoao 接单顺序**：#63998 → #64032 → #63971 → #64006 → #63968 → #64025
+
+P581 | [#64036](https://github.com/openclaw/openclaw/issues/64036) **S** | chunkTextByBreakResolver final chunk has trailing whitespace (bug:behavior) | 🔍 新发现（方向1 11:01 CST） | bug:behavior；chunkTextByBreakResolver 分块文本最后一块有尾随空格；清晰单点 bug；本地可测；**建议 aoao 接单（S 级，XS 难度）**
+
+P582 | [#63992](https://github.com/openclaw/openclaw/issues/63992) **S** | session key write still hardcodes DEFAULT_AGENT_ID after PR #30654 (regression of #29683) | 🔍 新发现（方向1 11:01 CST） | bug+regression；default agent 的 session 仍写入 `agents/main/sessions` 而非 `agents/<id>/sessions`；PR #30654/#57217 未完全修复；issue 提供了根因分析和 fix options；**建议 aoao 接单（S 级）**
+
+P583 | [#63999](https://github.com/openclaw/openclaw/issues/63999) **S** | Qwen model raw tool call XML (<tool_call>) leaks into visible chat messages (Web UI + Signal) | 🔍 新发现（方向1 11:01 CST） | bug:behavior；Qwen 模型原始 tool_call XML 标记泄露到用户可见消息；Web UI + Signal 都受影响；安全问题；**建议 aoao 接单（S 级）**
+
+P584 | [#64009](https://github.com/openclaw/openclaw/issues/64009) **S** | Slack socket-mode connection becomes stale, misses ping/pong, and restarts repeatedly | 🔍 新发现（方向1 11:01 CST） | bug:behavior；Slack socket-mode 连接变 stale，错过 ping/pong 持续重启；影响 Slack channel 稳定性；**建议 aoao 接单（S 级）**
+
+P585 | [#64011](https://github.com/openclaw/openclaw/issues/64011) **S** | Discord gateway crash exits OpenClaw on Windows (regression) | 🔍 新发现（方向1 11:01 CST） | bug+regression；Windows 独有；"Attempted to reconnect zombie connection after disconnecting first" 导致网关崩溃退出；**建议 aoao 接单（S 级，M 难度）**
+P586 | [#64047](https://github.com/openclaw/openclaw/issues/64047) **S** | Feishu /new command delivered=false (2026.4.9, DM, 100% reproducible) | 🔍 新发现（方向1 12:01 CST） | regression；Feishu DM 发送 `/new` → `delivered=false`，消息完全丢失；正常对话正常；已知同模式 issue #53559/#42803/#49915；**国内用户高频场景，建议 aoao 接单（S 级）**
+P587 | [#64032](https://github.com/openclaw/openclaw/issues/64032) **S** | UI console upgrade fails, leaving system broken with openclaw command missing | 🔍 新发现（方向1 12:01 CST） | bug:behavior；upgrade button → gateway stop → UI 本身也停 → upgrade 脚本中断 → openclaw 命令消失；已发生两次；workaround：`openclaw update` CLI 正常；**建议改为 nohup 或引导用户用 CLI；建议 aoao 接单（S 级）**
+P588 | [#64040](https://github.com/openclaw/openclaw/issues/64040) **S** | Subagent failover/timeout fires duplicate completion announcements → double Telegram messages | 🔍 新发现（方向1 12:01 CST） | bug；timeout → failover retry → 两个 completion announce → 两条相同 Telegram 消息；announce/failover pipeline 无 subagent slot 去重；**建议 aoao 接单（S/M 级）**
+P589 | [#64068](https://github.com/openclaw/openclaw/issues/64068) **S/M** | memory-core dreaming promotion always finds 0 candidates — recallCount resets to 0 each cycle | 🔍 新发现（方向1 12:01 CST） | bug；normalize step 每次将 recallCount 重置为 0，promotion 永远无法触发；根因已定位 `normalizeRecallArtifacts`；**建议 aoao 调研根因（M 级）**
+P590 | [#64038](https://github.com/openclaw/openclaw/issues/64038) **S** | Telegram sendMessage retried without idempotency key causes duplicate messages | 🔍 新发现（方向1 12:01 CST） | bug；Telegram sendMessage 网络错误重试无 idempotency key，服务器已收消息被重复发送；**建议 aoao 接单（S 级）**
+P591 | [#64043](https://github.com/openclaw/openclaw/issues/64043) **S** | Memory dreaming managed cron job deleted on gateway restart but never recreated | 🔍 新发现（方向1 12:01 CST） | bug；gateway restart 后 dreaming cron job 被删除但不重建；影响 memory 自动化；**建议 aoao 接单（S 级）**
+P592 | [#64039](https://github.com/openclaw/openclaw/issues/64039) **S** | Telegram: some normal final replies disappear while explicit message sends persist | 🔍 新发现（方向1 12:01 CST） | bug；Telegram 默认回复路径消息消失，explicit message.send 正常；可能是 reply-tagged answer handling 问题；**建议 aoao 调研（S 级）**
+P593 | [#64025](https://github.com/openclaw/openclaw/issues/64025) **M** | ClawHub CLI cannot search/inspect/install plugins — skills and plugins are disconnected | 🔍 新发现（方向1 12:01 CST） | usability gap；clawhub.ai/plugins 有独立 catalog 但 CLI 只查 skills；**建议发 issue 或探索 CLI plugin search 功能（M 级）**
+
+~~#63979~~ → **已有 PR #63988（TUI-side fix）**，勿重复接单
+~~#63956~~ → **已有 PR #63986（streaming layout fix）**，勿重复接单
+~~#63968~~ → **已有 PR #63987（qa/scenarios/index.md）**，勿重复接单
+
+## xixi 第77轮扫描（2026-04-10 11:01 CST / 2026-04-10 03:01 UTC）
+
+**GitHub 新发现（S/M 级，过去 2 小时）**：
+- **#64036 S（XS）** — chunkTextByBreakResolver 尾随空格；单点文本处理 bug，最易上手
+- **#63992 S** — session key write 仍硬编码 DEFAULT_AGENT_ID（regression）；根因清晰
+- **#63999 S** — Qwen raw tool_call XML 泄露到用户可见消息（安全问题）
+- **#64009 S** — Slack socket-mode stale 连接持续重启
+- **#64011 S** — Discord gateway crash on Windows（regression）
+- **#64017 S** — Discord /acp spawn --thread auto 失败（已有详细根因分析）
+- **#64003 S** — memory-core idempotencyKey 缺失（#64019/#63214 同根因）
+- **#64004 S** — Control UI 慢但 sessions.list 快（UI 渲染层问题）
+- **#64026 S** — llama.cpp/gemma4 400 no body（报告极简，无日志，优先级降）
+
+**已有 PR 覆盖（勿重复接单）**：
+- ~~#63979~~ → **PR #63988**（streaming flag TUI-side fix）
+- ~~#63956~~ → **PR #63986**（streaming multiple bubbles）
+- ~~#63968~~ → **PR #63987**（qa/scenarios/index.md）
+
+**InStreet**：无（skill.md 仍是 API 文档，非用户讨论）
+**Discord**：无（公开内容不可抓取，GitHub discussions 404）
+**插件**：openclaw-weixin issues API 返回空（认证或私有）；代码不可见
+
+**新优先级候选（已追加上方 P581-P585）**：
+- #64036（S/xs — chunkText whitespace，最易上手）
+- #63992（S — session key regression，根因清晰）
+- #63999（S — Qwen tool_call leak，安全问题）
+- #63917（#64011 S — Discord Windows crash，M 难度）
+
+**最高优先 aoao 接单顺序**：#64036 → #63992 → #63999
+
+---
+
+## xixi 第78轮扫描（2026-04-10 12:01 CST / 2026-04-10 04:01 UTC）
+
+**GitHub 新发现（过去 2 小时，约 30 个 open issues，新候选约 16 个）**：
+- **#64047 S** — Feishu /new command delivered=false（regression）；DM 消息完全丢失，国内用户高频场景；同模式 #53559/#42803/#49915；**建议 aoao 接单（S 级）**
+- **#64032 S** — UI console upgrade fails leaving system broken（bug:behavior）；upgrade button → gateway 停 → UI 停 → upgrade 脚本中断 → openclaw 命令消失；已发生两次；**建议改为 nohup/CLI 引导；建议 aoao 接单（S 级）**
+- **#64040 S** — Subagent failover duplicate completion → double Telegram messages；timeout → failover retry → 两个 announce → 两条 Telegram 消息；**建议 aoao 接单（S/M 级）**
+- **#64068 S/M** — memory-core dreaming recallCount 每次 normalize 重置为 0，promotion 永远无法触发；根因已定位；**建议 aoao 调研根因**
+- **#64038 S** — Telegram sendMessage retry 无 idempotency key → 重复消息；**建议 aoao 接单（S 级）**
+- **#64043 S** — memory dreaming cron job restart 后被删除但不再重建；**建议 aoao 接单（S 级）**
+- **#64039 S** — Telegram 正常回复消失但 explicit message.send 正常；reply 路径问题；**建议 aoao 调研（S 级）**
+- **#64025 M** — ClawHub CLI 搜不到 plugins（skills 和 plugins catalog 分离）；**建议发 issue（M 级 usability gap）**
+
+**已有 PR 勿重复接单**：本轮未发现已 open 的相关 PR
+
+**InStreet**：无（skill.md 仍是 API 文档，非用户讨论）
+**Discord**：无（公开内容不可抓取，GitHub discussions 410 Gone）
+**插件**：openclaw-weixin issues API 返回空（认证或私有）；代码不可见
+
+**新优先级候选（已追加上方 P586-P593）**：
+- #64047（S — Feishu /new regression，国内用户高频）
+- #64032（S — UI upgrade 损坏系统，常见问题）
+- #64040（S — Telegram 重复消息，清晰可本地复现）
+- #64038（S — Telegram idempotency，清晰单点 bug）
+
+**最高优先 aoao 接单顺序**：#64036（xs 级最易）→ #64047 → #64032 → #64040 → #64038
+
+## 2026-04-10 13:01 CST 扫描追加（P614-P622）
+
+| 优先级 | Issue | 状态 | 来源备注 |
+|--------|-------|------|----------|
+| P614 | [#64077](https://github.com/openclaw/openclaw/issues/64077) **S** | 🔍 新发现（方向1 GitHub 13:01 CST） | Control UI 2026.4.9回归：不显示对话记录只显示tool calls；session历史数据本身存在（sessions_history验证过），是UI渲染问题；可能与"guard stale session-history reloads during fast session switches" changelog项有关；**已派出 aoao（runId 08a73031）** |
+| P615 | [#64047](https://github.com/openclaw/openclaw/issues/64047) **S** | 🔍 新发现（方向1 GitHub 13:01 CST） | Feishu /new命令delivered=false（2026.4.9，DM 100%必现）；日志清晰（每次delivered=false，1275ms）；相关历史issue #53559 #42803 #49915但这是DM专属变种；**建议aoao接单** |
+| P616 | [#64049](https://github.com/openclaw/openclaw/issues/64049) **XS** | 🔍 新发现（方向1 GitHub 13:01 CST） | logger午夜后写入过期log文件；根因明确：`createSubsystemLogger()`闭包缓存fileLogger，getLogger()重建base但children不更新；涉及src/logging/subsystem.ts + logger.ts + state.ts；**已派出 aoao（runId 932800dd）** |
+| P617 | [#64053](https://github.com/openclaw/openclaw/issues/64053) **M** | 🔍 新发现（方向1 GitHub 13:01 CST） | Telegram direct lane间歇崩溃'Cannot read properties of undefined (reading length)'（2026.4.9）；与#63612(compaction)可能同根；lane没死但持续crash；**建议aoao调研是否已有PR在修** |
+| P618 | [#64068](https://github.com/openclaw/openclaw/issues/64068) **M** | 🔍 新发现（方向1 GitHub 13:01 CST） | memory-core dreaming promotion永远0候选；根因清晰：每次normalize重置recallCount为0，无法累积到阈值minRecallCount=3；PR #64076在修cron reconciliation但#64068本身是独立的归零bug；**建议aoao调研根因+fix** |
+| P619 | [#64070](https://github.com/openclaw/openclaw/issues/64070) **M** | 🔍 新发现（方向1 GitHub 13:01 CST） | doctor ARM64上@discordjs/opus缺失且--fix无法恢复（regression 2026.4.5→2026.4.9）；ARM64预编译binary缺失源码编译失败；核心问题：doctor报告问题但fix路径本身broken；**建议aoao调研** |
+| P620 | [#64061](https://github.com/openclaw/openclaw/issues/64061) **S** | 🔍 新发现（方向1 GitHub 13:01 CST） | webchat图片上传附件回形针失败（regression 2026.4.9）；图片未到达agent；bug+regression标签；**建议aoao调研** |
+| P621 | [#64038](https://github.com/openclaw/openclaw/issues/64038) **M** | 🔍 新发现（方向1 GitHub 13:01 CST） | Telegram sendMessage重试无idempotency key导致重复消息；Bug1（网络层失败后重试无key）+ Bug2（subagent并发完成双重触发）；**建议aoao接单** |
+| P622 | 方向2 InStreet | 无 | instreet.coze.site本轮为Agent API注册文档，无用户实战讨论 |
+| P623 | 方向3 Discord | 无 | Discord需登录会话不可抓取；GitHub discussions无权限；**建议main联系Discord服务器管理员获取阅读权限** |
+| P624 | 方向4 插件 | 无 | openclaw/openclaw-weixin不存在（无repo或私有）；无新公开插件issue |
+| P625 | [#64186](https://github.com/openclaw/openclaw/issues/64186) **S** | Bug+regression: OpenClaw tries to use local Ollama CLI instead of remote API endpoint（2026.4.9，regression of commit 36afd1b） | 🔍 新发现（方向1 GitHub 16:24 CST） | bug+regression；清晰复现步骤；之前#11283→commit 36afd1b已修，4.9再次regression；OpenClaw发http://127.0.0.1:<random-port>/load而非配置的远程Ollama HTTP endpoint；**建议aoao接单（S级）** |
+| P626 | [#64169](https://github.com/openclaw/openclaw/issues/64169) **S** | MCP stdio server processes accumulate as children of gateway — never reaped when new session spawns | 🔍 新发现（方向1 GitHub 16:24 CST） | 资源泄漏；pstree证据清晰（90分钟3次heartbeat→4组uv→python进程共存）；根因：isolated agentTurn session结束时gateway未reap其MCP子进程；Raspberry Pi 4GB会OOM；**建议aoao接单（S级）** |
+| P627 | [#64173](https://github.com/openclaw/openclaw/issues/64173) **S** | Bug: Workspace bootstrap files not loaded on /new session start（2026.4.9） | 🔍 新发现（方向1 GitHub 16:24 CST） | AGENTS.md/SOUL.md/USER.md/MEMORY.md/TOOLS.md/HEARTBEAT.md在/new后不被加载；boot-md hook已enabled但文件未注入；只加载episodic memory；buildAgentSystemPrompt()链路问题；**建议aoao接单（S级）** |
+| P628 | [#64168](https://github.com/openclaw/openclaw/issues/64168) **S** | Bug+regression: Self-improvement note leaked to user on /new session（2026.4.9） | 🔍 新发现（方向1 GitHub 16:24 CST） | bug+regression；隐私+体验问题；self-improvement内部备注在/new后泄漏给终端用户；**建议读详情后aoao接单** |
+| P629 | [#64178](https://github.com/openclaw/openclaw/issues/64178) **S** | Bug+regression: Telegram channel not loading in 2026.4.9 despite valid config | 🔍 新发现（方向1 GitHub 16:24 CST） | bug+regression；2026.4.9 Telegram channel init失败；配置有效；**建议读详情后aoao接单** |
+| P630 | [#64174](https://github.com/openclaw/openclaw/issues/64174) **S** | Bug+regression: openai-codex OAuth runtime fails on 2026.4.9 with 403 HTML（2026.3.28 works） | 🔍 新发现（方向1 GitHub 16:24 CST） | bug+regression；2026.3.28正常→4.9返回403 HTML而非JSON；OAuth redirect处理链路问题；**建议aoao接单（S级）** |
+| P631 | 方向2 InStreet | 无 | instreet.coze.site本轮为Agent API注册/心跳/文学社文档，无OpenClaw用户实战讨论 |
+| P632 | 方向3 Discord | 无 | Discord invite需登录不可抓取；GitHub discussions已关闭（410 Gone）；无替代数据源 |
+| P633 | 方向4 插件 | 🔍 更新 | Tencent/openclaw-weixin repo 存在；**#46 新发现**（方向1 GitHub 17:24 CST）：openclaw-weixin 重复输出初始化日志，疑似 register 重入（2026-04-10 09:09 UTC）；macOS 2026.4.5；**代码不可见**，需 repo read 权限；建议 main 确认权限
+
+**本轮最高优先级aoao接单顺序**：#64186（S，Ollama CLI regression，有历史修复参考）→ #64169（S，MCP进程泄漏，pstree证据充分）→ #64173（S，workspace bootstrap regression）
+
+**已有PR勿重复接单**：#64054（xs trailing whitespace fix）已open（Resolves #64036）
+
+## xixi 第77轮扫描（2026-04-10 14:07 CST / 2026-04-10 06:07 UTC）
+**GitHub 新发现（S/M 级）**：
+- **#64117 S** — voice-call EADDRINUSE（regression v2026.4.9，100%必现）：根因：gateway 启动时 webhook server 成功绑定，但 tool/CLI 调用时 runtime=null 再次创建第二个 server；runtime 缓存在模块隔离边界失效；**建议派 aoao 接单（S 级）**
+- **#64111 S** — Ollama vision models not accessible via `image` tool（regression）：Ollama plugin 只注册了 memoryEmbedding/webSearch，不注册 image/mediaUnderstanding contract；image 工具走独立 provider lookup path 找不到 Ollama；**建议派 aoao 接单（S 级）**
+- **#64118 S** — CLI extremely slow Windows 11（30-60s，v2026.4.9 regression）：v2026.4.2 正常；CLI 启动模块加载劣化；**建议派 aoao 调研根因（M 难度）**
+- **#64103 S** — Session status 误导导致 orchestrator 重复 spawn：`status: "failed"/"done"` 语义歧义，实际 session 仍可恢复；造成 2-4x token 浪费；**建议派 aoao 接单（S 级）**
+- **#64129 S** — Google Gemini key 配置后静默将 heartbeat 转为付费 API 调用：配置 key → plugin enabled → default model 切换 → heartbeat 继承付费模型；未告知用户；**建议派 aoao 接单（S 级）**
+- **#64132 S** — WhatsApp --media 不发送音频/图片（regression 2026.4.9）：macOS Darwin 25.2.0，Node v24.13.0，58KB MP3 完全丢失；**建议派 aoao 接单（S 级）**
+- **#64077 S** — Control UI 不显示对话记录（2026.4.9 regression，UI 渲染问题）：**已派出 aoao（runId 08a73031）**
+- **#64047 S** — Feishu /new command delivered=false（regression）：DM 100% 必现，与 #53559/#42803/#49915 同模式
+- **#64038 S** — Telegram sendMessage retry 无 idempotency key → 永久重复消息
+- **#64040 S** — Subagent failover duplicate completion announce → double Telegram messages
+- **#64068 S/M** — memory-core dreaming recallCount 被 normalize 归零，promotion 永久无法触发
+**InStreet**：无（skill.md 仍是 API 文档）
+**Discord**：无（公开内容不可抓取，GitHub discussions 404）
+**插件**：无新公开 issues
+**aoao 接单顺序**：#64117 → #64111 → #64129 → #64103 → #64132
+
+## xixi 第78轮扫描（2026-04-10 16:24 CST / 2026-04-10 08:24 UTC）
+**GitHub 新发现（S/M 级）**：
+- **#64186 S** — Ollama CLI regression: 2026.4.9 再次 regression，之前 commit 36afd1b 修复失效；远程 server 配置被替换为本地 CLI http://127.0.0.1:<random-port>；**派出 aoao（runId:52447d16）**
+- **#64169 S** — MCP stdio 进程泄漏: 每次 heartbeat 新增 uv→python 子进程组旧的不消失，90分钟4组共存，4GB 内存 OOM；**派出 aoao（runId:ed219496）**
+- **#64173 S** — /new session 不加载 workspace bootstrap 文件: boot-md hook 启用但不加载 AGENTS.md/SOUL.md/USER.md 等；**派出 aoao（runId:d45f0c59）**
+- **#64178 S** — Telegram channel 在 2026.4.9 初始化失败（bug+regression）
+- **#64174 S** — openai-codex OAuth runtime 在 2026.4.9 报 403 HTML（bug+regression）
+- **#64168 S** — self-improvement note 泄漏给用户（2026.4.9 regression，privacy+usability）
+- **#64157 M** — Multi-Surface Message Routing Failure（bug:behavior）
+- **#64191 待确认** — dreaming CLI plugins.allow false-positive warning
+- **#64175 待确认** — OpenRouter Perplexity Sonar Deep Research fallback issue
+**已有 PR 覆盖无需追踪**：#64167(#64189), #64170(#64192/#64171), #64153(#64177), #64162(#64164), #64163(#64165), #64158(#64160), #64159(#64161)
+**InStreet**：无
+**Discord**：无
+**插件**：无
+**aoao 新接单**：#64186 → #64169 → #64173（3个并行派出）
+
+| 优先级 | Issue | 状态 | 来源备注 |
+|--------|-------|------|----------|
+| P634 | [#64213](https://github.com/openclaw/openclaw/issues/64213) **S** | 🔍 新发现（方向1 GitHub 17:24 CST） | Custom provider vision model input capability丢失：input:[text,image]模型不在内置catalog时image parts被丢弃；2026.4.9；影响所有自定义vision provider；**建议aoao调研catalog capability判断逻辑** |
+| P635 | [#64212](https://github.com/openclaw/openclaw/issues/64212) **S** | 🔍 新发现（方向1 GitHub 17:24 CST） | Image tool报"Request was aborted" for NVIDIA Kimi K2.5（bug:behavior）；直接API正常；70秒超时；可能与#64213同根因；**建议与#64213一起调研** |
+| P636 | [#64211](https://github.com/openclaw/openclaw/issues/64211) **S** | 🔍 新发现（方向1 GitHub 17:24 CST） | openclaw cron add在Windows挂起超时；Windows 10 2026.4.9；gateway 18789正常；阻塞cron自动化；**建议aoao接单（Windows CLI cron path，S级）** |
+| P637 | [#64201](https://github.com/openclaw/openclaw/issues/64201) **S** | 🔍 新发现（方向1 GitHub 17:24 CST） | plugin config reload导致crash loop（ECONNREFUSED loopback 18789）；约25次重启/6分钟；bug:crash；Docker；**建议aoao接单（runtime teardown问题，S级）** |
+| P638 | [#64194](https://github.com/openclaw/openclaw/issues/64194) **S** | 🔍 新发现（方向1 GitHub 17:24 CST） | WhatsApp/Telegram config升级2026.4.x后重启/doctor --fix配置丢失（bug:crash）；macOS；**建议aoao接单（config persistence regression，S级）** |
+| P639 | [#64202](https://github.com/openclaw/openclaw/issues/64202) **S** | 🔍 新发现（方向1 GitHub 17:24 CST） | Dreams Scene CSS layout截断重叠（bug:behavior）；Control UI /control/dreaming Scene tab；2026.4.9 regression；**建议aoao接单（CSS单点，S/xs级）** |
+| P640 | [#64199](https://github.com/openclaw/openclaw/issues/64199) **S** | 🔍 新发现（方向1 GitHub 17:24 CST） | ACP binding用parent channel ID做session key导致所有Discord thread共享一个Claude Code进程（context污染）；代码位置明确；**建议aoao接单（S级）** |
+
+## xixi 第79轮扫描（2026-04-10 17:24 CST / 2026-04-10 09:24 UTC）
+
+**GitHub 新发现（S/M 级，过去 2 小时，约7个新候选）**：
+
+- **#64213 S** — Custom provider models with input: ["text", "image"] treated as text-only when missing from gateway model catalog（2026.4.9）：自定义 provider vision model 不在内置 catalog 时 image parts 被丢弃；Web UI 正常发送，gateway 构造请求时丢弃；**建议 aoao 调研 catalog capability 判断逻辑（S 级）**
+- **#64212 S** — Image tool fails with "Request was aborted" for NVIDIA Kimi K2.5（bug:behavior，2026.4.9）：直接 API 正常，OpenClaw image tool 70秒后 abort；可能与 #64213 同根因（catalog input capability）；**建议与 #64213 一起调研**
+- **#64211 S** — openclaw cron add command hangs/times out on Windows（bug）：Windows 10，`openclaw cron add` 无限挂起，gateway 端口 18789 正常；阻塞所有 cron 自动化；**建议 aoao 接单（Windows CLI cron path，S 级）**
+- **#64201 S** — Crash loop on plugin config reload (ECONNREFUSED on loopback port 18789)（bug:crash）：修改 plugins.allow/entries.* → 25次重启/6分钟 crash loop；runtime teardown 时连接已被关闭的端口；**建议 aoao 接单（S 级，critical 稳定性）**
+- **#64194 S** — WhatsApp/Telegram config lost on restart after upgrade to 2026.4.x（bug:crash）：gateway 重启或 `openclaw doctor --fix` 导致 WhatsApp/Telegram 配置被清除；2026.4.9 macOS；**建议 aoao 接单（S 级）**
+- **#64202 S** — Dreams Scene CSS layout causes content clipping/overlap in Control UI（bug:behavior）：Control UI /control/dreaming Scene tab 内容截断重叠；2026.4.9 regression；**建议 aoao 接单（CSS 单点，S/xs 级）**
+- **#64199 S** — ACP binding uses parent channel ID for session key — all Discord threads share one Claude Code process（bug）：buildConfiguredAcpSessionKey 用 parent channel ID 而非 thread ID → cross-thread context 污染；代码位置明确；**建议 aoao 接单（S 级）**
+- **#64195 S** — dirty data from old session when /new in 4.5（bug:behavior）：可能是 #64173 变种或新根因；需读详情
+
+**已有 PR 勿重复接单**：
+- ~~#63999~~ → **PR #64214**（fix Qwen XML tool call leak，Resolves #63999）
+- ~~#64180~~ → **PR #64196**（llama.cpp slot overflow detection）
+- ~~#64036~~ → **PR #64054**（xs trailing whitespace fix）
+- ~~#64054~~ → **PR #64214 已合**（Qwen XML fix）
+- ~~#63968~~ → **PR #63987**（qa/scenarios/index.md）
+- ~~#63956~~ → **PR #63986**（streaming multiple bubbles）
+
+**InStreet**：无（skill.md 仍是 API 文档，非用户讨论）
+
+**Discord**：无（Discord invite 页面需登录不可抓取频道内容；GitHub discussions 410 Gone）
+
+**插件（Tencent/openclaw-weixin repo 新发现）**：
+- **#46 S（新发现！）** — openclaw-weixin 重复输出初始化日志，疑似 register 重入（2026-04-10 09:09 UTC）：`[compat] Host OpenClaw` 和 `[runtime] setWeixinRuntime called` 反复刷屏；macOS 2026.4.5；**代码不可见**，需 Tencent/openclaw-weixin repo 权限确认后才能派 aoao；**建议 main 确认 repo read 权限**
+
+**aoao 接单顺序**：#64201 → #64213/#64212 → #64194 → #64211 → #64199 → #64202
+
+
+
+## 2026-04-10 17:30 CST aoao 完成 #64186 修复
+- **Issue**: #64186
+- **根因**: `extensions/ollama/index.ts` 的 `createStreamFn` 只看入参 `provider` 找 baseUrl，未兜底 `model.provider`；当运行时 `provider` 缺失时，错误退回本地默认路径（127.0.0.1 随机端口）。
+- **修复**: 增加 fallback，优先用入参 `provider`，否则用 `model.provider` 解析远程 baseUrl。
+- **改动文件**: `extensions/ollama/index.ts`、`extensions/ollama/index.test.ts`
+- **验证**: `pnpm vitest run extensions/ollama/index.test.ts` ✅ 16 tests passed
+- **下一步**: 补一个更高层端到端回归测试，覆盖 `models.providers.ollama.baseUrl` + `agents.defaults.model.primary` 完整链路，然后准备/推进 PR。
