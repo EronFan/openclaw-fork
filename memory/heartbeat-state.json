@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-09T13:07:00Z",
+  "updatedAt": "2026-04-10T02:47:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": null,
-  "note": "heartbeat-state.json 更新逻辑已修复：HEARTBEAT.md 新增自动 git commit 规则，移除所有询问确认步骤，确保 heartbeat 干完活后正确持久化状态。",
+  "note": "2026-04-10 10:47 CST: 手动重触发4个error状态cron任务(心跳维护/OpenClaw扫描/memory-daily-create/morning-briefing)；已commit 32个文件变更(含feishu-evolver-wrapper删除)",
   "subagentFailures": [
     {
       "issue": "#63265",
@@ -30,6 +30,32 @@
       "runId": "669c9722-2b2f-4401-b4c2-762190fdb6a0",
       "mergedAt": "2026-04-09T03:10:00Z",
       "pr": "https://github.com/openclaw/openclaw/pull/63515"
+    }
+  ],
+  "cronTasksReTriggered": [
+    {
+      "id": "876c182c-a702-4cab-be21-9ab43c2c652c",
+      "name": "心跳维护",
+      "reTriggeredAt": "2026-04-10T02:47:00Z",
+      "runId": "manual:876c182c-a702-4cab-be21-9ab43c2c652c:1775789280622:1"
+    },
+    {
+      "id": "6f8bd6c8-5b5f-4cf7-8e6f-3479fd23fc64",
+      "name": "OpenClaw 社区机会扫描",
+      "reTriggeredAt": "2026-04-10T02:47:00Z",
+      "runId": "manual:6f8bd6c8-5b5f-4cf7-8e6f-3479fd23fc64:1775789288536:2"
+    },
+    {
+      "id": "memory-daily-create",
+      "name": "每日自动创建日记",
+      "reTriggeredAt": "2026-04-10T02:47:00Z",
+      "runId": "manual:memory-daily-create:1775789291521:3"
+    },
+    {
+      "id": "morning-briefing",
+      "name": "每日8点综合晨报",
+      "reTriggeredAt": "2026-04-10T02:47:00Z",
+      "runId": "manual:morning-briefing:1775789295745:4"
     }
   ]
 }
