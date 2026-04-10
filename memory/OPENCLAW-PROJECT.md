@@ -78,6 +78,9 @@
 | P42 | #55954 Feature: agent-optimized CLI mode for programmatic/tool calls | 🔍 新发现 | 低优先级功能请求,CLI优化 |
 | P43 | #55919 Anthropic 429 'Extra usage required for long context' misclassified as transient rate limit | 🔍 新发现 | 高优先级可用性问题,错误分类导致用户得到错误建议 |
 | P44 | [#56173](https://github.com/openclaw/openclaw/issues/56173) 严重安全漏洞:/pair approve绕过admin scope guard | ✅ GHSA已提交 (2026-03-28) | CVSS 9.9/10.0,Critical severity;根因:`approveDevicePairing()`依赖`options?.callerScopes`,plugin command path未传入`ctx.gatewayClientScopes`;有`operator.pairing`无`operator.admin`者可提权;aoao验证通过,security advisory已由范总通过GitHub PVR渠道提交;等待maintainer私下联系;⚠️ PR #56234**不覆盖**此漏洞(#56234仅修复audit检查,fix仍待确认) |
+| P45 | [#64292](https://github.com/openclaw/openclaw/issues/64292) sessions_spawn agentId regression (2026.4.9) | 🔍 新发现 | **最高优先级 regression**;`sessions_spawn`报错"agentId is not allowed for sessions_spawn (allowed: none)";2026.4.9引入;用户配置`tools.allow:["*"]`无法解决;有明确复现步骤;阻塞所有subagent功能;**建议 aoao 优先接** |
+| P46 | [#64293](https://github.com/openclaw/openclaw/issues/64293) Heartbeat burns 2M tokens/day despite heartbeat:{} config | 🔍 新发现 | 高成本regression;配置`heartbeat:{}`被忽略;~150K tokens/次,每30分钟一次;约$6/天;需追config merge流程中空对象的语义处理;**建议 aoao 接** |
+| P47 | [#64299](https://github.com/openclaw/openclaw/issues/64299) feishu_doc write/append return 400 on valid markdown | 🔍 新发现 | Feishu集成bug;`write`和`append`动作始终返回400;`update_block`正常;扩展代码可见;请求体构造路径差异导致;**建议 aoao 定位write vs update_block的body差异** |
 | P45 | #55994 weixin通道regression:message action=send被误判为poll | 🔒 代码不可见 | bug+regression标签,Beta release blocker;⚠️ weixin插件代码不在公共仓库,无法定位根因;错误来自`message-action-runner.ts`的`enforcePollParamsPresence()`,但weixin插件本身未找到;建议从openclaw-weixin私有插件仓库继续调查 |
 | P46 | #55993 功能请求:Include sessionKey和metadata在session log文件头 | 🔍 新发现 | 中等优先级,改善session日志可追溯性 |
 | P47 | #56010 Telegram voice notes are not transcribed; inbound message arrives only as <media:audio> | 🔍 新发现 | 高优先级regression,Telegram语音消息转录功能失效 |
@@ -5319,7 +5322,7 @@ P593 | [#64025](https://github.com/openclaw/openclaw/issues/64025) **M** | ClawH
 **Discord**：无（Discord invite 页面需登录不可抓取频道内容；GitHub discussions 410 Gone）
 
 **插件（Tencent/openclaw-weixin repo 新发现）**：
-- **#46 S（新发现！）** — openclaw-weixin 重复输出初始化日志，疑似 register 重入（2026-04-10 09:09 UTC）：`[compat] Host OpenClaw` 和 `[runtime] setWeixinRuntime called` 反复刷屏；macOS 2026.4.5；**代码不可见**，需 Tencent/openclaw-weixin repo 权限确认后才能派 aoao；**建议 main 确认 repo read 权限**
+- **#46 S** — openclaw-weixin 重复输出初始化日志，疑似 register 重入（2026-04-10 09:09 UTC）；**跳过：Tencent 未公开此 repo，无法获取代码，停止追踪**
 
 **aoao 接单顺序**：#64201 → #64213/#64212 → #64194 → #64211 → #64199 → #64202
 
@@ -5332,3 +5335,10 @@ P593 | [#64025](https://github.com/openclaw/openclaw/issues/64025) **M** | ClawH
 - **改动文件**: `extensions/ollama/index.ts`、`extensions/ollama/index.test.ts`
 - **验证**: `pnpm vitest run extensions/ollama/index.test.ts` ✅ 16 tests passed
 - **下一步**: 补一个更高层端到端回归测试，覆盖 `models.providers.ollama.baseUrl` + `agents.defaults.model.primary` 完整链路，然后准备/推进 PR。
+
+## xixi 第81轮扫描（2026-04-10 19:27 CST / 11:27 UTC）
+
+P594 | [#64274](https://github.com/openclaw/openclaw/issues/64274) **S** | Agent-specific MiniMax auth resolves from main agent auth-profiles.json（bug+regression）| 🔍 aoao派出（runId 755f67d0，2026-04-10 19:50 CST） | 2026.4.9 regression；agent `kate` 的独立 auth-profiles.json 不生效，运行时读取 main agent 的 auth-profiles.json；症状：kate 用 main 的 rate limit/quota 而非自己的；0评论无标签；**S 级，S 难度，auth profile 路径解析，aoao 接单中**
+P595 | [#64272](https://github.com/openclaw/openclaw/issues/64272) **S** | TTS Regression in v2026.4.9（bug+regression）| 🔍 新发现（方向1 GitHub） | 2026.4.9 regression；TTS 生成音频成功但从不交付到 Telegram；STT 也完全失效；ElevenLabs+Telegram 配置完整；0评论无标签；**S 级，S 难度，建议 aoao 接单**
+P596 | [#64251](https://github.com/openclaw/openclaw/issues/64251) **S** | CLI-backed model fails in follow-up path（codex-cli/gpt-5.4）（bug+bug:behavior）| 🔍 新发现（方向1 GitHub） | 首次调用成功（cli exec provider=codex-cli），同 session 后续调用失败 Unknown model；说明 CLI backend 首次可用但 session 状态管理 follow-up path 有问题；1评论；**S 级，S 难度，建议 aoao 接单**
+P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_HOST_UNAVAILABLE — nodes canvas a2ui push unauthorized（bug）| 🔍 新发现（方向1 GitHub） | 2026.4.9；`openclaw nodes canvas a2ui push` → unauthorized error；节点 push auth 鉴权失败；0评论无标签；**S 级，M 难度，建议 aoao 接单**

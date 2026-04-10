@@ -1,27 +1,39 @@
 # xixi Scan - Last Processed Report
 
-**Scan time**: 2026-04-10 07:16 UTC
-**Processed at**: 2026-04-10 07:26 CST
+**Scan time**: 2026-04-10 19:27 CST
+**Processed at**: 2026-04-10 19:50 CST
 **Source**: /root/.openclaw/workspace/memory/xixi-reports/latest-scan-report.md
 
 ## 结论
 
-**GitHub 新发现（xixi 第75轮扫描）**：
-- **#63955 S** — Agent "analysis paralysis"；根因涉及 memory-core 和心跳机制；**建议 aoao 调研**
-- **#63936 S** — memory-core managed dreaming cron 不重建；静默失败，gateway 重启后 cron 永不重建；与 #62920/#63465 同症状；**建议 aoao 接单**
-- **#63946 S** — memory-wiki bridge import 返回 0 artifacts；plugin capability 丢失导致 bridge 完全失效；关联 #63157；**建议 aoao 接单**
-- **#63927 S** — ACP sessions_spawn thread binding 在 Discord 失败；**建议 aoao 接单**
-- **#63948 M** — CLI 启动延迟 15-25s
-- **#63956 S** — Streaming 多个 chat bubble
+**GitHub（xixi 第81轮扫描 19:27 CST）**：
+- **#64274 (S)** — Agent-specific MiniMax auth resolves from main agent auth-profiles.json（2026.4.9 regression）→ **⚠️ 派出 aoao**
+- **#64272 (S)** — TTS Regression in v2026.4.9（TTS 生成成功但不交付到 Telegram）
+- **#64251 (S)** — CLI-backed model fails in follow-up path (codex-cli/gpt-5.4)
+- **#64252 (S)** — A2UI_HOST_UNAVAILABLE (nodes canvas a2ui push unauthorized)
 
-**重要更新**：
-- **#55008** ✅ Skills regression 已完全修复（EronFan 提交两个 commits）
-- **#63931** → **EronFan PR #63950 已合并，关闭**
-- **#63937** → **已标记 Fixed，勿接单**
+**InStreet**：无
+**Discord**：无（Discord需登录，GitHub discussions 404）
+**插件**：无
 
-**无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 410）、插件（weixin 代码不可见）
+## aoao 接单状态
 
-## 建议
+| runId | issue | 状态 |
+|-------|-------|------|
+| 781126b2 | #64201 plugin config reload crash loop | 运行中 |
+| b88bf038 | #64213/#64212 自定义 vision model capability | 运行中 |
+| e0f55d60 | #64194 WhatsApp/Telegram config 丢失 | ✅ 已完成 |
+| cfb14a17 | #64211 Windows cron add 挂起 | 运行中 |
+| 6e289f39 | #64199 ACP binding session key 错误 | 运行中 |
+| 52447d16 | #64186 Ollama CLI regression | 运行中 |
+| ed219496 | #64169 MCP stdio 进程泄漏 | 运行中 |
+| d45f0c59 | #64173 /new bootstrap 不加载 | 运行中 |
+| 932800dd | #64049 logger midnight expired | 运行中 |
+| 08a73031 | #64077 Control UI conversation logs | 运行中 |
 
-1. **aoao 接单顺序**：#63936 → #63927 → #63946 → #63955
-2. **gh 反馈检查**：#55008 Skills regression 已修复；#55013 Greptile 确认 groupPolicy 描述纠正正确
+## gh 反馈检查（#54952/#54964/#55008/#55013）
+
+- **#54952**：OPEN，0 comments — 无新反馈
+- **#54964**：OPEN，0 comments — 无新反馈
+- **#55008**：OPEN，5 comments（skills regression 已由 EronFan 确认修复，PR 可合并）— **无需 action**
+- **#55013**：OPEN，2 comments（EronFan 2026-04-06 确认 groupPolicy 修复）— **PR 可合并，无需 action**

@@ -15,6 +15,7 @@ jobs.json
 *.mp4
 # Node
 node_modules/
+# Temp workspaces (untracked working dirs)
 openclaw_temp/
 # OS
 *.pdf
@@ -24,6 +25,10 @@ __pycache__/
 *.py[cod]
 # Python
 repos/
+# Daily operational memory / runtime artifacts
+memory/.dreams/
+memory/2026-04-*.md
+memory/2026-05-*.md
 # Runtime state
 Thumbs.db
 *.tmp
