@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-11T14:31:00Z",
+  "updatedAt": "2026-04-11T15:46:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
-  "lastProactiveReachoutAt": null,
-  "note": "2026-04-10 22:17 CST heartbeat: no subagents in last 120m, no failed runs. xixi latest scan report file missing at /root/.openclaw/workspace/xixi-reports/latest-scan-report.md, but current time is within no-disturb window and no urgent new signal was confirmed from this check.",
+  "lastProactiveReachoutAt": "2026-04-11T15:46:00Z",
+  "note": "2026-04-11 23:46 CST heartbeat: detected 2 recent aoao subagent failures (#64852 timeout, PR-approve batch failed). xixi latest scan report exists and is fresh at 2026-04-11 23:02 CST. sessions_history also times out via gateway loopback, suggesting gateway RPC remains degraded.",
   "subagentFailures": [
     {
       "issue": "#63265",
@@ -22,6 +22,22 @@
       "reason": "静默失败，未知原因",
       "retryCount": 1,
       "status": "replaced_by_new_run"
+    },
+    {
+      "issue": "#64852",
+      "runId": "1ef7ca56-ef32-47a0-ba63-0094486e1a9c",
+      "failedAt": "2026-04-11T15:12:27Z",
+      "reason": "subagent timeout",
+      "retryCount": 1,
+      "status": "needs_retry"
+    },
+    {
+      "issue": "PR-approve-batch",
+      "runId": "8ccc81e3-dea0-4543-a4ca-1af0c6574bde",
+      "failedAt": "2026-04-11T15:28:27Z",
+      "reason": "subagent failed; gateway timeout when fetching history",
+      "retryCount": 1,
+      "status": "needs_retry"
     }
   ],
   "subagentSuccesses": [
