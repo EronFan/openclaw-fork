@@ -32,6 +32,11 @@
 
 | 优先级 | 任务 | 状态 | 备注 |
 |--------|------|------|------|
+| P59881 | [PR #65016](https://github.com/openclaw/openclaw/pull/65016) fix(cron): normalize malformed persisted job state on load | 🔍 新发现(方向1 GitHub 第93轮 05:23 CST) | size S; cron 持久化状态畸形; 与 P35/#55935 announce 路径可能相关; updated 21:48 UTC; 建议 quick review |
+| P59882 | [PR #65012](https://github.com/openclaw/openclaw/pull/65012) fix(memory-core): preserve public artifact visibility | 🔍 新发现(方向1 GitHub 第93轮 05:23 CST) | size L; docs+extensions:memory-core; bridge mode artifact 可见性; 可能与 P333/#64510 同根; 建议 aoao 确认 |
+| P59883 | Tencent/openclaw-weixin [#54](https://github.com/Tencent/openclaw-weixin/issues/54) 图片查看功能不可用（sharp模块缺失） | 🔍 新发现(方向2 插件 第93轮 05:23 CST) | 🔒代码不可见; 可用性缺口; updated 14:03 UTC; 建议外部追踪 |
+| P59884 | Tencent/openclaw-weixin [#53](https://github.com/Tencent/openclaw-weixin/issues/53) AI承诺设置定时提醒后未创建cron任务 | 🔍 新发现(方向2 插件 第93轮 05:23 CST) | 🔒代码不可见; cron 集成缺口; updated 12:01 UTC; 建议外部追踪 |
+| P59880 | Tencent/openclaw-weixin [#55](https://github.com/Tencent/openclaw-weixin/issues/55) [Feature] Support ACP thread binding so mode="session" works on WeChat channel | 🔍 新发现(方向2 插件 第93轮 05:23 CST) | 插件仓库近 2 小时更新; 建议跟踪是否演变为主仓问题 |
 | P338 | #64925 Silent agent errors never surface to TUI/Telegram | 🔍 新发现(方向1 GitHub) | 高优先级 UX/可靠性问题;用户只看到 2 分钟 typing 后静默失败;错误被 isError=true 吞掉,适合直接修复可观测性 |
 | P339 | #64917 sessions_send 从 webchat 可泄露内部 announce 并重绑 target session | 🔍 新发现(方向1 GitHub) | 高优先级隐私/路由问题;多 agent / webchat 场景有错误交付风险;建议 aoao 优先看 announce path |
 | P340 | #64921 插件 textTransforms 在 main process 完全不生效 | 🔍 新发现(方向1 GitHub) | 可用性缺口;`loadPluginRuntime()`始终返回 null;已有对应 PR #64924,可跟进 review |
