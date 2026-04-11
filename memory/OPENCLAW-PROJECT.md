@@ -32,6 +32,15 @@
 
 | 优先级 | 任务 | 状态 | 备注 |
 |--------|------|------|------|
+| P338 | #64925 Silent agent errors never surface to TUI/Telegram | 🔍 新发现(方向1 GitHub) | 高优先级 UX/可靠性问题;用户只看到 2 分钟 typing 后静默失败;错误被 isError=true 吞掉,适合直接修复可观测性 |
+| P339 | #64917 sessions_send 从 webchat 可泄露内部 announce 并重绑 target session | 🔍 新发现(方向1 GitHub) | 高优先级隐私/路由问题;多 agent / webchat 场景有错误交付风险;建议 aoao 优先看 announce path |
+| P340 | #64921 插件 textTransforms 在 main process 完全不生效 | 🔍 新发现(方向1 GitHub) | 可用性缺口;`loadPluginRuntime()`始终返回 null;已有对应 PR #64924,可跟进 review |
+| P341 | #64910 Agent response gets stuck / 输出无限闪烁不结束 | 🔍 新发现(方向1 GitHub) | regression+bug;核心交互卡死,影响面广;建议尽快确认是否与近期 run/liveness 状态改动有关 |
+| P338 | [#64925](https://github.com/openclaw/openclaw/issues/64925) Silent agent errors never surface to TUI/Telegram | 🔍 新发现(方向1 GitHub 第92轮 01:03 CST) | 高优先级 UX/可靠性问题;用户只看到 2 分钟 typing 后静默失败;错误被 isError=true 吞掉,适合直接修复可观测性;根因已定位;**建议 aoao 接单** |
+P339 | [#64917](https://github.com/openclaw/openclaw/issues/64917) sessions_send 从 webchat 可泄露内部 announce 并重绑 target session | 🔍 新发现(方向1 GitHub 第92轮 01:03 CST) | 高优先级隐私/路由问题;多 agent / webchat 场景有错误交付风险;建议 aoao 优先看 announce path |
+P340 | [#64921](https://github.com/openclaw/openclaw/issues/64921) 插件 textTransforms 在 main process 完全不生效 | 🔍 新发现(方向1 GitHub 第92轮 01:03 CST) | 可用性缺口;`loadPluginRuntime()`始终返回 null;已有对应 PR #64924,可跟进 review |
+P341 | [#64910](https://github.com/openclaw/openclaw/issues/64910) Agent response gets stuck / 输出无限闪烁不结束 | 🔍 新发现(方向1 GitHub 第92轮 01:03 CST) | regression+bug;核心交互卡死,影响面广;建议尽快确认是否与近期 run/liveness 状态改动有关 |
+P342 | Tencent/openclaw-weixin [#55](https://github.com/Tencent/openclaw-weixin/issues/55) Support ACP thread binding on WeChat | 🔍 新发现(方向2 插件) | 新功能请求;与 thread-bound persistent session 直接相关,可作为 weixin 能力缺口长期追踪 |
 | P1 | Diagnostics gap issue | 🔍 仍开放 (#54952) | gh api 确认 state=open，comments=0；误判为 404；重新追踪，等 review 机会 |
 | P1b | Session zombie state after init failure | 🔍 仍开放 (#54964) | gh api 确认 state=open，comments=0；误判为 404；重新追踪 |
 | P3 | docs(cli/message) clarify plugin extensibility | ✅ **PR 可 merge（#55008）** | **重大进展！** Greptile P1 发现：PR 意外移除 feishu skills 注册（`./skills` 目录存在但 manifest 字段被删）；EronFan 及时报告→maintainer 已确认并修复（commit bb2ea2f7e4 + b14be82db1）；greptile 后续确认修复完成；PR 现在只含文档变更；建议 Approve 推 merge |
