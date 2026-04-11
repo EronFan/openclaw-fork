@@ -12,6 +12,16 @@ const routeReplyMock = vi.fn();
 const isRoutableChannelMock = vi.fn();
 const runPreflightCompactionIfNeededMock = vi.fn();
 const resolveCommandSecretRefsViaGatewayMock = vi.fn();
+const runMessageReceivedMock = vi.fn(async () => {});
+const hasHooksMock = vi.fn(() => true);
+const triggerInternalHookMock = vi.fn(async () => {});
+const createInternalHookEventMock = vi.fn((kind, action, sessionKey, payload) => ({
+  kind,
+  action,
+  sessionKey,
+  payload,
+}));
+const fireAndForgetHookMock = vi.fn();
 let createFollowupRunner: typeof import("./followup-runner.js").createFollowupRunner;
 let clearRuntimeConfigSnapshot: typeof import("../../config/config.js").clearRuntimeConfigSnapshot;
 let loadSessionStore: typeof import("../../config/sessions/store.js").loadSessionStore;
@@ -284,6 +294,19 @@ async function loadFreshFollowupRunnerModuleForTest() {
   vi.doMock("../../cli/command-secret-targets.js", () => ({
     getAgentRuntimeCommandSecretTargetIds: () => new Set(["skills.entries."]),
   }));
+  vi.doMock("../../plugins/hook-runner-global.js", () => ({
+    getGlobalHookRunner: () => ({
+      hasHooks: (...args: unknown[]) => hasHooksMock(...args),
+      runMessageReceived: (...args: unknown[]) => runMessageReceivedMock(...args),
+    }),
+  }));
+  vi.doMock("../../hooks/internal-hooks.js", () => ({
+    createInternalHookEvent: (...args: unknown[]) => createInternalHookEventMock(...args),
+    triggerInternalHook: (...args: unknown[]) => triggerInternalHookMock(...args),
+  }));
+  vi.doMock("../../hooks/fire-and-forget.js", () => ({
+    fireAndForgetHook: (...args: unknown[]) => fireAndForgetHookMock(...args),
+  }));
   ({ createFollowupRunner } = await import("./followup-runner.js"));
   ({ clearRuntimeConfigSnapshot, setRuntimeConfigSnapshot } =
     await import("../../config/config.js"));
@@ -326,6 +349,11 @@ beforeEach(() => {
   routeReplyMock.mockReset();
   routeReplyMock.mockResolvedValue({ ok: true });
   isRoutableChannelMock.mockReset();
+  runMessageReceivedMock.mockReset().mockResolvedValue(undefined);
+  hasHooksMock.mockReset().mockReturnValue(true);
+  triggerInternalHookMock.mockReset().mockResolvedValue(undefined);
+  createInternalHookEventMock.mockClear();
+  fireAndForgetHookMock.mockClear();
   isRoutableChannelMock.mockImplementation((ch: string | undefined) =>
     Boolean(ch?.trim() && ROUTABLE_TEST_CHANNELS.has(ch.trim().toLowerCase())),
   );
@@ -392,6 +420,77 @@ function mockCompactionRun(params: {
 function createAsyncReplySpy() {
   return vi.fn(async () => {});
 }
+
+describe("createFollowupRunner message hooks", () => {
+  it("emits message_received hooks for queued followups before the run restarts", async () => {
+    runEmbeddedPiAgentMock.mockResolvedValueOnce({
+      payloads: [],
+      meta: {},
+    });
+    const runner = createFollowupRunner({
+      typing: createMockTypingController(),
+      typingMode: "instant",
+      defaultModel: "openai/gpt-5.4",
+    });
+    const queued = createQueuedRun({
+      prompt: "queued inbound",
+      messageId: "msg-123",
+      originatingChannel: "telegram",
+      originatingTo: "chat-42",
+      originatingAccountId: "acct-1",
+      originatingThreadId: 77,
+      run: {
+        sessionKey: "main",
+        messageProvider: "telegram",
+        senderId: "user-7",
+        senderName: "Queue User",
+        senderUsername: "queue-user",
+        senderE164: "+8613800000000",
+      },
+    });
+
+    await runner(queued);
+
+    expect(runMessageReceivedMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        from: "user-7",
+        content: "queued inbound",
+        metadata: expect.objectContaining({
+          to: "chat-42",
+          provider: "telegram",
+          threadId: 77,
+          originatingChannel: "telegram",
+          originatingTo: "chat-42",
+          messageId: "msg-123",
+          senderName: "Queue User",
+        }),
+      }),
+      expect.objectContaining({
+        accountId: "acct-1",
+        channelId: "telegram",
+        conversationId: "chat-42",
+      }),
+    );
+    expect(createInternalHookEventMock).toHaveBeenCalledWith(
+      "message",
+      "received",
+      "main",
+      expect.objectContaining({
+        from: "user-7",
+        content: "queued inbound",
+        accountId: "acct-1",
+        messageId: "msg-123",
+        metadata: expect.objectContaining({
+          to: "chat-42",
+          provider: "telegram",
+          threadId: 77,
+        }),
+      }),
+    );
+    expect(triggerInternalHookMock).toHaveBeenCalledTimes(1);
+    expect(fireAndForgetHookMock).toHaveBeenCalledTimes(2);
+  });
+});
 
 describe("createFollowupRunner runtime config", () => {
   it("uses the active runtime snapshot for queued embedded followup runs", async () => {

@@ -15,7 +15,17 @@ import type { TypingMode } from "../../config/types.js";
 import { logVerbose } from "../../globals.js";
 import { registerAgentRunContext } from "../../infra/agent-events.js";
 import { formatErrorMessage } from "../../infra/errors.js";
+import { fireAndForgetHook } from "../../hooks/fire-and-forget.js";
+import {
+  toInternalMessageReceivedContext,
+  toPluginMessageContext,
+  toPluginMessageReceivedEvent,
+  type CanonicalInboundMessageHookContext,
+} from "../../hooks/message-hook-mappers.js";
+import { createInternalHookEvent, triggerInternalHook } from "../../hooks/internal-hooks.js";
+import { getGlobalHookRunner } from "../../plugins/hook-runner-global.js";
 import { defaultRuntime } from "../../runtime.js";
+import { normalizeLowercaseStringOrEmpty } from "../../shared/string-coerce.js";
 import { isInternalMessageChannel } from "../../utils/message-channel.js";
 import { stripHeartbeatToken } from "../heartbeat.js";
 import { isSilentReplyText, SILENT_REPLY_TOKEN } from "../tokens.js";
@@ -34,6 +44,63 @@ import { isRoutableChannel, routeReply } from "./route-reply.js";
 import { incrementRunCompactionCount, persistRunSessionUsage } from "./session-run-accounting.js";
 import { createTypingSignaler } from "./typing-mode.js";
 import type { TypingController } from "./typing.js";
+
+function buildQueuedMessageHookContext(queued: FollowupRun): CanonicalInboundMessageHookContext {
+  const provider = queued.run.messageProvider;
+  const channelId = normalizeLowercaseStringOrEmpty(queued.originatingChannel ?? provider ?? "");
+  const conversationId = queued.originatingTo ?? queued.run.groupId ?? queued.run.senderId;
+  const isGroup = Boolean(queued.run.groupId || queued.run.groupChannel);
+  return {
+    from: queued.run.senderId ?? queued.originatingTo ?? "",
+    to: queued.originatingTo,
+    content: queued.prompt,
+    timestamp: queued.enqueuedAt,
+    channelId,
+    accountId: queued.originatingAccountId ?? queued.run.agentAccountId,
+    conversationId,
+    messageId: queued.messageId,
+    senderId: queued.run.senderId,
+    senderName: queued.run.senderName,
+    senderUsername: queued.run.senderUsername,
+    senderE164: queued.run.senderE164,
+    provider,
+    surface: queued.originatingChannel ?? provider,
+    threadId: queued.originatingThreadId,
+    originatingChannel: queued.originatingChannel,
+    originatingTo: queued.originatingTo,
+    guildId: queued.run.groupSpace,
+    channelName: queued.run.groupChannel,
+    isGroup,
+    groupId: isGroup ? queued.run.groupId ?? conversationId : undefined,
+  };
+}
+
+function emitQueuedMessageReceivedHooks(queued: FollowupRun): void {
+  const canonical = buildQueuedMessageHookContext(queued);
+  const hookRunner = getGlobalHookRunner();
+  if (hookRunner?.hasHooks("message_received")) {
+    fireAndForgetHook(
+      hookRunner.runMessageReceived(
+        toPluginMessageReceivedEvent(canonical),
+        toPluginMessageContext(canonical),
+      ),
+      "followup-runner: message_received plugin hook failed",
+    );
+  }
+
+  const sessionKey = queued.run.sessionKey;
+  if (sessionKey) {
+    fireAndForgetHook(
+      triggerInternalHook(
+        createInternalHookEvent("message", "received", sessionKey, {
+          ...toInternalMessageReceivedContext(canonical),
+          timestamp: canonical.timestamp,
+        }),
+      ),
+      "followup-runner: message_received internal hook failed",
+    );
+  }
+}
 
 export function createFollowupRunner(params: {
   opts?: GetReplyOptions;
@@ -135,6 +202,7 @@ export function createFollowupRunner(params: {
   };
 
   return async (queued: FollowupRun) => {
+    emitQueuedMessageReceivedHooks(queued);
     queued.run.config = await resolveQueuedReplyExecutionConfig(queued.run.config);
     const replySessionKey = queued.run.sessionKey ?? sessionKey;
     const runtimeConfig = resolveQueuedReplyRuntimeConfig(queued.run.config);
