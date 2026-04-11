@@ -1,0 +1,623 @@
+{
+  "since": "2026-04-11T17:47:00Z",
+  "direction1": [
+    {
+      "number": 60970,
+      "title": "[Bug]: acpx 0.4.x — Silent Session Creation Failure",
+      "url": "https://github.com/openclaw/openclaw/issues/60970",
+      "labels": [
+        "bug",
+        "regression"
+      ],
+      "updated_at": "2026-04-11T19:49:10Z",
+      "is_pr": false,
+      "author": "sbmilburn",
+      "score": 11,
+      "body": "### Bug type\n\nRegression (worked before, now fails)\n\n### Beta release blocker\n\nNo\n\n### Summary\n\n`acpx@0.4.0` and `acpx@0.4.1` fail to create ACP sessions for Claude\nCode. The `sessions new` command exits 0 but creates no session.\n`sessions list` returns \"No sessions.\" The OpenClaw gateway reports\n\"ensureSession returned no events\" for both `sessions ensure` and\n`sessions new` code paths. Rolling back to `acpx@0.3.1` resolves the\nissue immediately.\n\n## Environment\n\n- **OS:** Ubuntu 24.04 (Linux 6.8.0-107-generic x64)\n- **Node.js:** v25.8.2\n- **OpenClaw:** 2026.4.2 (d74a122)\n- **Claude Code:** 2.1.92 (`@anthropic-ai/claude-code`)\n- **Auth:** OAuth (Max subscription, scopes include `user:sessions:claude_code`)\n\n\n### Steps to reproduce\n\n\n1. Install acpx 0.4.1: `npm install -g acpx@0.4.1`\n2. Configure OpenClaw plugin:\n   ```json\n   \"plugins\": {\n     \"entries\": {\n       \"acpx\": {\n         \"enabled\": true,\n         \"config\": {\n           \"command\": \"acpx\",\n           \"expectedVersion\": \"0.4.1\",\n           \"permissionMode\": \"approve-all\"\n         }\n       }\n     }\n   }\n   ```\n3. Restart gateway — logs confirm: `acpx runtime backend registered`\nand `acpx runtime backend ready`\n4. Attempt session creation via CLI:\n   ```bash\n   cd /home/user/workspace\n   acpx claude sessions new --name test\n   # Exit code: 0\n   # Output: (none)\n\n   acpx claude sessions list\n   # Output: \"No sessions\"\n   ```\n5. Attempt session creation via OpenClaw `sessions_spawn`:\n   ```\n   sessions_spawn(runtime: \"acp\", agentId: \"claude\", task: \"hello\", mode: \"run\")\n   ```\n   Returns: `ACP session init failed: neither 'sessions ensure' nor\n'sessions new' returned valid session identifiers`\n\n### Expected behavior\n\n\n`acpx claude sessions new` should create a session and return a\nsession ID. `sessions list` should"
+    },
+    {
+      "number": 64943,
+      "title": "memory-core: embedded reflection generation completely broken — 100% fallback to minimal pointer since 2026.4.3, zero files since 4/8",
+      "url": "https://github.com/openclaw/openclaw/issues/64943",
+      "labels": [],
+      "updated_at": "2026-04-11T17:47:03Z",
+      "is_pr": false,
+      "author": "Nana77mi",
+      "score": 11,
+      "body": "## Bug type\n\nRegression (worked before, now fails silently)\n\n## Summary\n\nEmbedded reflection generation (the automatic per-session reflection that writes to `memory/reflections/`) has been completely broken since upgrading to 2026.4.x. The pipeline produces either empty fallback pointers (4/3–4/8) or nothing at all (4/8–present), resulting in a dead recall store and a dreaming system that processes zero meaningful entries.\n\n## Environment\n\n- **OpenClaw:** 2026.4.10 (44e5b62)\n- **OS:** macOS 25.3.0 arm64 (Darwin Kernel Version 25.3.0, T8132)\n- **Node:** v22.22.0\n- **Providers:** bailian/qwen3.6-plus (primary), minimax/MiniMax-M2.7-highspeed (fallback), openai-codex/gpt-5.4 (fallback)\n\n## Observed behavior\n\n### Phase 1: 4/3 – 4/8 — 100% fallback to minimal pointer\n\nAll 12 reflection files in `memory/reflections/` are empty fallbacks:\n\n```\n# Reflection: 2026-04-07 15:41:29 UTC\n## Context (session background)\n- (fallback) Reflection generation failed; storing minimal pointer only.\n\n## Decisions (durable)\n- (none captured)\n\n## User model deltas (about the human)\n- (none captured)\n\n## Agent model deltas (about the assistant/system)\n- (none captured)\n\n## Lessons & pitfalls\n- (none captured)\n```\n\nEvery file has the same shape — no durable decisions, no user model deltas, no lessons. The only content is a generic \"Investigate why embedded reflection generation failed\" suggestion.\n\n### Phase 2: 4/8 – present — zero files generated\n\nAfter 2026-04-07, the `reflections/` directory has zero new files. Not even empty fallback pointers. The directory has been completely static for 4+ days despite dozens of conversation turns.\n\n### Concurrent symptom: embedded runner timeouts\n\nGateway logs from 2026-04-11 show frequent `embedded_run_failover_decision` events with `failoverReason: \"timeo"
+    },
+    {
+      "number": 64665,
+      "title": "[Bug]: WhatsApp outbound media silently dropped — hasMedia: false — CLI and model-initiated sends affected (v2026.4.8–4.9)",
+      "url": "https://github.com/openclaw/openclaw/issues/64665",
+      "labels": [
+        "bug",
+        "regression"
+      ],
+      "updated_at": "2026-04-11T18:34:44Z",
+      "is_pr": false,
+      "author": "AllenKWPaley",
+      "score": 9,
+      "body": "### Bug type\n\nRegression (worked before, now fails)\n\n### Beta release blocker\n\nNo\n\n### Summary\n\nAll WhatsApp outbound media fails silently regardless of trigger path — CLI --media flag and model-initiated sends are both affected. The model may attempt and \"confirm\" media delivery repeatedly without any indication of failure, burning tokens and misleading the user.\n\n### Steps to reproduce\n\nWe traced the full media path through the minified dist. The call chain breaks down as follows:\n\nMedia enters session processing and is saved to disk via persistChatSendImages → returns savedImages with filesystem paths (server.impl-BxLfE9ri.js:12837)\nresolveChatSendTranscriptMediaFields stores those paths as MediaPath/MediaPaths in the transcript only (server.impl-BxLfE9ri.js:12873)\nreply-BwK-bN2w.js:1696-1697 reads MediaPaths — but exclusively to inject a [media attached] text note into the LLM prompt. No path→URL conversion occurs here.\nresolveSendableOutboundReplyParts (reply-payload-CcbNO0Ax.js:65-68) assembles the outbound payload — mediaUrls is empty because nothing bridged the saved filesystem paths into it\nWhatsApp sender evaluates hasMedia: Boolean(options.mediaUrl) → false\nMessage is delivered as text only. No error is raised.\n\nConfirmed no path→URL conversion mechanism exists in the reply pipeline:\nbashgrep -n \"pathToUrl\\|fileToUrl\\|gatewayUrl\\|serveFile\" reply-BwK-bN2w.js\n# returns nothing\n\n### Expected behavior\n\nogg audio file passed to user handset in WhatsApp to be playable\n\n### Actual behavior\n\nSilent failure,  \"...\" other party is typing dots appear, no message comes through.\n\n### OpenClaw version\n\nv2026.4.8–4.9\n\n### Operating system\n\nMint 22\n\n### Install method\n\nOfficial one-liner install script\n\n### Model\n\nChatGPT5.4 Codex\n\n### Provider / routing chain\n\nOAuth\n\n### A"
+    },
+    {
+      "number": 64613,
+      "title": "chat.history leaks system-level memory injection blocks to WebChat UI",
+      "url": "https://github.com/openclaw/openclaw/issues/64613",
+      "labels": [],
+      "updated_at": "2026-04-11T18:02:26Z",
+      "is_pr": false,
+      "author": "JackChen201535",
+      "score": 8,
+      "body": "## Describe the bug\n\nThe WebChat UI (macOS native app, Control UI) renders system-level memory injection blocks that should be invisible to users. These blocks contain internal prompts like:\n\n```\n## Memory system — ACTION REQUIRED\n\nAuto-recall found no relevant results for a long query. You MUST call `memory_search` now with a shortened query (2-5 key words) before answering. Do not skip this step. Do NOT answer without searching first.\n```\n\nand\n\n```\nRead HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.\nWhen reading HEARTBEAT.md, use workspace file /Users/jackchen/.openclaw/workspace/HEARTBEAT.md (exact case). Do not read docs/heartbeat.md.\n```\n\n## Expected behavior\n\nThese are internal system prompts injected for the agent, not user-facing content. The `chat.history` response should strip them before rendering to the UI.\n\nThe docs mention that `chat.history` strips inline delivery directives (`[[reply_to_*]]`), `NO_REPLY`, and tool-call XML, but memory/heartbeat system injection blocks are not currently filtered.\n\n## To reproduce\n\n1. Start a fresh session\n2. When auto-recall finds no relevant results, the system injects the memory search prompt\n3. The prompt appears visible in the WebChat UI\n\n## Environment\n\n- **OpenClaw version:** 2026.4.9 (0512059)\n- **Platform:** macOS (arm64)\n- **Memory plugin:** memos-local-openclaw-plugin\n- **Channel:** webchat (Control UI)\n\n## Suggested fix\n\nAdd filtering in `chat.history` for system injection blocks. These typically appear as:\n- `## Memory system — ACTION REQUIRED` blocks\n- Heartbeat prompt blocks (starting with `Read HEARTBEAT.md`)\n\nSimilar to how `[[reply_to_*]]` and `NO_REPLY` are already stripped."
+    },
+    {
+      "number": 64799,
+      "title": "[Bug]: Volcengine Coding Plan model resolves to \"Unknown model: volcengine-plan/ark-code-latest\" on macOS 26.4.1",
+      "url": "https://github.com/openclaw/openclaw/issues/64799",
+      "labels": [
+        "bug"
+      ],
+      "updated_at": "2026-04-11T19:41:30Z",
+      "is_pr": false,
+      "author": "Siilent-Sea",
+      "score": 7,
+      "body": "### Bug type\n\nRegression (worked before, now fails)\n\n### Beta release blocker\n\nNo\n\n### Summary\n\nAfter reinstalling and reconfiguring OpenClaw 2026.4.10 on macOS, Volcengine Coding Plan fails before reply because the documented model ref `volcengine-plan/ark-code-latest` is rejected as `Unknown model`.\n\n### Steps to reproduce\n\n1. Install OpenClaw 2026.4.10 on macOS using npm global install and the mac app.\n2. Configure local gateway and confirm `openclaw gateway probe` returns reachable=yes, connect=ok, rpc=ok.\n3. Configure Volcengine auth using `VOLCANO_ENGINE_API_KEY`.\n4. Set the default model to `volcengine-plan/ark-code-latest`.\n5. Run `openclaw models status --agent main --probe` or try to chat.\n6. Observe `Unknown model: volcengine-plan/ark-code-latest`.\n\n### Expected behavior\n\nThe documented Volcengine Coding Plan model ref `volcengine-plan/ark-code-latest` should be accepted and the agent should reply normally.\n\n### Actual behavior\n\nThe agent fails before reply with `Unknown model: volcengine-plan/ark-code-latest`.\n\n`openclaw models status --agent main --probe` shows:\n- Default (defaults): volcengine-plan/ark-code-latest\n- Configured models (1): volcengine-plan/ark-code-latest\n- Volcengine auth is present\n- Probe result: `Unknown model: volcengine-plan/ark-code-latest`\n\nIn one earlier probe, `volcengine/deepseek-v3-2-251201` also returned `Unknown model`.\n\n### OpenClaw version\n\n2026.4.10 (44e5b62)\n\n### Operating system\n\nmacOS 26.4.1\n\n### Install method\n\nnpm global install + mac app\n\n### Model\n\nvolcengine-plan/ark-code-latest\n\n### Provider / routing chain\n\nopenclaw -> local gateway -> volcengine-plan\n\n### Additional provider/model setup details\n\nUsing Volcengine Coding Plan with `VOLCANO_ENGINE_API_KEY`.\n\nObserved facts:\n- `openclaw config get gateway.mode` return"
+    },
+    {
+      "number": 64667,
+      "title": "[Bug]: OpenAI Codex OAuth invalid request scope",
+      "url": "https://github.com/openclaw/openclaw/issues/64667",
+      "labels": [
+        "bug",
+        "regression"
+      ],
+      "updated_at": "2026-04-11T19:06:55Z",
+      "is_pr": false,
+      "author": "faustolazala",
+      "score": 7,
+      "body": "### Bug type\n\nRegression (worked before, now fails)\n\n### Beta release blocker\n\nNo\n\n### Summary\n\nDuring onboard when choosing OpenAI Codex as a Model/auth provider the OAuth URL contains invalid scopes (model.request+api.responses.write).\n\n### Steps to reproduce\n\n1. Start the onboarding process on version 2026.4.10.\n2. Choose OpenAI Codex as Model/auth provider.\n3. Open the generated URL in your LOCAL browser.\n4. Callback URL contains 'The requested scope is invalid, unknown or malformed. The OAuth 2.0 Client is not allowed to request scope model.request.\n\n### Expected behavior\n\nIn 2026.4.8 the OAuth process completed successfully.\n\n### Actual behavior\n\nThe OAuth process fails.\n\n### OpenClaw version\n\n2026.4.10\n\n### Operating system\n\nUbuntu 24.04\n\n### Install method\n\ncurl -fsSL https://openclaw.ai/install.sh | bash\n\n### Model\n\nopenai-codex/gpt-5.4\n\n### Provider / routing chain\n\nopenclaw -> openai\n\n### Additional provider/model setup details\n\n_No response_\n\n### Logs, screenshots, and evidence\n\n```shell\n\n```\n\n### Impact and severity\n\n_No response_\n\n### Additional information\n\nIt was working properly in version 2026.4.8. \nWorkaround: Remove the 'model.request+api.responses.write' section from the scope in the url."
+    },
+    {
+      "number": 64976,
+      "title": "[Bug]: (cron): announce delivery ignores NO_REPLY when agent prepends other text",
+      "url": "https://github.com/openclaw/openclaw/issues/64976",
+      "labels": [
+        "bug",
+        "regression"
+      ],
+      "updated_at": "2026-04-11T19:06:43Z",
+      "is_pr": false,
+      "author": "BKF-Gitty",
+      "score": 7,
+      "body": "### Bug type\n\nRegression (worked before, now fails)\n\n### Beta release blocker\n\nNo\n\n### Summary\n\nCron announce delivery sends the full agent response when it contains NO_REPLY mixed with other text; the NO_REPLY suppression only works when it is the entire response.\n\n### Steps to reproduce\n\n1. openclaw cron add --name \"Test\" --cron \"*/5 * * * *\" --session isolated --message \"Check X. If nothing actionable, reply NO_REPLY\" --announce --channel discord --to \"channel:xxx\"\n2. Wait for the agent to respond with summary text followed by NO_REPLY (e.g., \"All 3 items already processed.\\n\\nNO_REPLY\")\n3. Observe that the full response including the summary is delivered to the target channel\n\n### Expected behavior\n\nDelivery is suppressed when the normalized response resolves to NO_REPLY, consistent with the direct-reply path fix landed in 2026.4.9 (\"strip glued leading NO_REPLY tokens\").\n\n### Actual behavior\n\nFull response including summary text before NO_REPLY is delivered to the announce target. 15 deliveries observed over 8 days from production crons, 14 contained NO_REPLY but were delivered anyway.\n\n### OpenClaw version\n\n2026.4.8\n\n### Operating system\n\nmacOS 15.4\n\n### Install method\n\nnpm global\n\n### Model\n\nanthropic/claude-opus-4 (isolated cron jobs)\n\n### Provider / routing chain\n\nopenclaw -> anthropic\n\n### Additional provider/model setup details\n\nOpus for interactive, Sonnet for bulk crons\n\n### Logs, screenshots, and evidence\n\n```shell\n{\n  \"ts\": 1775912773688,\n  \"jobId\": \"ccabd2fc-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n  \"action\": \"finished\",\n  \"status\": \"ok\",\n  \"summary\": \"All 3 returned items have the xxxxxx Action field filled:\\n\\n1. **Item A** — xxxxxx Action already written (details)\\n2. **Item B** — xxxxx Action already written (details)\\n3. **Item C** — xxxxxx Action already wri"
+    },
+    {
+      "number": 64975,
+      "title": "[Bug]: CLI completion fails: qa scenario pack not found: qa/scenarios/index.md",
+      "url": "https://github.com/openclaw/openclaw/issues/64975",
+      "labels": [
+        "bug",
+        "regression"
+      ],
+      "updated_at": "2026-04-11T19:00:29Z",
+      "is_pr": false,
+      "author": "ronildoseixas",
+      "score": 7,
+      "body": "### Bug type\n\nRegression (worked before, now fails)\n\n### Beta release blocker\n\nNo\n\n### Summary\n\nAfter updating to OpenClaw 2026.4.10, I noticed that CLI completion generation is failing.\n\n`openclaw completion --help` works normally, but running:\n\n`openclaw completion --shell zsh`\n\nreturns:\n\n`Failed to start CLI: Error: qa scenario pack not found: qa/scenarios/index.md`\n\nSo the `completion` command exists, but actual completion script generation fails because the QA scenario pack file is missing.\n\nImpact seems limited to CLI completion/autocomplete generation. The main gateway/runtime still works normally:\n- `openclaw status` works\n- WhatsApp is ON / OK\n- Telegram is ON / OK\n- gateway service is running normally\n\nThis looks like a packaging/release issue rather than a runtime failure.\n\n### Steps to reproduce\n\n1. Run `openclaw completion --help` and confirm the command exists and prints usage normally.\n2. Run `openclaw completion --shell zsh`.\n3. Observe that the command fails with `Failed to start CLI: Error: qa scenario pack not found: qa/scenarios/index.md`.\n\n### Expected behavior\n\n`openclaw completion --shell zsh` should generate a valid zsh completion script on stdout, similar to how `openclaw completion --help` works normally and as expected from the CLI completion feature.\n\n### Actual behavior\n\n`openclaw completion --shell zsh` fails immediately with:\n\n`Failed to start CLI: Error: qa scenario pack not found: qa/scenarios/index.md`\n\nThe main OpenClaw runtime remains operational, but shell completion generation is broken.\n\n### OpenClaw version\n\n2026.4.10\n\n### Operating system\n\nUbuntu 24.04.4 LTS\n\n### Install method\n\nnpm global\n\n### Model\n\nNOT_ENOUGH_INFO\n\n### Provider / routing chain\n\nNOT_ENOUGH_INFO\n\n### Additional provider/model setup details\n\nThis issue appears un"
+    },
+    {
+      "number": 64523,
+      "title": "[Bug]: Control UI webchat re-injects assistant responses as new user input (hybrid mirror routing bug)",
+      "url": "https://github.com/openclaw/openclaw/issues/64523",
+      "labels": [
+        "bug",
+        "regression"
+      ],
+      "updated_at": "2026-04-11T18:50:21Z",
+      "is_pr": false,
+      "author": "cobra281",
+      "score": 7,
+      "body": "### Bug type\n\nRegression (worked before, now fails)\n\n### Beta release blocker\n\nNo\n\n### Summary\n\n# [Bug]: Control UI webchat re-injects assistant responses as new user input (hybrid mirror routing bug)\n\n## Description\n\nWhen external messages (e.g., iMessage) are mirrored into the Control UI webchat session, the assistant's outbound responses are being re-injected back into the same session as new user messages, creating an infinite echo loop.\n\n## Environment\n\n- OpenClaw version: 2026.4.9\n- Gateway mode: local (port 18789)\n- Channel: iMessage (mirrored into Control UI webchat)\n- Session: agent:main:main (direct messages)\n- Reproduce environment: macOS M4 Pro\n\n## Root Cause Analysis\n\nThis appears to be a hybrid combination of:\n- **Issue #5964** (Control UI duplicate messages): Client-side rendering may re-render chat events\n- **Control UI session routing bug**: Outbound assistant messages aren't marked as \"internal\" or \"already-sent\" before being fed back into chat.inject or the session history fetch\n- **Missing deduplication**: Unlike issue #1649 (iMessage self-chat), there's no logic to detect that a message came from the agent itself\n\n---\n\n**Severity:** High (causes infinite loops in automation)  \n**Type:** Session routing / Control UI webchat bug\n\n**Labels to add:** `bug`, `control-ui`, `webchat`, `routing`\n\n### Steps to reproduce\n\n## Reproduction Steps\n\n1. Have an agent receive a message from an external channel (e.g., iMessage from a user contact)\n2. Message is mirrored into the Control UI webchat as a user message (delivery-mirror)\n3. Agent responds (e.g., \"Yep, same conclusion — GPT-5.4\")\n4. Agent's response is re-injected back into the webchat as a new user message\n5. Agent processes it again, creating a feedback loop\n\n### Expected behavior\n\n## Expected Behavior\n\n"
+    },
+    {
+      "number": 64966,
+      "title": "[Bug]: Model Routing Timeout Issue: Premature Fallback Due to Short Default Timeout",
+      "url": "https://github.com/openclaw/openclaw/issues/64966",
+      "labels": [
+        "bug",
+        "regression"
+      ],
+      "updated_at": "2026-04-11T18:27:37Z",
+      "is_pr": false,
+      "author": "esoteric1entity",
+      "score": 7,
+      "body": "### Bug type\n\nRegression (worked before, now fails)\n\n### Beta release blocker\n\nNo\n\n### Summary\n\nI am experiencing an issue with model routing where the system prematurely switches to a fallback model due to short timeout settings. The default `idleTimeoutSeconds` setting (60s) is too short for many models, especially larger ones, leading to unnecessary fallbacks.\n\n### Steps to reproduce\n\n1. Configure OpenClaw with a primary model (e.g., `ollama/glm-5.1:cloud`).\n2. Set up a cron job or run a long-running task that requires more than 60 seconds.\n3. Observe that the system switches to a fallback model before the primary model has completed its response.\n\n### Expected behavior\n\nThe system should wait for the primary model to complete its response before switching to a fallback model.\n\n### Actual behavior\n\nThe system switches to a fallback model after 60 seconds, even if the primary model is still processing.\n\n## Additional Information\n\n- OpenClaw Version: v2026.4.10\n- Model: `ollama/glm-5.1:cloud`\n- Environment: WSL2 Ubuntu kernel 6.6.87.2, Windows 10 Pro 22H2\n\n### OpenClaw version\n\n v2026.4.10\n\n### Operating system\n\nWindows 10 / WSL Container\n\n### Install method\n\nstandard curl, via wsl terminal (bash)\n\n### Model\n\nminimax-m2.7, glm-5.1, glm-5, kimik2.5\n\n### Provider / routing chain\n\nopenclaw -> ollama -> glm-5.1:cloud\n\n### Additional provider/model setup details\n\nDefault route is openclaw -> ollama -> glm-5.1:cloud. \n\n<img width=\"621\" height=\"744\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/210f5522-cd30-49f7-83d2-528b0709233d\" />\n\n\"primary\": \"ollama/glm-5.1:cloud\",\n        \"fallbacks\": [\n          \"ollama/minimax2.7:cloud\",\n          \"google/gemini-2.5-flash\",\n          \"ollama/qwen3-vl:235b-instruct-cloud\",\n          \"ollama/kimi-k2.5:cloud\"\n\n### Logs, scr"
+    },
+    {
+      "number": 64752,
+      "title": "[Bug]: Inbound reaction context events arrive but do not trigger an agent turn (Telegram)",
+      "url": "https://github.com/openclaw/openclaw/issues/64752",
+      "labels": [],
+      "updated_at": "2026-04-11T18:22:21Z",
+      "is_pr": false,
+      "author": "M-Lietz",
+      "score": 7,
+      "body": "## Environment\n- OpenClaw v2026.4.10 (44e5b62)\n- Node.js v22.22.1\n- Telegram (long-polling), grammY\n- Config: `messages.reactions.level: \"extensive\"`, `messages.reactions.triggerAgentTurn: true`\n\n## Description\n\nWhen a user reacts to a message in Telegram (e.g. adds a 👍 or ❤️ emoji), the gateway receives the `message_reaction` update and logs it as a context event, but **no agent turn is triggered** in response.\n\n### Observed behavior\n\n1. User adds reaction to a message → Telegram sends `message_reaction` update\n2. Gateway receives and logs the event as an inbound context event\n3. **No agent run starts** — the reaction is recorded in session context but the agent never processes it\n4. If the user sends a text message afterwards, the agent can see the reaction in its context history\n\n### Expected behavior\n\nWith `triggerAgentTurn: true`, inbound reactions should wake the agent for a turn, allowing it to respond to the reaction (e.g. acknowledge it, respond contextually).\n\n### Additional context\n\n- Hot-reload of config does not seem to fix this — a full gateway restart was required during testing\n- The feature may never have worked end-to-end (unclear if this is a regression or an incomplete feature)\n- This affects both DM and group contexts\n\n## Reproduction\n\n1. Configure `messages.reactions.level: \"extensive\"` and `messages.reactions.triggerAgentTurn: true`\n2. Send a message in Telegram DM with the bot\n3. React to one of the bot's messages with any emoji\n4. Observe: no agent turn starts, reaction is only recorded as context event"
+    },
+    {
+      "number": 64955,
+      "title": "[Bug]: x_search fails with unresolved SecretRef on canonical xAI auth path",
+      "url": "https://github.com/openclaw/openclaw/issues/64955",
+      "labels": [],
+      "updated_at": "2026-04-11T18:17:17Z",
+      "is_pr": false,
+      "author": "columbiaclaw",
+      "score": 7,
+      "body": "### Bug type\n\nRegression (worked before, now fails)\n\n### Summary\n\n`x_search` fails on current April builds even when xAI auth is configured at the canonical plugin-owned path.\n\nOn our current setup, the built-in `x_search` tool returns:\n\n```json\n{\n  \"status\": \"error\",\n  \"tool\": \"x_search\",\n  \"error\": \"plugins.entries.xai.config.webSearch.apiKey: unresolved SecretRef \\\"exec:onepassword_xai:value\\\". Resolve this command against an active gateway runtime snapshot before reading it.\"\n}\n```\n\nThis worked for us prior to the April xAI config/auth refactors.\n\n### Steps to reproduce\n\n1. Configure xAI auth at the canonical path:\n   - `plugins.entries.xai.config.webSearch.apiKey`\n2. Store that key as an **exec SecretRef** (in our case via 1Password).\n3. Enable `x_search`.\n4. Invoke the built-in `x_search` tool.\n\nOur relevant config shape is:\n\n```json\n{\n  \"tools\": {\n    \"web\": {\n      \"search\": {\n        \"provider\": \"brave\"\n      },\n      \"x_search\": {\n        \"enabled\": true,\n        \"model\": \"grok-4-1-fast-non-reasoning\",\n        \"maxTurns\": 2,\n        \"timeoutSeconds\": 30,\n        \"cacheTtlMinutes\": 15\n      }\n    }\n  },\n  \"plugins\": {\n    \"entries\": {\n      \"xai\": {\n        \"config\": {\n          \"webSearch\": {\n            \"apiKey\": {\n              \"source\": \"exec\",\n              \"provider\": \"onepassword_xai\",\n              \"id\": \"value\"\n            }\n          }\n        }\n      }\n    }\n  }\n}\n```\n\n### Expected behavior\n\n`x_search` should resolve the xAI credential from the active runtime snapshot and run successfully.\n\nIt should not matter that normal `web_search` is currently using another provider (`brave`).\n\n### Actual behavior\n\n`x_search` fails immediately with:\n\n```text\nplugins.entries.xai.config.webSearch.apiKey: unresolved SecretRef \"exec:onepassword_xai:value\". Resolve t"
+    },
+    {
+      "number": 59363,
+      "title": "[Bug]: imessage echo loop",
+      "url": "https://github.com/openclaw/openclaw/issues/59363",
+      "labels": [
+        "bug",
+        "regression"
+      ],
+      "updated_at": "2026-04-11T18:04:59Z",
+      "is_pr": false,
+      "author": "fagandesign",
+      "score": 7,
+      "body": "### Bug type\n\nRegression (worked before, now fails)\n\n### Beta release blocker\n\nNo\n\n### Summary\n\niMessage reflects assistant outbound text back as inbound user messages in direct chat, causing loops.\n\n### Steps to reproduce\n\n1. send message to agent in imessage.\n2. agent sends message back\n3. agent receives its own message back\n4. agent keeps replying to its own messages\n5. eventually agent stops replying to self, but echo persists\n\n\n### Expected behavior\n\nexpected behavior is that the agent would not see its own message returned. there would be a smooth conversation with no filtering required. \n\n### Actual behavior\n\nEvidence:\n1) Session metadata shows self-addressed route:\n   ~/.openclaw/agents/main/sessions/sessions.json\n   origin.from == origin.to == imessage:+xxxxxxxxxx\n\n2) In session log, assistant messages are re-ingested as user content with control-char prefixes (e.g. ��\\^@):\n   ~/.openclaw/agents/main/sessions/6b18f336-84ff-4525-9736-32eaece59b25.jsonl\n\n3) Runtime decision path:\n   /opt/homebrew/lib/node_modules/openclaw/dist/monitor-provider-ClqFz1Hj.js\n   function resolveIMessageInboundDecision()\n   around line ~917 (params.message.is_from_me branch)\n\nRoot cause:\nFor self-chat-shaped routing, is_from_me messages could continue if echo-cache match missed, so reflected assistant text could dispatch as inbound.\n\nLocal hotfix that resolved it:\nForce-drop all inbound is_from_me iMessage events (including self-chat) in resolveIMessageInboundDecision:\n\nif (params.message.is_from_me) {\n  params.selfChatCache?.remember(selfChatLookup);\n  return { kind: \"drop\", reason: isSelfChat ? \"from me self-chat\" : \"from me\" };\n}\n\nRequest:\nPlease patch upstream iMessage monitor so inbound is_from_me cannot dispatch, and harden reflection detection against control-char-prefixed refl"
+    },
+    {
+      "number": 45028,
+      "title": "[Bug]: Control UI replies to Telegram-backed session are delivered to `webchat` instead of Telegram",
+      "url": "https://github.com/openclaw/openclaw/issues/45028",
+      "labels": [
+        "bug",
+        "regression"
+      ],
+      "updated_at": "2026-04-11T17:53:09Z",
+      "is_pr": false,
+      "author": "cleartangle",
+      "score": 7,
+      "body": "### Bug type\n\nRegression (worked before, now fails)\n\n### Summary\n\n**Title:** Control UI replies to Telegram-backed session are delivered to `webchat` instead of Telegram\n\n**Summary**\nWhen opening or interacting with a Telegram direct session from the OpenClaw Control UI, replies are delivered to `webchat` rather than being sent back to Telegram. Telegram transport itself works; explicit cross-session send works too. The issue appears to be reply routing / delivery context selection.\n\n**Environment**\n- OpenClaw: `2026.3.12 (6472949)`\n- OS: macOS arm64\n- Gateway: local, running\n- Telegram channel: `ON / OK`\n- Control UI: local dashboard\n\n**What I expected**\nIf I open a Telegram direct session in the Control UI and reply there, the reply should go back to the Telegram chat for that session.\n\n**What actually happens**\n- Messages sent from Telegram to OpenClaw are received correctly.\n- Replies generated after a Telegram-originated message are delivered to Telegram correctly.\n- But when I type from the **web UI / Control UI** while viewing that Telegram-backed session, the reply stays in **webchat** instead of being sent to Telegram.\n- If I use an explicit `sessions_send` to the Telegram session, the message reaches Telegram.\n\n**Repro steps**\n1. Ensure Telegram channel is connected and working.\n2. Send a message from Telegram to the bot/user session.\n3. Open the corresponding Telegram direct session in the Control UI.\n4. Send a message from the Control UI in that session.\n5. Observe that the reply appears in web UI, but does not get delivered to Telegram.\n6. Use explicit `sessions_send` to the Telegram session.\n7. Observe that Telegram receives that message successfully.\n\n**Observed evidence**\n`openclaw status` showed Telegram connected and the direct Telegram session present"
+    },
+    {
+      "number": 64939,
+      "title": "[Bug]: Groq audio transcription returns no transcript on 2026.4.10 unless multipart body is manually serialized",
+      "url": "https://github.com/openclaw/openclaw/issues/64939",
+      "labels": [
+        "bug",
+        "regression"
+      ],
+      "updated_at": "2026-04-11T17:47:10Z",
+      "is_pr": false,
+      "author": "z88-cloud",
+      "score": 7,
+      "body": "### Bug type\n\nRegression (worked before, now fails)\n\n### Beta release blocker\n\nNo\n\n### Summary\n\nTitle\nGroq audio transcription returns no transcript on 2026.4.10 unless multipart body is manually serialized\n\nBody\n### Version\nOpenClaw 2026.4.10 (44e5b62)\n\n### Config\njson5\n{\ntools: {\n    media: {\n      audio: {\n        enabled: true,\n        echoTranscript: false,\n        models: [{ provider: \"groq\" }],\n      },\n    },\n  },\n}\n### What happens\nNative OpenClaw voice transcription fails for inbound `.ogg` audio with:\ntext\nError: No transcript returned for audio: /home/server/.openclaw/media/inbound/e45eb790-f6f2-4f9a-a935-4f11d77787d8.ogg\n\n### What I verified\n- correct config path is `tools.media.audio`\n- config is already valid\n- gateway and CLI are using the same install/config\n- this is not a renamed config key or bad JSON structure\n\n### Workaround that fixes it\nPatching the installed runtime file:\n\n`/home/server/.npm-global/lib/node_modules/openclaw/dist/shared-D_aQ0EvE.js`\n\nto manually serialize `FormData` into a multipart buffer and explicitly set:\n\n`content-type: multipart/form-data; boundary=...`\n\nrestores Groq transcription.\n\n### Suspected cause\nThe guarded fetch / undici path is not sending the multipart upload correctly for Groq audio transcription, so the provider request succeeds badly enough to avoid an HTTP error but returns no usable transcript.\n\n\n### Steps to reproduce\n\n1. Use Groq as voice transcription provider on latest version of openclaw\n2. Send voice note\n3. Ask agent if transcript worked - it won't, agent will have to use manual API method\n\n### Expected behavior\n\nOpenclaw should natively transcribe the voice note using Groq through openclaw voice transcription pipeline\n\n### Actual behavior\n\nVoice note lands as .ogg, no automatic transcription\n\n### Ope"
+    },
+    {
+      "number": 64987,
+      "title": "skills.update fails on second call: runtime Brave mirror injects legacy tools.web.search.apiKey into source config",
+      "url": "https://github.com/openclaw/openclaw/issues/64987",
+      "labels": [],
+      "updated_at": "2026-04-11T19:51:22Z",
+      "is_pr": false,
+      "author": "lubao515",
+      "score": 6,
+      "body": "## Bug Description\n\nWhen calling `skills.update` via the Gateway RPC multiple times in the same session, the second call fails with:\n\n```\nConfig validation failed: tools.web.search: tools.web.search provider-owned config moved to plugins.entries.<plugin>.config.webSearch. Run \"openclaw doctor --fix\".\n```\n\nThe disk config does not contain `tools.web.search` - the error is caused by a runtime snapshot field leaking back into the source config during write-back.\n\n## Root Cause\n\nIn `runtime-web-tools-BITgb3nI.js`, the function `setResolvedWebSearchApiKey()` deliberately mirrors the Brave web search API key to the legacy path `tools.web.search.apiKey` for backward compatibility:\n\n```js\n// runtime-web-tools-BITgb3nI.js ~line 1124\nfunction setResolvedWebSearchApiKey(params) {\n  const search = ensureObject(ensureObject(ensureObject(params.resolvedConfig, \"tools\"), \"web\"), \"search\");\n  if (params.provider.setConfiguredCredentialValue) {\n    params.provider.setConfiguredCredentialValue(params.resolvedConfig, params.value);\n    if (params.provider.id !== \"brave\") return;  // non-Brave providers return here\n  }\n  // Brave falls through and also writes to the legacy path:\n  params.provider.setCredentialValue(search, params.value);\n}\n```\n\nThe Brave provider is the only one that falls through without returning, so it writes to both:\n1. `plugins.entries.brave.config.webSearch.apiKey` (new plugin-scoped path) ✓\n2. `tools.web.search.apiKey` (legacy path) ← injected into runtime snapshot\n\nWhen `skills.update` writes the config back to disk, `resolvePersistCandidateForWrite()` in `io-BxA9F2P4.js` computes a merge patch from `runtimeConfigSnapshot → nextConfig`. This patch includes the runtime-injected `tools.web.search.apiKey`, which did not exist in the source config. The legacy field is "
+    },
+    {
+      "number": 64945,
+      "title": "qa-lab packaging regression in openclaw@2026.4.10 breaks CLI startup commands like completion --write-state",
+      "url": "https://github.com/openclaw/openclaw/issues/64945",
+      "labels": [],
+      "updated_at": "2026-04-11T17:48:19Z",
+      "is_pr": false,
+      "author": "superfat1988",
+      "score": 6,
+      "body": "## Summary\n\n`openclaw@2026.4.10` appears to ship without the `qa/scenarios/*` files, but the CLI startup path still hard-depends on them through `qa-lab`.\n\nAs a result, unrelated commands like:\n\n```bash\nopenclaw completion --write-state\n```\n\ncan fail before the command itself runs.\n\n## Version\n\n- openclaw: `2026.4.10`\n\n## Repro\n\nInstall:\n\n```bash\nnpm i -g openclaw@2026.4.10\n```\n\nThen run:\n\n```bash\nopenclaw completion --write-state\n```\n\n## Actual result\n\nCLI fails during startup with errors like:\n\n```text\nError: qa scenario pack not found: qa/scenarios/index.md\n```\n\nAfter adding a minimal `qa/scenarios/index.md`, startup then fails with:\n\n```text\nError: unknown qa scenario: source-docs-discovery-report\n```\n\n## Expected result\n\n`openclaw completion --write-state` should run successfully, and unrelated CLI commands should not be blocked by missing QA scenario-pack files.\n\n## Evidence\n\nThe published package metadata for `openclaw@2026.4.10` does not include `qa/` in the `files` whitelist:\n\n```json\n\"files\": [\n  \"CHANGELOG.md\",\n  \"LICENSE\",\n  \"openclaw.mjs\",\n  \"README.md\",\n  \"assets/\",\n  \"dist/\",\n  \"!dist/**/*.map\",\n  \"!dist/plugin-sdk/.tsbuildinfo\",\n  \"docs/\",\n  \"!docs/.generated/**\",\n  \"!docs/.i18n/zh-CN.tm.jsonl\",\n  \"skills/\",\n  \"scripts/npm-runner.mjs\",\n  \"scripts/postinstall-bundled-plugins.mjs\",\n  \"scripts/windows-cmd-helpers.mjs\"\n]\n```\n\nAt the same time, the runtime code still expects:\n\n- `qa/scenarios/index.md`\n- scenario id `source-docs-discovery-report`\n\nRelevant references observed locally:\n\n- `dist/scenario-catalog-*.js` → `const QA_SCENARIO_PACK_INDEX_PATH = \"qa/scenarios/index.md\"`\n- `dist/suite-*.js` → `readQaScenarioExecutionConfig(\"source-docs-discovery-report\")`\n\n## Impact\n\nThis affects normal CLI usage, not just QA flows, because the failure happens during "
+    },
+    {
+      "number": 62496,
+      "title": "[Bug] Telegram DM voice-note transcription silently fails in 4.5: allMedia[n].path is undefined, normalizeAttachments filters out all audio attachments",
+      "url": "https://github.com/openclaw/openclaw/issues/62496",
+      "labels": [],
+      "updated_at": "2026-04-11T19:51:31Z",
+      "is_pr": false,
+      "author": "Theo-jobs",
+      "score": 5,
+      "body": "## Summary\n\nIn OpenClaw `2026.4.5`, Telegram DM voice messages arrive as raw `<media:audio>` placeholders with no transcription attempt, despite `tools.media.audio` being correctly configured and the fix from #61008 being present in the dist.\n\n## Environment\n\n- **OpenClaw:** 2026.4.5 (3e72c03)\n- **OS:** macOS (Darwin 25.4.0, arm64)\n- **Channel:** Telegram DM\n- **STT Provider:** Groq (whisper-large-v3) — loaded and verified working via direct API call\n- **Gateway mode:** local\n\n## Root cause (traced in dist)\n\nThe fix from #61008 correctly widened the preflight condition in `bot-message-context-ID6QScNo.js` line 121:\n\n```js\nif (hasAudio && !hasUserText && (!isGroup || requireMention && ...)) {\n  preflightTranscript = await transcribeFirstAudio({ ctx: {\n    MediaPaths: allMedia.length > 0 ? allMedia.map((m) => m.path) : void 0,\n    MediaTypes: allMedia.length > 0 ? allMedia.map((m) => m.contentType).filter(Boolean) : void 0\n  }, cfg, agentDir: void 0 });\n}\n```\n\nHowever, `allMedia[n].path` is `undefined` for Telegram voice notes. This is confirmed in `bot-message-context-ID6QScNo.js` around lines 340–390, where `contextMedia` objects are built with:\n\n```js\nMediaPath: contextMedia.length > 0 ? contextMedia[0]?.path : void 0,\nMediaPaths: contextMedia.length > 0 ? contextMedia.map((m) => m.path) : void 0,\n```\n\nWhen `contextMedia[n].path` is `undefined`, `normalizeAttachments()` in `runner-Bo7fJw79.js` filters out the entry:\n\n```js\n.filter((entry) => Boolean(entry.path?.trim() || entry.url?.trim()))\n```\n\nSo `transcribeFirstAudio` receives an empty attachment list and returns immediately — no transcription, no error, no log (errors are caught and only emitted via `logVerbose`, which is `off` by default).\n\n## Why `path` is undefined\n\nFor Telegram voice/audio messages, the media o"
+    },
+    {
+      "number": 32983,
+      "title": "[Bug]: `heartbeat.model` config is ignored — heartbeat uses default/fallback model instead",
+      "url": "https://github.com/openclaw/openclaw/issues/32983",
+      "labels": [
+        "bug",
+        "stale",
+        "bug:behavior"
+      ],
+      "updated_at": "2026-04-11T19:48:48Z",
+      "is_pr": false,
+      "author": "sbmilburn",
+      "score": 5,
+      "body": "### Bug type\n\nBehavior bug (incorrect output/state without crash)\n\n### Summary\n\nThe `agents.defaults.heartbeat.model` configuration setting is ignored. Heartbeat sessions use the agent's default model (or its fallback chain) instead of the explicitly configured heartbeat model. This makes it impossible to run heartbeats on a cheaper/free model tier.\n\n## Version\n\n- **OpenClaw:** `2026.3.1`\n- **OS:** Ubuntu Linux 6.8.0-101-generic (x64)\n- **Node:** v25.6.1\n- **Channel:** WhatsApp\n\n\n\n### Steps to reproduce\n\n\n1. Configure `heartbeat.model` to a model different from the agent's primary model (e.g., a free-tier OpenRouter model) see snippet below. \n2. Set `heartbeat.every` to `\"5m\"` (or any short interval for testing)\n3. Ensure `activeHours` covers the current time\n4. Wait for heartbeat to fire\n5. Check OpenRouter activity logs (or equivalent provider logs) for which model was actually called\n\n\n## Configuration\n\nRelevant section from `openclaw.json`:\n\n```json\n{\n  \"agents\": {\n    \"defaults\": {\n      \"model\": {\n        \"primary\": \"anthropic/claude-sonnet-4-6\",\n        \"fallbacks\": [\n          \"openrouter/anthropic/claude-sonnet-4.6\",\n          \"openrouter/meta-llama/llama-3.3-70b-instruct:free\",\n          \"openrouter/anthropic/claude-haiku-4.5\"\n        ]\n      },\n      \"heartbeat\": {\n        \"every\": \"5m\",\n        \"activeHours\": {\n          \"start\": \"08:00\",\n          \"end\": \"22:00\",\n          \"timezone\": \"America/Los_Angeles\"\n        },\n        \"model\": \"openrouter/meta-llama/llama-3.3-70b-instruct:free\",\n        \"directPolicy\": \"allow\"\n      }\n    }\n  }\n}\n```\n\nThe free model (`openrouter/meta-llama/llama-3.3-70b-instruct:free`) is properly defined in `models.providers.openrouter.models`:\n\n```json\n{\n  \"id\": \"meta-llama/llama-3.3-70b-instruct:free\",\n  \"name\": \"Llama 3.3 70B (Op"
+    },
+    {
+      "number": 64982,
+      "title": "[Bug]: (doctor): plugins.allow advisory doesn't warn it's an exclusive allowlist",
+      "url": "https://github.com/openclaw/openclaw/issues/64982",
+      "labels": [
+        "bug",
+        "bug:behavior"
+      ],
+      "updated_at": "2026-04-11T19:47:39Z",
+      "is_pr": false,
+      "author": "BKF-Gitty",
+      "score": 5,
+      "body": "### Bug type\n\nBehavior bug (incorrect output/state without crash)\n\n### Beta release blocker\n\nNo\n\n### Summary\n\nopenclaw doctor advises adding a plugin to plugins.allow without warning that this field is an exclusive allowlist — all plugins not listed are disabled, causing silent breakage of active channels, memory, and integrations.\n\n### Steps to reproduce\n\n1. Run openclaw doctor with a working setup (Discord, Telegram, memory-core, memory-wiki all active)\n2. Doctor suggests adding lossless-claw to plugins.allow\n3. Add plugins.allow: [\"lossless-claw\"] to openclaw.json as advised\n4. Restart gateway\n5. Discord, Telegram, memory-core, and memory-wiki all fail to load — only lossless-claw is active\n\n### Expected behavior\n\nEither: (a) doctor's advisory includes all currently-active plugins in the suggested plugins.allow value, or (b) doctor warns that plugins.allow is exclusive and unlisted plugins will be disabled, or (c) the plugin loader emits a warning at startup when plugins.allow would disable currently-active plugins.\n\n### Actual behavior\n\nDoctor suggests adding a single plugin to plugins.allow with no mention of exclusivity. Following the advice disables all other plugins. No warning at startup. 4-hour outage before root cause was identified by manually reviewing config changes.\n\n### OpenClaw version\n\n 2026.4.8\n\n### Operating system\n\nmacOS 15.4\n\n### Install method\n\nnpm global\n\n### Model\n\nanthropic/claude-opus-4\n\n### Provider / routing chain\n\nopenclaw -> anthropic\n\n### Additional provider/model setup details\n\n_No response_\n\n### Logs, screenshots, and evidence\n\n```shell\n\n```\n\n### Impact and severity\n\nAffected: Any user who follows doctor's plugins.allow advisory without knowing it's exclusive\nSeverity: High — silently disables all unlisted plugins including channels and"
+    }
+  ],
+  "direction2": {
+    "Tencent/openclaw-weixin": []
+  },
+  "direction3": [
+    {
+      "login": "lml2468",
+      "contributions": 10,
+      "files": [
+        "CHANGELOG.md",
+        "extensions/discord/src/monitor/message-handler.preflight.test.ts",
+        "extensions/feishu/src/docx.test.ts",
+        "extensions/feishu/src/docx.ts",
+        "extensions/msteams/src/sdk.test.ts",
+        "extensions/msteams/src/sdk.ts",
+        "src/agents/pi-extensions/compaction-safeguard.test.ts",
+        "src/agents/pi-extensions/compaction-safeguard.ts",
+        "src/auto-reply/reply/agent-runner-memory.dedup.test.ts",
+        "src/auto-reply/reply/agent-runner-memory.ts",
+        "src/auto-reply/reply/agent-runner.runreplyagent.e2e.test.ts",
+        "src/auto-reply/reply/agent-runner.ts",
+        "src/auto-reply/reply/memory-flush.ts",
+        "src/auto-reply/reply/session.ts",
+        "src/cli/daemon-cli/install.ts",
+        "src/cli/daemon-cli/lifecycle-core.config-guard.test.ts",
+        "src/cli/daemon-cli/lifecycle-core.ts",
+        "src/cli/gateway-cli/run-loop.ts",
+        "src/config/sessions/types.ts",
+        "src/gateway/control-plane-rate-limit.test.ts",
+        "src/gateway/control-plane-rate-limit.ts",
+        "src/gateway/server-maintenance.ts",
+        "src/gateway/server-methods/nodes.invoke-wake.test.ts",
+        "src/gateway/server-methods/nodes.ts",
+        "src/gateway/server/ws-connection.ts",
+        "src/gateway/session-transcript-key.test.ts",
+        "src/gateway/session-transcript-key.ts",
+        "src/infra/agent-events.test.ts",
+        "src/infra/agent-events.ts"
+      ],
+      "candidate_bugs": []
+    },
+    {
+      "login": "clawdinator[bot]",
+      "contributions": 10,
+      "files": [],
+      "candidate_bugs": []
+    },
+    {
+      "login": "Whoaa512",
+      "contributions": 10,
+      "files": [
+        "CHANGELOG.md",
+        "src/agents/system-prompt.ts",
+        "src/agents/tools/web-tools.enabled-defaults.e2e.test.ts",
+        "src/agents/tools/web-tools.fetch.e2e.test.ts",
+        "src/gateway/protocol/schema/sessions.ts",
+        "src/gateway/session-utils.fs.test.ts",
+        "src/gateway/session-utils.fs.ts",
+        "src/gateway/session-utils.test.ts",
+        "src/gateway/session-utils.ts",
+        "src/gateway/session-utils.types.ts",
+        "src/security/external-content.test.ts",
+        "src/security/external-content.ts",
+        "src/tui/components/filterable-select-list.ts",
+        "src/tui/components/fuzzy-filter.ts",
+        "src/tui/components/searchable-select-list.ts",
+        "src/tui/components/selectors.ts",
+        "src/tui/gateway-chat.ts",
+        "src/tui/theme/theme.ts",
+        "src/tui/tui-command-handlers.ts",
+        "src/utils/time-format.ts"
+      ],
+      "candidate_bugs": []
+    },
+    {
+      "login": "BruceMacD",
+      "contributions": 9,
+      "files": [
+        "CHANGELOG.md",
+        "docs/.i18n/glossary.zh-CN.json",
+        "docs/cli/index.md",
+        "docs/docs.json",
+        "docs/help/faq.md",
+        "docs/providers/index.md",
+        "docs/providers/ollama.md",
+        "docs/reference/api-usage-costs.md",
+        "docs/reference/wizard.md",
+        "docs/start/wizard-cli-automation.md",
+        "docs/start/wizard-cli-reference.md",
+        "docs/start/wizard.md",
+        "docs/tools/ollama-search.md",
+        "docs/tools/web.md",
+        "extensions/ollama/api.ts",
+        "extensions/ollama/index.test.ts",
+        "extensions/ollama/index.ts",
+        "extensions/ollama/openclaw.plugin.json",
+        "extensions/ollama/plugin-registration.contract.test.ts",
+        "extensions/ollama/src/defaults.ts",
+        "extensions/ollama/src/provider-models.test.ts",
+        "extensions/ollama/src/provider-models.ts",
+        "extensions/ollama/src/setup.test.ts",
+        "extensions/ollama/src/setup.ts",
+        "extensions/ollama/src/stream.ts",
+        "extensions/ollama/src/web-search-provider.test.ts",
+        "extensions/ollama/src/web-search-provider.ts",
+        "src/agents/huggingface-models.ts",
+        "src/agents/model-auth.profiles.test.ts",
+        "src/agents/model-auth.ts",
+        "src/agents/models-config.providers.discovery.ts",
+        "src/agents/ollama-models.ts",
+        "src/agents/ollama-stream.test.ts",
+        "src/agents/pi-embedded-runner/extra-params.ollama.test.ts",
+        "src/agents/pi-embedded-runner/extra-params.test-support.ts",
+        "src/agents/pi-embedded-runner/extra-params.ts",
+        "src/agents/pi-embedded-runner/run/attempt.ts",
+        "src/agents/pi-embedded-runner/run/auth-controller.ts",
+        "src/commands/auth-choice-options.test.ts",
+        "src/commands/auth-choice-options.ts",
+        "src/commands/auth-choice.apply.ollama.test.ts",
+        "src/commands/auth-choice.apply.ollama.ts",
+        "src/commands/auth-choice.apply.ts",
+        "src/commands/auth-choice.preferred-provider.ts",
+        "src/commands/auth-choice.test.ts",
+        "src/commands/ollama-setup.test.ts",
+        "src/commands/ollama-setup.ts",
+        "src/commands/onboard-non-interactive/local/auth-choice.ts",
+        "src/commands/onboard-types.ts",
+        "src/memory/embeddings-ollama.ts",
+        "src/plugins/provider-ollama-setup.ts",
+        "src/wizard/onboarding.ts",
+        "src/wizard/setup.ts"
+      ],
+      "candidate_bugs": []
+    },
+    {
+      "login": "davidrudduck",
+      "contributions": 9,
+      "files": [
+        "CHANGELOG.md",
+        "docs/channels/grammy.md",
+        "docs/channels/telegram.md",
+        "extensions/telegram/src/channel.ts",
+        "src/agents/pi-embedded-runner/compact.hooks.test.ts",
+        "src/agents/pi-embedded-runner/compact.ts",
+        "src/agents/pi-embedded-runner/run.overflow-compaction.fixture.ts",
+        "src/agents/pi-embedded-runner/run.overflow-compaction.loop.test.ts",
+        "src/agents/pi-embedded-runner/run.overflow-compaction.mocks.shared.ts",
+        "src/agents/pi-embedded-runner/run.overflow-compaction.shared-test.ts",
+        "src/agents/pi-embedded-runner/run.overflow-compaction.test.ts",
+        "src/agents/pi-embedded-runner/run.ts",
+        "src/agents/pi-embedded-runner/run/attempt.ts",
+        "src/agents/pi-embedded-runner/run/params.ts",
+        "src/auto-reply/reply/agent-runner-execution.ts",
+        "src/auto-reply/reply/agent-runner-memory.ts",
+        "src/auto-reply/reply/dispatch-from-config.test.ts",
+        "src/auto-reply/reply/dispatch-from-config.ts",
+        "src/auto-reply/reply/followup-runner.ts",
+        "src/canvas-host/server.ts",
+        "src/commands/agent.ts",
+        "src/config/includes.test.ts",
+        "src/config/includes.ts",
+        "src/config/types.telegram.ts",
+        "src/config/zod-schema.providers-core.ts",
+        "src/cron/isolated-agent/run.ts",
+        "src/discord/monitor/exec-approvals.ts",
+        "src/gateway/openai-http.ts",
+        "src/gateway/openresponses-http.ts",
+        "src/gateway/tools-invoke-http.ts",
+        "src/markdown/frontmatter.ts",
+        "src/plugins/types.ts",
+        "src/security/secret-equal.ts",
+        "src/telegram/monitor.test.ts",
+        "src/telegram/monitor.ts",
+        "src/telegram/webhook.ts"
+      ],
+      "candidate_bugs": []
+    },
+    {
+      "login": "pandego",
+      "contributions": 9,
+      "files": [
+        "CHANGELOG.md",
+        "Dockerfile",
+        "docs/install/docker.md",
+        "docs/install/gcp.md",
+        "src/browser/server-context.remote-tab-ops.test.ts",
+        "src/browser/server-context.ts",
+        "src/channels/plugins/config-schema.test.ts",
+        "src/channels/plugins/config-schema.ts",
+        "src/slack/monitor/provider.reconnect.test.ts",
+        "src/slack/monitor/provider.ts"
+      ],
+      "candidate_bugs": []
+    },
+    {
+      "login": "joaohlisboa",
+      "contributions": 9,
+      "files": [],
+      "candidate_bugs": []
+    },
+    {
+      "login": "pejmanjohn",
+      "contributions": 9,
+      "files": [
+        "CHANGELOG.md",
+        "docs/channels/discord.md",
+        "docs/channels/telegram.md",
+        "docs/tools/acp-agents.md",
+        "docs/zh-CN/channels/telegram.md",
+        "extensions/acpx/src/runtime.test.ts",
+        "extensions/acpx/src/runtime.ts",
+        "extensions/telegram/src/channel.ts",
+        "src/acp/control-plane/manager.core.ts",
+        "src/acp/control-plane/manager.types.ts",
+        "src/acp/runtime/types.ts",
+        "src/acp/translator.cancel-scoping.test.ts",
+        "src/acp/translator.set-session-mode.test.ts",
+        "src/acp/translator.stop-reason.test.ts",
+        "src/acp/translator.ts",
+        "src/agents/acp-spawn.ts",
+        "src/agents/tools/sessions-spawn-tool.test.ts",
+        "src/agents/tools/sessions-spawn-tool.ts",
+        "src/auto-reply/reply/reply-routing.test.ts",
+        "src/channels/dock.ts",
+        "src/telegram/bot.ts"
+      ],
+      "candidate_bugs": []
+    },
+    {
+      "login": "joe2643",
+      "contributions": 9,
+      "files": [
+        "Dockerfile",
+        "extensions/whatsapp/src/auto-reply/monitor/group-gating.ts",
+        "extensions/whatsapp/src/inbound/extract.ts",
+        "extensions/whatsapp/src/inbound/monitor.ts",
+        "extensions/whatsapp/src/inbound/types.ts",
+        "package.json",
+        "scripts/postinstall-bundled-plugins.mjs",
+        "scripts/runtime-postbuild.mjs",
+        "src/mcp/plugin-tools-serve.ts",
+        "tsdown.config.ts"
+      ],
+      "candidate_bugs": []
+    },
+    {
+      "login": "mneves75",
+      "contributions": 9,
+      "files": [
+        "AGENTS.md",
+        "CHANGELOG.md",
+        "PR-326-REVIEW.md",
+        "apps/android/app/src/main/assets/tool-display.json",
+        "apps/macos/Sources/Clawdbot/CronJobEditor.swift",
+        "apps/macos/Sources/Clawdbot/GatewayConnection.swift",
+        "apps/shared/ClawdbotKit/Resources/tool-display.json",
+        "docs/concepts/models.md",
+        "docs/cron.md",
+        "docs/gateway/configuration.md",
+        "docs/groups.md",
+        "docs/plans/cron-add-hardening.md",
+        "docs/plans/group-policy-hardening.md",
+        "docs/telegram.md",
+        "docs/tools.md",
+        "package.json",
+        "patches/@mariozechner__pi-agent-core.patch",
+        "patches/@mariozechner__pi-ai.patch",
+        "patches/@mariozechner__pi-ai@0.42.1.patch",
+        "patches/@mariozechner__pi-coding-agent.patch",
+        "pnpm-lock.yaml",
+        "src/agents/auth-profiles.test.ts",
+        "src/agents/auth-profiles.ts",
+        "src/agents/minimax.live.test.ts",
+        "src/agents/model-auth.test.ts",
+        "src/agents/model-selection.test.ts",
+        "src/agents/model-selection.ts",
+        "src/agents/pi-embedded-helpers.test.ts",
+        "src/agents/pi-embedded-helpers.ts",
+        "src/agents/pi-embedded-runner-extraparams.test.ts",
+        "src/agents/pi-embedded-runner.ts",
+        "src/agents/pi-embedded-subscribe.ts",
+        "src/agents/tool-display.json",
+        "src/agents/tools/cron-tool.test.ts",
+        "src/agents/tools/cron-tool.ts",
+        "src/agents/tools/telegram-actions.test.ts",
+        "src/agents/tools/telegram-actions.ts",
+        "src/agents/tools/telegram-schema.ts",
+        "src/agents/tools/telegram-tool.ts",
+        "src/auto-reply/reply/agent-runner.ts",
+        "src/cli/cron-cli.ts",
+        "src/commands/auth-choice-options.ts",
+        "src/commands/auth-choice.ts",
+        "src/commands/configure.ts",
+        "src/commands/models.list.test.ts",
+        "src/commands/models.set.test.ts",
+        "src/commands/models/list.ts",
+        "src/commands/onboard-auth.test.ts",
+        "src/commands/onboard-auth.ts",
+        "src/commands/onboard-non-interactive.ts",
+        "src/commands/onboard-types.ts",
+        "src/config/types.ts",
+        "src/config/zod-schema.ts",
+        "src/cron/cron-protocol-conformance.test.ts",
+        "src/cron/normalize.ts",
+        "src/gateway/protocol/schema.ts",
+        "src/gateway/server-methods/cron.ts",
+        "src/gateway/server.cron.test.ts",
+        "src/telegram/bot.test.ts",
+        "src/telegram/bot.ts",
+        "src/telegram/send.test.ts",
+        "src/telegram/send.ts",
+        "src/web/inbound.ts",
+        "src/web/monitor-inbox.test.ts",
+        "ui/src/ui/controllers/cron.ts",
+        "ui/src/ui/tool-display.json",
+        "ui/src/ui/types.ts",
+        "ui/src/ui/ui-types.ts",
+        "ui/src/ui/views/cron.ts"
+      ],
+      "candidate_bugs": []
+    }
+  ],
+  "direction4": {
+    "prs": [
+      {
+        "number": 55815,
+        "title": "fix: avoid failed tool alerts for warning-only reaction results",
+        "state": "open",
+        "updated_at": "2026-04-11T19:18:39Z",
+        "comments": 1,
+        "labels": [
+          "agents",
+          "size: S"
+        ],
+        "events": []
+      },
+      {
+        "number": 56028,
+        "title": "fix(sessions): honor spawned tree lineage across agents",
+        "state": "closed",
+        "updated_at": "2026-04-11T19:45:59Z",
+        "comments": 2,
+        "labels": [
+          "agents",
+          "size: S"
+        ],
+        "events": [
+          {
+            "kind": "issue_comment",
+            "user": "bde1",
+            "state": null,
+            "updated_at": "2026-04-11T19:45:59Z",
+            "body": "Closing this stale resubmission because it now needs a broader branch refresh against main, not a contained fix on top of the original sessions-lineage change. The open failures are coming from unrelated repo drift, so I’m closing it instead of keeping a stale branch open."
+          }
+        ]
+      }
+    ],
+    "issues": [],
+    "tracked_count": 1467
+  }
+}

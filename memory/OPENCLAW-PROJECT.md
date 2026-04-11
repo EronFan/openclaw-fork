@@ -5758,3 +5758,13 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 
 ### EronFan PR
 - #64823 heartbeat preemption fix，size S，有 r:too-many-prs 标签
+
+### 方向1 新候选 P726-P730（2026-04-12 02:18 CST）
+- **P726** [#64966](https://github.com/openclaw/openclaw/issues/64966) **S + regression** Model Routing Timeout Issue: Premature Fallback Due to Short Default Timeout | idleTimeoutSeconds 默认 60s 太短，ollama/glm-5.1:cloud 等大模型响应超 60s 就触发不必要切换；与 #63207（timeoutSeconds 修复）强相关；**建议 aoao 修复 #63207 P0 compile error 后验证**
+- **P727** [#64971](https://github.com/openclaw/openclaw/issues/64971) **S + bug:behavior** Control UI replies to externally-backed sessions delivered to webchat instead of underlying channel | Telegram-backed session 在 Control UI 回复时被路由到 webchat；清晰可本地复现；**建议 aoao 接单（S 级）**
+- **P728** [#64939](https://github.com/openclaw/openclaw/issues/64939) **S + regression** Groq audio transcription returns no transcript on 2026.4.10 unless multipart body is manually serialized | undici fetch 未正确发送 multipart upload；workaround 已给出；**建议 aoao 接单（S 级）**
+- **P729** [#64959](https://github.com/openclaw/openclaw/issues/64959) **M/S + bug:crash** agent:<id>:main persistent main session can become zombie/relock after restart | main session restart 后保持 running + .jsonl.lock 不释放；导致后续运行报 session file locked；**建议 xixi 调研根因**
+- **P730** [Tencent/openclaw-weixin #55](https://github.com/Tencent/openclaw-weixin/issues/55) **Feature Request** Support ACP thread binding so mode="session" works on WeChat channel | WeChat 渠道不支持 ACP mode=session；根因已定位（未注册 session binding adapter）；代码不可见；**长期追踪价值高**
+
+### 方向4 PR 新动态（2026-04-12 02:18 CST）
+- **#63207** fix: respect agents.defaults.timeoutSeconds in HTTP request timeout | **Greptile Review 2/5**，发现 P0 compile error（`opts` 未 threading through wrapper functions）+ P1 functional gap（Ollama path 未修）；**建议 aoao 直接修复 compile error 并验证覆盖 #64966**
