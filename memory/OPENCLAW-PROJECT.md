@@ -5709,3 +5709,43 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P707 | [#64795](https://github.com/openclaw/openclaw/issues/64795) | **S** | Bug: heartbeat isolatedSession:true silently reuses same transcript file across every run | 🔍 新发现（方向1 22:03 CST） | transcript 覆盖问题；0评论无标签 |
 | P708 | [#64681](https://github.com/openclaw/openclaw/pull/64681) | **XS** | test(qa): (GPT 5.4 Parity vs. Opus Agentic) gate parity prose scenarios | 🔍 新发现（方向1 22:03 CST） | size:XS；刚创建（14:04 UTC）；无标签评论 |
 | P709 | [Tencent/openclaw-weixin #54](https://github.com/Tencent/openclaw-weixin/issues/54) | **P1** | Bug: 图片查看功能完全不可用（sharp 模块缺失，ERR_MODULE_NOT_FOUND）| 🔍 新发现（方向2 22:03 CST） | Windows 环境；微信发图场景完全失效；**建议调研是否 openclaw 缺 sharp dependency 或 weixin 缺 peerDependency** |
+
+| P710 | [#64853](https://github.com/openclaw/openclaw/issues/64853) | **S** | Bug: CLI commands hang on Windows（SIGKILL, openclaw status → SIGKILL）| 🔍 新发现（方向1 23:03 CST） | 15:00:55Z 最新鲜；CLI gateway 通信进程被 SIGKILL；引用 #64211；**建议 aoao 确认是否与 #64821 同根因（exec/security corruption）** |
+| P711 | [#64852](https://github.com/openclaw/openclaw/issues/64852) | **S** | Bug: google-vertex OAuth/service-account auth 2026.4.9 works, 2026.4.10 fails 401 CREDENTIALS_MISSING | 🔍 新发现（方向1 23:03 CST） | regression；Token getMe 验证成功但 downstream 401；**建议 aoao 接单** |
+| P712 | [#64850](https://github.com/openclaw/openclaw/issues/64850) | **S** | Bug: ACP runtime backend unavailable persists — qwen-code agent cannot spawn (v2026.4.10) | 🔍 新发现（方向1 23:03 CST） | regression；qwen-code agent 无法 spawn；bug+bug:behavior 标签；**建议 aoao 接单** |
+| P713 | [#64845](https://github.com/openclaw/openclaw/issues/64845) | **S** | Bug: Memory dreaming narrative generation fails — 'must have required property idempotencyKey' | 🔍 新发现（方向1 23:03 CST） | idempotencyKey 缺失；memory dreaming 新功能报错；**建议 aoao 调研根因** |
+| P714 | [#64844](https://github.com/openclaw/openclaw/issues/64844) | **S** | Bug: /new session ignores agents.defaults.model.primary — injects wrong model | 🔍 新发现（方向1 23:03 CST） | regression；新 session 注入错误模型；影响用户体验；**建议 aoao 接单** |
+| P715 | [#64841](https://github.com/openclaw/openclaw/issues/64841) | **S** | Bug: Disabled memory-lancedb entry still fails config validation after upgrading to 2026.4.9 | 🔍 新发现（方向1 23:03 CST） | regression+bug:crash；已禁用的 lancedb 仍触发 validation 导致 crash；**建议 aoao 接单** |
+| P716 | [#64840](https://github.com/openclaw/openclaw/issues/64840) | **S** | Model fallback not triggered on HTTP 400 model_not_supported error | 🔍 新发现（方向1 23:03 CST） | regression；400 应触发 fallback chain 但未触发；已有历史 issue(#32533/#49079/#62141)；**建议 aoao 接单** |
+| P717 | [#64839](https://github.com/openclaw/openclaw/issues/64839) | **S** | Bug: qwen3.6-plus via bailian cannot handle images after upgrade: image tool says Unknown model and QQ media URL is blocked | 🔍 新发现（方向1 23:03 CST） | regression；图片工具+QQ media URL 双问题；**建议 aoao 接单** |
+| P718 | [#64838](https://github.com/openclaw/openclaw/issues/64838) | **S** | File editor: CTRL-F hides the file instead of triggering browser find | 🔍 新发现（方向1 23:03 CST） | UI bug；键盘快捷键冲突；**建议 aoao 接单（XS）** |
+| P719 | [#64836](https://github.com/openclaw/openclaw/issues/64836) | **S** | Auth config lost after upgrading openclaw via npm | 🔍 新发现（方向1 23:03 CST） | 升级流程问题；auth 配置丢失；**建议 aoao 接单** |
+| P720 | [#64835](https://github.com/openclaw/openclaw/issues/64835) | **S** | Bug: memory_search returns no results — vec0 virtual table shadow data not populated | 🔍 新发现（方向1 23:03 CST） | regression；vec0 表未填充导致 memory search 永远返回 0 结果；**建议 aoao 接单** |
+| P721 | [#64833](https://github.com/openclaw/openclaw/issues/64833) | **S** | OpenAI Codex OAuth fails with misleading callback error; actual redirect is invalid_scope for model.request | 🔍 新发现（方向1 23:03 CST） | OAuth scope 问题；**建议 aoao 接单** |
+| P722 | [#64831](https://github.com/openclaw/openclaw/issues/64831) | **S** | Bug: Cron jobs run inconsistently, chat-triggered exec unstable, and missing catch-up delivery on Telegram | 🔍 新发现（方向1 23:03 CST） | regression；Cron 执行不稳定+Telegram catch-up delivery 缺失；**建议 aoao 接单** |
+| P723 | [#64810](https://github.com/openclaw/openclaw/issues/64810) | **S** | Bug: Heartbeat / async system events can interrupt and effectively swallow in-progress replies in Telegram topic sessions | 🔍 新发现（方向1 23:03 CST） | regression；Heartbeat 机制破坏 Telegram topic sessions 中进行中回复；**建议 aoao 接单** |
+| P724 | [#64794](https://github.com/openclaw/openclaw/issues/64794) | **S** | configure wizard: minimax-portal OAuth configPatch missing api and auth fields (2026.4.10) | 🔍 新发现（方向1 23:03 CST） | configure wizard 问题；OAuth 配置缺失字段；**建议 aoao 接单** |
+| P725 | [Tencent/openclaw-weixin #53](https://github.com/Tencent/openclaw-weixin/issues/53) | **P1** | Bug: AI 承诺设置定时提醒后实际未创建 cron 任务，且无法通过聊天记录回忆 | 🔍 新发现（方向2 23:03 CST） | 2026-04-11T12:01:40Z；承诺与执行分离；与 #54303（P273）相关但独立（#53 是 cron 未创建，#50 是推送不触发）；**建议追踪 openclaw cron 创建可靠性** |
+
+## 2026-04-11 晚间扫描更新 (23:02 CST)
+
+### 新发现 P1
+- **#64852** Google Vertex OAuth 2026.4.10 regression，401 CREDENTIALS_MISSING，难度 S，**aoao 接单中**
+- **#64814** api.pluginConfig 在 register() 里是 null regression，难度 S
+- **#64821** tools.exec.security 被 plugin init log 污染，security bug + crash，难度 M
+
+### 新发现 P2
+- **#64841** disabled memory-lancedb 仍触发 validation crash，难度 S
+- **#64839** qwen3.6-plus bailian 图片处理 regression
+
+### PR Approve 任务
+- #64790 (security redact secrets) - **aoao 执行中**
+- #64796 (matrix m.mentions.user_ids) - **aoao 执行中**
+- #64846 (tools sessions_send duplicate) - **aoao 执行中**
+
+### Issue 状态更新
+- #62750 (iMessage echo loop) ✅ 已关闭，#61619 修复
+- #62569 (cron toolsAllow) 仍在 OPEN，hexsprite PR #62675 在修
+
+### EronFan PR
+- #64823 heartbeat preemption fix，size S，有 r:too-many-prs 标签
