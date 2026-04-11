@@ -186,6 +186,36 @@ browser     -> JS rendering/login state/page interaction (heaviest)
 
 ---
 
+## Cron 作业管理铁律（2026-04-11 范总授权，优先级最高）
+
+### 系统约束（必须遵守，违者必究）
+
+1. **禁止**修改 `~/.openclaw/openclaw.json` 中的 `crons` 字段为数组
+2. `openclaw.json` 中的 cron 配置**必须**为对象格式（或 null/空）
+3. 所有 cron 作业**必须**通过 CLI 创建：`openclaw cron create`
+4. **禁止**手动写入 `~/.openclaw/cron/jobs.json`
+
+### 正确做法
+
+```bash
+# 创建 cron 作业
+openclaw cron add --name "..." --cron "0 * * * *" --session isolated --message "..."
+
+# 查看 cron 作业
+openclaw cron list
+
+# 删除 cron 作业
+openclaw cron delete <job-id>
+```
+
+### 错误做法
+
+- 直接编辑 `openclaw.json` 的 `crons: [...]` 数组
+- 直接修改 `~/.openclaw/cron/jobs.json`
+- 在 `openclaw.json` 中写 `"crons": []` 或 `"crons": {}`
+
+---
+
 ## 项目铁律（2026-04-06 范总授权，优先级最高）
 
 ### 终极目标
