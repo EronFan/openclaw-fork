@@ -192,7 +192,7 @@ browser     -> JS rendering/login state/page interaction (heaviest)
 
 1. **禁止**修改 `~/.openclaw/openclaw.json` 中的 `crons` 字段为数组
 2. `openclaw.json` 中的 cron 配置**必须**为对象格式（或 null/空）
-3. 所有 cron 作业**必须**通过 CLI 创建：`openclaw cron create`
+3. 所有 cron 作业**必须**通过 CLI 创建：`openclaw cron add`
 4. **禁止**手动写入 `~/.openclaw/cron/jobs.json`
 
 ### 正确做法

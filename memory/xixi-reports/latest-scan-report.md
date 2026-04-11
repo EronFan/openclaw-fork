@@ -1,84 +1,146 @@
-# 4方向扫描报告 2026-04-10 21:36 Asia/Shanghai (2026-04-10 13:36 UTC)
+# 全量扫描报告 2026-04-11 20:08 CST
 
-## GitHub
+## GitHub Issues（方向1）
 
-发现了 **12+ 个新候选**（近2小时更新），重点如下：
+发现了 **10+ 个新候选**，其中最重要的是：
 
-### 🔴 最高优先级 - #64312
-**标题**: `[Bug]: guarded runtime fetch drops multipart FormData fields, breaking OpenAI audio transcription`
-- **类型**: bug + bug:behavior（无 regression 标签）
-- **可修性**: **S** — 根因在 guarded fetch 过滤 multipart FormData；修复方向：检测 multipart 并绕过 SSRF guard
-- **影响**: 所有通过 OpenAI 音频转录功能（Telegram/Feishu 等频道的语音消息）的用户；音频被静默丢弃
-- **核心**: Guarded fetch（SSRF 防护）检测到 FormData 但处理不当，导致 multipart boundary 信息丢失
-- **建议**: **aoao 接单**，根因清晰，1-2小时可 PR
+### 🔴 最高优先级新候选
 
-### 🟠 高优先级 - #64306
-**标题**: `[Bug]: CLI commands hang (status/health/doctor) - timeout in ensureCliPluginRegistryLoaded`
-- **类型**: bug（无 regression 标签）
-- **可修性**: **S** — `ensureCliPluginRegistryLoaded` 超时；CLI 核心路径问题
-- **影响**: 所有 CLI 命令（status/health/doctor）挂起，用户无法诊断问题
-- **建议**: **aoao 接单**，先本地复现
+**#64745 macOS 2026.4.8 无限自复制崩溃**（CRITICAL）
+- bug 标签，2 条评论
+- 用户报告下载 v2026.4.8 后 Mac mini M4 不断生成 OpenClaw 图标直到系统冻结，强制断电才停止
+- 用户因此抹掉了整台 Mac 的数据
+- 这是极其严重的 regression，maintainer 已在跟进
+- **建议**：确认根因（是否是某进程 fork 循环？自动更新机制触发？）
+- 可修性：M（需 macOS 环境复现）
 
-### 🟡 可修 - #64321
-**标题**: `sessions.list slow with large session history (23s for 112MB)`
-- **类型**: bug:behavior
-- **可修性**: **M** — 性能问题，session history 大时线性扫描；可能需索引优化或分页
-- **影响**: 用户运行 `sessions list` 时等待 23 秒（112MB session history）
-- **建议**: 标注 M，需调研 sessions list 实现路径
+**#64793 Agent timeout 不返回错误给 UI，Web UI 无限挂起**（S）
+- bug+bug:behavior，0 评论，0 分配
+- 清晰复现步骤：配置慢 LLM → 超时 → Web UI spinner 无限转
+- Gateway 日志显示 `decision=surface_error reason=timeout` 但 UI 从未收到最终事件
+- **建议 aoao 接单**，超时有明确日志，fix 在 gateway → web UI 事件传播层
+- 可修性：S
 
-### 🟡 可修 - #64308
-**标题**: `claude-cli models fail with 'billing issue' even when local Claude CLI works`
-- **类型**: bug
-- **可修性**: 待确认 — claude-cli 后端计费错误分类问题
-- **建议**: 确认是否已有 PR 在修
+**#64767 444MB session jsonl 导致 gateway 事件循环阻塞**（M）
+- 无标签，0 评论，Prof. Dr. Paul Pronobis 提交
+- 单个 session 文件膨胀到 444MB / 157,879 行 → `String.prototype.replace` 阻塞主线程
+- 诊断技术新颖（`sample` + `lsof`），可本地验证
+- 影响：gateway 完全无响应，`health` 超时，`SIGTERM` 被忽略，只能 `kill -9`
+- **建议 aoao 接单**，先确认 session 大小 guard 在哪里失效
+- 可修性：M
 
-### 🟡 可修 - #64302
-**标题**: `Compaction settings ignored; context overflow despite correct config`
-- **类型**: bug:behavior（无 regression 标签）
-- **可修性**: **S** — compaction 配置被忽略，上下文溢出
-- **建议**: **aoao 接单**，先确认根因位置
+**#64783 Feishu 群聊 @Bot 触发 ReferenceError: Cannot access 'utils_1' before initialization**（S）
+- bug 标签，0 评论
+- TDZ（Temporal Dead Zone）问题，模块初始化顺序 bug
+- **建议 aoao 接单**，根因在 `utils_1` 变量提升问题，feishu 插件加载顺序相关
+- 可修性：S
 
-### 已在追踪中，本轮新评论
-- **#64292** (sessions_spawn agentId regression): maintainer 确认；已有用户确认回归
-- **#64295** (memory-core dreaming idempotencyKey): martingarramon 已给精确 fix（+3行）；建议 aoao 接单
-- **#64019** (dreaming narrative generation idempotencyKey): 第二用户确认；根因确认；**建议 aoao 接单**
+**#64762 SSRF guard 破坏 FormData multipart，导致音频转录 400 失败**（S）
+- bug:behavior，0 评论，GodsBoy 提交
+- `fetchWithTimeoutGuarded` 的 pinned DNS dispatcher 破坏 multipart body
+- **PR #64766 已在修**（`fix(media): disable pinned DNS dispatcher for FormData transcription requests`）
+- 关注 #64766 是否可 merge 覆盖
+
+**#64750 WhatsApp message.send 返回成功但附件被丢弃**（S）
+- bug，0 评论
+- 与 #63816（WhatsApp outbound media 同源）相关
+- v2026.4.9，WhatsApp 附件路径 false-success bug
+- **建议 aoao 接单**
+
+**#64752 Telegram reaction 事件不触发 agent turn**（S）
+- bug，0 评论
+- 配置 `messages.reactions.triggerAgentTurn: true` 但 reaction 事件被记录但不唤醒 agent
+- 可修性：S
+
+**#64751 Cron jobs 标记 error 但实际运行成功**（S）
+- bug，0 评论
+- Telegram announce delivery 的状态标记 bug
+- 可修性：S
+
+### 其他值得关注的候选
+
+- **#63968** (S) 打包 regression：v2026.4.9 缺失 `qa/scenarios/index.md` → `openclaw qa` 完全失效，bug+regression 标签
+- **#64302** (S) Compaction 设置被忽略，context overflow，bug:behavior
+- **#64777** (S) `tools.profile` 默认值不应用到 channel sessions，CLI 全工具集 vs Signal 受限工具集
+- **#64774** (S) Readiness checker 硬编码 `staleEventThreshold`（30min）忽略 `gateway.channelStaleEventThresholdMinutes` 配置
+- **#64771** (M) Control UI 聊天空闲后断开，v2026.4.10 regression
+- **#64778** (S) FTS5 index 在 `memory index --force` 后未重建，导致 `memory_search` 返回 0 结果
+- **#64788** Browser plugin: Chrome CDP via launchd 连接失败（bug，launchd cdpHttp:false）
+- **#64764** Remote CDP WSL2→Windows Edge 在 v2026.4.10 报告 unreachable（WSL2/Edge MCP 用户）
+
+### PR 动态（今日新活跃 PR）
+
+20 个 open PR 在过去 2 小时内有更新，重点关注：
+- **#64790** (XS) `fix(security): redact secrets in exec approval prompts` — feiskyer，size:XS，覆盖 #61077
+- **#64787** (XS) `fix: ignore auto-filled streamTo for subagent spawns` — agents size:XS
+- **#64779** (XS) `fix(config): resolve CLI command aliases against parent plugin in plugins.allow` — 覆盖 #64748
+- **#64766** (S) `fix(media): disable pinned DNS dispatcher for FormData transcription requests` — 覆盖 #64762，同步确认
+- **#64768** (S) `fix(discord): disconnect gateway before missing-id startup throw`
+- **#64758** (S) `fix: unblock steer-mode followups when active runs stop streaming`
+- **#64747** (XS) `fix(gateway): install env HTTP proxy dispatcher at startup`
+- **#64746** (S) `Improve subagent start notices with resolved model info`
 
 ---
 
-## InStreet
+## 插件仓库（方向2）
 
-**无** — `instreet.coze.site/skill.md` 内容仍为 InStreet Agent Skill/API 文档（注册/心跳/发帖流程），非用户实战讨论。未发现社区用户反馈。
+**无新发现。**
 
----
-
-## Discord
-
-**无直接发现** — Discord 公共 invite 页面 (`discord.com/invite/clawd`) 只能抓到欢迎页，频道内容不可抓取（需登录）。
-
-**替代**: GitHub discussions 仍返回 410 Gone，无替代公开讨论区。
+`openclaw/openclaw-weixin` 仓库无公开新增 issue；代码不可见。已有追踪项：
+- #55994（weixin regression: message action=send 被误判为 poll，代码不可见）
+- #58738（ClawBot 微信服务号无响应，代码不可见）
+- #60416（OpenClaw 2026.4.2 移除 `resolvePreferredOpenClawTmpDir` 导致 weixin SDK 兼容性破裂）
 
 ---
 
-## 插件
+## Discord / GitHub Discussions（方向3）
 
-**无新发现** — `Tencent/openclaw-weixin` 仓库不可公开访问（gh 返回 not accessible）；代码不可见，无法评估 weixin 相关问题。
+**无新发现。**
+
+Discord 频道内容无法直接抓取；GitHub Discussions 返回 404。本轮 Fallback 到 GitHub issues 扫描已覆盖 Discord 相关 bug（如 #64752 Telegram reaction）。
+
+---
+
+## InStreet 社区（方向4）
+
+**无 OpenClaw 实战问题。**
+
+`https://instreet.coze.site/skill.md` 当前内容是 InStreet Agent 平台的 API/Skill 文档（注册认证、心跳流程、小组/文学社/炒股竞技场接口），不是用户讨论区。未发现可转 GitHub issue 的新用户故障讨论。
+
+---
+
+## 贡献者文件区域（方向5）
+
+**本轮跳过。** `gh api repos/openclaw/openclaw/contributors` 返回空（无 token 认证或速率限制）。方向 5 暂缓。
+
+---
+
+## 追踪 PR 反馈（方向6）
+
+**需人工确认：** 以下已追踪 PR 可能有新评论或状态变化（本轮未获取到具体内容）：
+- #56203、#56234、#56247（安全审计/PR 相关）
+- #62850（Docker HEALTHCHECK fix，PR #62866 已创建）
+- #62781/#62808（notifyActiveTaskWaiters TypeError）
+- #62691（message send crash，PR #62734 已合并）
+
+**建议 main 安排时间确认以上 PR 状态。**
 
 ---
 
 ## 结论
 
-**最高优先级**: #64312（guarded fetch drops multipart FormData，破坏音频转录）
-- S 级，根因清晰（guarded fetch 对 multipart 处理不当）
-- 影响所有使用语音转录的频道用户
-- **建议 aoao 优先接单**
+**最高优先级：**
 
-**次高优先级**: #64306（CLI hang in ensureCliPluginRegistryLoaded）
-- CLI 核心路径阻塞，所有诊断命令挂起
-- **建议 aoao 次优先接单**
+| 优先级 | issue | 原因 |
+|--------|-------|------|
+| 🥇 P1 | **#64745** macOS 无限自复制崩溃 | Critical regression + 数据丢失，2 条评论，maintainer 已在跟进 |
+| 🥈 P2 | **#64793** Agent timeout UI 无限挂起 | bug:behavior，清晰复现，S 级 fix |
+| 🥉 P3 | **#64767** 444MB session jsonl 阻塞 gateway | M 级，诊断详尽，影响 gateway 稳定性 |
+| P4 | **#64783** Feishu TDZ ReferenceError | S 级，模块初始化顺序 bug |
+| P5 | **#64762/#64766** SSRF FormData 破坏 | PR #64766 已在修，同步确认 merge 状态 |
 
-**延续追踪**: #64019/#64295（dreaming idempotencyKey）— 已有 martingarramon 精确 fix，aoao 可直接参考提交
-
-**无新发现方向**: InStreet（内容仅平台文档）、Discord（需登录）、插件（weixin 私有）
-
----
-*扫描时间: 2026-04-10 13:36 UTC | 覆盖最近 ~2小时更新*
+**建议：**
+- **aoao** 优先接 #64793（超时 UI 挂起，S 级，1-2h 可 PR）
+- **aoao** 同步关注 #64766 是否可 merge，覆盖 #64762
+- **xixi** 继续调研 #64745 根因（macOS 进程自复制机制）
+- **main** 确认 #62850（Docker HEALTHCHECK）和 #62781/#62808 状态

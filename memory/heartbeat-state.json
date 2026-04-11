@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-10T13:44:00Z",
+  "updatedAt": "2026-04-10T14:17:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": null,
-  "note": "2026-04-10 21:44 CST heartbeat: no subagents in last 120m, no failed runs. xixi latest scan report file missing at workspace root path expected by HEARTBEAT.md; OPENCLAW-PROJECT latest visible entries remain active and no new unassigned high-priority xixi handoff was confirmed in this check.",
+  "note": "2026-04-10 22:17 CST heartbeat: no subagents in last 120m, no failed runs. xixi latest scan report file missing at /root/.openclaw/workspace/xixi-reports/latest-scan-report.md, but current time is within no-disturb window and no urgent new signal was confirmed from this check.",
   "subagentFailures": [
     {
       "issue": "#63265",
