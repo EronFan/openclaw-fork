@@ -1,146 +1,32 @@
-# 全量扫描报告 2026-04-11 20:08 CST
+# 全量扫描报告 2026-04-11 22:03 (CST)
 
 ## GitHub Issues（方向1）
-
-发现了 **10+ 个新候选**，其中最重要的是：
-
-### 🔴 最高优先级新候选
-
-**#64745 macOS 2026.4.8 无限自复制崩溃**（CRITICAL）
-- bug 标签，2 条评论
-- 用户报告下载 v2026.4.8 后 Mac mini M4 不断生成 OpenClaw 图标直到系统冻结，强制断电才停止
-- 用户因此抹掉了整台 Mac 的数据
-- 这是极其严重的 regression，maintainer 已在跟进
-- **建议**：确认根因（是否是某进程 fork 循环？自动更新机制触发？）
-- 可修性：M（需 macOS 环境复现）
-
-**#64793 Agent timeout 不返回错误给 UI，Web UI 无限挂起**（S）
-- bug+bug:behavior，0 评论，0 分配
-- 清晰复现步骤：配置慢 LLM → 超时 → Web UI spinner 无限转
-- Gateway 日志显示 `decision=surface_error reason=timeout` 但 UI 从未收到最终事件
-- **建议 aoao 接单**，超时有明确日志，fix 在 gateway → web UI 事件传播层
-- 可修性：S
-
-**#64767 444MB session jsonl 导致 gateway 事件循环阻塞**（M）
-- 无标签，0 评论，Prof. Dr. Paul Pronobis 提交
-- 单个 session 文件膨胀到 444MB / 157,879 行 → `String.prototype.replace` 阻塞主线程
-- 诊断技术新颖（`sample` + `lsof`），可本地验证
-- 影响：gateway 完全无响应，`health` 超时，`SIGTERM` 被忽略，只能 `kill -9`
-- **建议 aoao 接单**，先确认 session 大小 guard 在哪里失效
-- 可修性：M
-
-**#64783 Feishu 群聊 @Bot 触发 ReferenceError: Cannot access 'utils_1' before initialization**（S）
-- bug 标签，0 评论
-- TDZ（Temporal Dead Zone）问题，模块初始化顺序 bug
-- **建议 aoao 接单**，根因在 `utils_1` 变量提升问题，feishu 插件加载顺序相关
-- 可修性：S
-
-**#64762 SSRF guard 破坏 FormData multipart，导致音频转录 400 失败**（S）
-- bug:behavior，0 评论，GodsBoy 提交
-- `fetchWithTimeoutGuarded` 的 pinned DNS dispatcher 破坏 multipart body
-- **PR #64766 已在修**（`fix(media): disable pinned DNS dispatcher for FormData transcription requests`）
-- 关注 #64766 是否可 merge 覆盖
-
-**#64750 WhatsApp message.send 返回成功但附件被丢弃**（S）
-- bug，0 评论
-- 与 #63816（WhatsApp outbound media 同源）相关
-- v2026.4.9，WhatsApp 附件路径 false-success bug
-- **建议 aoao 接单**
-
-**#64752 Telegram reaction 事件不触发 agent turn**（S）
-- bug，0 评论
-- 配置 `messages.reactions.triggerAgentTurn: true` 但 reaction 事件被记录但不唤醒 agent
-- 可修性：S
-
-**#64751 Cron jobs 标记 error 但实际运行成功**（S）
-- bug，0 评论
-- Telegram announce delivery 的状态标记 bug
-- 可修性：S
-
-### 其他值得关注的候选
-
-- **#63968** (S) 打包 regression：v2026.4.9 缺失 `qa/scenarios/index.md` → `openclaw qa` 完全失效，bug+regression 标签
-- **#64302** (S) Compaction 设置被忽略，context overflow，bug:behavior
-- **#64777** (S) `tools.profile` 默认值不应用到 channel sessions，CLI 全工具集 vs Signal 受限工具集
-- **#64774** (S) Readiness checker 硬编码 `staleEventThreshold`（30min）忽略 `gateway.channelStaleEventThresholdMinutes` 配置
-- **#64771** (M) Control UI 聊天空闲后断开，v2026.4.10 regression
-- **#64778** (S) FTS5 index 在 `memory index --force` 后未重建，导致 `memory_search` 返回 0 结果
-- **#64788** Browser plugin: Chrome CDP via launchd 连接失败（bug，launchd cdpHttp:false）
-- **#64764** Remote CDP WSL2→Windows Edge 在 v2026.4.10 报告 unreachable（WSL2/Edge MCP 用户）
-
-### PR 动态（今日新活跃 PR）
-
-20 个 open PR 在过去 2 小时内有更新，重点关注：
-- **#64790** (XS) `fix(security): redact secrets in exec approval prompts` — feiskyer，size:XS，覆盖 #61077
-- **#64787** (XS) `fix: ignore auto-filled streamTo for subagent spawns` — agents size:XS
-- **#64779** (XS) `fix(config): resolve CLI command aliases against parent plugin in plugins.allow` — 覆盖 #64748
-- **#64766** (S) `fix(media): disable pinned DNS dispatcher for FormData transcription requests` — 覆盖 #64762，同步确认
-- **#64768** (S) `fix(discord): disconnect gateway before missing-id startup throw`
-- **#64758** (S) `fix: unblock steer-mode followups when active runs stop streaming`
-- **#64747** (XS) `fix(gateway): install env HTTP proxy dispatcher at startup`
-- **#64746** (S) `Improve subagent start notices with resolved model info`
-
----
+- 发现了 **6个新候选**，最重要是 **#64821（P1 security+crash）** 和 **#64814（P1 regression）**
+- **#64821（P1）** Bug: tools.exec.security 被插件初始化日志污染 — 热重载把插件输出拼接进 config 值；bug+security+bug:crash 三标签；0评论；**建议 aoao 优先接单（S级，可本地复现）**
+- **#64814（P1）** Bug: api.pluginConfig 在 extension plugin register() 中为 null，虽然 openclaw.json 已配置；bug+regression 双标签；**新 regression，建议 aoao 接单**
+- **#64816（S）** Bug: 插件绑定的 skill 对 CLI 可见但 live session 中 agent available_skills 不可见；影响 skill 发现机制；0评论
+- **#64818（S）** Bug: openclaw update 的 src/canvas-host/a2ui/.bundle.hash 破坏 preflight bisect 回溯；影响开发者 bisect 工作流
+- **#64825（S）** Bug: TUI finalizeRun() 在 wasActiveRun=false 时不转换 UI，导致 streaming 指示器卡住
+- **#64795（S）** Bug: heartbeat isolatedSession:true 静默复用同一 transcript 文件（每次运行覆盖）
 
 ## 插件仓库（方向2）
+- 发现了 **2个新 open issue**（Tencent/openclaw-weixin 近2小时）
+- **#54（P1）** Bug: 图片查看功能完全不可用（sharp 模块缺失）；Windows 环境；错误信息清晰：`ERR_MODULE_NOT_FOUND: Cannot find package 'sharp'`；影响所有微信发图场景；**建议 aoao 调研是否在上游 openclaw 层缺 sharp 依赖，或腾讯侧缺 peerDependency**
+- **#53（P1）** Bug: AI 承诺创建 cron 定时提醒但实际未调用创建接口；根因分析已给出（承诺与执行分离 + LCM 压缩导致承诺内容丢失）；**代码不可见**，但根因在上游 openclaw cron 创建可靠性
+- **PR #49** fix: preserve quote context (ref_msg) for voice messages；已有完整实现；**可 Approve 支持**
 
-**无新发现。**
+## 贡献者文件区域（方向3）
+- 扫描了排名最末的 **10位贡献者**（贡献量 2~10 次，均为极低活跃账号）
+- 名单：graysurf(4), giulio-leone(4), efe-buken(4), danielz1z(4), chziyue(4), kevinWangSheng(4), wes-davis(4), irtiq7(4), teconomix(4), jonisjongithub(4), benithors(3), arthurbr11(3), AdeboyeDN(3) 等
+- **受限**: 部分账号（如 graysurf/giulio-leone/jonisjongithub）在主仓库无 commit 记录，可能是插件仓库或其他来源贡献；未能抽样到足够 commit 进行文件区域分析
+- **结论**: 本轮末10名大多为极低活跃度或跨仓库贡献账号，末10名文件中无可操作的高优先级未认领 bug
 
-`openclaw/openclaw-weixin` 仓库无公开新增 issue；代码不可见。已有追踪项：
-- #55994（weixin regression: message action=send 被误判为 poll，代码不可见）
-- #58738（ClawBot 微信服务号无响应，代码不可见）
-- #60416（OpenClaw 2026.4.2 移除 `resolvePreferredOpenClawTmpDir` 导致 weixin SDK 兼容性破裂）
-
----
-
-## Discord / GitHub Discussions（方向3）
-
-**无新发现。**
-
-Discord 频道内容无法直接抓取；GitHub Discussions 返回 404。本轮 Fallback 到 GitHub issues 扫描已覆盖 Discord 相关 bug（如 #64752 Telegram reaction）。
-
----
-
-## InStreet 社区（方向4）
-
-**无 OpenClaw 实战问题。**
-
-`https://instreet.coze.site/skill.md` 当前内容是 InStreet Agent 平台的 API/Skill 文档（注册认证、心跳流程、小组/文学社/炒股竞技场接口），不是用户讨论区。未发现可转 GitHub issue 的新用户故障讨论。
-
----
-
-## 贡献者文件区域（方向5）
-
-**本轮跳过。** `gh api repos/openclaw/openclaw/contributors` 返回空（无 token 认证或速率限制）。方向 5 暂缓。
-
----
-
-## 追踪 PR 反馈（方向6）
-
-**需人工确认：** 以下已追踪 PR 可能有新评论或状态变化（本轮未获取到具体内容）：
-- #56203、#56234、#56247（安全审计/PR 相关）
-- #62850（Docker HEALTHCHECK fix，PR #62866 已创建）
-- #62781/#62808（notifyActiveTaskWaiters TypeError）
-- #62691（message send crash，PR #62734 已合并）
-
-**建议 main 安排时间确认以上 PR 状态。**
-
----
+## 追踪 PR 反馈（方向4）
+- **近2小时新评论**: #63807, #64344, #64027, #64827 等有新评论活动
+- **新 PR**: #64681（GPT-5.4 Parity test, size:XS）刚创建（14:04:56 UTC）
+- 项目文件中所追踪 issue/PR 未检测到显著状态剧变
+- 其他已追踪 PR 无新增 maintainer 评论
 
 ## 结论
-
-**最高优先级：**
-
-| 优先级 | issue | 原因 |
-|--------|-------|------|
-| 🥇 P1 | **#64745** macOS 无限自复制崩溃 | Critical regression + 数据丢失，2 条评论，maintainer 已在跟进 |
-| 🥈 P2 | **#64793** Agent timeout UI 无限挂起 | bug:behavior，清晰复现，S 级 fix |
-| 🥉 P3 | **#64767** 444MB session jsonl 阻塞 gateway | M 级，诊断详尽，影响 gateway 稳定性 |
-| P4 | **#64783** Feishu TDZ ReferenceError | S 级，模块初始化顺序 bug |
-| P5 | **#64762/#64766** SSRF FormData 破坏 | PR #64766 已在修，同步确认 merge 状态 |
-
-**建议：**
-- **aoao** 优先接 #64793（超时 UI 挂起，S 级，1-2h 可 PR）
-- **aoao** 同步关注 #64766 是否可 merge，覆盖 #64762
-- **xixi** 继续调研 #64745 根因（macOS 进程自复制机制）
-- **main** 确认 #62850（Docker HEALTHCHECK）和 #62781/#62808 状态
+- **最高优先级**: **#64821**（P1 security+crash，tools.exec.security 被热重载污染）；其次 **#64814**（P1 regression，api.pluginConfig null）；**#64810** 继续追踪（已在上一轮报告）
+- **建议**: 派 aoao 接 #64821（security+crash 双标签，S级快速可修）；对 PR #49（weixin voice quote context）发支持评论；对 #64814 regression 安排 aoao 跟进
