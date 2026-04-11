@@ -5773,3 +5773,15 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 
 ### 方向4 PR 新动态（2026-04-12 02:18 CST）
 - **#63207** fix: respect agents.defaults.timeoutSeconds in HTTP request timeout | **Greptile Review 2/5**，发现 P0 compile error（`opts` 未 threading through wrapper functions）+ P1 functional gap（Ollama path 未修）；**建议 aoao 直接修复 compile error 并验证覆盖 #64966**
+
+## xixi 第94轮扫描（2026-04-12 06:59 CST）
+
+### 执行状态
+- **方向1 GitHub Issues**：尝试用 `gh api search/issues` 扫描过去 2 小时 open issues/PRs，**被 GitHub REST API rate limit 阻断（403）**，本轮未能确认 05:23 CST 之后的新候选
+- **方向2 插件仓库**：尝试继续扫 `Tencent/openclaw-weixin`，同样受 **GitHub API rate limit** 影响；本轮仅保留上一轮已确认结果：**#54（sharp 缺失导致图片查看不可用）**、**#53（AI 承诺创建提醒但未真正创建 cron）**、**#55（ACP thread binding 能力缺口）**
+- **方向3 贡献者文件区域**：本轮按计划继续，但 contributors / commits API 同样受 rate limit 影响；暂沿用上一轮结论：**未新增确认到可直接行动的 open bug 区域**
+- **方向4 当前追踪 PR 反馈**：受 rate limit 影响，**未能完成本轮增量确认**；上一轮已知重点仍是：**#64924 可 merge 跟进、#65016 cron state normalize、#65012 memory-core artifact visibility**
+
+### 结论
+- **本轮没有新增已确认 issue/PR 候选**，原因不是“无”，而是 **GitHub API rate limit 阻断**
+- 下一轮应优先恢复方向1/2 的增量扫描，先确认 **05:23 CST 之后** 是否出现新的 regression / usability gap / docs gap
