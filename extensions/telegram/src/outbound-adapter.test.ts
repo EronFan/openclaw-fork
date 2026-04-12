@@ -94,4 +94,86 @@ describe("telegramOutbound", () => {
     ).toBeUndefined();
     expect(result).toEqual({ channel: "telegram", messageId: "tg-2", chatId: "12345" });
   });
+
+  it("forwards audioAsVoice as asVoice in sendMedia", async () => {
+    sendMessageTelegramMock.mockResolvedValueOnce({ messageId: "tg-voice" });
+
+    const result = await telegramOutbound.sendMedia!({
+      cfg: {} as never,
+      to: "12345",
+      text: "hello",
+      mediaUrl: "/tmp/voice.ogg",
+      audioAsVoice: true,
+      accountId: "ops",
+      deps: { sendTelegram: sendMessageTelegramMock },
+    });
+
+    expect(sendMessageTelegramMock).toHaveBeenCalledWith(
+      "12345",
+      "hello",
+      expect.objectContaining({
+        mediaUrl: "/tmp/voice.ogg",
+        asVoice: true,
+      }),
+    );
+    expect(result).toEqual({ channel: "telegram", messageId: "tg-voice" });
+  });
+
+  it("forwards audioAsVoice through sendPayload as asVoice", async () => {
+    sendMessageTelegramMock.mockResolvedValueOnce({ messageId: "tg-voice" });
+
+    const result = await telegramOutbound.sendPayload!({
+      cfg: {} as never,
+      to: "12345",
+      text: "voice caption",
+      payload: {
+        text: "voice caption",
+        mediaUrl: "file:///tmp/voice.ogg",
+        audioAsVoice: true,
+      },
+      accountId: "ops",
+      deps: { sendTelegram: sendMessageTelegramMock },
+    });
+
+    expect(sendMessageTelegramMock).toHaveBeenCalledWith(
+      "12345",
+      "voice caption",
+      expect.objectContaining({
+        mediaUrl: "file:///tmp/voice.ogg",
+        asVoice: true,
+      }),
+    );
+    expect(result).toEqual({ channel: "telegram", messageId: "tg-voice" });
+  });
+
+  it("sendPayload with audioAsVoice does not use sendPayloadMediaSequence", async () => {
+    // When audioAsVoice is true, we bypass sendPayloadMediaSequenceOrFallback
+    // and send directly with asVoice to ensure the flag is properly forwarded.
+    sendMessageTelegramMock.mockResolvedValueOnce({ messageId: "tg-voice" });
+
+    await telegramOutbound.sendPayload!({
+      cfg: {} as never,
+      to: "12345",
+      text: "voice",
+      payload: {
+        text: "voice",
+        mediaUrl: "file:///tmp/voice.ogg",
+        mediaUrls: ["file:///tmp/voice.ogg"],
+        audioAsVoice: true,
+      },
+      accountId: "ops",
+      deps: { sendTelegram: sendMessageTelegramMock },
+    });
+
+    // Should only be called once (not sequence of media sends)
+    expect(sendMessageTelegramMock).toHaveBeenCalledTimes(1);
+    expect(sendMessageTelegramMock).toHaveBeenCalledWith(
+      "12345",
+      "voice",
+      expect.objectContaining({
+        mediaUrl: "file:///tmp/voice.ogg",
+        asVoice: true,
+      }),
+    );
+  });
 });
