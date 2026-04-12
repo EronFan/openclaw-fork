@@ -56,6 +56,14 @@
 | P59916 | [#65195](https://github.com/openclaw/openclaw/issues/65195) **M** exec/runtime 无法访问 LAN host，interactive shell 正常 (macOS) | 🔍 新发现(方向1 GitHub 第99轮 14:51 CST) | OpenClaw exec 路径报 "No route to host"，同一机器 shell `curl` 正常；疑似 launchd/service 路径与交互 shell 的网络视图隔离；所有依赖 LAN 服务的 exec 工具全部失效 |
 | P59917 | [#65192](https://github.com/openclaw/openclaw/issues/65192) **S** too many dream sessions accumulation | 🔍 新发现(方向1 GitHub 第99轮 14:51 CST) | Sessions 面板大量 dream session 堆积，暴露给普通用户；建议 dream session 应该有 maxAge 或自动清理机制；**建议 aoao 接单** |
 | P59918 | [方向4 PR 监控 第99轮 14:51 CST] PR #65202 (Feishu botName migration, S) — maintainer 评论：不应 rename top-level `channels.feishu.botName` → 应该是 per-account 层；PR #65194 (imessage duplicate monitor, S) — maintainer P1×2/P2×2 评论范围问题；PR #65205 (Discord Activities, XL) — maintainer 需在 merge 前处理 spoofed launch markers + SDK load promise reset | 👀 状态变化(方向4 第99轮 14:51 CST) | 维护者反馈集中在 Feishu migration 层次设计、imessage 检查范围过宽；建议确认 #65202 的 top-level vs per-account 设计差异后再 review |
+| P59925 | [#65244](https://github.com/openclaw/openclaw/issues/65244) **bug+regression** sqlite-vec extension cannot be loaded - missing allowExtension option in DatabaseSync | 🔍 新发现(方向1 GitHub 第100轮 15:58 CST) | bug+regression；`sqlite-vec` 扩展加载失败，`DatabaseSync` 缺少 `allowExtension` 选项；影响向量搜索插件生态；0评论，未认领；**建议 aoao 接单** |
+| P59926 | [#65236](https://github.com/openclaw/openclaw/issues/65236) **regression** MiniMax portal provider broken after v2026.4.11 — calls /responses instead of /v1/messages | 🔍 新发现(方向1 GitHub 第100轮 15:58 CST) | regression；2026.4.11 起 MiniMax provider 错误调用 `/responses` 而非 `/v1/messages`，直接阻断所有 MiniMax 用户；**建议 aoao 优先接单** |
+| P59927 | [#65225](https://github.com/openclaw/openclaw/issues/65225) Cron isolated session fails to execute: task stuck in 'running' state | 🔍 新发现(方向1 GitHub 第100轮 15:58 CST) | cron isolated session 卡在 running 态，无法完成；与既有 cron task 问题簇相关；0评论，未认领 |
+| P59928 | [#65234](https://github.com/openclaw/openclaw/issues/65234) Fallback models not attempted when session started on a different primary model | 🔍 新发现(方向1 GitHub 第100轮 15:58 CST) | session 切换主模型后 fallback 不触发，model-governance bug；与 #65086 sessions_spawn model fallback 问题同簇 |
+| P59929 | [#65220](https://github.com/openclaw/openclaw/issues/65220) Turn-triggered context-engine maintenance is awaited inline and can stall the session lane | 🔍 新发现(方向1 GitHub 第100轮 15:58 CST) | 与 #65233（100yenadmin 已提 PR）直接同题，用户侧有明确投诉；PR 已 open，建议 review 确认 |
+| P59930 | [#65238](https://github.com/openclaw/openclaw/issues/65238) [chat.history omitted: message too large] placeholder appears frequently in webchat since 2026.4.11 | 🔍 新发现(方向1 GitHub 第100轮 15:58 CST) | regression；2026.4.11 起 webchat 频繁出现历史省略占位符，用户体验 bug；与 token usage / auto-compression 问题簇可能相关 |
+| P59931 | [#65235](https://github.com/openclaw/openclaw/issues/65235) [UX] Suppress tool parameter validation errors from being sent to user chat surfaces | 🔍 新发现(方向1 GitHub 第100轮 15:58 CST) | UX bug；工具参数校验错误被推送到用户聊天界面，暴露内部细节；建议修复 error handling 路径 |
+| P59932 | [方向4 第100轮 15:58 CST] GPT-5.4 parity rollup 进入 2-PR 收尾阶段：Runtime Completion Rollup **#65219** + Parity Proof Rollup **#65224** | ✅ **收尾阶段**(方向4 第100轮 15:58 CST) | 旧 wave 3 PRs 已合并为 2 个 rollup；Copilot review + Greptile 均为 COMMENTED（有1个 inline comment）；建议快速 Approve 推 merge；另 #65242(CompletionDeliveryGate ACP) greptile COMMENTED，值得关注 |
 | P59890 | [#65076](https://github.com/openclaw/openclaw/issues/65076) OpenAI 音频转写对有效 OGG/Opus 静默失败且无日志 | 🔍 新发现(方向1 GitHub 第95轮 10:08 CST) | 高优先级行为 bug; `openclaw infer audio transcribe` 与 Telegram voice-note 路径同时失败,同文件直接 curl OpenAI 200 正常,说明问题在 OpenClaw `tools.media.audio` 管线与错误吞掉路径; **建议优先查 applyMediaUnderstanding / verbose-only swallow** |
 | P59891 | [#65078](https://github.com/openclaw/openclaw/issues/65078) v2026.4.9 起 Telegram transcript 不再出现在 Web UI | 🔍 新发现(方向1 GitHub 第95轮 10:08 CST) | 明确 regression; v2026.4.8 正常,v2026.4.9~4.11 持续异常,且仅 `google-gemini-cli` provider 路径触发; 影响 Telegram ↔ Web UI 可见性 |
 | P59892 | [#65082](https://github.com/openclaw/openclaw/issues/65082) npm 包缺失 `qa/scenarios/index.md` 导致 completion cache update fatal | 🔍 新发现(方向1 GitHub 第95轮 10:08 CST) | packaging / docs gap; `openclaw update` 主流程成功后在 completion cache 阶段报 fatal,对 npm global 用户升级体验很差; 可修性 S |
@@ -5848,7 +5856,28 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 - **方向3 贡献者文件区域**：扫描贡献量最低的 20 位 contributors。**gh api 返回 commit sha 但 .files 全部为 null**，未能完成文件路径收集。建议下轮改用 `repos/{owner}/{repo}/commits?author={login}&per_page=20` + `.[].files[].filename` 逐个拉取
 - **方向4 当前追踪 PR 反馈**：确认多个追踪 PR 有 maintainer/bot 新评论。**#65205** (Discord Activities) 有关键 P1 评论需 merge 前处理；**#65202** (Feishu migration) 有 P2 评论；**#65194** (iMessage) 有 maintainer P1 评论
 
+### 方向1 新候选 P741-P750（2026-04-12 20:55 CST）
+| P741 | [#65341](https://github.com/openclaw/openclaw/issues/65341) **bug:behavior** memory-core dreaming narrative 每次运行静默失败 — `idempotencyKey` 必填字段被条件 spread 省略 | 🔍 新发现(方向1 GitHub 第101轮 20:55 CST) | 根因已定位：`server.impl-*.js` 的 `createGatewaySubagentRuntime().run()` 用 `...params.idempotencyKey && {...}` 可省略必填字段；`AgentParamsSchema` 要求非空；次生问题：cron 仍报 `lastRunStatus: "ok"`；**建议 aoao 接单（S 级，workaround 已给出）** |
+| P742 | [#65347](https://github.com/openclaw/openclaw/issues/65347) **bug+regression** OpenAI Codex OAuth `invalid_scope` — `model.request` scope 被 OpenAI 拒绝，v2026.4.10 起认证完全失败 | 🔍 新发现(方向1 GitHub 第101轮 20:55 CST) | OAuth flow 报 `invalid_scope` 和 `missing authorization code`；**建议 aoao 调查 scope 是否 OpenAI API 变更** |
+| P743 | [#65328](https://github.com/openclaw/openclaw/issues/65328) **bug** 同步 readFileSync 在 .map() 里导致 99% CPU — 6 agent 时 gateway 持续高负载 | 🔍 新发现(方向1 GitHub 第101轮 20:55 CST) | plugin 初始化时同步读文件阻塞事件循环；sample profiler 确认 `Builtins_ArrayMap → node::fs::ReadFileUtf8`；**建议 aoao 接单（M 级）** |
+| P744 | [#65346](https://github.com/openclaw/openclaw/issues/65346) **bug** Skill catalog prompt injection 忽略 `blockedByAllowlist` 过滤 | 🔍 新发现(方向1 GitHub 第101轮 20:55 CST) | 已从 allowlist 移除的 skills 仍注入 system prompt；**建议 aoao 接单（S 级）** |
+| P745 | [#65343](https://github.com/openclaw/openclaw/issues/65343) **bug** Ollama provider 每次请求 120 秒超时 | 🔍 新发现(方向1 GitHub 第101轮 20:55 CST) | 可能与 P443(#61487) 同根；**建议确认 #61487 是否覆盖** |
+| P746 | [#65335](https://github.com/openclaw/openclaw/issues/65335) **bug** Dreams Diary 调用未知 RPC `wiki.importInsights` | 🔍 新发现(方向1 GitHub 第101轮 20:55 CST) | Control UI → Dreams → Diary 触发 unknown method error；**建议 aoao 接单** |
+| P747 | [#65334](https://github.com/openclaw/openclaw/issues/65334) **bug** CLI 报告错误版本 2026.4.1 而实际 2026.4.11 | 🔍 新发现(方向1 GitHub 第101轮 20:55 CST) | 插件加载被误判跳过；**建议 aoao 调研版本解析路径** |
+| P748 | [#65329](https://github.com/openclaw/openclaw/issues/65329) **bug** msteams DM inline images/files 被静默丢弃 | 🔍 新发现(方向1 GitHub 第101轮 20:55 CST) | 1 comment；**建议继续跟** |
+| P749 | [#65326](https://github.com/openclaw/openclaw/issues/65326) **bug** Google Chat JWT/event format 不兼容（Add-ons framework 2026 变更）| 🔍 新发现(方向1 GitHub 第101轮 20:55 CST) | 需 `audienceType: "app-url"`；**建议修文档** |
+| P750 | [#65339](https://github.com/openclaw/openclaw/issues/65339) **feature** Same-model retry with backoff before fallback | 🔍 新发现(方向1 GitHub 第101轮 20:55 CST) | 重开 #17465；有完整日志证据；**建议调研** |
+
+### 方向2 插件仓库（2026-04-12 20:55 CST）
+| P751 | Tencent/openclaw-weixin [#57](https://github.com/Tencent/openclaw-weixin/issues/57) **bug** 无法卸载 | 🔍 新发现(方向2 插件 第101轮 20:55 CST) | 🔒代码不可见；**建议外部追踪** |
+| P752 | Tencent/openclaw-weixin [#56](https://github.com/Tencent/openclaw-weixin/pull/56) **PR** ACP thread binding adapter for WeChat | 🔍 新发现(方向2 插件 第101轮 20:55 CST) | PR 已 open；**建议跟踪** |
+
+### 方向4 PR 新动态（2026-04-12 20:55 CST）
+- **#65206**（cron persist state）：**Greptile P2**：`lastErrorReason` 未校验 `FailoverReason` enum；非阻塞性，follow-up 处理
+- **#65242**（CompletionDeliveryGate ACP）：**Greptile P2**：`getCompletionClaim` 在 gate mode "off" 时静默返回 undefined；建议 review 后要求修复
+- **#65219 / #65224**（GPT-5.4 parity rollups）：Greptile 确认 `.trim()` 已加；streaming SSE 需更新 block comment；**接近 merge ready**
+
 ### 结论
-- **本轮最高优先级**: **#65210** (token usage N/A regression, 阻塞 token 监控+auto-compression) + **#65211** (provider models catalog 根因, supersedes #65178)
-- **建议 aoao**: (1) #65210 → usage parsing 链; (2) #65211 → 优先 review 根因级修复; (3) #65205 → maintainer P1 评论需在 merge 前处理; (4) #65202 → Feishu migration 注意 top-level vs per-account 区分
-- **下轮改进**: 方向3 修复文件路径收集方法；方向2 持续关注 weixin 仓库公开化可能性
+- **本轮最高优先级**: **#65341** (dreaming idempotencyKey bug) + **#65347** (OpenAI Codex OAuth regression) + **#65328** (readFileSync CPU 问题)
+- **建议 aoao**: (1) #65341 接单（S 级）；(2) #65347 调研 OAuth scope 变更；(3) #65328 接单（M 级）
+- **下轮**: 继续扫描新 regression；关注 #65346 可修性
