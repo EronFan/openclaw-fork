@@ -1,25 +1,29 @@
-# 全量扫描报告 [2026-04-12 10:08 CST]
+# 全量扫描报告 [2026-04-12 11:33 CST]
 
 ## GitHub Issues（方向1）
-- 发现了6个新候选，其中最重要的是 #65076，OpenAI 音频转写对有效 OGG/Opus 静默失败，CLI 与 Telegram 路径同时中招，且默认日志不报错。
-- 其次是 #65078，v2026.4.9 起 Telegram transcript 不再出现在 Web UI，明确 regression，且指向 `google-gemini-cli` provider 路径。
-- 另外两个值得跟的是 #65082（npm 包缺失 `qa/scenarios/index.md`，升级后 completion cache fatal）和 #65086（`sessions_spawn` 显示 `modelApplied:true` 但子代理实际落到 fallback 模型）。
+- 发现了 6 个新候选，其中最重要的是 #65141，iMessage 在 `default` 与命名 account 并存时会启动双 watcher，导致同一条消息被回复两次。
+- 其次是 #65136，gateway restart 或 `/reset` 杀掉子代理后，task 记录仍长期停留在 `running`，`openclaw tasks maintenance --apply` 不会回收，属于 crash recovery 缺口。
+- 同时间窗内还出现了 #65135（Control UI cron 展示错误）、#65142（skill 扫描启动慢的 feature request）等，但优先级明显低于前两项。
 
 ## 插件仓库（方向2）
 - 无。
-- `Tencent/openclaw-weixin` 最近 2 小时未检出新的 open issue/PR 更新。
+- `Tencent/openclaw-weixin` 最近 2 小时未检出新的 open issue 或 PR 更新，公开可见的最新仍是 #55 / #54 / #53，更新时间都早于本轮窗口。
 
 ## 贡献者文件区域（方向3）
-- 扫描了排名最末的10个 contributors，拿到8个贡献者最近提交涉及的文件区域。
-- 文件区里最相关的是 `src/agents/pi-embedded-runner/compact*`，命中未覆盖 open bug #64962（timeout-compaction 失败后不升级）。
-- 另外搜到 `server-context` 相关 MCP 老问题和 `CHANGELOG` 类低相关 feature 请求，总体本轮只发现1个值得继续追的高相关 open bug 区域。
+- 扫描了排名最末的 10 个 contributors，实际拿到 8 个贡献者最近 20 条 commit 涉及的文件区域。
+- 最有价值的命中有 2 个：
+  - `lml2468` 最近活跃在 `src/gateway/control-plane-rate-limit*`，与 #64911（gateway 提前 ready，但 WS control plane 还不可用，CLI RPC/cron run 握手超时）直接同区。
+  - `lml2468` 还活跃在 `src/gateway/server-maintenance.ts` / `src/gateway/server-methods/nodes.ts`，与 #64984（gateway reconnect 后 MCP 子进程不清理，长期累积 OOM）高度相关。
+- 另外，上一轮已追踪的 `davidrudduck` 文件区 ↔ #64962（timeout-compaction 不升级）仍然有效，但本轮不是新增。
 
 ## 追踪 PR 反馈（方向4）
-- 本轮未发现已追踪 PR 的 maintainer 新评论。
-- OPENCLAW-PROJECT.md 已追踪项里有2个状态变化：
-  - #65043 仍 open，2 小时内有新更新，comments=1
-  - #65067 仍 open，2 小时内有新更新，comments=0
+- 已追踪 PR 本轮未发现 maintainer 新评论。
+- 状态检查结果：
+  - PR #64681 仍 open，updated 23:43 UTC
+  - PR #65016 仍 open，updated 22:06 UTC
+  - PR #65012 仍 open，updated 21:45 UTC
+- 已追踪新问题状态也无反转：#65043 / #65067 / #65076 / #65078 / #65082 / #65086 均仍 open。
 
 ## 结论
-最高优先级是 #65076，其次是 #65078。
-建议：优先把 #65076 丢给 aoao 看 `tools.media.audio` / `applyMediaUnderstanding` 吞错路径；#65078 可并行确认 `google-gemini-cli` 是否在 transcript / Web UI 写入链路上漏字段。
+最高优先级是 #65141，其次是 #65136。
+建议：优先把 #65141 丢给 aoao 看 iMessage account watcher 去重/启动判重逻辑；#65136 可并行检查 gateway startup crash recovery 和 tasks maintenance reconcile 路径。
