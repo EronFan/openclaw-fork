@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-12T01:17:00Z",
+  "updatedAt": "2026-04-12T02:09:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": "2026-04-12T01:17:00Z",
-  "note": "2026-04-12 09:17 CST heartbeat: No recent subagent runs or failures in last 120m. XIXI latest scan is fresh at 2026-04-12 08:12 CST, but OPENCLAW-PROJECT.md contains unhandled high-priority xixi recommendation #65042, so aoao was dispatched; dispatch timed out waiting for gateway response and should be retried manually if needed.",
+  "note": "2026-04-12 10:09 CST heartbeat: no recent subagent runs or failures in last 120m. xixi latest scan report is fresh at 2026-04-12 10:08 CST, so no outage signal despite intermittent GitHub API rate-limit errors during scan execution. workspace had uncommitted temp changes and was auto-committed per HEARTBEAT.md.",
   "subagentFailures": [
     {
       "issue": "#63265",
