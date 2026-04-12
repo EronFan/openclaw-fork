@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-11T18:40:00Z",
+  "updatedAt": "2026-04-12T18:11:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": "2026-04-12T05:59:00Z",
-  "note": "2026-04-12 14:40 CST: aoao #65193 cron runningAtMs 修复完成 PR #65206；xixi 最新扫描 13:58 CST 正常；无新 subagent 失败需处理",
+  "note": "2026-04-13 02:11 CST: #65498 (Main-session user task loses final reply) subagent 完成；xixi 最新扫描 2026-04-12 20:58 CST 正常（约5小时前）；无新 subagent 失败需处理；git auto-commit done",
   "subagentFailures": [
     {
       "issue": "#63265",
@@ -60,6 +60,13 @@
       "completedAt": "2026-04-12T03:49:00Z",
       "pr": "https://github.com/openclaw/openclaw/pull/65155",
       "status": "done"
+    },
+    {
+      "issue": "#65498",
+      "runId": "441e78ad-03f0-42c1-8e3b-7138898b331d",
+      "completedAt": "2026-04-12T18:47:00Z",
+      "status": "done",
+      "task": "Main-session user task loses final reply after heartbeat/exec-completion interrupt"
     }
   ],
   "cronTasksReTriggered": [
