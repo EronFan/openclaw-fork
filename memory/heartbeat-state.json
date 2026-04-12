@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-12T06:03:00Z",
+  "updatedAt": "2026-04-11T18:40:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": "2026-04-12T05:59:00Z",
-  "note": "2026-04-12 14:03 CST heartbeat: xixi latest scan report is fresh at 2026-04-12 13:58 CST, recent subagents in last 120m are successful xixi scans only, no active failures requiring retry.",
+  "note": "2026-04-12 14:40 CST: aoao #65193 cron runningAtMs 修复完成 PR #65206；xixi 最新扫描 13:58 CST 正常；无新 subagent 失败需处理",
   "subagentFailures": [
     {
       "issue": "#63265",
@@ -48,15 +48,17 @@
       "pr": "https://github.com/openclaw/openclaw/pull/63515"
     },
     {
-      "issue": "xixi-afternoon-scan",
-      "runId": "cbe1621b-856d-42e1-88ac-40d67e82b2a5",
-      "completedAt": "2026-04-12T04:30:37Z",
+      "issue": "#65193",
+      "runId": "06ee724f-6c99-41b2-8bd2-9a3132beb352",
+      "completedAt": "2026-04-12T06:33:00Z",
+      "pr": "https://github.com/openclaw/openclaw/pull/65206",
       "status": "done"
     },
     {
-      "issue": "xixi-scan-v2",
-      "runId": "6536b95a-74a9-45d6-8abf-26fc98228723",
-      "completedAt": "2026-04-12T05:55:43Z",
+      "issue": "#65155",
+      "runId": "d4e7e667-1301-4fd9-8f4c-daf6e9d6ca21",
+      "completedAt": "2026-04-12T03:49:00Z",
+      "pr": "https://github.com/openclaw/openclaw/pull/65155",
       "status": "done"
     }
   ],

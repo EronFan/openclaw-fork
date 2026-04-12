@@ -32,7 +32,7 @@
 
 | 优先级 | 任务 | 状态 | 备注 |
 |--------|------|------|------|
-| P59904 | [#65193](https://github.com/openclaw/openclaw/issues/65193) Cron 持久化状态缺字段，运行时直接 `runningAtMs` 崩溃 | 🔍 新发现(方向1 GitHub 第98轮 13:45 CST) | 高优先级 cron regression；新 issue 带 `bug + regression`，报错是 `Cannot read properties of undefined (reading 'runningAtMs')`，属于直接打断定时任务的运行时异常，且目前未见认领，值得优先 action |
+| P59904 | [#65193](https://github.com/openclaw/openclaw/issues/65193) Cron 持久化状态缺字段，运行时直接 `runningAtMs` 崩溃 | ✅ **PR #65206 已创建** | 根因：normalize.ts 丢失 job.state；修复：coerceState() 保留 runningAtMs/nextRunAtMs 等字段；store.test.ts 回归测试通过；commit 0ad6d8d153 |
 | P59905 | [#65191](https://github.com/openclaw/openclaw/issues/65191) 插件初始化先于 config 加载，导致启动期误报/失效 | 🔍 新发现(方向1 GitHub 第98轮 13:45 CST) | 明确 lifecycle / init ordering 缺口；weixin 与 memory-lancedb-pro 都中招，表现为重启后插件配置未读取、报 validation 错但稍后又恢复，影响插件稳定性和首启体验 |
 | P59906 | [#65184](https://github.com/openclaw/openclaw/issues/65184) migrated root + `systemd --user` 场景 `openclaw gateway install` 误报 unit file 不存在 | 🔍 新发现(方向1 GitHub 第98轮 13:45 CST) | 升级恢复链路 regression；`openclaw update` 后服务自恢复失败，但手工 `daemon-reload + enable + restart` 可恢复，说明更像 install race/timing 问题，阻断升级体验 |
 | P59907 | contributor-area: `src/auto-reply/reply/agent-runner-memory*` / `pi-embedded-runner/compact*` ↔ [#55679](https://github.com/openclaw/openclaw/issues/55679) memoryFlush 永不触发 | 🔍 新发现(方向3 文件区 第98轮 13:45 CST) | 来自末段 contributors `lml2468` / `davidrudduck` 最近活跃文件区；与 compaction、memory flush、token projection 路径直接重叠，仍 open 未认领，可作为稳定性缺口继续盯 |
