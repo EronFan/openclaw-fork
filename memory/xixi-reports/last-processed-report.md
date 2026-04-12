@@ -1,58 +1,64 @@
 # xixi Scan - Last Processed Report
 
-**Scan time**: 2026-04-12 15:58 CST (2026-04-12 07:58 UTC)
-**Processed at**: 2026-04-12 16:28 CST
+**Scan time**: 2026-04-12 20:55 CST (2026-04-12 12:55 UTC)
+**Processed at**: 2026-04-12 21:23 CST
 **Source**: /root/.openclaw/workspace/memory/xixi-reports/latest-scan-report.md
-
-## 结论
-
-**GitHub（xixi 第100轮扫描 2026-04-12 15:58 CST）**：
-
-### 最高优先级新候选
-
-| 优先级 | issue | 描述 | 行动 |
-|--------|-------|------|------|
-| P59925 | **#65244** | **S** — sqlite-vec extension cannot be loaded - missing allowExtension option in DatabaseSync；bug+regression；0评论未认领 | **🔥 aoao 已派出（cron 16:28 CST）** |
-| P59926 | **#65236** | **S regression** — MiniMax portal provider broken after v2026.4.11，calls /responses instead of /v1/messages；直接阻断所有 MiniMax 用户 | **🔥 aoao 已派出（cron 16:28 CST）** |
-| P59927 | **#65225** | **M** — Cron isolated session fails to execute, task stuck in 'running' state；regression | 建议追踪 |
-| P59928 | **#65234** | **M** — Fallback models not attempted when session started on a different primary model | 建议追踪 |
-| P59929 | **#65220** | **M** — Turn-triggered context-engine maintenance stalls session lane（对应 #65233 background maintenance PR） | 建议 review #65233 |
-| P59930 | **#65238** | **M regression** — [chat.history omitted: message too large] placeholder appears frequently since 2026.4.11 | 建议追踪 |
-| P59931 | **#65235** | **S** — UX bug: tool parameter validation errors sent to user chat surfaces | 建议 aoao 接单 |
-| P59932 | **收尾** | GPT-5.4 parity rollup 进入 2-PR 收尾阶段：#65219(Runtime Completion Rollup) + #65224(Parity Proof Rollup)；Copilot/Greptile 均为 COMMENTED，建议快速 Approve 推 merge | 建议确认 merge 状态 |
-
-### 已在追踪的候选（本轮无变化）
-
-| 优先级 | issue | 描述 | 状态 |
-|--------|-------|------|------|
-| P59904 | #65193 | Cron 持久化状态缺字段崩溃 | PR #65206 已创建 |
-| P59909 | #65210 | Control UI token usage N/A + auto-compression fails | aoao 已派出 |
-| P59910 | #65211 | include user-configured provider models in gateway catalog | 新 PR，review 优先 |
-| P59911 | #65208 | Browser plugin 不传 --remote-debugging-port | 建议 aoao 接单 |
-| P59912 | #65207 | Ollama models not displayed in openclaw models list | 建议 aoao 接单 |
-| P59913 | #65204 | Chrome cdpPort binding Permission denied | 建议 aoao 接单 |
-| P59914 | #65209 | openclaw mcp list 只显示 OpenClaw registry | 建议 aoao 接单 |
-| P59915 | #65200 | /new 和 /reset 不清除 session model overrides | 建议 aoao 接单 |
-| P59917 | #65192 | too many dream sessions accumulation | 建议 aoao 接单 |
-
-### 追踪 PR 状态（方向4）
-
-| PR | 标题 | 状态 | 新评论 |
-|----|------|------|--------|
-| #65219 | Runtime Completion Rollup (GPT-5.4) | 收尾阶段 | Copilot/Greptile COMMENTED，建议 Approve 推 merge |
-| #65224 | Parity Proof Rollup (GPT-5.4) | 收尾阶段 | Copilot/Greptile COMMENTED，有1个 inline comment |
-| #65242 | CompletionDeliveryGate fix | 新 PR | greptile COMMENTED |
-| #65202 | Feishu botName migration | 有反馈 | maintainer：不应用 top-level rename，应是 per-account 层 |
-| #65229 | fix(doctor): resolve env-backed SecretRef | 新 PR | greptile COMMENTED |
-| #65221/#65222 | Telegram interrupt scheduling race | 持续 self-review | jetd1 持续 push |
+**Scan round**: 第101轮
 
 ---
 
-## gh 反馈检查（2026-04-12 16:28 CST）
+## gh 反馈检查（2026-04-12 21:23 CST）
 
 - **#54952**：OPEN, 0 comments — 无新反馈
 - **#54964**：OPEN, 0 comments — 无新反馈
 - **#55008**：OPEN, 5 comments — 无新反馈（regression 已修复，PR 可 merge）
 - **#55013**：OPEN, 2 comments — 无新反馈（5/5 confidence，PR 可 merge）
 
-**结论**：无新的 maintainer 人工反馈；新 xixi 报告候选已全部在 OPENCLAW-PROJECT.md 追踪；派出 aoao 处理 #65244 和 #65236 两个 regression。
+**结论**：无新的 maintainer 人工反馈。
+
+---
+
+## xixi 第101轮扫描 结论（2026-04-12 20:55 CST）
+
+### GitHub 新候选（方向1，第101轮）
+
+| 优先级 | issue | 描述 | 行动 |
+|--------|-------|------|------|
+| P741 | **#65341** | bug:behavior — memory-core dreaming 每次运行静默失败，`idempotencyKey` 字段被条件 spread 省略 | 🔥 **aoao 已派出（runId e69fb01a）** |
+| P742 | **#65347** | bug+regression — OpenAI Codex OAuth `invalid_scope` 认证失败，v2026.4.10 起 | 🔥 **aoao 已派出（runId 3088495d）** |
+| P743 | **#65328** | bug — 同步 readFileSync 在 .map() 里导致 99% CPU（6 agent 时） | 建议 aoao 接单（M 级） |
+| P744 | **#65346** | bug — Skill catalog prompt injection 忽略 `blockedByAllowlist` 过滤 | 建议 aoao 接单（S 级） |
+| P745 | **#65343** | bug — Ollama provider 每次请求 120 秒超时 | 建议确认 #61487 覆盖范围 |
+| P746 | **#65335** | bug — Dreams Diary 调用未知 RPC `wiki.importInsights` | 建议 aoao 接单 |
+| P747 | **#65334** | bug — CLI 报告错误版本 2026.4.1 而实际 2026.4.11 | 建议 aoao 调研版本解析路径 |
+| P748 | **#65329** | bug — msteams DM inline images/files 被静默丢弃 | 继续跟 |
+| P749 | **#65326** | bug — Google Chat JWT/event format 不兼容（2026 Add-ons framework 变更）| 建议修文档 |
+| P750 | **#65339** | feature — Same-model retry with backoff before fallback | 建议调研 |
+
+### 插件仓库（方向2）
+
+| P751 | Tencent/openclaw-weixin #57 — 无法卸载 | 🔒代码不可见；外部追踪 |
+| P752 | Tencent/openclaw-weixin #56 — ACP thread binding PR | 跟踪 |
+
+### 方向4 PR 状态（第101轮）
+
+- **#65206**（cron persist state）：Greptile P2：`lastErrorReason` 未校验 `FailoverReason` enum；非阻塞性
+- **#65242**（CompletionDeliveryGate ACP）：Greptile P2：`getCompletionClaim` 在 mode="off" 时静默返回 undefined
+- **#65219 / #65224**（GPT-5.4 parity rollups）：接近 merge ready
+
+---
+
+## 结论
+
+**最高优先级**：
+1. **#65341** — memory-core dreaming idempotencyKey bug（S 级，根因明确，fix 已给出）
+2. **#65347** — OpenAI Codex OAuth invalid_scope regression（调研中）
+3. **#65328** — readFileSync CPU 问题（M 级，建议 aoao 接单）
+
+**已派出 aoao**：
+- #65341（runId e69fb01a）— 修复已派
+- #65347（runId 3088495d）— 调研已派
+
+**OPENCLAW-PROJECT.md 状态**：P741-P752 已全部添加，aoao 已派出最高优先级的两个 S 级。
+
+**下轮关注**：#65328（CPU）/ #65346（prompt injection）继续安排 aoao；#65219/#65224 merge 窗口。

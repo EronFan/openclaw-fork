@@ -17,6 +17,8 @@ jobs.json
 node_modules/
 # Temp workspaces (untracked working dirs)
 openclaw_temp/
+# Local test artifacts
+test_write
 # OS
 *.pdf
 *.png
