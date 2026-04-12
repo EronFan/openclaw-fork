@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-11T23:22:00Z",
+  "updatedAt": "2026-04-11T23:52:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
-  "lastProactiveReachoutAt": "2026-04-11T23:22:00Z",
-  "note": "2026-04-12 07:22 CST heartbeat: no recent subagent runs or failures in last 120m. xixi latest scan report is fresh at 2026-04-12 06:59 CST, but GitHub API rate limit is now blocking fresh xixi scans, which is an exception needing attention. workspace had uncommitted scan artifacts and was auto-committed per HEARTBEAT.md.",
+  "lastProactiveReachoutAt": "2026-04-11T23:52:00Z",
+  "note": "2026-04-12 07:52 CST heartbeat: no recent subagent runs or failures in last 120m. xixi latest scan report is stale at 2026-04-11 23:02 CST, exceeding 6h threshold, so a rescan was triggered via sessions_send but timed out waiting for gateway response. workspace has uncommitted changes.",
   "subagentFailures": [
     {
       "issue": "#63265",
