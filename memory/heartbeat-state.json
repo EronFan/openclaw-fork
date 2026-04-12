@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-12T08:52:00Z",
+  "updatedAt": "2026-04-12T01:17:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
-  "lastProactiveReachoutAt": "2026-04-11T23:52:00Z",
-  "note": "2026-04-12 08:52 CST heartbeat: No recent subagent runs or failures in last 120m. XIXI latest scan report was stale at 2026-04-11 23:02 CST (exceeding 6h), so a rescan was triggered but response timed out waiting for gateway ping. Still no fresh scan. Workspace has minor changes to scan artifacts.",
+  "lastProactiveReachoutAt": "2026-04-12T01:17:00Z",
+  "note": "2026-04-12 09:17 CST heartbeat: No recent subagent runs or failures in last 120m. XIXI latest scan is fresh at 2026-04-12 08:12 CST, but OPENCLAW-PROJECT.md contains unhandled high-priority xixi recommendation #65042, so aoao was dispatched; dispatch timed out waiting for gateway response and should be retried manually if needed.",
   "subagentFailures": [
     {
       "issue": "#63265",
