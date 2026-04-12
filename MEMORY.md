@@ -122,3 +122,17 @@
 - 2026-03-24：发现 workspace 有大量未提交改动需要整理提交
 - 2026-03-24：发现自动日报生成 cron 任务未配置，导致日报延迟
 - 需要配置自动化日报生成机制，确保未来每日 9 点前推送晨报
+
+## 磁盘空间整理记录（2026-04-12）
+
+### 清理
+- 删除 openclaw_temp（409M，含 node_modules）
+- 删除 tmp_xixi_scan/
+
+### repos/openclaw 迁移
+- 原路径：/root/.openclaw/workspace/repos/openclaw
+- 新路径：/data/disk/openclaw（20G 硬盘）
+- 访问方式：symlink /root/.openclaw/workspace/repos/openclaw → /data/disk/openclaw
+- 验证：git fetch/push/clone 全部正常，aoao subagent 工作正常
+- 主盘空间：97% → 91%（释放约 4.7G）
+
