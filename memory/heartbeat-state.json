@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-11T23:52:00Z",
+  "updatedAt": "2026-04-12T08:52:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": "2026-04-11T23:52:00Z",
-  "note": "2026-04-12 07:52 CST heartbeat: no recent subagent runs or failures in last 120m. xixi latest scan report is stale at 2026-04-11 23:02 CST, exceeding 6h threshold, so a rescan was triggered via sessions_send but timed out waiting for gateway response. workspace has uncommitted changes.",
+  "note": "2026-04-12 08:52 CST heartbeat: No recent subagent runs or failures in last 120m. XIXI latest scan report was stale at 2026-04-11 23:02 CST (exceeding 6h), so a rescan was triggered but response timed out waiting for gateway ping. Still no fresh scan. Workspace has minor changes to scan artifacts.",
   "subagentFailures": [
     {
       "issue": "#63265",

@@ -32,6 +32,11 @@
 
 | 优先级 | 任务 | 状态 | 备注 |
 |--------|------|------|------|
+| P59885 | [#65043](https://github.com/openclaw/openclaw/issues/65043) Slack subagent completion 仍泄露顶层频道消息 | 🔍 新发现(方向1 GitHub 第94轮 08:24 CST) | 高优先级 regression; 2026.4.10 修完 thread routing 后仍有 duplicate delivery path; 现象是 thread 内正确发一条,频道顶层又漏一条; 与 #64454 同簇但不是同问题; **建议 aoao 优先看 announce/deliver 双路径** |
+| P59886 | [#65067](https://github.com/openclaw/openclaw/issues/65067) Windows `openclaw onboard` 在 2026.4.5 因 ESM file URL 崩溃 | 🔍 新发现(方向1 GitHub 第94轮 08:24 CST) | 可用性 regression; 任何 provider 都会在 Windows onboarding 末段报 `ERR_UNSUPPORTED_ESM_URL_SCHEME`; 首配直接阻断; 可修性 S-M |
+| P59887 | [#65042](https://github.com/openclaw/openclaw/issues/65042) Gmail watcher 重复启动导致 8788 端口冲突 | 🔍 新发现(方向1 GitHub 第94轮 08:24 CST) | 高优先级 watcher 生命周期问题; 首个 watcher 正常启动后 gateway 又拉起第二个进程; 直接阻断 Gmail 自动化出站回复 |
+| P59888 | [#64973](https://github.com/openclaw/openclaw/issues/64973) macOS Talk Mode 触发 stale config.set / token mismatch / local gateway restart | 🔍 新发现(方向3 贡献者文件区 第94轮 08:24 CST) | 来自排名末段 contributor `mneves75` 最近活跃区域 `apps/macos`; 与 companion/macOS 配置链路直接相关; 建议作为 contributor-area 候选继续跟 |
+| P59889 | [PR #64681](https://github.com/openclaw/openclaw/pull/64681) parity gate real tool calls | 👀 maintainer 新反馈(方向4 第94轮 08:24 CST) | `100yenadmin` 在 23:43 UTC 追加 recheck: `scenario-catalog.test.ts` 7/7 通过,当前 head `f33f6cbf37`; 状态继续偏正向,可维持关注 |
 | P59881 | [PR #65016](https://github.com/openclaw/openclaw/pull/65016) fix(cron): normalize malformed persisted job state on load | 🔍 新发现(方向1 GitHub 第93轮 05:23 CST) | size S; cron 持久化状态畸形; 与 P35/#55935 announce 路径可能相关; updated 21:48 UTC; 建议 quick review |
 | P59882 | [PR #65012](https://github.com/openclaw/openclaw/pull/65012) fix(memory-core): preserve public artifact visibility | 🔍 新发现(方向1 GitHub 第93轮 05:23 CST) | size L; docs+extensions:memory-core; bridge mode artifact 可见性; 可能与 P333/#64510 同根; 建议 aoao 确认 |
 | P59883 | Tencent/openclaw-weixin [#54](https://github.com/Tencent/openclaw-weixin/issues/54) 图片查看功能不可用（sharp模块缺失） | 🔍 新发现(方向2 插件 第93轮 05:23 CST) | 🔒代码不可见; 可用性缺口; updated 14:03 UTC; 建议外部追踪 |
