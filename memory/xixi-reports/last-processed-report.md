@@ -1,13 +1,13 @@
 # xixi Scan - Last Processed Report
 
-**Scan time**: 2026-04-12 20:55 CST (2026-04-12 12:55 UTC)
-**Processed at**: 2026-04-12 21:23 CST
+**Scan time**: 2026-04-13 02:26 CST (2026-04-12 18:26 UTC)
+**Processed at**: 2026-04-13 02:37 CST
 **Source**: /root/.openclaw/workspace/memory/xixi-reports/latest-scan-report.md
-**Scan round**: 第101轮
+**Scan round**: 第105轮（02:26 CST）
 
 ---
 
-## gh 反馈检查（2026-04-12 21:23 CST）
+## gh 反馈检查（2026-04-13 02:37 CST）
 
 - **#54952**：OPEN, 0 comments — 无新反馈
 - **#54964**：OPEN, 0 comments — 无新反馈
@@ -18,47 +18,42 @@
 
 ---
 
-## xixi 第101轮扫描 结论（2026-04-12 20:55 CST）
+## xixi 第105轮扫描 结论（2026-04-13 02:26 CST）
 
-### GitHub 新候选（方向1，第101轮）
+### GitHub 新候选（方向1，第105轮 02:26 CST）
 
 | 优先级 | issue | 描述 | 行动 |
 |--------|-------|------|------|
-| P741 | **#65341** | bug:behavior — memory-core dreaming 每次运行静默失败，`idempotencyKey` 字段被条件 spread 省略 | 🔥 **aoao 已派出（runId e69fb01a）** |
-| P742 | **#65347** | bug+regression — OpenAI Codex OAuth `invalid_scope` 认证失败，v2026.4.10 起 | 🔥 **aoao 已派出（runId 3088495d）** |
-| P743 | **#65328** | bug — 同步 readFileSync 在 .map() 里导致 99% CPU（6 agent 时） | 建议 aoao 接单（M 级） |
-| P744 | **#65346** | bug — Skill catalog prompt injection 忽略 `blockedByAllowlist` 过滤 | 建议 aoao 接单（S 级） |
-| P745 | **#65343** | bug — Ollama provider 每次请求 120 秒超时 | 建议确认 #61487 覆盖范围 |
-| P746 | **#65335** | bug — Dreams Diary 调用未知 RPC `wiki.importInsights` | 建议 aoao 接单 |
-| P747 | **#65334** | bug — CLI 报告错误版本 2026.4.1 而实际 2026.4.11 | 建议 aoao 调研版本解析路径 |
-| P748 | **#65329** | bug — msteams DM inline images/files 被静默丢弃 | 继续跟 |
-| P749 | **#65326** | bug — Google Chat JWT/event format 不兼容（2026 Add-ons framework 变更）| 建议修文档 |
-| P750 | **#65339** | feature — Same-model retry with backoff before fallback | 建议调研 |
+| P59964 | #65501 | **M** forceFlushTranscriptBytes is a no-op on fresh sessions | 🔥 aoao 已派出 |
+| P59965 | #65500 | **regression** Custom models not shown in Telegram/Web Console (2026.3.24+) | 关联 #65211 追踪 |
+| P59966 | #65498 | **bug:crash** Main-session user task loses final reply after heartbeat/exec-completion interrupt | 🔥 aoao 已派出 |
+| P59967 | #65499 | **regression** --force-reset-cross-signing sends malformed UIA response (401) | 观察 |
+| P59968 | #65493 | **S** delivery-mirror duplicates message(action=send) messages | 建议 aoao 接单 |
+| P59969 | #65486 | **S** Gateway restart doesn't invalidate approval-pending session tool results | 建议 aoao 接单 |
+| P59970 | #65485 | **S** Gateway SIGTERM-restarts kill in-flight agent runs on non-critical config changes | 建议 aoao 接单 |
+| P59971 | #65487 | **S** Context with Heartbeat turns causes high token usage (lightContext:true) | 建议 aoao 接单 |
 
-### 插件仓库（方向2）
+### 已在表中追踪（来自 02:26 CST 扫描）
 
-| P751 | Tencent/openclaw-weixin #57 — 无法卸载 | 🔒代码不可见；外部追踪 |
-| P752 | Tencent/openclaw-weixin #56 — ACP thread binding PR | 跟踪 |
+- P59948 #65470（CommandLane.Nested maxConcurrent=1）— aoao 已派出
+- P59955 #65470（已在上一轮派出）
+- P59961 PR #65452 SQL injection latent risk — ⚠️ 最高安全优先级，需 maintainer 确认
+- P59962 PR #65453 MiniMax-M2.7 catalog — 对应 #65442，建议 close
+- P59963 PR #65496 CDP SSRF — 待确认是否覆盖 #65495
 
-### 方向4 PR 状态（第101轮）
+### PR 动态（方向4，第105轮）
 
-- **#65206**（cron persist state）：Greptile P2：`lastErrorReason` 未校验 `FailoverReason` enum；非阻塞性
-- **#65242**（CompletionDeliveryGate ACP）：Greptile P2：`getCompletionClaim` 在 mode="off" 时静默返回 undefined
-- **#65219 / #65224**（GPT-5.4 parity rollups）：接近 merge ready
+- **PR #65452** SQL injection — Greptile P2 指出 latent SQL 注入（definition 参数仍未转义）；需向 maintainer 确认
+- **PR #65453** MiniMax-M2.7 catalog — 直接解决 #65442；建议确认后 close issue
+- **PR #65496** CDP SSRF fix — 需确认是否覆盖 #65495 WSL2 场景
 
----
-
-## 结论
+### 结论
 
 **最高优先级**：
-1. **#65341** — memory-core dreaming idempotencyKey bug（S 级，根因明确，fix 已给出）
-2. **#65347** — OpenAI Codex OAuth invalid_scope regression（调研中）
-3. **#65328** — readFileSync CPU 问题（M 级，建议 aoao 接单）
+1. **#65501**（M，forceFlushTranscriptBytes no-op）：aoao 已派出
+2. **#65498**（bug:crash，main-session 任务回复丢失）：aoao 已派出
+3. **PR #65452** SQL injection latent risk：⚠️ 需 maintainer 确认
 
-**已派出 aoao**：
-- #65341（runId e69fb01a）— 修复已派
-- #65347（runId 3088495d）— 调研已派
+**新增追踪**：P59964-P59971 已写入 OPENCLAW-PROJECT.md（第105轮 02:26 CST）。
 
-**OPENCLAW-PROJECT.md 状态**：P741-P752 已全部添加，aoao 已派出最高优先级的两个 S 级。
-
-**下轮关注**：#65328（CPU）/ #65346（prompt injection）继续安排 aoao；#65219/#65224 merge 窗口。
+**下轮关注**：#65501/#65498 aoao 进展；PR #65452 maintainer 确认；#65470（CommandLane）aoao 进展。

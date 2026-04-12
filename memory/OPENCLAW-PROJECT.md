@@ -64,6 +64,21 @@
 | P59930 | [#65238](https://github.com/openclaw/openclaw/issues/65238) [chat.history omitted: message too large] placeholder appears frequently in webchat since 2026.4.11 | 🔍 新发现(方向1 GitHub 第100轮 15:58 CST) | regression；2026.4.11 起 webchat 频繁出现历史省略占位符，用户体验 bug；与 token usage / auto-compression 问题簇可能相关 |
 | P59931 | [#65235](https://github.com/openclaw/openclaw/issues/65235) [UX] Suppress tool parameter validation errors from being sent to user chat surfaces | 🔍 新发现(方向1 GitHub 第100轮 15:58 CST) | UX bug；工具参数校验错误被推送到用户聊天界面，暴露内部细节；建议修复 error handling 路径 |
 | P59932 | [方向4 第100轮 15:58 CST] GPT-5.4 parity rollup 进入 2-PR 收尾阶段：Runtime Completion Rollup **#65219** + Parity Proof Rollup **#65224** | ✅ **收尾阶段**(方向4 第100轮 15:58 CST) | 旧 wave 3 PRs 已合并为 2 个 rollup；Copilot review + Greptile 均为 COMMENTED（有1个 inline comment）；建议快速 Approve 推 merge；另 #65242(CompletionDeliveryGate ACP) greptile COMMENTED，值得关注 |
+| P59933 | [#65407](https://github.com/openclaw/openclaw/issues/65407) **Regression** CLI runner bypasses GlobalHookRunner，breaking ensemble-style prompt hooks since v2026.4.7 | 🔍 新发现(方向1 GitHub 第101轮 23:11 CST) | regression；v2026.4.7 起 CLI runner pipeline 跳过 GlobalHookRunner，导致 ensemble 风格 prompt hooks 全部失效；size 未标注；**建议 aoao 优先接单** |
+| P59934 | [#65408](https://github.com/openclaw/openclaw/issues/65408) **Bug** Control UI session survives gateway token rotation via persisted device-token retry fallback | 🔍 新发现(方向1 GitHub 第101轮 23:11 CST) | bug+bug:behavior；gateway token rotation 后 session 仍通过 persisted device-token retry 存活；安全边界问题；建议关注 |
+| P59935 | [#65400](https://github.com/openclaw/openclaw/issues/65400) **Bug** `openclaw browser --help` triggers full application boot (30s+) | 🔍 新发现(方向1 GitHub 第101轮 23:11 CST) | bug+regression；--help 应即时返回，但触发了完整应用启动；CLI 体验 regression；建议 aoao 接单 |
+| P59936 | [#65394](https://github.com/openclaw/openclaw/issues/65394) **Bug** audio transcribe returns "No transcript returned" for Deepgram/Groq/OpenAI on valid local files | 🔍 新发现(方向1 GitHub 第101轮 23:11 CST) | bug+bug:behavior；音频转写静默失败；与 #65076 同簇；建议 aoao 接单 |
+| P59937 | [#65412](https://github.com/openclaw/openclaw/issues/65412) **Bug** Dreaming narrative never writes to DREAMS.md — snippets/promotions always empty | 🔍 新发现(方向1 GitHub 第101轮 23:11 CST) | bug；dreaming 功能实际完全失效，DREAMS.md 从不被写入；建议 aoao 接单 |
+| P59938 | [#65448](https://github.com/openclaw/openclaw/issues/65448) **S** Gemini 3.x via direct google-vertex produces empty visible output intermittently | 🔥 **aoao 已派出**(方向1 GitHub 第104轮 16:18 CST) | **最高优先级**；根因已定位：`getGoogleBudget()` 对 Gemini 3.x 返回 `-1`（unlimited thinking），导致所有 context 消耗在 hidden thinking，visible output 为空；影响所有 Gemini 3.x (pro/flash) via direct google-vertex；workaround 用外部 proxy；两行 patch，作者已给精确方向；**runId 5de6a024** |
+| P59939 | [#65430](https://github.com/openclaw/openclaw/issues/65430) **S regression** BlueBubbles inbound image webhooks arrive with `attachments: []` | 🔍 新发现(方向1 GitHub 第104轮 16:18 CST) | regression；BB webhook 到达但 `attachments: []`，OpenClaw 从不下载图片，agent 只看到占位文字；无 workaround；建议 aoao 接单 |
+| P59940 | [#65441](https://github.com/openclaw/openclaw/issues/65441) **M** Gateway loads all session history at startup (~1.6GB with 200+ sessions) | 🔍 新发现(方向1 GitHub 第104轮 16:18 CST) | usability + performance；所有 session JSONL 启动时全部读入内存，建议 lazy-load sessions；建议 xixi 调研启动加载路径后 aoao 接单 |
+| P59941 | [#65443](https://github.com/openclaw/openclaw/issues/65443) **S** Telegram direct-chat TTS tool reports success but voice replies not delivered | 🔥 **aoao 已派出**(方向1 GitHub 第104轮 16:18 CST) | 明确 handoff bug；tts tool 返回成功但 Telegram 收不到语音消息；与 generic TTS provider 问题不同，是 delivery 路径 bug；0评论，未认领；**建议优先接单** |
+| P59942 | [#65424](https://github.com/openclaw/openclaw/issues/65424) **bug** MiniMax-M2.7 image attachments silently dropped | 🔍 新发现(方向1 GitHub 第104轮 16:18 CST) | `buildMinimaxCatalog()` hardcodes `input: ["text"]`，图片附件被静默丢弃；与 #65211 同簇；建议 aoao 接单 |
+| P59943 | [#65437](https://github.com/openclaw/openclaw/issues/65437) **M** tools.elevated.allowFrom.slack silently blocked by commandAuthorized gate | 🔍 新发现(方向1 GitHub 第104轮 16:18 CST) | Slack elevated tool allowFrom 被 commandAuthorized gate 静默阻断；0评论；建议 aoao 排查 slack command gate 逻辑 |
+| P59944 | [#65428](https://github.com/openclaw/openclaw/issues/65428) **bug:crash+security** cli-runner hashes tokens from ~/.claude/.credentials.json | 🔍 新发现(方向1 GitHub 第104轮 16:18 CST) | **安全相关**；credentials.json 内容被哈希处理；cli-runner 不应访问 credentials；建议 aoao 优先排查 |
+| P59945 | [#65418](https://github.com/openclaw/openclaw/issues/65418) **bug** Anthropic adapter mutates replayed thinking block text (breaks signature validation) | 🔍 新发现(方向1 GitHub 第104轮 16:18 CST) | replay 时 thinking block 被篡改，signature validation 失败；影响 replay 可靠性；建议 aoao 接单 |
+| P59946 | [#65380](https://github.com/openclaw/openclaw/issues/65380) **bug** MiniMax tool use broken: tool call ID sanitization causes error 2013 | 🔍 新发现(方向1 GitHub 第104轮 16:18 CST) | MiniMax tool call ID sanitization 导致 error 2013；影响 MiniMax 用户工具调用；建议 aoao 接单 |
+| P59947 | [#65379](https://github.com/openclaw/openclaw/issues/65379) **bug** Browser CDP reachability check fails on Linux due to global undici EnvHttpProxyAgent | 🔍 新发现(方向1 GitHub 第104轮 16:18 CST) | Linux 上 CDP health check 因 global undici EnvHttpProxyAgent 失败；影响浏览器自动化；建议 aoao 接单 |
 | P59890 | [#65076](https://github.com/openclaw/openclaw/issues/65076) OpenAI 音频转写对有效 OGG/Opus 静默失败且无日志 | 🔍 新发现(方向1 GitHub 第95轮 10:08 CST) | 高优先级行为 bug; `openclaw infer audio transcribe` 与 Telegram voice-note 路径同时失败,同文件直接 curl OpenAI 200 正常,说明问题在 OpenClaw `tools.media.audio` 管线与错误吞掉路径; **建议优先查 applyMediaUnderstanding / verbose-only swallow** |
 | P59891 | [#65078](https://github.com/openclaw/openclaw/issues/65078) v2026.4.9 起 Telegram transcript 不再出现在 Web UI | 🔍 新发现(方向1 GitHub 第95轮 10:08 CST) | 明确 regression; v2026.4.8 正常,v2026.4.9~4.11 持续异常,且仅 `google-gemini-cli` provider 路径触发; 影响 Telegram ↔ Web UI 可见性 |
 | P59892 | [#65082](https://github.com/openclaw/openclaw/issues/65082) npm 包缺失 `qa/scenarios/index.md` 导致 completion cache update fatal | 🔍 新发现(方向1 GitHub 第95轮 10:08 CST) | packaging / docs gap; `openclaw update` 主流程成功后在 completion cache 阶段报 fatal,对 npm global 用户升级体验很差; 可修性 S |
@@ -5872,12 +5887,112 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P751 | Tencent/openclaw-weixin [#57](https://github.com/Tencent/openclaw-weixin/issues/57) **bug** 无法卸载 | 🔍 新发现(方向2 插件 第101轮 20:55 CST) | 🔒代码不可见；**建议外部追踪** |
 | P752 | Tencent/openclaw-weixin [#56](https://github.com/Tencent/openclaw-weixin/pull/56) **PR** ACP thread binding adapter for WeChat | 🔍 新发现(方向2 插件 第101轮 20:55 CST) | PR 已 open；**建议跟踪** |
 
-### 方向4 PR 新动态（2026-04-12 20:55 CST）
-- **#65206**（cron persist state）：**Greptile P2**：`lastErrorReason` 未校验 `FailoverReason` enum；非阻塞性，follow-up 处理
-- **#65242**（CompletionDeliveryGate ACP）：**Greptile P2**：`getCompletionClaim` 在 gate mode "off" 时静默返回 undefined；建议 review 后要求修复
-- **#65219 / #65224**（GPT-5.4 parity rollups）：Greptile 确认 `.trim()` 已加；streaming SSE 需更新 block comment；**接近 merge ready**
+### 方向1 新候选 P753-P755（2026-04-12 22:02 CST）
+| P753 | [#65380](https://github.com/openclaw/openclaw/issues/65380) **bug+regression** MiniMax tool use broken: tool call ID sanitization causes error 2013 | 🔍 新发现(方向1 GitHub 第102轮 22:02 CST) | `minimax/MiniMax-M2.7` via Anthropic-compatible API 所有 tool call 报 2013；根因：`buildStrictAnthropicReplayPolicy` 的 `sanitizeToolCallIds: true` 重写 ID，MiniMax 校验失败；mneves75 的 #65371（`minimax: disable tool call ID sanitization`）可能已覆盖；**需确认 #65371 是否完全解决** |
+| P754 | [#65379](https://github.com/openclaw/openclaw/issues/65379) **bug** Browser CDP reachability check fails on Linux due to global undici EnvHttpProxyAgent | 🔥 **aoao 已派出**(方向1 GitHub 第102轮 22:02 CST, runId b792b8d0) | Linux systemd 环境下 gateway 15s 内杀 Chrome；但 curl/独立 node fetch 均证明 CDP 可达；根因：`undici-global-dispatcher.ts` 全局 EnvHttpProxyAgent 拦截 `globalThis.fetch` 对 localhost 的请求，只在 gateway 进程内生效；fix 方向：CDP localhost 请求绕过 EnvHttpProxyAgent；**S 级，根因清晰文件小** |
+| P755 | [#65377](https://github.com/openclaw/openclaw/issues/65377) **bug+regression** Mattermost outbound messages posted under wrong bot account (cross-account misrouting) | 🔍 新发现(方向1 GitHub 第102轮 22:02 CST) | v4.10 regression（v4.2 → v4.10 升级后出现）；多账号 Mattermost 配置下 Bot A 发消息被路由到 Bot B 的 user_id；影响审计追溯和安全性；**建议 aoao 接单（M 级）** |
+
+### 方向2 插件仓库（2026-04-12 22:02 CST）
+| P756 | Tencent/openclaw-weixin [#57](https://github.com/Tencent/openclaw-weixin/issues/57) **bug** unable to uninstall | 🔄 持续追踪(第102轮 22:02 CST) | 无新更新；外部追踪 |
+| P757 | Tencent/openclaw-weixin [#56](https://github.com/Tencent/openclaw-weixin/pull/56) **PR** feat(bindings): add ACP thread binding adapter for WeChat | 🔄 持续追踪(第102轮 22:02 CST) | PR 仍 open；等待 review；**跟踪进度** |
+
+### 方向4 PR 新动态（2026-04-12 22:02 CST）
+- **#65376**（feat: add ATOM provider）：**Greptile P2 × 2**（14:02 UTC）：(1) `docs/docs.json` ATOM 排序正确但 `index.md` 错误（Ollama → vLLM → SGLang → ATOM 应为 ATOM → Ollama → SGLang → vLLM）；(2) Alphabetical ordering inconsistency in index.md；**这是 ATOM provider merge 的 blocker；需确认作者是否已响应**
+- **#65375**（LINE webhook fix）：welfo-beo 已在 14:02 UTC 认领并给出详细 fix 方案（fire-and-forget async）；**24h 内若无 PR 发出则 ping 作者**
+- **#65323**（fix(exec): prevent agent listener crash on late PTY output）：maintainer 标签；updated 14:03 UTC；持续追踪
+- **#65298**（fix(plugins): centralize explicit plugin scope handling）：maintainer 标签；updated 13:50 UTC；持续追踪
 
 ### 结论
-- **本轮最高优先级**: **#65341** (dreaming idempotencyKey bug) + **#65347** (OpenAI Codex OAuth regression) + **#65328** (readFileSync CPU 问题)
-- **建议 aoao**: (1) #65341 接单（S 级）；(2) #65347 调研 OAuth scope 变更；(3) #65328 接单（M 级）
-- **下轮**: 继续扫描新 regression；关注 #65346 可修性
+- **本轮最高优先级**: **#65379** (Browser CDP Linux undici EnvHttpProxyAgent, S 级) + **#65377** (Mattermost 跨 bot 路由 bug, M 级 regression) + **#65380** (MiniMax tool call ID, 待确认 #65371 覆盖情况)
+- **建议 aoao**: (1) #65379 接单（S 级，根因清晰文件小）；(2) #65377 接单（M 级 regression）；(3) 确认 #65371 是否完全解决 #65380
+- **下轮**: 盯 #65376 ATOM provider greptile P2 是否已修复；盯 #65375 welfo-beo PR 进度
+
+### 方向1 新候选 P758-P772（2026-04-13 00:18 CST / 16:18 UTC）
+| P758 | [#65448](https://github.com/openclaw/openclaw/issues/65448) **S+bug:behavior** Gemini 3.x via direct google-vertex produces empty visible output intermittently | 🔥 **建议 aoao 优先接单**(方向1 第103轮 00:18 CST) | 根因已定位（报告自带 patch）：`getGoogleBudget()` 对 Gemini 3.x 返回 `-1`，`maxOutputTokens` 无 fallback；所有 thinking 消耗在 hidden text，visible output 为空；影响所有 direct google-vertex Gemini 3.x；workaround：用外部 proxy；**patch 极小（两处），建议 aoao 优先处理** |
+| P759 | [#65443](https://github.com/openclaw/openclaw/issues/65443) **bug** Telegram direct-chat TTS tool reports success but voice replies not delivered | 🔍 新发现(方向1 第103轮 00:18 CST) | tts tool 返回成功但 Telegram 收不到语音；明确 delivery handoff bug（不是 provider 问题）；**建议 aoao 调研 TTS → current-chat 交付路径** |
+| P760 | [#65441](https://github.com/openclaw/openclaw/issues/65441) **usability+performance** Gateway loads all session history at startup (~1.6GB with 200+ sessions) | 🔍 新发现(方向1 第103轮 00:18 CST) | 所有 session JSONL 启动时全部读入内存；lazy-load 是正确方向；**建议 aoao 接单** |
+| P761 | [#65430](https://github.com/openclaw/openclaw/issues/65430) **bug+regression** BlueBubbles inbound image webhooks arrive with attachments: [] | 🔥 **建议 aoao 接单**(方向1 第103轮 00:18 CST) | regression；BB webhook 到达但 attachments:[]，OpenClaw 从不下载图片，agent 只看到占位文字；**建议 aoao 接单** |
+| P762 | [#65442](https://github.com/openclaw/openclaw/issues/65442) **bug** Voice input button on webchat does not respond to click | 🔍 新发现(方向1 第103轮 00:18 CST) | webchat voice input button 无响应；Control UI bug |
+| P763 | [#65437](https://github.com/openclaw/openclaw/issues/65437) **bug** tools.elevated.allowFrom.slack silently blocked by commandAuthorized gate | 🔍 新发现(方向1 第103轮 00:18 CST) | Slack elevated allowFrom 被静默拦截；无文档 fallback；usability gap |
+| P764 | [#65428](https://github.com/openclaw/openclaw/issues/65428) **bug:crash** cli-runner hashes accessToken + refreshToken from ~/.claude/.credentials.json | 🔍 新发现(方向1 第103轮 00:18 CST) | 安全相关；credentials.json 内容被哈希处理；**建议确认意图** |
+| P765 | [#65424](https://github.com/openclaw/openclaw/issues/65424) **bug:behavior** MiniMax-M2.7 image attachments silently dropped in chat.send | 🔥 **建议 aoao 接单**(方向1 第103轮 00:18 CST) | `buildMinimaxCatalog()` hardcodes `input: ["text"]`，图片附件被静默丢弃；与 #65380 同簇；**建议 aoao 接单** |
+| P766 | [#65418](https://github.com/openclaw/openclaw/issues/65418) **bug** Anthropic adapter mutates replayed thinking block text (breaks signature validation) | 🔍 新发现(方向1 第103轮 00:18 CST) | `sanitizeTransportPayloadText` 修改 thinking block，导致签名校验失败；安全/完整性 bug |
+| P767 | [#65407](https://github.com/openclaw/openclaw/issues/65407) **bug+regression** CLI runner bypasses GlobalHookRunner since v2026.4.7 | 🔥 **建议 aoao 接单**(方向1 第103轮 00:18 CST) | v2026.4.7 起 CLI runner 跳过 GlobalHookRunner，ensemble-style prompt hooks 全部失效；**regression，建议 aoao 接单** |
+| P768 | [#65400](https://github.com/openclaw/openclaw/issues/65400) **bug+regression** `openclaw browser --help` triggers full application boot (30s+) | 🔍 新发现(方向1 第103轮 00:18 CST) | --help 应即时返回但触发完整启动；CLI 体验 regression |
+| P769 | [#65394](https://github.com/openclaw/openclaw/issues/65394) **bug:behavior** audio transcribe returns "No transcript" for Deepgram/Groq/OpenAI on valid local files | 🔍 新发现(方向1 第103轮 00:18 CST) | 音频转写静默失败；与 #65076 同簇 |
+| P770 | [#65380](https://github.com/openclaw/openclaw/issues/65380) **bug** MiniMax tool use broken (error 2013) | 🔍 新发现(方向1 第103轮 00:18 CST) | 待确认 #65371 是否完全覆盖；持续追踪 |
+| P771 | [#65379](https://github.com/openclaw/openclaw/issues/65379) **bug** Browser CDP reachability fails on Linux due to undici EnvHttpProxyAgent | 🔥 **aoao 已派出**(第102轮) | CDP localhost 请求被 EnvHttpProxyAgent 拦截；**S 级，根因清晰** |
+| P772 | [#65375](https://github.com/openclaw/openclaw/issues/65375) **bug** LINE webhook blocks HTTP 200 response | 🔄 已认领(第103轮 00:18 CST) | welfo-beo 已在 14:02 UTC 认领；**外部追踪** |
+
+### 方向2 插件仓库（2026-04-13 00:18 CST）
+| P773 | Tencent/openclaw-weixin [#57](https://github.com/Tencent/openclaw-weixin/issues/57) **bug** unable to uninstall | 🔍 新发现(方向2 第103轮 00:18 CST) | 1 新 issue；**外部追踪** |
+
+### 方向4 PR 新动态（2026-04-13 00:18 CST）
+- **#65219**（Runtime Completion Rollup）：**100yenadmin 大量处理 review comments（07:01-10:28 UTC）**：所有 Greptile P1/P2 findings 已 resolve 并标记 "Already fixed on this branch"；所有 Copilot findings 已处理（stripProviderPrefix trim、character class idiomatic form）；**状态：接近 merge-ready**
+- **#65224**（Parity Proof Rollup）：**100yenadmin 大量处理 review comments（07:01-10:28 UTC）**：Greptile P2 findings 全部 resolve；Copilot findings 全部 resolve；commit `bb6333d44d` 包含所有修复；**状态：接近 merge-ready**
+- **#65229**（doctor SecretRef fix）：updated 16:18 UTC；维持 open
+- **#65233**（context-engine idle-aware）：updated 16:19 UTC；维持 open
+- **#65429**（feat plugins narrow channel loads）：updated 16:19 UTC；size L；维持 open
+- **#65417**（WIP secret-scanning skill）：updated 16:14 UTC；维持 open
+- **#65242**（CompletionDeliveryGate）：无新评论；维持 open
+
+### 结论
+- **本轮最高优先级**: **#65448**（S 级，Gemini 3.x empty output，根因已定位 patch 极小）+ **#65430**（BlueBubbles image regression）+ **#65407**（GlobalHookRunner bypass regression）
+- **建议 aoao**: (1) #65448 优先（patch 自带，极小）；(2) #65430 接单（regression）；(3) #65407 接单（regression）；(4) #65424 接单（MiniMax 图片）
+- **GPT-5.4 rollups**（#65219/#65224）：所有 review comments 已 resolve，建议推 merge
+- **下轮**: 盯 GPT-5.4 rollups merge 状态；盯 #65379 aoao 进度；盯 #65375 welfo-beo PR 进度
+
+
+
+### 方向1 GitHub 新发现（2026-04-13 01:23 CST）
+| P774 | [#65480](https://github.com/openclaw/openclaw/issues/65480) **regression** QMD collection patterns fall back to `**/*.md` because qmd-manager prefers --glob over --mask | 🔍 新发现(方向1 第105轮 01:23 CST) | regression；QMD 2.0.1 忽略未知 --glob；MEMORY.md 冲突、transcript 收集失效；已有 PR #65481 在修；**review 确认后推 merge** |
+| P775 | [#65470](https://github.com/openclaw/openclaw/issues/65470) **bug:behavior** CommandLane.Nested maxConcurrent defaults to 1, serializing all sessions_send agent runs | 🔥 **最高优先级**(方向1 第105轮 01:23 CST) | bug:behavior；90+ agent 多 agent 编排完全串行化；applyGatewayLaneConcurrency() 漏配 Nested lane；maxConcurrent:50 被绕过；**建议 aoao 优先接单，1-2 行配置** |
+| P776 | [#65465](https://github.com/openclaw/openclaw/issues/65465) **bug:crash** Ollama ignores compaction.reserveTokens config, prechecks with 16384 | 🔍 新发现(方向1 第105轮 01:23 CST) | bug:crash；reserveTokens=2048 配置不生效；Raspberry Pi + Ollama 场景；已有用户 makma 确认；**建议 aoao 接单** |
+| P777 | [#65441](https://github.com/openclaw/openclaw/issues/65441) **M** Gateway loads all session history at startup (~1.6GB with 200+ sessions) | 🔍 新发现(方向1 第105轮 01:23 CST) | performance/usability；启动时全量读入所有 session JSONL；lazy-load sessions 方案；**建议 xixi 调研路径后 aoao 接单** |
+| P778 | [#65430](https://github.com/openclaw/openclaw/issues/65430) **S regression** BlueBubbles inbound image webhooks arrive with `attachments: []` | 🔍 新发现(方向1 第105轮 01:23 CST) | regression；BB webhook 到达但 attachments:[]，图片从不被下载；0 评论；无 workaround；**建议 aoao 接单** |
+| P779 | [#65424](https://github.com/openclaw/openclaw/issues/65424) **bug** MiniMax-M2.7 image attachments silently dropped (buildMinimaxCatalog hardcodes input: ["text"]) | 🔍 新发现(方向1 第105轮 01:23 CST) | bug:behavior；已有 PR #65453 在修；与 #65211 同簇 |
+| P780 | [#65407](https://github.com/openclaw/openclaw/issues/65407) **regression** CLI runner bypasses GlobalHookRunner since v2026.4.7 | 🔍 新发现(方向1 第105轮 01:23 CST) | regression；v2026.4.7 起 prompt hooks 全部失效；**建议 aoao 优先接单** |
+| P781 | [#65418](https://github.com/openclaw/openclaw/issues/65418) **bug** Anthropic adapter mutates replayed thinking block text (breaks signature validation) | 🔍 新发现(方向1 第105轮 01:23 CST) | bug；replay 可靠性受损；0 评论；**建议 aoao 接单** |
+| P782 | [#65428](https://github.com/openclaw/openclaw/issues/65428) **bug:crash+security** cli-runner hashes tokens from ~/.claude/.credentials.json | 🔍 新发现(方向1 第105轮 01:23 CST) | **安全相关**；credentials 访问；**优先排查** |
+| P783 | [#65479](https://github.com/openclaw/openclaw/issues/65479) Feishu footer and threadSession config fields removed in v3.28+ causing validation errors | 🔍 新发现(方向1 第105轮 01:23 CST) | regression；v3.28 后 Feishu 配置字段被删；0 评论；**建议 aoao 接单** |
+
+### 方向2 插件仓库（2026-04-13 01:23 CST）
+| P784 | Tencent/openclaw-weixin [#57](https://github.com/Tencent/openclaw-weixin/issues/57) **bug** unable to uninstall (zod module missing, duplicate plugin id) | 🔍 新发现(方向2 第105轮 01:23 CST) | **外部追踪**（代码不可见）；zod 依赖缺失；duplicate plugin id；安装路径问题 |
+| P785 | Tencent/openclaw-weixin [PR #56](https://github.com/Tencent/openclaw-weixin/pull/56) feat(bindings): add ACP thread binding adapter for WeChat | 🔍 新发现(方向2 第105轮 01:23 CST) | 0 评论；仍 OPEN；对应 #55 ACP thread binding；持续追踪 |
+
+### 方向4 PR 新动态（2026-04-13 01:23 CST）
+- **#65482**（fix(imessage): retry watch.subscribe）：Aisle 发现🟡 Medium PII 泄露（RPC error payload 完整记录 msg.params）；Greptile 5/5 Safe to merge；CHANGELOG entry 在已发布 block 而非 Unreleased；**代码正确，CHANGELOG 修正后可 merge**
+- **#65481**（fix(memory-qmd): prefer --mask for collection patterns）：0 评论；对应 #65480（已覆盖 P774）
+- **#65478**（fix(agents): preserve active-turn queued user prompts）：Aisle 发现🟡 Medium DoS（orphan text 无 token cap）；Greptile 5/5 Safe to merge；两 P2（短 orphan substring check + CHANGELOG 位置）；**建议 aoao 加 orphan text cap（S 级）**
+- GPT-5.4 rollups（#65219/#65224）：无新评论；上轮 100yenadmin 已处理所有 findings
+
+### 结论
+- **本轮最高优先级**: **#65470**（sessions_send 串行化，多 agent 编排完全阻塞，1-2 行配置可修）
+- **次高优先级**: **#65465**（Ollama reserveTokens）+ **#65480**（QMD regression，已有 PR #65481）
+- **安全优先**: **#65428**（credentials 访问）+ **#65478 Aisle 发现**（orphan text DoS）
+- **建议 aoao**: (1) #65470 接单 (2) #65465 接单 (3) review #65481 推 merge (4) #65478 orphan cap
+| P59948 | [#65470](https://github.com/openclaw/openclaw/issues/65470) **S** CommandLane.Nested maxConcurrent defaults to 1, serializing all sessions_send agent runs | 🔥 **aoao 已派出（最高优先级）** | 90+ agent 多 agent 编排完全串行化；根因：`applyGatewayLaneConcurrency()` 漏配 Nested lane；1-2 行 fix；runId 失败（gateway timeout），retry |
+| P59949 | [#65480](https://github.com/openclaw/openclaw/issues/65480) **regression** QMD collection patterns fall back to `**/*.md`，影响 memory 跨 agent 复用 | 🔍 新发现(方向1 第105轮 01:23 CST) | 已有 PR #65481 对应修复；建议 review 确认后推 merge |
+| P59950 | [#65465](https://github.com/openclaw/openclaw/issues/65465) **S** Ollama reserveTokens config 失效，prechecks 用 16384 而非用户配置值 | 🔍 新发现(方向1 第105轮 01:23 CST) | 小 context 模型立即 overflow；用户 makma 已确认；建议 aoao 接单 |
+
+| P59951 | [#65501](https://github.com/openclaw/openclaw/issues/65501) **High** `forceFlushTranscriptBytes` is a no-op on fresh sessions (agent-runner:1194) | 🔍 新发现(方向1 第105轮 02:26 CST) | 文档承诺的 TPM overflow 保护在 legacy compaction 未触发前完全不工作；High severity；建议 aoao 接单(M) |
+| P59952 | [#65500](https://github.com/openclaw/openclaw/issues/65500) **[Bug][regression]** Custom models not shown by /models in Telegram or Web Console UI | 🔍 新发现(方向1 第105轮 02:26 CST) | 2026.3.24→2026.4.11 Ollama/oMLX/LM-Studio 自定义模型全消失；关联 #65211(provider catalog) 可能同根 |
+| P59953 | [#65498](https://github.com/openclaw/openclaw/issues/65498) **[Bug][bug:crash]** Main-session user task loses final reply after heartbeat/exec-completion interrupt | 🔍 新发现(方向1 第105轮 02:26 CST) | bug:crash；心跳或 exec 完成中断时原始任务最终回复丢失；建议 aoao 接单 |
+| P59954 | [#65493](https://github.com/openclaw/openclaw/issues/65493) **S** delivery-mirror duplicates messages sent via `message(action=send)` tool | 🔍 新发现(方向1 第105轮 02:26 CST) | delivery-mirror 对每条 message(action=send) 发出二次 plain-text 副本；清晰 bug；建议 aoao 接单 |
+| P59955 | [#65486](https://github.com/openclaw/openclaw/issues/65486) **M** Gateway restart does not invalidate approval-pending session tool results — infinite INVALID_REQUEST loop | 🔍 新发现(方向1 第105轮 02:26 CST) | 重启后 stale approval IDs 导致无限 INVALID_REQUEST 循环；影响所有 approval 用户；建议 aoao 接单 |
+| P59956 | [#65485](https://github.com/openclaw/openclaw/issues/65485) **M** Gateway SIGTERM-restarts kill in-flight agent runs on non-critical config changes | 🔍 新发现(方向1 第105轮 02:26 CST) | 任何 openclaw.json 变化触发 SIGTERM，包含不需要重启的配置；建议 aoao 接单 |
+| P59957 | [#65495](https://github.com/openclaw/openclaw/issues/65495) **S** Browser tool SSRF policy blocks CDP connection to localhost on WSL2 | 🔍 新发现(方向1 第105轮 02:26 CST) | 需 `dangerouslyAllowPrivateNetwork`；与 #65208/#65204 同簇；**建议 aoao 接单**；注意 PR #65496 可能已修复 |
+| P59958 | [#65499](https://github.com/openclaw/openclaw/issues/65499) **[Bug][regression]** --force-reset-cross-signing sends malformed UIA response (2026.4.2→2026.4.11) | 🔍 新发现(方向1 第105轮 02:26 CST) | HTTP 401 "Unknown message"；安全adjacent key reset 功能损坏；建议 xixi 调研 |
+| P59959 | [#65494](https://github.com/openclaw/openclaw/issues/65494) **S** iMessage channel fails: `ReferenceError: accountInfo is not defined` | 🔍 新发现(方向1 第105轮 02:26 CST) | iMessage 回复失败；**已有 PR #65482 在修**；建议 review 确认覆盖范围 |
+| P59960 | Tencent/openclaw-weixin [#57](https://github.com/Tencent/openclaw-weixin/issues/57) unable to uninstall | 🔍 新发现(方向2 第105轮 02:26 CST) | 🔒代码不可见；无法评估根因；建议外部追踪 |
+| P59961 | [方向4 第105轮 02:26 CST] **PR #65452** SQL injection security fix — Greptile P2 评论：definition 参数仍未转义，存在 latent SQL 注入 | ⚠️ 需确认(方向4 第105轮 02:26 CST) | Greptile-apps[bot] 连续两次指出同一 latent 问题；建议向 maintainer 确认；**最高安全优先级** |
+| P59962 | [方向4 第105轮 02:26 CST] **PR #65453** MiniMax-M2.7 catalog image input — 直接对应 aoao 已接单的 #65442 | ✅ 对应(方向4 第105轮 02:26 CST) | PR 修 catalog `input: ["text","image"]`；建议确认后 close #65442 |
+| P59963 | [方向4 第105轮 02:26 CST] **PR #65496** CDP SSRF fix — 可能覆盖 #65495 WSL2 CDP 连接问题 | 👀 待确认(方向4 第105轮 02:26 CST) | PR by keithce；需确认是否覆盖 #65495 场景后再决定接单 |
+| P59964 | [#65501](https://github.com/openclaw/openclaw/issues/65501) **M** forceFlushTranscriptBytes is a no-op on fresh sessions | 🔥 **aoao 已派出**(方向1 第105轮 02:26 CST) | **高严重性**；`forceFlushTranscriptBytes` 在 legacy compaction 未触发前完全不工作，TPM overflow 保护在新鲜会话上完全失效；可修性 M，代码路径清晰；**建议立即接单** |
+| P59965 | [#65500](https://github.com/openclaw/openclaw/issues/65500) **regression** Custom models not shown in Telegram or Web Console UI since 2026.3.24 | 🔍 新发现(方向1 第105轮 02:26 CST) | regression；Ollama/oMLX/LM-Studio 自定义模型在 Telegram 和 Web Console 均不可见；**已覆盖于 #65211**（provider catalog 未合并用户模型），关联追踪 |
+| P59966 | [#65498](https://github.com/openclaw/openclaw/issues/65498) **bug:crash** Main-session user task loses final reply after heartbeat/exec-completion interrupt | 🔍 新发现(方向1 第105轮 02:26 CST) | bug:crash；心跳或 exec 完成中断时，原始任务的最终用户回复丢失；serious；**建议 aoao 接单** |
+| P59967 | [#65499](https://github.com/openclaw/openclaw/issues/65499) **regression** --force-reset-cross-signing sends malformed UIA response (401 Unknown message) | 🔍 新发现(方向1 第105轮 02:26 CST) | regression；2026.4.2 → 2026.4.11 均受影响，HTTP 401；安全 adjacent（key reset 功能损坏） |
+| P59968 | [#65493](https://github.com/openclaw/openclaw/issues/65493) **S** delivery-mirror duplicates messages sent via message(action=send) tool | 🔍 新发现(方向1 第105轮 02:26 CST) | bug；delivery-mirror 对每条 message(action=send) 发出二次 plain-text 副本；范围清晰（Telegram message tool 用户）；**建议 aoao 接单** |
+| P59969 | [#65486](https://github.com/openclaw/openclaw/issues/65486) **S** Gateway restart does not invalidate approval-pending session tool results — infinite loop | 🔍 新发现(方向1 第105轮 02:26 CST) | 重启后 stale approval IDs 导致 `INVALID_REQUEST` 循环；严重，影响所有使用 approval 的用户；**建议 aoao 接单** |
+| P59970 | [#65485](https://github.com/openclaw/openclaw/issues/65485) **S** Gateway SIGTERM-restarts kill in-flight agent runs on non-critical config changes | 🔍 新发现(方向1 第105轮 02:26 CST) | 任何 `openclaw.json` 变化触发 SIGTERM，包括不需要重启的配置项；在飞 agent runs 被杀，产生静默失败；**建议 aoao 接单** |
+| P59971 | [#65487](https://github.com/openclaw/openclaw/issues/65487) **S** Context with Heartbeat turns causes high token usage (lightContext:true still burns tokens) | 🔍 新发现(方向1 第105轮 02:26 CST) | bug:behavior；heartbeat turns 即使 lightContext:true 仍高 token usage；建议排查 heartbeat session context 注入路径 |
