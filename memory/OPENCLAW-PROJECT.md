@@ -32,6 +32,11 @@
 
 | 优先级 | 任务 | 状态 | 备注 |
 |--------|------|------|------|
+| P59890 | [#65076](https://github.com/openclaw/openclaw/issues/65076) OpenAI 音频转写对有效 OGG/Opus 静默失败且无日志 | 🔍 新发现(方向1 GitHub 第95轮 10:08 CST) | 高优先级行为 bug; `openclaw infer audio transcribe` 与 Telegram voice-note 路径同时失败,同文件直接 curl OpenAI 200 正常,说明问题在 OpenClaw `tools.media.audio` 管线与错误吞掉路径; **建议优先查 applyMediaUnderstanding / verbose-only swallow** |
+| P59891 | [#65078](https://github.com/openclaw/openclaw/issues/65078) v2026.4.9 起 Telegram transcript 不再出现在 Web UI | 🔍 新发现(方向1 GitHub 第95轮 10:08 CST) | 明确 regression; v2026.4.8 正常,v2026.4.9~4.11 持续异常,且仅 `google-gemini-cli` provider 路径触发; 影响 Telegram ↔ Web UI 可见性 |
+| P59892 | [#65082](https://github.com/openclaw/openclaw/issues/65082) npm 包缺失 `qa/scenarios/index.md` 导致 completion cache update fatal | 🔍 新发现(方向1 GitHub 第95轮 10:08 CST) | packaging / docs gap; `openclaw update` 主流程成功后在 completion cache 阶段报 fatal,对 npm global 用户升级体验很差; 可修性 S |
+| P59893 | [#65086](https://github.com/openclaw/openclaw/issues/65086) sessions_spawn 显示 `modelApplied:true` 但子代理实际落到 fallback 模型 | 🔍 新发现(方向1 GitHub 第95轮 10:08 CST) | model-governance 行为 bug; 明确出现“请求 GPT, 子会话启动成 Sonnet”的证据,会误导成本与模型控制; 与既有 subagent / model override 问题簇相关 |
+| P59894 | contributor-area: `src/agents/pi-embedded-runner/compact*` ↔ [#64962](https://github.com/openclaw/openclaw/issues/64962) timeout-compaction 失败不升级 | 🔍 新发现(方向3 文件区 第95轮 10:08 CST) | 来自末段 contributor `davidrudduck` 最近活跃文件; 与 compact/overflow 代码区直接重叠,属于未认领的高相关 open bug,适合继续盯 |
 | P59885 | [#65043](https://github.com/openclaw/openclaw/issues/65043) Slack subagent completion 仍泄露顶层频道消息 | 🔍 新发现(方向1 GitHub 第94轮 08:24 CST) | 高优先级 regression; 2026.4.10 修完 thread routing 后仍有 duplicate delivery path; 现象是 thread 内正确发一条,频道顶层又漏一条; 与 #64454 同簇但不是同问题; **建议 aoao 优先看 announce/deliver 双路径** |
 | P59886 | [#65067](https://github.com/openclaw/openclaw/issues/65067) Windows `openclaw onboard` 在 2026.4.5 因 ESM file URL 崩溃 | 🔍 新发现(方向1 GitHub 第94轮 08:24 CST) | 可用性 regression; 任何 provider 都会在 Windows onboarding 末段报 `ERR_UNSUPPORTED_ESM_URL_SCHEME`; 首配直接阻断; 可修性 S-M |
 | P59887 | [#65042](https://github.com/openclaw/openclaw/issues/65042) Gmail watcher 重复启动导致 8788 端口冲突 | 🔍 新发现(方向1 GitHub 第94轮 08:24 CST) | 高优先级 watcher 生命周期问题; 首个 watcher 正常启动后 gateway 又拉起第二个进程; 直接阻断 Gmail 自动化出站回复 |
