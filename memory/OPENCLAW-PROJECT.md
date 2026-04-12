@@ -39,7 +39,7 @@
 | P59894 | contributor-area: `src/agents/pi-embedded-runner/compact*` ↔ [#64962](https://github.com/openclaw/openclaw/issues/64962) timeout-compaction 失败不升级 | 🔍 新发现(方向3 文件区 第95轮 10:08 CST) | 来自末段 contributor `davidrudduck` 最近活跃文件; 与 compact/overflow 代码区直接重叠,属于未认领的高相关 open bug,适合继续盯 |
 | P59885 | [#65043](https://github.com/openclaw/openclaw/issues/65043) Slack subagent completion 仍泄露顶层频道消息 | 🔍 新发现(方向1 GitHub 第94轮 08:24 CST) | 高优先级 regression; 2026.4.10 修完 thread routing 后仍有 duplicate delivery path; 现象是 thread 内正确发一条,频道顶层又漏一条; 与 #64454 同簇但不是同问题; **建议 aoao 优先看 announce/deliver 双路径** |
 | P59886 | [#65067](https://github.com/openclaw/openclaw/issues/65067) Windows `openclaw onboard` 在 2026.4.5 因 ESM file URL 崩溃 | 🔍 新发现(方向1 GitHub 第94轮 08:24 CST) | 可用性 regression; 任何 provider 都会在 Windows onboarding 末段报 `ERR_UNSUPPORTED_ESM_URL_SCHEME`; 首配直接阻断; 可修性 S-M |
-| P59887 | [#65042](https://github.com/openclaw/openclaw/issues/65042) Gmail watcher 重复启动导致 8788 端口冲突 | 🔍 新发现(方向1 GitHub 第94轮 08:24 CST) | 高优先级 watcher 生命周期问题; 首个 watcher 正常启动后 gateway 又拉起第二个进程; 直接阻断 Gmail 自动化出站回复 |
+| P59887 | [#65042](https://github.com/openclaw/openclaw/issues/65042) Gmail watcher 重复启动导致 8788 端口冲突 | ✅ **PR [#65146](https://github.com/openclaw/openclaw/pull/65146) 已创建并评论** | 高优先级 watcher 生命周期问题; 首个 watcher 正常启动后 gateway 又拉起第二个进程; 直接阻断 Gmail 自动化出站回复; Fix: addressInUse 时设置 stopped=true 防止重复启动 |
 | P59888 | [#64973](https://github.com/openclaw/openclaw/issues/64973) macOS Talk Mode 触发 stale config.set / token mismatch / local gateway restart | 🔍 新发现(方向3 贡献者文件区 第94轮 08:24 CST) | 来自排名末段 contributor `mneves75` 最近活跃区域 `apps/macos`; 与 companion/macOS 配置链路直接相关; 建议作为 contributor-area 候选继续跟 |
 | P59889 | [PR #64681](https://github.com/openclaw/openclaw/pull/64681) parity gate real tool calls | 👀 maintainer 新反馈(方向4 第94轮 08:24 CST) | `100yenadmin` 在 23:43 UTC 追加 recheck: `scenario-catalog.test.ts` 7/7 通过,当前 head `f33f6cbf37`; 状态继续偏正向,可维持关注 |
 | P59881 | [PR #65016](https://github.com/openclaw/openclaw/pull/65016) fix(cron): normalize malformed persisted job state on load | 🔍 新发现(方向1 GitHub 第93轮 05:23 CST) | size S; cron 持久化状态畸形; 与 P35/#55935 announce 路径可能相关; updated 21:48 UTC; 建议 quick review |
@@ -733,12 +733,12 @@ P553 | [#64565](https://github.com/openclaw/openclaw/issues/64565) **S** | memor
 - **#63677 S** — WhatsApp DM voice notes bypass STT pipeline（regression）；根因极清晰（2026.3.31 commit 影响 WhatsApp DM STT，#61008 修复 Telegram DM 但遗漏 WhatsApp）；fix 路径参考 #61008 PR 加 preflight transcriber；**最高优先 aoao 接单候选**
 - **#63674 S** — Feishu 多机器人路由 Bug（regression）；bindings 完全被忽略，全部路由到 agent:main
 - **#63664 S** — Session flush 完全阻止 write tool（usability gap）；flush 期间无法编辑非 memory 文件
-- **#63661 S** — Context overflow 产生 0 payloads，UI 无限转圈；payloads=0+isError=true 时应生成 synthetic error text
+- ~~**#63661 S**~~ → ✅ **PR [#65114](https://github.com/openclaw/openclaw/pull/65114) 已创建**
 - **#63645 S** — NO RESPONSE while many requests（regression，minimax provider）
 - **#63673 S** — Keychat Bridge 2026.4.8 regression，inbound 消息接收失败（代码不可见）
 **已有 PR 勿重复接单**：#63665/#63639 → PR #63679 已开
 **无新发现**：InStreet（skill.md 仍是 API 文档）、Discord（需登录+discussions 404）、插件（weixin 代码不可见）
-**建议**：aoao 接单顺序 #63677 → #63661 → #63664
+**建议**：aoao 接单顺序 #63677 → #63664
 
 ---
 
@@ -748,7 +748,7 @@ Tencent/openclaw-weixin 新增：#34（消息接收）、#33（hook pack错误�
 
 P538 | [#63677](https://github.com/openclaw/openclaw/issues/63677) **S** | WhatsApp DM voice notes bypass STT pipeline（2026.3.31 regression） | 🔍 新发现（方向1 18:01 CST） | regression；2026.3.31 commit 同时影响 #59875（Groq）和 WhatsApp DM STT；#61008 修复 Telegram DM 但遗漏 WhatsApp；fix：WhatsApp inbound handler 加 preflight STT transcriber 调用（参考 #61008 PR）；Impact：WhatsApp 最热门 channel，100% 复现，静默失败；**最高优先 aoao 接单**
 P539 | [#63674](https://github.com/openclaw/openclaw/issues/63674) **S** | Feishu 多机器人路由 Bug（regression） | 🔍 新发现（方向1 18:01 CST） | bug+regression；channels.feishu.bindings 完全被忽略，所有 bot 路由到 agent:main；**建议 aoao 接单（S 级）**
-P540 | [#63661](https://github.com/openclaw/openclaw/issues/63661) **S** | Context overflow 产生 0 payloads，UI 无限转圈 | 🔍 新发现（方向1 18:01 CST） | bug:behavior；payloads=0+isError=true 时 gateway 应生成 synthetic error text payload 供 UI 渲染；**建议 aoao 接单（S 级）**
+P540 | [#63661](https://github.com/openclaw/openclaw/issues/63661) **S** | Context overflow 产生 0 payloads，UI 无限转圈 | ✅ **PR [#65144](https://github.com/openclaw/openclaw/pull/65144) 已创建并评论** | bug:behavior；payloads=0+isError=true 时 gateway 应生成 synthetic error text payload 供 UI 渲染；Fix: 1) `resolveIncompleteTurnPayloadText` 移除 `lastToolError` 抑制；2) `run.ts` 增加 fallback 生成 synthetic error；测试通过
 P541 | [#63664](https://github.com/openclaw/openclaw/issues/63664) **S** | Session flush 完全阻止 write tool | 🔍 新发现（方向1 18:01 CST） | bug:behavior；flush 期间 write tool 只能写 memory 文件，非 memory 文件被锁定；**建议 aoao 接单（S 级）**
 P542 | [#63645](https://github.com/openclaw/openclaw/issues/63645) **S** | NO RESPONSE while many requests（regression，minimax provider） | 🔍 新发现（方向1 18:01 CST） | regression；heartbeat everywhere，用户发消息无响应；可能与并发/请求去重逻辑有关
 P543 | [#63673](https://github.com/openclaw/openclaw/issues/63673) **S** | Keychat Bridge 2026.4.8 inbound 消息接收失败 | 🔍 新发现（方向1 18:01 CST） | regression；代码不可见；**建议关注**
@@ -4831,7 +4831,7 @@ P66 | #63103 v2026.4.8 dist imports 11 modules not declared in package.json | �
 ### 2026-04-09 18:01 CST（xixi 第69轮扫描，距上次 ~4小时）
 | P599 | [#63677](https://github.com/openclaw/openclaw/issues/63677) **S** | WhatsApp DM voice notes bypass STT pipeline — audio arrives as raw &lt;media:audio&gt; with no transcription attempt（regression） | 🔍 新发现（方向1 GitHub 18:01 CST） | **最高优先级**；bug+regression；2026.3.14 工作 → 2026.3.31 起坏（跨6版本100%复现）；根因：#61008 在 2026.4.5 修复了 Telegram DM 语音转录，但 WhatsApp DM inbound path 被遗漏，未触发 preflight STT；Fix 路径极清晰：WhatsApp channel inbound handler 加等效 preflight transcriber 调用（参考 #61008 PR diff）；Reporter 提供了完整证据（direct curl Groq 成功 + verbose log 证明 pipeline 未触发）；Impact：WhatsApp 最热门 messaging 渠道，静默失败；**建议 aoao 接单** |
 | P600 | [#63674](https://github.com/openclaw/openclaw/issues/63674) **S** | 飞书多机器人路由 Bug：所有 Feishu bot 都路由到 agent:main，完全忽略 channels.feishu.bindings 配置（regression） | 🔍 新发现（方向1 GitHub 18:01 CST） | bug+regression；多个 botId 绑定了不同 agent（main/jiajia/zhushou），但全部路由到 main；需查 routing resolver 代码；**建议 aoao 接单** |
-| P601 | [#63661](https://github.com/openclaw/openclaw/issues/63661) **S** | Context overflow produces 0 payloads, UI shows infinite spinner instead of error | 🔍 新发现（方向1 GitHub 18:01 CST） | bug；model_context_window_exceeded 时日志 `payloads=0`，UI 无内容渲染所以 spinner 无限转；Fix 简单：gateway 在 payloads=0+isError=true 时生成 synthetic error text payload；**建议 aoao 接单** |
+| P601 | [#63661](https://github.com/openclaw/openclaw/pull/65114) **S** | Context overflow produces 0 payloads, UI shows infinite spinner instead of error | ✅ **PR #65114 已创建** | bug；model_context_window_exceeded 时日志 `payloads=0`，UI 无内容渲染所以 spinner 无限转；Fix：1) `resolveIncompleteTurnPayloadText` 移除 `lastToolError` 错误抑制逻辑；2) `run.ts` 增加 fallback：当 payloads=0 且有 error indicator 时生成 synthetic error text payload；测试：incomplete-turn.test.ts 8通过 / payloads.errors.test.ts 29通过 / overflow-compaction.test.ts 12通过 / attempt.test.ts 99通过 |
 | P602 | [#63664](https://github.com/openclaw/openclaw/issues/63664) **M** | Session flush blocks write tool completely during compaction | 🔍 新发现（方向1 GitHub 18:01 CST） | bug:behavior；compaction 期间 write tool 锁死只能写 memory 文件；用户主动发"写"也只解锁一条消息；usability gap；可选修复：soft-limit / config 开关 / 延长 unlock 时效 |
 | P603 | [#63645](https://github.com/openclaw/openclaw/issues/63645) **S** | NO RESPONSE while many requests（regression，v2026.4.9） | 🔍 新发现（方向1 GitHub 18:01 CST） | bug+regression；minimax provider；heartbeat everywhere 但用户发消息不回；可能和并发/请求去重逻辑有关；需更多日志确认 |
 | P604 | [#63673](https://github.com/openclaw/openclaw/issues/63673) **M** | Keychat Bridge receives no inbound messages after OpenClaw update to 2026.4.8（regression） | 🔍 新发现（方向1 GitHub 18:01 CST） | bug+regression；新 channel；2026.4.8 更新后 Keychat Bridge 收不到入站消息；**代码不可见** |
@@ -5530,11 +5530,13 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 - **新发现：#64476 — Windows gateway partial RPC failures**（S）：v2026.4.9, 部分 WS 操作超时
 - **方向2/3/4 无新发现**：InStreet 仍为 API 文档，Discord 需登录，weixin 代码不可见
 
-### PR进展更新
+### PR进展更新（2026-04-12 11:30 CST）
 | PR | 状态 | 备注 |
 |----|------|-------|
-| #64482 | ✅ 已开 PR | fix WhatsApp media gateway path（覆盖 #64478 + #61726/#54131） |
-| #64470 | ✅ 已开 PR | fix Chrome DISPLAY env for WSL2（覆盖 #64464） |
+| #65146 | ✅ 已开 PR | fix(gmail): set stopped=true on addressInUse（覆盖 #65042） |
+| #65145 | ✅ 已开 PR | fix(minimax): use configured baseUrl for usage polling endpoint（覆盖 #65054） |
+| #65144 | ✅ 已开 PR | fix(gateway): synthetic error text on context overflow（覆盖 #63661） |
+| #65106 | ✅ 已开 PR | fix(minimax): use configured baseUrl for usage polling endpoint（覆盖 #65054） |
 
 ### aoao 派单状态（2026-04-11 04:39 CST）
 | issue | 状态 | runId |
