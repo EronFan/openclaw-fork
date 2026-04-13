@@ -319,3 +319,48 @@
 - For manual `openclaw message send` messages that include `!`, use the heredoc pattern noted below to avoid the Bash tool’s escaping.
 - Release guardrails: do not change version numbers without operator’s explicit consent; always ask permission before running any npm publish/release step.
 - Beta release guardrail: when using a beta Git tag (for example `vYYYY.M.D-beta.N`), publish npm with a matching beta version suffix (for example `YYYY.M.D-beta.N`) rather than a plain version on `--tag beta`; otherwise the plain version name gets consumed/blocked.
+
+## 空转防止机制：扫描→修复自动闭环
+
+### 核心规则
+
+**xixi 扫描完成 = 立即触发修复，不等确认。**
+
+扫描报告产出后，main agent 必须立即执行以下判断（不停止、不汇报、不等待）：
+
+1. **扫描到 Top Candidate 且符合以下条件 → 立即派修复任务**：
+   - size S 或 M（根因明确、复现路径清晰）
+   - 根因已在 issue 正文或评论中给出
+   - 没有其他阻塞（无 PR 已覆盖、无 maintainer 正在处理）
+2. **不满足条件的 issue → 记录到 OPENCLAW-PROJECT.md 待处理队列**
+3. **禁止行为**：只汇报"建议接单"而不触发实际修复动作
+
+### 汇报必须包含 inProgressFixes 字段
+
+每次向范总汇报项目状态时，必须同时报告：
+
+```
+inProgressFixes:
+- #<issue> @ <时间> — <简短根因> — <当前阶段>
+```
+
+让范总一眼看出 main 是否真的在修代码，而不是只在汇报。
+
+### heartbeat-state.json 必须维护 lastPrCreatedAt
+
+每次 PR 创建后更新 `lastPrCreatedAt`（UTC 时间戳）。
+如果超过 24 小时没有新 PR 且没有活跃的 in-progress fix，视为空转，
+下次 heartbeat 时主动告警范总。
+
+### cron 失败降级规则
+
+cron 任务失败不影响其他任务执行。如果 cron xixi 扫描失败：
+1. 立即手动触发 xixi 扫描（sessions_spawn xixi）
+2. 不以 cron 失败为由延迟汇报或修复执行
+
+### 禁止行为
+
+- ❌ xixi 扫描完成后只汇报"建议接单"，不触发实际修复
+- ❌ 等待范总指令才开始修代码（除非是高风险/不可逆操作）
+- ❌ 在晨报里列一堆 issue 但没有 inProgressFixes
+- ❌ 以"等待 cron"为理由延迟修复执行
