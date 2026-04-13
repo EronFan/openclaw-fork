@@ -1,46 +1,110 @@
-# 全量扫描报告 2026-04-13 14:23 CST (06:23 UTC)
+# 全量扫描报告 2026-04-13 15:28 CST / 07:28 UTC
 
 ## GitHub Issues（方向1）
-- 发现了 **7个** 新候选（近2小时内 open 且 updated）
-- 最重要的：
-  - **#65721** `[Bug]: Beta blocker: core - OpenClaw Agents Can Self-Destruct Through Configuration Modification` — 安全+crash，beta-blocker 标签，需立即关注
-  - **#65740** `[Bug]: Chrome CDP websocket unreachable after start - macOS ARM64` — regression，macOS ARM64 Chrome CDP 连接失败，0评论未认领
-  - **#65733** `[Bug]: Plugin discovery via safeRealpathSync takes ~20 minutes during gateway startup on Windows` — bug:behavior，Windows 启动 20 分钟延迟，影响严重
-  - **#65744** `[Bug]: Feishu DM response truncated and leaked to group chat — similar to #55019` — 飞书 DM 回复被截断并泄露到群聊，类似历史问题 #55019
-  - **#65747** `[Bug]: 钉钉官方插件无法工作 - Stream 模式接入失败` — 钉钉插件 Stream 模式失败
-  - **#65748** `macOS gateway service install and doctor disagree on gateway entrypoint` — macOS launchd 与 doctor 对 entrypoint 描述不一致
-  - **#65728** `[Bug]: always get unauthorized when I start openclaw gateway run` — regression，认证失败
+
+**本轮扫描范围**: issues #65701–#65779（上次覆盖至 #65779 第117轮 14:23 CST）
+
+**新发现**: 13 个 open issues（部分已被 PR 覆盖）
+
+### 最高优先级（建议立即行动）
+
+1. **#65721 🔥 BETA BLOCKER** — agents can self-destruct through configuration modification
+   - agent 可写无效字段到 `~/.openclaw/openclaw.json`，导致 gateway 启动失败
+   - 需 `openclaw doctor --fix` 手动恢复；影响 2026.4.9+ 所有用户
+   - **建议：aoao 优先接单**
+
+2. **#65706 🔥 BETA BLOCKER** — `nodes status` 和 `nodes list` 不 sync
+   - `node.paired` 字段处理不当导致 regression
+   - PR [#65772](https://github.com/openclaw/openclaw/pull/65772) 已在修（M 级），但有 3 个 maintainer review comments（P1+P2×2）
+   - **建议：持续盯 PR merge 前 review 机会**
+
+3. **#65701 regression** — Telegram provider 重复发送每条响应
+   - bug+regression 双标签；用户对话完全不可用
+   - **建议：aoao 接单**
+
+4. **#65740 regression** — Chrome CDP websocket unreachable macOS ARM64
+   - 2026.4.10；可能与 #65208/#65204 同根
+   - **建议：aoao 接单**
+
+### 已确认有 PR 覆盖（可快速确认）
+
+| Issue | PR | Size | 状态 |
+|-------|-----|------|------|
+| #65768 minimax OAuth token | [#65779](https://github.com/openclaw/openclaw/pull/65779) | XS | 今日提交 |
+| #65760 fallbackRetryPrompt 丢弃 prompt | [#65778](https://github.com/openclaw/openclaw/pull/65778) | XS | 今日提交 |
+| #65751 Slack manifest box chars | [#65773](https://github.com/openclaw/openclaw/pull/65773) | XS | 今日提交，review 进行中 |
+| #65769 active-memory qmd collection not found | 上轮已覆盖 | S | 根因 backend-config.ts inode/case |
+
+### 建议跟踪（暂未认领）
+
+- #65775 active-memory: `allowedChatTypes` 丢弃 `"explicit"` sessions（behavior bug，S 级）
+- #65747 Dingtalk Stream mode failure（钉钉插件，0评论）
+- #65744 Feishu DM response 截断泄露群聊（regression）
+- #65734 session_status imports missing runtime path（beta 1，0评论）
+- #65733 safeRealpathSync Windows 20分钟（regression）
+- #65728 gateway run unauthorized regression
+- #65705 Dreaming sweep 每 heartbeat 重复触发（已有 PR）
+
+---
 
 ## 插件仓库（方向2）
-- Tencent/openclaw-weixin 发现 **3个** 新公开 issue/PR
-- 最重要的：
-  - **PR #58** `feat(messaging): support chunkMode for outbound text messages` (2026-04-13 05:54 UTC) — chunkMode 出站文本支持，新的出站消息分块功能
-  - **#57** `unable to uninstall` — 用户无法卸载插件，Error: Cannot find module 'zod' + duplicate plugin id（上次已追踪）
-  - **#58** `feat(messaging): support chunkMode for outbound text messages` — 新功能
-- 无 openclaw-weixin 相关 regression 新发现；主仓最新 regression 集中在 Chrome CDP、Telegram、WhatsApp 等
+
+**扫描 Tencent/openclaw-weixin**
+
+### 新发现: 4 个
+
+| # | 标题 | 优先级 | 备注 |
+|---|------|--------|------|
+| [#58](https://github.com/Tencent/openclaw-weixin/pull/58) | feat(messaging): chunkMode outbound text | 新功能 | PR 已开，2026-04-13 最新 |
+| [#57](https://github.com/Tencent/openclaw-weixin/issues/57) | unable to uninstall（Error: zod module + duplicate plugin id） | S | 持续 open |
+| [#54](https://github.com/Tencent/openclaw-weixin/issues/54) | 图片查看功能不可用（sharp 模块缺失） | M | 持续 open |
+| [#55](https://github.com/Tencent/openclaw-weixin/issues/55) | ACP thread binding for WeChat | feat | PR #56 在修 |
+
+---
 
 ## 贡献者文件区域（方向3）
-- 扫描了排名最末的 **10个** 贡献者（huntharo, mcaxtr, bmendonca3, onutc, jalehman, osolmaz, Glucksberg, altaywtf, eleqtrizit, quotentiroler）
-- 其中 **mcaxtr** 的最近 20 条 commit 集中在 `extensions/whatsapp/src/` 目录（login-qr.ts、connection-controller.ts 等），与当前已知 WhatsApp 相关 regression 区域高度吻合
-- 其余 9 人本轮未检出活跃 commit 或活跃文件区与当前 open bugs 的高相关匹配
-- 发现 **0个** 需要追加追踪的新高优先级 open bug
+
+**扫描**: 14 名低末段贡献者（scoootscooob / github-actions[bot] / Sid-Qin / BunsDev / joshp123 / huntharo / mcaxtr / bmendonca3 / onutc / jalehman / osolmaz / Glucksberg / altaywtf / eleqtrizit / quotentiroler）
+
+**结果**: 所有 14 个账号在 `openclaw/openclaw` 本仓库均无 commit 记录（可能 commits 在 fork 或其他仓库）
+
+**无新发现**
+
+---
 
 ## 追踪 PR 反馈（方向4）
-- 本轮扫描到 **30+ 个新 open PR**（过去 2 小时内），无 maintainer 新评论增量信息
-- 关键 PR 状态：
-  - **PR #65574** (MCP stdio proxy, size:M) — KeWang0622 持续 5 个 fix commit，接近可 merge
-  - **PR #65577** (OutboundPayloadPlan centralization, size:L) — maintainer，测试覆盖好，等 review
-  - **PR #65750** `fix(control-ui): stop reloading history after clear (#65719)` — 与 Control UI `/clear` race condition 相关，XS 级 fix
-  - **PR #65752** `qa: prefer Codex auth for live defaults` — maintainer+qa-lab，最新更新时间 06:23 UTC
-- 已追踪 PR 无本轮 maintainer 人工新反馈；状态稳定，持续跟进
+
+### Maintainer Review 新增 comments（本轮重点）
+
+**PR #65773**（fix: Slack JSON manifest box chars，XS）— 2 个新 review：
+- **greptile-apps P1**: manifest 在 env-shortcut 路径仍被打印（`SLACK_BOT_TOKEN+SLACK_APP_TOKEN` 命中时未跳过 prepare）
+- **chatgpt-codex-connector P2**: manifest 应用 `console.log` 而非 WizardPrompter，session-based 客户端丢失 in-flow payload
+
+**PR #65772**（fix: nodes list/status sync，M）— 3 个新 review：
+- **greptile-apps P2×2**: `"unauthorized"` fallback 未 scope 到 method + 重复 `node.list` 调用可合并
+- **chatgpt-codex-connector P1**: `node.paired` 硬性要求导致无该字段时全量过滤（regression 根因）
+
+**PR #65771**（cron errorReason schema，S）— 2 个新 review：
+- **greptile-apps P1**: `CronFailoverReasonSchema` 缺 `"auth_permanent"` / `"overloaded"` / `"session_expired"`（暴露协议 gap）
+- **chatgpt-codex-connector P2**: `resolveFailoverReasonFromError` 返回值可能超出 schema 范围
+
+### 持续追踪状态
+- PR #65574（MCP stdio proxy）：author 连续 5 个 fix commits，仍接近可 merge
+- PR #65577（OutboundPayloadPlan size:L）：maintainer 等待 review
+- PR #65750/65752：最新 fix PRs
+
+---
 
 ## 结论
-**最高优先级：**
-1. **#65721** 安全+crash beta-blocker（OpenClaw Agents 可通过配置修改自我销毁）— 建议 aoao 立即排查代码路径
-2. **#65740** Chrome CDP websocket unreachable — macOS ARM64 regression，与已知 CDP 问题簇重叠
-3. **#65733** Windows 插件发现 20 分钟启动延迟 — 影响所有 Windows 用户，严重可用性 bug
 
-**建议：**
-- #65721 安全+crash 属性 → 优先派给 aoao
-- PR #65750 与 PR #65752 为最新 fix，建议快速 review 后 Approve
-- mcaxtr 的 WhatsApp 文件区与已知 WhatsApp regression 区域重叠，继续监控
+**本轮最高优先级**：
+
+1. 🔥 **#65721 agents self-destruct through config modification** — BETA BLOCKER，根因明确，建议 aoao 立即接单
+2. 🔥 **#65706 nodes status/list 不 sync** — BETA BLOCKER，PR #65772 在修，持续盯 maintainer review 走向
+3. 🔥 **#65701 Telegram 重复消息** — regression 未认领，建议 aoao 接单
+4. ⏸️ **PR #65772** — 3 个 maintainer P1/P2 review，建议等 author 修复后再 Approve
+
+**建议快速行动项**：
+- 确认 PR #65779（minimax OAuth）和 PR #65778（fallbackRetryPrompt）可 merge → 推 Approve
+- 评估 #65721 的 config validation guard → aoao 接单
+- PR #65773 有两个反向 review（console.log vs WizardPrompter），需 author 澄清后再判断

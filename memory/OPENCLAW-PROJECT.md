@@ -6150,3 +6150,58 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P60058 | [#65748](https://github.com/openclaw/openclaw/issues/65748) **macOS gateway service install and doctor disagree on gateway entrypoint** | 🔍 S | macOS launchd 与 doctor 对 entrypoint 描述不一致 |
 | P60059 | [Tencent/openclaw-weixin PR #58](https://github.com/Tencent/openclaw-weixin/pull/58) **feat(messaging): support chunkMode for outbound text messages** | 🔍 新发现(方向2 插件 第117轮 14:23 CST) | chunkMode 出站文本支持；2026-04-13 05:54 UTC 更新；新功能 |
 | P60060 | [方向4 第117轮 14:23 CST] 本轮新 open PR 30+ 个（过去 2 小时内），无 maintainer 人工新评论增量信息 | 👀 状态检查(方向4 第117轮 14:23 CST) | PR #65574 持续修复接近可 merge；PR #65577 maintainer 等 review；PR #65750/65752 为最新 fix |
+
+### xixi 第120轮扫描（2026-04-13 15:26 CST / 07:26 UTC）
+**覆盖**: issues #65683–#65779, PRs #65725–#65779
+
+**Top 可修发现**:
+- [#65769](https://github.com/openclaw/openclaw/issues/65769) **S** active-memory qmd search: `Collection not found: memory-alt-main`（根因已定位：backend-config.ts inode/case 去重缺失；macOS case-insensitive fs 中招）
+- [#65763](https://github.com/openclaw/openclaw/issues/65763) **S** Plugin-registered provider models return 'model not allowed'（buildAllowedModelSet 条件漏了 plugin provider；与 #30152 同根）
+- [#65734](https://github.com/openclaw/openclaw/issues/65734) **S** session_status imports missing auto-reply runtime path（importRuntimeModule base URL 解析到错误路径）
+- [#65724](https://github.com/openclaw/openclaw/issues/65724) **XS** Windows DeprecationWarning: shell: true → 改 shell: false
+- [#65775](https://github.com/openclaw/openclaw/issues/65775) **S** active-memory: allowedChatTypes silently strips "explicit" sessions
+- [#65745](https://github.com/openclaw/openclaw/issues/65745) **S** gateway.nodes.denyCommands audit mislabels valid commands
+
+**已有 PR 覆盖**:
+- [#65779](https://github.com/openclaw/openclaw/pull/65779) fix(minimax web_search OAuth) — XS, 今日提交
+- [#65778](https://github.com/openclaw/openclaw/pull/65778) fix(agent fallback retry prompt) — XS, 今日提交
+- [#65773](https://github.com/openclaw/openclaw/pull/65773) fix(slack manifest box chars) — XS, 今日提交
+- [#65772](https://github.com/openclaw/openclaw/pull/65772) fix(cli nodes list sync) — M, 今日提交
+- [#65746](https://github.com/openclaw/openclaw/pull/65746) fix(pdf custom provider) — S, 今日提交
+
+**代码交叉点**:
+- `active-memory` 区 (backend-config.ts) → #65769, #65775
+- `buildAllowedModelSet` → #65763
+- `importRuntimeModule` / 打包路径 → #65734
+- `sqlite-vec` + `better-sqlite3` → #65704
+
+**报告路径**: `/root/.openclaw/workspace/xixi-reports/latest-scan-report.md`
+
+### xixi 第121轮扫描（2026-04-13 15:28 CST / 07:28 UTC）
+**覆盖**: issues #65721–#65779 全量 + weixin 插件仓库 + 14名低贡献者 + PR review
+
+**方向1 关键新发现**:
+- [#65721](https://github.com/openclaw/openclaw/issues/65721) **🔥 BETA BLOCKER** agents can modify critical config → `openclaw doctor --fix` 恢复（根因明确，阻断所有 2026.4.9+ 用户）
+- [#65706](https://github.com/openclaw/openclaw/issues/65706) **🔥 BETA BLOCKER** `nodes status` 和 `nodes list` 不 sync — PR [#65772](https://github.com/openclaw/openclaw/pull/65772) 已在修但有 3 个 maintainer review comments（P2×3）指出改进点
+- [#65701](https://github.com/openclaw/openclaw/issues/65701) **regression** Telegram provider 重复发送每条消息（bug+regression，双标签）
+- [#65740](https://github.com/openclaw/openclaw/issues/65740) **regression** Chrome CDP websocket macOS ARM64（2026.4.10）
+- [#65768](https://github.com/openclaw/openclaw/issues/65768) minimax web_search 不使用 OAuth token（MINIMAX_OAUTH_TOKEN 未入查找链）
+- [#65775](https://github.com/openclaw/openclaw/issues/65775) active-memory: `allowedChatTypes` 静默丢弃 `"explicit"` session type
+- [#65760](https://github.com/openclaw/openclaw/issues/65760) `resolveFallbackRetryPrompt` 丢弃原始 user prompt
+
+**方向2 Weixin 插件**: 新增 #58 chunkMode + PR #58；#57 uninstall 问题仍在；#54 sharp 模块问题仍在
+
+**方向3 贡献者文件区**: 14名低末段贡献者（scoootscooob ~ quotentiroler）均无本仓库 commit 记录；未产生新发现
+
+**方向4 PR Review 增量**:
+- [#65773](https://github.com/openclaw/openclaw/pull/65773)（Slack manifest box chars, XS）— greptile-apps P1（manifest env-shortcut path）+ chatgpt-codex-connector P2（应走 WizardPrompter 而非 console.log）
+- [#65772](https://github.com/openclaw/openclaw/pull/65772)（nodes list sync, M）— greptile-apps P2×2（unauthorized 未 scope + 重复 node.list 调用）+ chatgpt-codex-connector P1（node.paired 硬性要求导致 regression）
+- [#65771](https://github.com/openclaw/openclaw/pull/65771)（cron run errorReason schema, S）— greptile-apps P1（schema 缺 auth_permanent/overloaded/session_expired）
+
+| P60061 | [#65721](https://github.com/openclaw/openclaw/issues/65721) **🔥 BETA BLOCKER** agents can self-destruct through configuration modification（修改关键配置文件无 safeguard，需 `openclaw doctor --fix` 恢复） | 🔥 **建议优先接单**(方向1 GitHub 第121轮 15:28 CST) | **最高优先级之一**；根因明确：agent 可写无效字段导致 gateway 启动失败；影响 2026.4.9+ 所有用户；建议 aoao 优先处理 |
+| P60062 | [#65706](https://github.com/openclaw/openclaw/issues/65706) **🔥 BETA BLOCKER** `nodes status` 和 `nodes list` 不 sync（PR [#65772](https://github.com/openclaw/openclaw/pull/65772) M 级修复中，有 3 个 maintainer P1/P2 review） | 🔍 **持续追踪 review**(方向1+方向4 第121轮 15:28 CST) | PR #65772 已解决核心逻辑，但 3 个 review comments 提出改进建议（P2 unauthorized scope + duplicate call + node.paired regression）；建议持续盯 merge 时机 |
+| P60063 | [#65701](https://github.com/openclaw/openclaw/issues/65701) **regression** Telegram provider 每条响应重复发送 | 🔍 新发现(方向1 GitHub 第121轮 15:28 CST) | bug+regression 双标签；用户对话完全不可用；无评论未认领；**建议 aoao 接单** |
+| P60064 | [#65740](https://github.com/openclaw/openclaw/issues/65740) **regression** Chrome CDP websocket unreachable — macOS ARM64 | 🔍 新发现(方向1 GitHub 第121轮 15:28 CST) | 2026.4.10；CDP WebSocket 连接失败；影响浏览器自动化；可能与 #65208/#65204 同根；建议 aoao 接单 |
+| P60065 | [#65768](https://github.com/openclaw/openclaw/issues/65768) minimax web_search 不使用 MINIMAX_OAUTH_TOKEN | 🔍 新发现(方向1 GitHub 第121轮 15:28 CST) | OAuth token 未入 resolveMiniMaxApiKey 查找链；已 PR #65779 修复（XS）；确认即可 |
+| P60066 | [#65775](https://github.com/openclaw/openclaw/issues/65775) active-memory: allowedChatTypes 静默丢弃 `"explicit"` sessions | 🔍 新发现(方向1 GitHub 第121轮 15:28 CST) | normalizePluginConfig 只认 direct/group/channel；portal/webchat 用户配置无感知失效；建议 aoao 接单 |
+| P60067 | [#65760](https://github.com/openclaw/openclaw/issues/65760) resolveFallbackRetryPrompt 丢弃原始 user prompt | 🔍 新发现(方向1 GitHub 第121轮 15:28 CST) | fallback 重试时用户指令丢失；已有 PR #65778 修复（XS）；确认即可 |
