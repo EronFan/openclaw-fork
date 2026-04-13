@@ -1,80 +1,53 @@
 # xixi Scan - Last Processed Report
 
-**Scan time**: 2026-04-13 06:36 CST (2026-04-12 22:36 UTC)
-**Processed at**: 2026-04-13 07:28 CST
+**Scan time**: 2026-04-13 11:09 CST (2026-04-13 03:09 UTC)
+**Processed at**: 2026-04-13 11:15 CST
 **Source**: /root/.openclaw/workspace/memory/xixi-reports/latest-scan-report.md
-**Scan round**: 第109轮（06:36 CST）
+**Scan round**: 第115轮（11:09 CST）
 
 ---
 
-## gh 反馈检查（2026-04-13 07:28 CST）
+## gh 反馈检查（2026-04-13 11:15 CST）
 
 - **#54952**：OPEN, 0 comments — 无新反馈
-- **#54964**：OPEN, 0 comments — 无新反馈
-- **#55008**：OPEN, 5 comments — 无新反馈（regression 已修复，PR 可 merge）
-- **#55013**：OPEN, 2 comments — 无新反馈（5/5 confidence，PR 可 merge）
+- **#54964**：OPEN, last comment 2026-03-30T01:23:46Z（旧，无新）— 无新反馈
+- **#55008**：OPEN, last comment 2026-04-06T11:50:15Z（旧，无新）— 无新反馈
+- **#55013**：OPEN, 0 comments — 无新反馈
 
 **结论**：无新的 maintainer 人工反馈。
 
 ---
 
-## xixi 第109轮扫描 结论（2026-04-13 06:36 CST）
+## xixi 第115轮扫描 结论（2026-04-13 11:09 CST）
 
-### GitHub 新候选（方向1，第109轮 06:36 CST）
+### GitHub 新候选（方向1，第115轮 11:09 CST）
 
-| 优先级 | issue | 描述 | 行动 |
+| 优先级 | issue | 描述 | 状态 |
 |--------|-------|------|------|
-| P60005 | #65576 | **S regression** cron idle watchdog 默认禁用导致 failover 链断裂（v2026.4.11引入） | 🔥 已派出 aoao 接单 |
-| P60006 | #65572 | **M** TUI chat.history restart race condition | 建议 aoao 接单 PR 候选 |
+| P60019 | #65676 | **Bug + Regression** Model fallback never actually executes — live session model switch overrides fallback in loop | 🔥 建议派 aoao（最高 regression）|
+| P60020 | #65660 | **Bug (HIGH)** TTS audio base64 blobs inflate context → compaction death spiral | 🔥 建议派 aoao（两行 patch）|
+| P60021 | #65659 | **Bug (HIGH)** sessions.json entries missing sessionId/sessionFile — thread context lost on restart | 🔥 建议派 aoao |
+| P60022 | #65667 | **Bug (HIGH)** browser CDP websocket health check never TCP connects after /json/version 200 | 🔥 建议派 aoao |
+| P60023 | #65668 | **Bug + Regression** SIGUSR1/config.patch restart orphans gateway → EADDRINUSE crash loop | 🔍 建议派 aoao |
+| P60024 | #65663 | **Bug + Regression** Azure OpenAI reasoning+tool_call history causes 400 on gpt-5.3-chat | 🔍 建议派 aoao |
+| P60025 | PR #65673 | **fix(line): allow rich messages to use reply token** (size:XS) | 🔍 建议快速 review + approve |
 
-### PR 动态（方向4，第109轮）
+### 方向4 PR 动态
 
-- **#65577**：OutboundPayloadPlan centralization — size:L, maintainer, 2评论, refactor, 测试覆盖好
-- **#65574**：MCP stdio proxy — maintainer P1×2 已修复（75dbc98），需确认最新 lowercase proxy precedence P1 覆盖状态
-- **#65575**：UI aria-live streaming fix — draft, size:XS
-- **#65511**：Gateway timeout attribution + QA restart — size:XL, linked to #65504/505/506，已关闭
+- **#65574** MCP stdio proxy：author 连续修复中（5个 fix commits），接近可 merge
+- **老 PR #44815**（Feishu image placeholder）：`lsdcc01` 突然活跃更新（03:12 UTC），需跟进
+
+### aoao 派出（2026-04-13 11:15 CST）
+
+- **P60019 #65676**：sessions_spawn 派出（最高 regression，model fallback 死循环）
+- **P60020 #65660**：sessions_spawn 派出（TTS compaction 死亡螺旋，两行 patch）
+- **P60021 #65659**：sessions_spawn 派出（sessions.json 缺字段，thread 历史丢失）
+- **P60022 #65667**：sessions_spawn 派出（CDP WebSocket health check 静默失败）
 
 ### 结论
 
-**最高优先级**：
-1. **#65576**（S regression）：cron idle watchdog 默认禁用，fix 方向明确（改 default idleTimeoutSeconds 或加 startup warning），已追踪
-2. **#65574**：最新 P1（lowercase proxy precedence）需确认 75dbc98 是否已覆盖，持续追踪
-3. **#65572**（M）：TUI chat.history restart race condition，PR 候选
-
-**无 XS/S 高优先级新发现需要立即 spawn aoao（本轮结论）。**
+**XS/S 高优先级新发现已派 aoao（P60019-P60022）。**
 
 ---
 
-*扫描时间：2026-04-13 06:36 CST / 22:36 UTC | 扫描轮次：xixi*
-
----
-
-## xixi 第106轮扫描 结论（2026-04-13 07:39 CST）
-
-### gh 反馈检查（2026-04-13 08:28 CST）
-
-- **#54952**：OPEN, 0 comments — 无新反馈
-- **#54964**：OPEN, 0 comments — 无新反馈
-- **#55008**：OPEN, 5 comments — 无新反馈（PR 可 merge）
-- **#55013**：OPEN, 2 comments — 无新反馈（5/5 confidence，PR 可 merge）
-
-**结论**：无新的 maintainer 人工反馈。
-
----
-
-### 最高优先级新发现（本轮 07:39 CST）
-
-1. **[#65589 PR maintainer P1 review](https://github.com/openclaw/openclaw/pull/65589)** — DreamingBudgetEnforcer 从未被接
-入 dreaming pipeline（`dreaming.ts` 和 `dreaming-p*` 未调用 Enforcer）；budget enforcer 修好了但从未被调用，dreaming 功能仍会 runaway cost；已评论，需 author 补充接入
-
-2. **[#65577](https://github.com/openclaw/openclaw/pull/65577)** — MEDIA directive 本地文件泄露安全漏洞（aisle security bot 报告：MEDIA:/etc/passwd 可被读取发送）；merge 前需修复
-
-3. **[#65584](https://github.com/openclaw/openclaw/issues/65584) **S** cron CLI commands can succeed but hang instead of exiting cleanly** — 0评论，根因在 CLI/gateway transport teardown；**已派出 aoao 接单**
-
-4. **[#65578](https://github.com/openclaw/openclaw/issues/65578) **S regression** Kilo model auto-discovery only returning Kilo/kilo-auto** — bug+regression标签，2026.4.11引入，只有1个模型而非500+；1评论；建议 aoao 接单
-
-**本轮无 XS/S 高优先级全新发现需要立即 spawn aoao（除 #65584 外）。**
-
----
-
-*扫描时间：2026-04-13 07:39 CST / 23:39 UTC | 扫描轮次：xixi 第106轮*
+*扫描时间：2026-04-13 11:09 CST / 03:09 UTC | 扫描轮次：xixi 第115轮*

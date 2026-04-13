@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-13T00:43:00Z",
+  "updatedAt": "2026-04-13T02:37:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
@@ -38,6 +38,15 @@
       "reason": "subagent failed; gateway timeout when fetching history",
       "retryCount": 1,
       "status": "needs_retry"
+    },
+    {
+      "issue": "#65667",
+      "runId": "a12f778c-2432-4346-9db6-b8fc83b5079d",
+      "failedAt": "2026-04-13T03:21:00Z",
+      "reason": "ChatGPT usage limit exceeded, retry in ~5955 min (约4天). 任务: review/fix issue #65667 browser CDP websocket health check",
+      "retryCount": 0,
+      "status": "blocked_by_api_limit",
+      "note": "非代码问题，是 ChatGPT 账户额度耗尽"
     }
   ],
   "subagentSuccesses": [
