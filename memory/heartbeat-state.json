@@ -1,17 +1,17 @@
 {
-  "updatedAt": "2026-04-13T08:10:00Z",
+  "updatedAt": "2026-04-13T18:27:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": "2026-04-13T07:40:00Z",
-  "note": "PR #65780 updated: added #65763 fix (plugin model allowlist); 3 fixes total",
+  "note": "aoao #65835 PR done (#65858). aoao #65843 incomplete: ACP pairing fix committed locally (fix-65584-clean) but PR not created; branch mismatch needs resolution.",
   "subagentFailures": [
     {
       "issue": "#63265",
       "runId": "9bec1ac5-babe-411f-ad1e-f423608de8b7",
       "failedAt": "2026-04-09T03:00:00Z",
-      "reason": "\u9759\u9ed8\u5931\u8d25\uff0c\u672a\u77e5\u539f\u56e0",
+      "reason": "静默失败，未知原因",
       "retryCount": 1,
       "status": "replaced_by_new_run"
     },
@@ -19,7 +19,7 @@
       "issue": "#63269",
       "runId": "ae270f0c-10af-43ca-bbed-998bb8edae35",
       "failedAt": "2026-04-09T03:00:00Z",
-      "reason": "\u9759\u9ed8\u5931\u8d25\uff0c\u672a\u77e5\u539f\u56e0",
+      "reason": "静默失败，未知原因",
       "retryCount": 1,
       "status": "replaced_by_new_run"
     },
@@ -43,10 +43,10 @@
       "issue": "#65667",
       "runId": "a12f778c-2432-4346-9db6-b8fc83b5079d",
       "failedAt": "2026-04-13T03:21:00Z",
-      "reason": "ChatGPT usage limit exceeded, retry in ~5955 min (\u7ea64\u5929). \u4efb\u52a1: review/fix issue #65667 browser CDP websocket health check",
+      "reason": "ChatGPT usage limit exceeded, retry in ~5955 min. 任务: review/fix issue #65667 browser CDP websocket health check",
       "retryCount": 0,
       "status": "blocked_by_api_limit",
-      "note": "\u975e\u4ee3\u7801\u95ee\u9898\uff0c\u662f ChatGPT \u8d26\u6237\u989d\u5ea6\u8017\u5c3d"
+      "note": "非代码问题，是 ChatGPT 账户额度耗尽"
     }
   ],
   "subagentSuccesses": [
@@ -85,7 +85,7 @@
     {
       "runId": "xixi-117",
       "completedAt": "2026-04-13T06:23:00Z",
-      "task": "xixi scan 117\u8f6e 2026-04-13 14:23 CST - found 7 new candidates, top #65721 P0 beta-blocker"
+      "task": "xixi scan 117轮 2026-04-13 14:23 CST - found 7 new candidates, top #65721 P0 beta-blocker"
     },
     {
       "runId": "main-patch-2026-04-13",
@@ -93,34 +93,55 @@
       "pr": "https://github.com/openclaw/openclaw/pull/65780",
       "status": "done",
       "task": "PR #65780: fix-65602 (reserveTokens reload) + fix-65769 (memory-alt inode dedup)"
+    },
+    {
+      "runId": "cf4e553f-733e-436f-b8f3-cb50f876f1c0",
+      "completedAt": "2026-04-13T09:01:00Z",
+      "task": "xixi-scan-2026-04-13: 33 new issues, 24 active PRs, 9 P0/P1 candidates",
+      "status": "done"
+    },
+    {
+      "issue": "#65835",
+      "runId": "0f309256-c9f2-434f-a302-8c82f3a452ad",
+      "completedAt": "2026-04-13T18:11:00Z",
+      "pr": "https://github.com/openclaw/openclaw/pull/65858",
+      "status": "done",
+      "task": "Security fix: sourceConfig in config.get exposed API keys in plaintext; added sourceConfig redaction in redact-snapshot.ts"
+    },
+    {
+      "issue": "#65843",
+      "runId": "69151ae9-dd67-4d98-b7ce-af2ddab3a452",
+      "completedAt": "2026-04-13T18:27:00Z",
+      "status": "incomplete",
+      "task": "ACP pairing fix committed locally (fix-65584-clean) but PR not created; branch named #65584 but targets #65843 ACP pairing; needs branch resolution"
     }
   ],
   "cronTasksReTriggered": [
     {
       "id": "876c182c-a702-4cab-be21-9ab43c2c652c",
-      "name": "\u5fc3\u8df3\u7ef4\u62a4",
+      "name": "心跳维护",
       "reTriggeredAt": "2026-04-10T02:47:00Z",
       "runId": "manual:876c182c-a702-4cab-be21-9ab43c2c652c:1775789280622:1"
     },
     {
       "id": "6f8bd6c8-5b5f-4cf7-8e6f-3479fd23fc64",
-      "name": "OpenClaw \u793e\u533a\u673a\u4f1a\u626b\u63cf",
+      "name": "OpenClaw 社区机会扫描",
       "reTriggeredAt": "2026-04-10T02:47:00Z",
       "runId": "manual:6f8bd6c8-5b5f-4cf7-8e6f-3479fd23fc64:1775789288536:2"
     },
     {
       "id": "memory-daily-create",
-      "name": "\u6bcf\u65e5\u81ea\u52a8\u521b\u5efa\u65e5\u8bb0",
+      "name": "每日自动创建日记",
       "reTriggeredAt": "2026-04-10T02:47:00Z",
       "runId": "manual:memory-daily-create:1775789291521:3"
     },
     {
       "id": "morning-briefing",
-      "name": "\u6bcf\u65e58\u70b9\u7efc\u5408\u6668\u62a5",
+      "name": "每日8点综合晨报",
       "reTriggeredAt": "2026-04-10T02:47:00Z",
       "runId": "manual:morning-briefing:1775789295745:4"
     }
   ],
-  "xixiLastScanAt": "2026-04-13T06:23:00Z",
-  "lastPrCreatedAt": "2026-04-13T08:10:00Z"
+  "xixiLastScanAt": "2026-04-13T09:01:00Z",
+  "lastPrCreatedAt": "2026-04-13T18:11:00Z"
 }
