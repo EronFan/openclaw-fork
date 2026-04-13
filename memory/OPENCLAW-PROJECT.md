@@ -6177,6 +6177,44 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 
 **报告路径**: `/root/.openclaw/workspace/xixi-reports/latest-scan-report.md`
 
+### 当前优先级更新（xixi 第122轮 2026-04-13 16:38 CST / 08:38 UTC）
+
+| P# | Issue | 优先级 | 备注 |
+|----|-------|--------|------|
+| P60061 | [#65810](https://github.com/openclaw/openclaw/issues/65810) **S** Fallbacks does not work. Connection errors (ECONNREFUSED, network offline) should trigger model fallback | 🔥 **高** | bug+bug:behavior；网络错误应触发 fallback 但未触发；0评论未认领；**建议 aoao 接单** |
+| P60062 | [#65786](https://github.com/openclaw/openclaw/issues/65786) **regression** Feishu config invalid after upgrade to 4.11 (channels.feishu: invalid config) | 🔍 regression | bug+regression；与 #65177 同簇；`openclaw doctor --fix` 在 4.11 无效；**建议 aoao 接单** |
+| P60063 | [#65782](https://github.com/openclaw/openclaw/issues/65782) **M** Memory indexing stalls permanently when chunker splits emoji at surrogate-pair boundary | 🔍 新发现 | bug；有完整根因+修复方案+live verification；0评论；**建议 aoao 接单**；已有 PR #65796 在修 |
+| P60064 | [#65799](https://github.com/openclaw/openclaw/issues/65799) **S** Feishu WebSocket should not inherit ambient proxy env by default | 🔍 新发现(方向1) | bug+usability；给出精确代码位置（extensions/feishu/src/client.ts）；**已有 PR #65802 在修** |
+| P60065 | [#65763](https://github.com/openclaw/openclaw/issues/65763) **S** Plugin-registered provider models return 'model not allowed' | 🔍 新发现(方向1) | bug；buildAllowedModelSet 漏了 plugin provider；与 #30152 同根；**建议 review 后接单** |
+| P60066 | [方向4 第122轮 16:38 CST] PR #65772 (nodes list sync, M) — greptile-apps 发了 2 个 P2 review comments（unauthorized fallback 范围过宽 + if/else 重复调用 node.list）；chatgpt-codex-connector 无 major issues；接近可 merge，关注 author 响应状态 | 👀 状态变化(方向4 第122轮 16:38 CST) | 实质 review feedback，需 author 响应 P2 点后可能可 merge |
+| P60067 | [方向2] Tencent/openclaw-weixin 仓库无法公开抓取 | i️ 无新发现 | 代码不可见；已追踪 #55994/#58738 继续 |
+| P60068 | [方向3] 最低段 10 位 contributors（各 2 次贡献）commit 无法抓取 | i️ 无新发现 | 低段 contributors 最近 commit gh api 不可见 |
+
+**xixi 第122轮扫描（2026-04-13 16:38 CST / 08:38 UTC）**
+**覆盖**: issues #65810–#65760, PRs #65809–#65770, weixin 插件, 10名低贡献者, PR review
+
+**方向1 新候选（按优先级）**:
+1. **#65810 S** — 网络错误 fallback 失效（ECONNREFUSED 不触发 fallback chain）
+2. **#65786 regression** — Feishu config invalid after upgrade 4.11（与 #65177 同簇）
+3. **#65782 M** — Memory indexing emoji surrogate stall（有 PR #65796 在修）
+4. **#65799 S** — Feishu WS 继承 proxy env（已有 PR #65802 在修）
+5. **#65763 S** — Plugin provider models 'not allowed'（buildAllowedModelSet 漏 plugin provider）
+
+**方向4 PR 反馈**:
+- PR #65772 (nodes list/status sync, M) — 实质 review：greptile 2×P2（unauthorized fallback 范围+if/else 重复调用）；接近可 merge 状态
+- PR #65805/65796/65778 — 刚 open，skeinguyen1412/greptile 已 COMMENTED
+
+**代码交叉点**:
+- fallback chain / connection error handling → #65810
+- Feishu config migration → #65786, #65177
+- emoji chunker surrogate boundary → #65782, #27753
+- Feishu WS proxy inheritance → #65799
+- buildAllowedModelSet / plugin provider allowlist → #65763
+
+**结论**: 最高优先级 **#65810**（网络错误 fallback）和 **#65786**（feishu upgrade regression）；PR #65772 接近可 merge 关注 author 是否响应 greptile P2 feedback
+
+**报告路径**: `/root/.openclaw/workspace/memory/xixi-reports/latest-scan-report.md`
+
 ### xixi 第121轮扫描（2026-04-13 15:28 CST / 07:28 UTC）
 **覆盖**: issues #65721–#65779 全量 + weixin 插件仓库 + 14名低贡献者 + PR review
 

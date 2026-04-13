@@ -1,110 +1,101 @@
-# 全量扫描报告 2026-04-13 15:28 CST / 07:28 UTC
+# 全量扫描报告 2026-04-13 16:38 CST / 08:38 UTC
 
 ## GitHub Issues（方向1）
 
-**本轮扫描范围**: issues #65701–#65779（上次覆盖至 #65779 第117轮 14:23 CST）
+**扫描范围**: 2026-04-13 06:38 UTC 后更新的 open issues/PRs
+**本轮新发现**: 14 个 open issues，20 个 open PRs（大部分为已追踪 issue 的配套 PR）
 
-**新发现**: 13 个 open issues（部分已被 PR 覆盖）
+### 最高优先级新候选
 
-### 最高优先级（建议立即行动）
-
-1. **#65721 🔥 BETA BLOCKER** — agents can self-destruct through configuration modification
-   - agent 可写无效字段到 `~/.openclaw/openclaw.json`，导致 gateway 启动失败
-   - 需 `openclaw doctor --fix` 手动恢复；影响 2026.4.9+ 所有用户
-   - **建议：aoao 优先接单**
-
-2. **#65706 🔥 BETA BLOCKER** — `nodes status` 和 `nodes list` 不 sync
-   - `node.paired` 字段处理不当导致 regression
-   - PR [#65772](https://github.com/openclaw/openclaw/pull/65772) 已在修（M 级），但有 3 个 maintainer review comments（P1+P2×2）
-   - **建议：持续盯 PR merge 前 review 机会**
-
-3. **#65701 regression** — Telegram provider 重复发送每条响应
-   - bug+regression 双标签；用户对话完全不可用
+1. **#65810 🔥 S** — Fallbacks does not work. Connection errors (ECONNREFUSED, network offline) should trigger model fallback
+   - bug+bug:behavior 双标签；网络错误（ECONNREFUSED）应触发 fallback 但未触发
+   - 0评论，未认领；根因涉及 fallback chain 对网络错误的处理
    - **建议：aoao 接单**
 
-4. **#65740 regression** — Chrome CDP websocket unreachable macOS ARM64
-   - 2026.4.10；可能与 #65208/#65204 同根
-   - **建议：aoao 接单**
+2. **#65786 regression** — Feishu config invalid after upgrade to 4.11 (channels.feishu: invalid config)
+   - bug+regression 双标签；与 #65177(feishu botName→name migration)同簇
+   - `openclaw doctor --fix` 在 4.11 版本无法修复；centOS Stream 8 用户受影响
+   - 0评论，未认领；**建议 aoao 接单**
 
-### 已确认有 PR 覆盖（可快速确认）
+3. **#65763 S** — Plugin-registered provider models return 'model not allowed'
+   - 根因已给出：plugin-registered providers 在 `buildAllowedModelSet` 中不被识别
+   - 与历史 issue #30152 同根；workaround 是用 alias
+   - **建议：review #30152 相关修复后接单**
 
-| Issue | PR | Size | 状态 |
-|-------|-----|------|------|
-| #65768 minimax OAuth token | [#65779](https://github.com/openclaw/openclaw/pull/65779) | XS | 今日提交 |
-| #65760 fallbackRetryPrompt 丢弃 prompt | [#65778](https://github.com/openclaw/openclaw/pull/65778) | XS | 今日提交 |
-| #65751 Slack manifest box chars | [#65773](https://github.com/openclaw/openclaw/pull/65773) | XS | 今日提交，review 进行中 |
-| #65769 active-memory qmd collection not found | 上轮已覆盖 | S | 根因 backend-config.ts inode/case |
+4. **#65782 M** — Memory indexing stalls when chunker splits emoji at surrogate-pair boundary
+   - bug；根因+完整修复方案+live verification 数据齐全；与 #27753 同簇
+   - 0评论，未认领；**建议 aoao 接单**（已给出精确修复路径）
 
-### 建议跟踪（暂未认领）
+5. **#65799 S** — Feishu WebSocket should not inherit ambient proxy env by default
+   - bug+usability；给出精确代码位置（extensions/feishu/src/client.ts）
+   - PR #65802 已同步 open（fix: disable ambient proxy inheritance for websocket by default）
+   - **建议：review #65802 确认是否覆盖**
 
-- #65775 active-memory: `allowedChatTypes` 丢弃 `"explicit"` sessions（behavior bug，S 级）
-- #65747 Dingtalk Stream mode failure（钉钉插件，0评论）
-- #65744 Feishu DM response 截断泄露群聊（regression）
-- #65734 session_status imports missing runtime path（beta 1，0评论）
-- #65733 safeRealpathSync Windows 20分钟（regression）
-- #65728 gateway run unauthorized regression
-- #65705 Dreaming sweep 每 heartbeat 重复触发（已有 PR）
+### 已确认有 PR 在修（可快速确认）
+- #65782 → PR #65796 (fix(memory): prevent indexing stalls from emoji surrogate pair splits)
+- #65799 → PR #65802 (fix(feishu): disable ambient proxy inheritance for websocket by default)
+- #65760 → PR #65805 (fix(fallback): preserve original prompt in resolveFallbackRetryPrompt)
+- #65768 → PR #65785 (fix(minimax): allow web_search to use MINIMAX_OAUTH_TOKEN)
+
+### 方向1结论
+本轮新 issue 质量较高，#65810/#65786/#65782 明确可修；#65799 已有配套 PR。最高优先级 **#65810**（网络错误 fallback 失效）和 **#65786**（feishu upgrade regression）。
 
 ---
 
 ## 插件仓库（方向2）
 
-**扫描 Tencent/openclaw-weixin**
+### Tencent/openclaw-weixin
+- 仓库 issue/PR 无法抓取（exit code 1 或空）
+- 继续追踪：#55994/#58738（weixin 代码不可见）
 
-### 新发现: 4 个
+### 其他相关插件
+- 无新增可公开访问的插件 issue
 
-| # | 标题 | 优先级 | 备注 |
-|---|------|--------|------|
-| [#58](https://github.com/Tencent/openclaw-weixin/pull/58) | feat(messaging): chunkMode outbound text | 新功能 | PR 已开，2026-04-13 最新 |
-| [#57](https://github.com/Tencent/openclaw-weixin/issues/57) | unable to uninstall（Error: zod module + duplicate plugin id） | S | 持续 open |
-| [#54](https://github.com/Tencent/openclaw-weixin/issues/54) | 图片查看功能不可用（sharp 模块缺失） | M | 持续 open |
-| [#55](https://github.com/Tencent/openclaw-weixin/issues/55) | ACP thread binding for WeChat | feat | PR #56 在修 |
+**结论：无新发现（方向2）**
 
 ---
 
 ## 贡献者文件区域（方向3）
 
-**扫描**: 14 名低末段贡献者（scoootscooob / github-actions[bot] / Sid-Qin / BunsDev / joshp123 / huntharo / mcaxtr / bmendonca3 / onutc / jalehman / osolmaz / Glucksberg / altaywtf / eleqtrizit / quotentiroler）
+### 扫描范围
+最低贡献量 10 位 contributors（各 2 次贡献）：aaronveklabs, Aftabbs, AI-Reviewer-QS, AkashKobal, akoscz, al3mart, Alex-Alaniz, alexfilatov, Anandesh-Sharma, andreabadesso
 
-**结果**: 所有 14 个账号在 `openclaw/openclaw` 本仓库均无 commit 记录（可能 commits 在 fork 或其他仓库）
+### 发现
+- 最低段 contributors 的最近 commit 无法通过 `gh api` 抓取（可能是 CONTRIBUTING 分支或已删除 fork）
+- 无可关联的新 open bug
 
-**无新发现**
+**结论：无新发现（方向3）**
 
 ---
 
 ## 追踪 PR 反馈（方向4）
 
-### Maintainer Review 新增 comments（本轮重点）
+### PR #65772（fix(cli): keep nodes list aligned with nodes status）
+- 3 个新 review comments：
+  - **greptile-apps**: 2 个 P2 问题（unauthorized fallback 范围过宽 + if/else 重复调用 node.list）
+  - **chatgpt-codex-connector**: P2 无 major issues
+  - **skainguyen1412**: 3 个 COMMENTED review
+- **建议：关注 author 是否响应 greptile P2 feedback，接近可 merge 状态**
 
-**PR #65773**（fix: Slack JSON manifest box chars，XS）— 2 个新 review：
-- **greptile-apps P1**: manifest 在 env-shortcut 路径仍被打印（`SLACK_BOT_TOKEN+SLACK_APP_TOKEN` 命中时未跳过 prepare）
-- **chatgpt-codex-connector P2**: manifest 应用 `console.log` 而非 WizardPrompter，session-based 客户端丢失 in-flow payload
+### 其他追踪 PR 状态
+- PR #65805（preserve original prompt in fallback retry）刚 open，greptile 已 COMMENTED
+- PR #65796（emoji surrogate pair split）刚 open，skeinguyen1412 已 COMMENTED
+- PR #65778（preserve original prompt in fallback retry, same as #65805）刚 open
 
-**PR #65772**（fix: nodes list/status sync，M）— 3 个新 review：
-- **greptile-apps P2×2**: `"unauthorized"` fallback 未 scope 到 method + 重复 `node.list` 调用可合并
-- **chatgpt-codex-connector P1**: `node.paired` 硬性要求导致无该字段时全量过滤（regression 根因）
-
-**PR #65771**（cron errorReason schema，S）— 2 个新 review：
-- **greptile-apps P1**: `CronFailoverReasonSchema` 缺 `"auth_permanent"` / `"overloaded"` / `"session_expired"`（暴露协议 gap）
-- **chatgpt-codex-connector P2**: `resolveFailoverReasonFromError` 返回值可能超出 schema 范围
-
-### 持续追踪状态
-- PR #65574（MCP stdio proxy）：author 连续 5 个 fix commits，仍接近可 merge
-- PR #65577（OutboundPayloadPlan size:L）：maintainer 等待 review
-- PR #65750/65752：最新 fix PRs
+### 方向4结论
+PR #65772 有实质性的 maintainer/copilot review feedback，接近 merge 窗口；其余新 PR 均处于早期 review 阶段。
 
 ---
 
 ## 结论
 
-**本轮最高优先级**：
+**最高优先级：**
+1. **#65810** — 网络错误 fallback 失效（S 级，0评论未认领，建议 aoao 接单）
+2. **#65786** — Feishu config upgrade regression（regression，与 #65177 同簇，建议 aoao 接单）
+3. **#65782** — Memory indexing emoji surrogate stall（有完整根因分析+修复方案，建议 aoao 接单）
 
-1. 🔥 **#65721 agents self-destruct through config modification** — BETA BLOCKER，根因明确，建议 aoao 立即接单
-2. 🔥 **#65706 nodes status/list 不 sync** — BETA BLOCKER，PR #65772 在修，持续盯 maintainer review 走向
-3. 🔥 **#65701 Telegram 重复消息** — regression 未认领，建议 aoao 接单
-4. ⏸️ **PR #65772** — 3 个 maintainer P1/P2 review，建议等 author 修复后再 Approve
-
-**建议快速行动项**：
-- 确认 PR #65779（minimax OAuth）和 PR #65778（fallbackRetryPrompt）可 merge → 推 Approve
-- 评估 #65721 的 config validation guard → aoao 接单
-- PR #65773 有两个反向 review（console.log vs WizardPrompter），需 author 澄清后再判断
+**建议：**
+- aoao 优先处理 #65810（网络 fallback）和 #65786（feishu upgrade）
+- #65782 有 PR #65796 在修，可 review 确认
+- 方向2/方向3 本轮无新发现
+- PR #65772 接近可 merge，关注 author 是否响应 greptile P2 feedback
