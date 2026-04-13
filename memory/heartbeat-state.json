@@ -1,40 +1,29 @@
 {
-  "updatedAt": "2026-04-13T19:21:00Z",
+  "updatedAt": "2026-04-13T19:35:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": "2026-04-13T07:40:00Z",
-  "note": "aoao #65899 v1 incomplete (wrong search path). v2 dispatched with targeted grep instructions. #65835 PR #65858 done. xixi scan 11:09Z added P60073-77.",
-  "subagentFailures": [
-    {
-      "issue": "#65899",
-      "runId": "5329d46d-d227-41cc-8f4a-9524636107e0",
-      "failedAt": "2026-04-13T19:11:00Z",
-      "reason": "Investigation incomplete - searched wrong paths (dist files, external hooks); never found TDZ root cause",
-      "retryCount": 1,
-      "status": "retrying"
-    }
-  ],
+  "note": "#65899 resolved: root cause is third-party clawhub managed hooks (clawvault or telegram-stickers), NOT in openclaw/openclaw repo. No PR possible. User workaround: disable hooks one by one to isolate.",
+  "subagentFailures": [],
   "subagentSuccesses": [
     {
       "issue": "#65835",
       "runId": "0f309256-c9f2-434f-a302-8c82f3a452ad",
       "completedAt": "2026-04-13T18:11:00Z",
       "pr": "https://github.com/openclaw/openclaw/pull/65858",
-      "status": "done",
-      "task": "Security fix: sourceConfig in config.get exposed API keys in plaintext"
-    }
-  ],
-  "inProgressFixes": [
+      "status": "done"
+    },
     {
       "issue": "#65899",
-      "runId": "f5206c05-d9f5-472b-b5b1-44eb295780cf",
-      "dispatchedAt": "2026-04-13T19:21:00Z",
-      "task": "Hook TDZ bug v2: targeted grep search + clear scope instructions",
-      "stage": "retry_dispatched"
+      "runId": "76f6efc6-9eaa-4a72-9882-328de5afffa2",
+      "completedAt": "2026-04-13T19:21:00Z",
+      "status": "done_non_actionable",
+      "task": "Root cause: third-party clawhub hooks (clawvault/telegram-stickers) - NOT in openclaw/openclaw repo, no PR possible"
     }
   ],
+  "inProgressFixes": [],
   "cronTasksReTriggered": [],
   "xixiLastScanAt": "2026-04-13T11:09:00Z",
   "lastPrCreatedAt": "2026-04-13T18:11:00Z"
