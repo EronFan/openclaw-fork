@@ -1,147 +1,39 @@
 {
-  "updatedAt": "2026-04-13T18:27:00Z",
+  "updatedAt": "2026-04-13T19:09:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": "2026-04-13T07:40:00Z",
-  "note": "aoao #65835 PR done (#65858). aoao #65843 incomplete: ACP pairing fix committed locally (fix-65584-clean) but PR not created; branch mismatch needs resolution.",
-  "subagentFailures": [
-    {
-      "issue": "#63265",
-      "runId": "9bec1ac5-babe-411f-ad1e-f423608de8b7",
-      "failedAt": "2026-04-09T03:00:00Z",
-      "reason": "静默失败，未知原因",
-      "retryCount": 1,
-      "status": "replaced_by_new_run"
-    },
-    {
-      "issue": "#63269",
-      "runId": "ae270f0c-10af-43ca-bbed-998bb8edae35",
-      "failedAt": "2026-04-09T03:00:00Z",
-      "reason": "静默失败，未知原因",
-      "retryCount": 1,
-      "status": "replaced_by_new_run"
-    },
-    {
-      "issue": "#64852",
-      "runId": "1ef7ca56-ef32-47a0-ba63-0094486e1a9c",
-      "failedAt": "2026-04-11T15:12:27Z",
-      "reason": "subagent timeout",
-      "retryCount": 1,
-      "status": "needs_retry"
-    },
-    {
-      "issue": "PR-approve-batch",
-      "runId": "8ccc81e3-dea0-4543-a4ca-1af0c6574bde",
-      "failedAt": "2026-04-11T15:28:27Z",
-      "reason": "subagent failed; gateway timeout when fetching history",
-      "retryCount": 1,
-      "status": "needs_retry"
-    },
-    {
-      "issue": "#65667",
-      "runId": "a12f778c-2432-4346-9db6-b8fc83b5079d",
-      "failedAt": "2026-04-13T03:21:00Z",
-      "reason": "ChatGPT usage limit exceeded, retry in ~5955 min. 任务: review/fix issue #65667 browser CDP websocket health check",
-      "retryCount": 0,
-      "status": "blocked_by_api_limit",
-      "note": "非代码问题，是 ChatGPT 账户额度耗尽"
-    }
-  ],
+  "note": "xixi scan 11:09 UTC: 14 new issues found, top #65899 (P0 hook TDZ) dispatched to aoao. P60073-77 added to project. #65835 PR #65858 done. ACP pairing #65843 incomplete.",
+  "subagentFailures": [],
   "subagentSuccesses": [
-    {
-      "issue": "#63261",
-      "runId": "669c9722-2b2f-4401-b4c2-762190fdb6a0",
-      "mergedAt": "2026-04-09T03:10:00Z",
-      "pr": "https://github.com/openclaw/openclaw/pull/63515"
-    },
-    {
-      "issue": "#65193",
-      "runId": "06ee724f-6c99-41b2-8bd2-9a3132beb352",
-      "completedAt": "2026-04-12T06:33:00Z",
-      "pr": "https://github.com/openclaw/openclaw/pull/65206",
-      "status": "done"
-    },
-    {
-      "issue": "#65155",
-      "runId": "d4e7e667-1301-4fd9-8f4c-daf6e9d6ca21",
-      "completedAt": "2026-04-12T03:49:00Z",
-      "pr": "https://github.com/openclaw/openclaw/pull/65155",
-      "status": "done"
-    },
-    {
-      "issue": "#65498",
-      "runId": "441e78ad-03f0-42c1-8e3b-7138898b331d",
-      "completedAt": "2026-04-12T18:47:00Z",
-      "status": "done",
-      "task": "Main-session user task loses final reply after heartbeat/exec-completion interrupt"
-    },
-    {
-      "runId": "23d613fb-2ad6-4a6e-a479-9199099d73f1",
-      "completedAt": "2026-04-13T00:40:00Z",
-      "task": "xixi scan 2026-04-13 08:40 CST - found 7 regression issues, top candidate #65600"
-    },
-    {
-      "runId": "xixi-117",
-      "completedAt": "2026-04-13T06:23:00Z",
-      "task": "xixi scan 117轮 2026-04-13 14:23 CST - found 7 new candidates, top #65721 P0 beta-blocker"
-    },
-    {
-      "runId": "main-patch-2026-04-13",
-      "completedAt": "2026-04-13T07:40:00Z",
-      "pr": "https://github.com/openclaw/openclaw/pull/65780",
-      "status": "done",
-      "task": "PR #65780: fix-65602 (reserveTokens reload) + fix-65769 (memory-alt inode dedup)"
-    },
-    {
-      "runId": "cf4e553f-733e-436f-b8f3-cb50f876f1c0",
-      "completedAt": "2026-04-13T09:01:00Z",
-      "task": "xixi-scan-2026-04-13: 33 new issues, 24 active PRs, 9 P0/P1 candidates",
-      "status": "done"
-    },
     {
       "issue": "#65835",
       "runId": "0f309256-c9f2-434f-a302-8c82f3a452ad",
       "completedAt": "2026-04-13T18:11:00Z",
       "pr": "https://github.com/openclaw/openclaw/pull/65858",
       "status": "done",
-      "task": "Security fix: sourceConfig in config.get exposed API keys in plaintext; added sourceConfig redaction in redact-snapshot.ts"
+      "task": "Security fix: sourceConfig in config.get exposed API keys in plaintext"
     },
     {
       "issue": "#65843",
       "runId": "69151ae9-dd67-4d98-b7ce-af2ddab3a452",
       "completedAt": "2026-04-13T18:27:00Z",
       "status": "incomplete",
-      "task": "ACP pairing fix committed locally (fix-65584-clean) but PR not created; branch named #65584 but targets #65843 ACP pairing; needs branch resolution"
+      "task": "ACP pairing fix committed locally but PR not created; needs resolution"
     }
   ],
-  "cronTasksReTriggered": [
+  "inProgressFixes": [
     {
-      "id": "876c182c-a702-4cab-be21-9ab43c2c652c",
-      "name": "心跳维护",
-      "reTriggeredAt": "2026-04-10T02:47:00Z",
-      "runId": "manual:876c182c-a702-4cab-be21-9ab43c2c652c:1775789280622:1"
-    },
-    {
-      "id": "6f8bd6c8-5b5f-4cf7-8e6f-3479fd23fc64",
-      "name": "OpenClaw 社区机会扫描",
-      "reTriggeredAt": "2026-04-10T02:47:00Z",
-      "runId": "manual:6f8bd6c8-5b5f-4cf7-8e6f-3479fd23fc64:1775789288536:2"
-    },
-    {
-      "id": "memory-daily-create",
-      "name": "每日自动创建日记",
-      "reTriggeredAt": "2026-04-10T02:47:00Z",
-      "runId": "manual:memory-daily-create:1775789291521:3"
-    },
-    {
-      "id": "morning-briefing",
-      "name": "每日8点综合晨报",
-      "reTriggeredAt": "2026-04-10T02:47:00Z",
-      "runId": "manual:morning-briefing:1775789295745:4"
+      "issue": "#65899",
+      "runId": "9dbc8bbf-96aa-42f8-ab59-d83582a0f43c",
+      "dispatchedAt": "2026-04-13T19:09:00Z",
+      "task": "Hook TDZ bug: Cannot access 'group' before initialization",
+      "stage": "dispatched"
     }
   ],
-  "xixiLastScanAt": "2026-04-13T09:01:00Z",
+  "cronTasksReTriggered": [],
+  "xixiLastScanAt": "2026-04-13T11:09:00Z",
   "lastPrCreatedAt": "2026-04-13T18:11:00Z"
 }
