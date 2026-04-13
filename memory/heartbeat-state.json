@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-13T07:25:00Z",
+  "updatedAt": "2026-04-13T07:40:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
-  "lastProactiveReachoutAt": "2026-04-13T07:25:00Z",
-  "note": "2026-04-13 15:25 CST: xixi scan 117轮 completed (14:23 CST); found 7 new candidates, top #65721 P0 beta-blocker (agent config self-destruct); new xixi scan manually triggered at 15:25 CST; git auto-commit done",
+  "lastProactiveReachoutAt": "2026-04-13T07:40:00Z",
+  "note": "2026-04-13 15:40 CST: PR #65780 created (fix-65602 reserveTokens + fix-65769 memory-alt inode dedup); pushed to EronFan fork; tests passed",
   "subagentFailures": [
     {
       "issue": "#63265",
@@ -86,6 +86,13 @@
       "runId": "xixi-117",
       "completedAt": "2026-04-13T06:23:00Z",
       "task": "xixi scan 117轮 2026-04-13 14:23 CST - found 7 new candidates, top #65721 P0 beta-blocker"
+    },
+    {
+      "runId": "main-patch-2026-04-13",
+      "completedAt": "2026-04-13T07:40:00Z",
+      "pr": "https://github.com/openclaw/openclaw/pull/65780",
+      "status": "done",
+      "task": "PR #65780: fix-65602 (reserveTokens reload) + fix-65769 (memory-alt inode dedup)"
     }
   ],
   "cronTasksReTriggered": [
