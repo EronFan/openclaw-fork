@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-12T18:11:00Z",
+  "updatedAt": "2026-04-13T00:43:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": "2026-04-12T05:59:00Z",
-  "note": "2026-04-13 02:11 CST: #65498 (Main-session user task loses final reply) subagent 完成；xixi 最新扫描 2026-04-12 20:58 CST 正常（约5小时前）；无新 subagent 失败需处理；git auto-commit done",
+  "note": "2026-04-13 08:43 CST: xixi scan completed (08:40 CST); found 7 regression issues, top candidate #65600 (totalTokensFresh bypass); no subagent failures; git auto-commit done",
   "subagentFailures": [
     {
       "issue": "#63265",
@@ -67,6 +67,11 @@
       "completedAt": "2026-04-12T18:47:00Z",
       "status": "done",
       "task": "Main-session user task loses final reply after heartbeat/exec-completion interrupt"
+    },
+    {
+      "runId": "23d613fb-2ad6-4a6e-a479-9199099d73f1",
+      "completedAt": "2026-04-13T00:40:00Z",
+      "task": "xixi scan 2026-04-13 08:40 CST - found 7 regression issues, top candidate #65600"
     }
   ],
   "cronTasksReTriggered": [
@@ -94,5 +99,6 @@
       "reTriggeredAt": "2026-04-10T02:47:00Z",
       "runId": "manual:morning-briefing:1775789295745:4"
     }
-  ]
+  ],
+  "xixiLastScanAt": "2026-04-13T00:40:00Z"
 }
