@@ -5,7 +5,7 @@
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": "2026-04-13T07:40:00Z",
-  "note": "#65899 resolved: root cause is third-party clawhub managed hooks (clawvault or telegram-stickers), NOT in openclaw/openclaw repo. No PR possible. User workaround: disable hooks one by one to isolate.",
+  "note": "#65899 external (clawhub hook). #65902 dispatched to aoao. P60073 updated. P60074-77 pending.",
   "subagentFailures": [],
   "subagentSuccesses": [
     {
@@ -20,10 +20,18 @@
       "runId": "76f6efc6-9eaa-4a72-9882-328de5afffa2",
       "completedAt": "2026-04-13T19:21:00Z",
       "status": "done_non_actionable",
-      "task": "Root cause: third-party clawhub hooks (clawvault/telegram-stickers) - NOT in openclaw/openclaw repo, no PR possible"
+      "task": "Third-party clawhub hooks (clawvault/telegram-stickers) - NOT in openclaw/openclaw repo"
     }
   ],
-  "inProgressFixes": [],
+  "inProgressFixes": [
+    {
+      "issue": "#65902",
+      "runId": "f55e05de-1125-4603-93c5-6c62d03a752e",
+      "dispatchedAt": "2026-04-13T19:35:00Z",
+      "task": "WhatsApp session discovery inconsistent with runtime status",
+      "stage": "dispatched"
+    }
+  ],
   "cronTasksReTriggered": [],
   "xixiLastScanAt": "2026-04-13T11:09:00Z",
   "lastPrCreatedAt": "2026-04-13T18:11:00Z"
