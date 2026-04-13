@@ -349,7 +349,7 @@ inProgressFixes:
 ### heartbeat-state.json 必须维护 lastPrCreatedAt
 
 每次 PR 创建后更新 `lastPrCreatedAt`（UTC 时间戳）。
-如果超过 24 小时没有新 PR 且没有活跃的 in-progress fix，视为空转，
+如果超过 2 小时没有新 PR 且没有活跃的 in-progress fix，视为空转，
 下次 heartbeat 时主动告警范总。
 
 ### cron 失败降级规则
