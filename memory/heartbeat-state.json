@@ -1,12 +1,21 @@
 {
-  "updatedAt": "2026-04-13T19:09:00Z",
+  "updatedAt": "2026-04-13T19:21:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": "2026-04-13T07:40:00Z",
-  "note": "xixi scan 11:09 UTC: 14 new issues found, top #65899 (P0 hook TDZ) dispatched to aoao. P60073-77 added to project. #65835 PR #65858 done. ACP pairing #65843 incomplete.",
-  "subagentFailures": [],
+  "note": "aoao #65899 v1 incomplete (wrong search path). v2 dispatched with targeted grep instructions. #65835 PR #65858 done. xixi scan 11:09Z added P60073-77.",
+  "subagentFailures": [
+    {
+      "issue": "#65899",
+      "runId": "5329d46d-d227-41cc-8f4a-9524636107e0",
+      "failedAt": "2026-04-13T19:11:00Z",
+      "reason": "Investigation incomplete - searched wrong paths (dist files, external hooks); never found TDZ root cause",
+      "retryCount": 1,
+      "status": "retrying"
+    }
+  ],
   "subagentSuccesses": [
     {
       "issue": "#65835",
@@ -15,22 +24,15 @@
       "pr": "https://github.com/openclaw/openclaw/pull/65858",
       "status": "done",
       "task": "Security fix: sourceConfig in config.get exposed API keys in plaintext"
-    },
-    {
-      "issue": "#65843",
-      "runId": "69151ae9-dd67-4d98-b7ce-af2ddab3a452",
-      "completedAt": "2026-04-13T18:27:00Z",
-      "status": "incomplete",
-      "task": "ACP pairing fix committed locally but PR not created; needs resolution"
     }
   ],
   "inProgressFixes": [
     {
       "issue": "#65899",
-      "runId": "9dbc8bbf-96aa-42f8-ab59-d83582a0f43c",
-      "dispatchedAt": "2026-04-13T19:09:00Z",
-      "task": "Hook TDZ bug: Cannot access 'group' before initialization",
-      "stage": "dispatched"
+      "runId": "f5206c05-d9f5-472b-b5b1-44eb295780cf",
+      "dispatchedAt": "2026-04-13T19:21:00Z",
+      "task": "Hook TDZ bug v2: targeted grep search + clear scope instructions",
+      "stage": "retry_dispatched"
     }
   ],
   "cronTasksReTriggered": [],
