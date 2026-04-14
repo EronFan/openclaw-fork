@@ -1,10 +1,11 @@
 {
   "updatedAt": "2026-04-14T18:01:00Z",
-  "note": "xixi 扫描正常(<6h)",
-  "lastHeartbeatAt": "2026-04-14T18:00:00Z",
+  "lastHeartbeatAt": "2026-04-14T18:01:00Z",
+  "note": "xixi scan OK (3.5h ago). 4 subagent failures detected (OpenAI Codex hit limit). #66657 respawned. #66626 fix already in code. EronFan PRs #66703/#66704 awaiting review.",
   "alertFlags": [
     "P60130(PR#66703): webchat image attachments - EronFan PR, awaiting merge review",
-    "P60131(PR#66704): plugin uninstall - EronFan PR, awaiting merge review"
+    "P60131(PR#66704): plugin uninstall - EronFan PR, awaiting merge review",
+    "Subagent failures: #66669, #66668, #66657, #66626 all failed due to OpenAI Codex usage limit (gpt-5.4 hit cap). #66657 respawned (this cycle). #66626 fix confirmed already in codebase."
   ],
   "inProgressFixes": [
     {
@@ -20,6 +21,58 @@
       "status": "pr_created",
       "assignee": "EronFan",
       "note": "awaiting maintainer review"
+    },
+    {
+      "issue": "#66657",
+      "status": "respawned",
+      "note": "Subagent failed (OpenAI Codex limit). Root cause found (card-ux-launcher.ts trim). Respawned as fix-66657-feishu-trim-error-v2"
+    }
+  ],
+  "subagentFailures": [
+    {
+      "issue": "#66669",
+      "label": "fix-66669-webchat-image-attachments",
+      "failures": 1,
+      "firstFailedAt": "2026-04-14T17:48:00Z",
+      "reason": "OpenAI Codex usage limit"
+    },
+    {
+      "issue": "#66668",
+      "label": "fix-66668-plugin-uninstall-link",
+      "failures": 1,
+      "firstFailedAt": "2026-04-14T17:44:00Z",
+      "reason": "OpenAI Codex usage limit"
+    },
+    {
+      "issue": "#66657",
+      "label": "fix-66657-feishu-trim-error",
+      "failures": 2,
+      "firstFailedAt": "2026-04-14T17:46:00Z",
+      "reason": "OpenAI Codex usage limit; respawned"
+    },
+    {
+      "issue": "#66626",
+      "label": "fix-66626-config-secret-leak",
+      "failures": 1,
+      "firstFailedAt": "2026-04-14T17:46:00Z",
+      "reason": "OpenAI Codex usage limit; fix confirmed already in codebase"
+    }
+  ],
+  "subagentSuccesses": [
+    {
+      "issue": "#66601",
+      "label": "fix-66601-lossless-claw-regression",
+      "completedAt": "2026-04-14T17:50:00Z"
+    },
+    {
+      "issue": "#66626-66657",
+      "label": "fix-66626-66657-security-feishu",
+      "completedAt": "2026-04-14T17:38:00Z"
+    },
+    {
+      "issue": "#66669-66668",
+      "label": "fix-66669-66668-ui-cli",
+      "completedAt": "2026-04-14T17:48:00Z"
     }
   ]
 }
