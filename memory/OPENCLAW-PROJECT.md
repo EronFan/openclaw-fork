@@ -6307,6 +6307,33 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P60108 | [Tencent/openclaw-weixin #65](https://github.com/Tencent/openclaw-weixin/issues/65) **S** 微信消息接收乱序，网页端收到微信收不到 | 🔍 新发现(方向2 插件 第124轮 21:50 CST) | 近24h新 issue；消息乱序且部分丢失；0评论；**建议跟进确认是否与 openclaw core message ordering 相关** |
 | P60109 | [方向4 第124轮 21:50 CST] **PR #66575 maintainer P1×2 未解决：** (1) dry-run 分支没有调用 runMessageAction，导致 result 缺少必需字段，破坏 buildMessageCliJson/formatMessageCliText 契约；(2) aborted 逻辑把所有非 end_turn/stop_sequence 的 stop reason 都标记为 aborted: true | 👀 状态变化(方向4 第124轮 21:50 CST) | maintainer 评审意见明确；PR #66575 需要修复 P1 后才能 merge；**建议 aoao 关注** |
 | P60110 | [方向4 第124轮 21:50 CST] **PR #66574 maintainer P2 反馈：** Keep media type indexes aligned after path filtering | 👀 状态变化(方向4 第124轮 21:50 CST) | MediaPaths 和 MediaTypes 独立过滤可能导致 index 不对齐；需要确认 fix 是否完整覆盖 |
+| P60111 | [#66588](https://github.com/openclaw/openclaw/issues/66588) **bug** Browser plugin fails to launch on Raspberry Pi 5 (ARM) — falls back to web_fetch despite Chromium/Playwright working | 🔥 建议跟进(方向1 GitHub 第124轮 13:50 CST) | ARM 上 Playwright 检测失败导致误 fallback；根因路径清晰；建议确认 fix 可行性 |
+| P60112 | [#66579](https://github.com/openclaw/openclaw/issues/66579) **bug** WhatsApp auto-reply ignores plugin hooks (message_sending cancel / before_dispatch handled) | 🔍 建议跟进(方向1 GitHub 第124轮 13:50 CST) | WhatsApp 渠道的 auto-reply 跳过了 plugin hooks；0评论；根因可能在 channel plugin 层面的 dispatch 逻辑 |
+| P60113 | [#66591](https://github.com/openclaw/openclaw/issues/66591) **bug regression** lossless-claw ContextEngine factory returned invalid: info.id must match registered id "lossless-claw" | 🔍 建议跟进(方向1 GitHub 第124轮 13:50 CST) | 2026.4.14 regression；info.id 与注册 ID 不匹配；可能是版本升级引入的 contract 破坏 |
+| P60114 | [#66553](https://github.com/openclaw/openclaw/issues/66553) **M** Race condition — voice message fires before STT transcription available | 🔍 先调研(方向1 GitHub 第124轮 13:50 CST) | WhatsApp voice → transcription=NULL → agent turn 触发 → agent 读到空；100% 可复现；建议先调研根因路径再派单 |
+| P60115 | [#66522](https://github.com/openclaw/openclaw/issues/66522) **M** Session index rebuilds on Gateway restart, session history completely lost | 🔍 建议跟进(方向1 GitHub 第124轮 13:50 CST) | sessions.json 重建但 session 文件存在；sessions_list 只返回 ended=false；无 warning；影响长期使用用户 |
+| P60116 | [#66535](https://github.com/openclaw/openclaw/issues/66535) **S** /compact command cannot be canceled while in progress | 🔥 **已派出修复**(方向1 GitHub 第124轮 14:32 CST) | /compact 执行中无法取消；已派出 aoao 修复（runId a3e18107） |
+| P60117 | [#66558](https://github.com/openclaw/openclaw/issues/66558) **S** sessions_spawn/sessions_send not available in main agent despite tools.profile: coding | 🔥 **已派出修复**(方向1 GitHub 第124轮 14:32 CST) | group:sessions 工具不可用，coding profile 未含该 group；日志警告 tools.allow unknown entries；已派出 aoao 修复（runId c415139e） |
+| P60118 | [方向4 第124轮 13:50 CST] **PR #66610/#66599/#66596 被 P1 block 关闭：** #66610 catch 吞所有错误；#66599 AbortError 短路 timeout 检测；#66596 状态待查 | ⚠️ P1阻塞(方向4 第124轮 13:50 CST) | 三个 PR 均被 Greptile reviewer 标记 P1；需修复后重新提 PR；**建议修复 #66573 P1 后立即重提** |
+
+### 2026-04-14 14:30（第124轮扫描完成）
+- **xixi 扫描状态**：✅ 完成（13:50 CST 扫描，14:29 回传）
+- **inProgressFixes**：
+  - #66558 @ 14:32 — sessions_spawn/sessions_send 工具在 main agent 不可用，coding profile 未含 group:sessions（已派出 aoao）
+  - #66535 @ 14:32 — /compact 命令无法取消（已派出 aoao）
+- **最新扫描摘要**（13:50 CST）：
+  - **#66573** 🔥 S PR #66610 创建 → CLOSED（P1：catch 吞所有错误不只 limit-exceeded）
+  - **#66561** 🔥 S PR #66599 创建 → CLOSED（P1：AbortError 短路 failover timeout 检测）
+  - **#66564** S PR #66596 创建 → CLOSED（状态待查）
+  - **#66558** S sessions_spawn 在 main agent 不可用 → 已派出修复
+  - **#66535** S /compact 无法取消 → 已派出修复
+  - **#66588** bug ARM RPi5 browser plugin 失败 fallback 到 web_fetch
+  - **#66579** bug WhatsApp auto-reply 忽略 plugin hooks
+  - **#66591** regression lossless-claw context engine factory id 不匹配
+  - **#66553** M voice 消息 race condition（STT 未完成就触发 agent turn）
+- **建议**：优先确认 #66558/#66535 修复结果；#66610/#66599 P1 问题需要修复后重新提 PR
+
+---
 
 ### 2026-04-14 12:00（心跳恢复 — 8天空白期后重启）
 - **xixi 扫描状态**：✅ 正常，最新报告 11:21 CST（issue #66283/#66284/#66227）

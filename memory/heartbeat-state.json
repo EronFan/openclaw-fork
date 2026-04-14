@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-14T14:29:00Z",
+  "updatedAt": "2026-04-14T14:32:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": null,
-  "note": "第124轮扫描完成。方向1新发现14个候选，建议接单5个(#66573/#66564/#66561/#66558/#66535)。方向2新发现1个(#66565微信乱序)。方向4收到PR #66575/#66574 maintainer反馈(P1×2未解决)。inProgress维持高水位(#65584/#66135/#66393/#66391/#66421/#66443/#66436/#66433/#66424/#66423)。",
+  "note": "第124轮扫描完成。3个PR创建后被P1 block关闭(#66610/#66599/#66596)。已派出#66558(Sessions工具可用性) 和#66535(/compact取消)修复任务。",
   "subagentFailures": [],
   "subagentSuccesses": [
     {
@@ -13,27 +13,42 @@
       "runId": "792910f4",
       "dispatchedAt": "2026-04-14T14:19:00Z",
       "completedAt": "2026-04-14T14:29:00Z",
-      "stage": "PR CREATED #66610",
-      "note": "sessions_history limit retry — 收到INVALID_REQUEST后用服务器上限重试"
+      "stage": "PR #66610 CREATED → CLOSED (P1: catch swallows all errors)",
+      "note": "sessions_history limit retry — P1: catch block catches all errors, not just limit-exceeded"
     },
     {
       "issue": "#66561",
       "runId": "fb87df63",
       "dispatchedAt": "2026-04-14T14:14:00Z",
       "completedAt": "2026-04-14T14:20:00Z",
-      "stage": "PR CREATED #66599",
-      "note": "hasTimeoutHint AbortError guard"
+      "stage": "PR #66599 CREATED → CLOSED (P1: AbortError bypasses timeout detection)",
+      "note": "hasTimeoutHint AbortError guard — P1: early return bypasses failover-matches timeout detection"
     },
     {
       "issue": "#66564",
       "runId": "cron-2026-04-14-1356",
       "dispatchedAt": "2026-04-14T14:03:00Z",
       "completedAt": "2026-04-14T14:14:00Z",
-      "stage": "PR CREATED #66596",
+      "stage": "PR #66596 CREATED → CLOSED (status unclear)",
       "note": "Control UI polling间隔调优"
     }
   ],
-  "inProgressFixes": [],
+  "inProgressFixes": [
+    {
+      "issue": "#66558",
+      "runId": "c415139e-6cf1-4934-a33e-ad6be70e3116",
+      "dispatchedAt": "2026-04-14T14:32:00Z",
+      "stage": "fixing",
+      "note": "Sessions tools not in coding profile — tools.allow unknown entries"
+    },
+    {
+      "issue": "#66535",
+      "runId": "a3e18107-929c-42c5-bd45-2522c2b25de0",
+      "dispatchedAt": "2026-04-14T14:32:00Z",
+      "stage": "fixing",
+      "note": "/compact command cannot be canceled"
+    }
+  ],
   "cronTasksReTriggered": [],
   "xixiLastScanAt": "2026-04-14T13:50:00Z",
   "lastPrCreatedAt": "2026-04-14T14:29:00Z"
