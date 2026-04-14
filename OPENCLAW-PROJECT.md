@@ -411,6 +411,9 @@
 | P342 | #66469 **P1** restoreMemoryPluginState clears capability when shouldActivate=false | 🔥 修复中 | bug：memory loader 缺少 `previousMemoryCapability` 保存/恢复；每次 shouldActivate=false 都清除 capability；根因已精确到文件+行号；**fix subagent 正在运行** |
 | P343 | #66460 **P1** Cron-owned exec completion events incorrectly relayed to user by heartbeat | 🔥 修复中 | bug：cron 任务完成的 exec completion 事件被 heartbeat handler 重复发给用户；**fix subagent 正在运行** |
 | P344 | #66470 **S** TUI/webchat stays in pondering 39s after gpt-5.4/codex finished | 🔍 新发现 | regression：streaming 已完成但 UI 持续显示 pondering 约 39 秒；streaming 状态与 UI 渲染不同步 |
+| P345 | [#66564](https://github.com/openclaw/openclaw/issues/66564) **P1** Control UI feels significantly laggier in 2026.4.12 during normal chat use | ✅ PR #66596 | fix:app-polling.ts — node.list 5s→30s, logs 2s→15s, debug 3s→15s；根因：gateway RPC 300-800ms 堆积与聊天渲染竞争；[PR #66596](https://github.com/openclaw/openclaw/pull/66596) |
+| P346 | [#66561](https://github.com/openclaw/openclaw/issues/66561) **S** openai-codex SSE stream begins, but embedded run aborts locally and is surfaced as timeout (408) | ✅ PR #66599 | fix:hasTimeoutHint() adds AbortError guard — 防止 SSE stream abort 被误分类为 408 timeout从而误触发 failover；[PR #66599](https://github.com/openclaw/openclaw/pull/66599) |
+| P347 | [#66573](https://github.com/openclaw/openclaw/issues/66573) **S** chat.history limit=2000 exceeds server maximum of 1000, no retry | ✅ PR #66610 | fix:sessions-history-tool.ts — 收到 INVALID_REQUEST 后解析服务器上限并用合规 limit 重试；[PR #66610](https://github.com/openclaw/openclaw/pull/66610) |
 
 ---
 
@@ -467,6 +470,25 @@
 ---
 
 ## 每日进度日志
+### 2026-04-14 22:14(cron 第124轮 - aoao 修复 #66564 完成)
+- **aoao fix 完成**:PR #66596 已开
+- **修复内容**:
+  - 文件:`ui/src/ui/app-polling.ts`
+  - `node.list` 轮询:5s → 30s
+  - `logs` 轮询:2s → 15s
+  - `debug` 轮询:3s → 15s
+- **根因**:Control UI 轮询间隔过于激进,gateway RPC 耗时 300-800ms,与聊天消息渲染竞争资源,导致发送消息后 UI 延迟几秒才更新
+- **状态**:PR 已创建,等 maintainer review
+
+### 2026-04-14 22:20(aoao 修复 #66561 完成)
+- **aoao fix 完成**:PR #66599 已开
+- **修复内容**:
+  - 文件:`src/agents/failover-error.ts`
+  - `hasTimeoutHint()` 添加 `AbortError` 检查,返回 `false` 防止误分类
+- **根因**:SSE stream 已经开始(首字节 12:03:01.557),但 embedded run 本地 abort,`hasTimeoutHint()` 误将 "stream aborted" 消息匹配超时模式,错误归类为 408 timeout 并触发 failover
+- **测试**:failover-error.test.ts 51 tests pass ✓
+- **状态**:PR 已创建,等 maintainer review
+
 ### 2026-03-31 18:14(sessions_send 发送失败)
 - **问题**:main 会话的 Feishu 群聊会话已结束(status: done)
 - **会话 key**:agent:main:feishu:default:direct:ou_5abeeb52afc248214694d8d79ab20df8
