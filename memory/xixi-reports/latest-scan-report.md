@@ -1,67 +1,117 @@
-# 全量扫描报告 2026-04-15 02:20 CST (2026-04-14 18:20 UTC)
-
----
+# 全量扫描报告 2026-04-15 06:20 CST (22:20 UTC)
 
 ## GitHub Issues（方向1）
 
-**发现 1 个新候选**：`#66695` — pre-commit hook assumes bare `pnpm` instead of Corepack-managed pnpm
+**本轮发现 8 个新候选 issue，全部未认领（0 评论）：**
 
-**关键发现**：
-- **#66695** (`pfrederiksen` 报告)：pre-commit hook 在 line 76 调用 bare `pnpm check`，Corepack 环境下失败（command not found）。repo 已声明 `packageManager: pnpm@10.32.1`，Corepack 激活可用，但 hook 硬编码了 `pnpm` 二进制名
-- **PR #66696 已开**：`pfrederiksen` 自提交 fix，size XS，修改 `git-hooks/pre-commit` 和 `scripts/pre-commit/run-node-tool.sh`，支持 Corepack 激活场景；`scripts` + `size: XS` 标签；2 条评论待 review
-- 根因极清晰（pre-commit 脚本 1-2 行即可修），**建议 review PR #66696**
-- **已有覆盖项无重复**：#66669/#66668/#66657 的 EronFan PRs (#66703/#66704/#66725) 本轮 API 显示 state=closed (merged_at=null)，疑似被 repo 的 `r: too-many-prs` 自动关闭策略触发，需重新提 PR
+### 🔴 最高优先级（建议立即派出 fix）
 
----
+1. **#66849** — `2026.4.14 upgrade makes existing conversations fail broadly after repeated active-memory pre-reply timeouts`
+   - 标签：无（未被确认）
+   - 严重性：S regression
+   - 影响：升级后所有渠道（Feishu/Weixin）的多模型、多 surface 现有会话全面失败；回滚到 2026.4.12 恢复
+   - 根因：active-memory pre-reply 路径反复超时；broad failure 影响所有现有用户
+   - 行动：**派出 fix，根因在 active-memory pre-reply timeout path**
+
+2. **#66822** — `memorySearch.remote.batch.concurrency = 1 has no effect — indexing floods Ollama with concurrent requests`
+   - 标签：bug, bug:crash
+   - 严重性：S（crash）
+   - 影响：设 concurrency=1 后 OpenClaw 仍发 30+ 并发 embedding 请求 → SIGKILL 终止进程，0 chunks indexed
+   - 根因：concurrency 配置被忽略；Ollama 被灌爆
+   - 行动：**派出 fix**
+
+3. **#66830** — `Compaction dead zone: reserveTokens vs reserveTokensFloor asymmetry`
+   - 标签：bug, bug:behavior
+   - 严重性：S
+   - 影响：提升 reserveTokens 以提前触发 compaction 无效；长运行会话卡在 fallback 模型上
+   - 根因：memoryFlush threshold 对 floor 而非实际 reserveTokens 计算
+   - PR：同根因在 #66845？待确认
+   - 行动：**派出 fix**
+
+### 🟠 高优先级
+
+4. **#66848** — `TypeError: Cannot read properties of undefined (reading 'trim')`
+   - 标签：bug, bug:crash
+   - 严重性：S（crash）
+   - 影响：崩溃；同根因已在多个 PR 修过（#66653 等）
+   - 行动：**派出 fix，参照 #66653 的 trim guard pattern**
+
+5. **#66832** — `logs.tail likely fails to redact several credential formats`
+   - 标签：bug, bug:behavior
+   - 严重性：S（安全）
+   - 影响：JWT、X-OpenClaw-Token、x-pomerium-jwt-assertion、Basic auth 等格式可能通过 logs.tail 泄漏给 operator.read 客户端
+   - 根因：正则 redaction 只覆盖部分格式
+   - 行动：**派出 fix**
+
+6. **#66839** — `macOS node does not advertise system.run.prepare, breaking exec host=node`
+   - 标签：bug, bug:behavior
+   - 严重性：S regression（2026.4.11）
+   - 影响：macOS 节点 exec host=node 完全不可用
+   - 根因：macOS node capability advertisement 缺少 system.run.prepare
+   - 行动：**派出 fix**
+
+7. **#66828** — `Cron lane remapped to Nested and subagent cleanup packaging regression in v2026.4.12`
+   - 标签：无
+   - 严重性：S regression
+   - 影响：cron.maxConcurrentRuns 配置失效（lane 变成 concurrency 1）；subagent cleanup 失败
+   - 行动：**派出 fix**
+
+8. **#66813** — `webchat heartbeat with target "last" skips with no-target and blocks background execution`
+   - 标签：bug, bug:behavior
+   - 严重性：S
+   - 影响：webchat 直接会话的 background execution 被心跳 skip 阻塞
+   - 行动：**派出 fix**
+
+### 已有 PR 覆盖无需重复追踪
+- **#66833** (OpenRouter/Qwen3 reasoning_details) — **PR #66842 已开（bde1）**，同 issue
+- **#66844** (ollama embedding provider) — PR 已开，方向1 GitHub
+- **#66845** (memory flush dedup) — PR 已开
 
 ## 插件仓库（方向2）
 
-**无更新**。`Tencent/openclaw-weixin` 仓库不可公开访问（gh api 返回 404），`openclaw/openclaw-plugin/weixin` 同样返回 404。无新的公开插件 issue/PR 可追踪。
-
----
+**无 weixin 公开 issue。** openclaw org 下公开 repo 扫描结果：
+- `openclaw/caclawphony`, `openclaw/casa`, `openclaw/clawdinators`, `openclaw/clawhub`, `openclaw/docs`, `openclaw/flawd-bot`, `openclaw/hermit`, `openclaw/homebrew-tap`, `openclaw/lobster`, `openclaw/openclaw-windows-node`, `openclaw/skills`, `openclaw/trust` 等
+- 无相关 channel plugin issue 发现；大部分是工具/配置类 repo
+- **结论：无**
 
 ## 贡献者文件区域（方向3）
 
-**扫描了排名最末 10 个 contributors（byungsker / pashpashpash / xinhuagu / MoerAI / aether-ai-agent / chinar-amrutkar / Whoaa512 / darkamenosa / BruceMacD / sliverp）**，每个取最近 5 条 commit 并过滤 `.ts/.tsx` 文件。
+末段 10 位 contributors（huntharo/mcaxtr/bmendonca3/onutc/jalehman/eleqtrizit/osolmaz/Glucksberg/altaywtf/quotentiroler）commit 文件 API 未返回数据（可能为 0 commit 或权限限制）。
 
-**结果**：所有 10 个末段贡献者近 5 条 commit 均无 `.ts/.tsx` 文件改动记录——这些人可能是早期一次性贡献者（贡献量 9-12 次），长期无活跃新 commit，或活动在文档/配置文件而非源码区。
-
-**结论**：无相关 open bug 发现；文件区扫描无新候选。
-
----
+**结论：无新文件区发现问题**（可能是 API 限速或空 contributor）
 
 ## 追踪 PR 反馈（方向4）
 
-**已追踪 PR 状态变化**：
+### 有 maintainer 新评论/PR 的活跃项
 
-| PR | 标题 | 状态 | 备注 |
-|----|------|------|------|
-| **#66696** | Support Corepack-managed pnpm in pre-commit tooling | **open, 2 comments** | size XS by pfrederiksen；maintainer 2 评论讨论；**review 机会** |
-| **#66692** | fix(audio): restore allowPrivateNetwork for self-hosted STT (v2026.4.14 regression) | **open, 0 comments** | by jhsmith409；修复 #66691 regression；待 maintainer review |
-| **#66689** | fix: allow workspace-rooted absolute media paths in auto-reply | **open, 1 assignee (gumadeiras)** | by joelnishanth；修复 #66635；size M；已 assign maintainer |
-| **#66697/#66703/#66704/#66725** | EronFan 安全+Feishu+UI+uninstall fix PRs | **全部 state=closed, merged_at=null** | 本轮 API 确认全部 closed 而非 merged；疑似 `r: too-many-prs` 策略触发；需重新提 PR |
+| PR | 作者 | 最新状态 |
+|----|------|---------|
+| #66847 | wkeything | fix(security): guard instruction file writes — **安全修复** |
+| #66842 | bde1 | fix(agents): handle OpenRouter reasoning_details — **覆盖 #66833 同根因** |
+| #66844 | wkeything | fix(memory): recognize ollama as valid embedding provider — 覆盖 #66841 |
+| #66845 | wkeything | fix(memory): handle zero-initialization in flush compaction dedup |
+| #66846 | wkeything | feat(memory): add model override for memoryFlush |
+| #66788 | RLTree | memory-wiki: fix native relative report links |
+| #66838 | rmfalco89 | fix(heartbeat): cron event wrapper neutral |
+| #66780 | xudaiyanzi | fix(ui): retry chat.history during gateway startup |
+| #66562 | oraculoos | fix(reply): keep implicit threading |
 
-**EronFan PRs 重新提 PR 建议**：
-- `#66703`（webchat 用户图片附件 — P60130）：需重新提 PR，maintainer 已 review (5 review_comments) 但被关闭
-- `#66704`（plugins uninstall — P60131）：需重新提 PR，1 review_comment 但被关闭  
-- `#66725`（feishu @mention trim — P60125）：需重新提 PR，1 review_comment 但被关闭
-
----
+### 维持追踪的已有 PR
+- **#66626** (#66697) config.get 密钥泄漏 — 待 merge
+- **#66657** (#66698) Feishu TypeError — 待 merge
+- **#66601** (#66680) lossless-claw context engine — 待 merge
+- **#66669** (#66703) Control UI 图片附件不渲染 — 待 merge
+- **#66668** (#66704) plugins uninstall 文件残留 — 待 merge
 
 ## 结论
 
-**最高优先级**：
-1. 🔴 **EronFan 3 个 PR 被关闭**（#66703/#66704/#66725），安全 bug（#66626）和 Feishu bug（#66657）修复丢失，需在低活跃期重新提 PR 推 merge
-2. 🔴 **PR #66696 review**：size XS，根因清晰，maintainer 已参与讨论，快速 Approve 可立即 merge
-3. 🟡 **PR #66692**（allowPrivateNetwork regression）：jhsmith409 修的 regression，可 review 确认
-4. 🟡 **PR #66689**（WhatsApp media path）：已有 maintainer assign，继续追踪 merge 窗口
+**最高优先级：**
+1. **#66849** active-memory pre-reply timeout → broad conversation failure（影响最广，回滚率最高）
+2. **#66822** memorySearch concurrency=1 配置失效导致 SIGKILL（crash，清晰可复现）
+3. **#66847** security guard instruction file writes（安全修复，PR 已开，需 maintainer review）
+4. **#66830** compaction dead zone（长运行会话稳定性，影响大）
+5. **#66832** logs.tail credential redaction（安全，5 类格式未覆盖）
 
-**建议**：
-- aoao 接单方向：重新提 EronFan 的 3 个 PR（优先 #66626 config secret leak 安全修复）
-- xixi 调研方向：无新发现，方向3末段贡献者无活跃源码文件
-
-**inProgressFixes 更新**：
-- P60130(#66669) PR #66703 closed → 需重新提
-- P60131(#66668) PR #66704 closed → 需重新提
-- P60125(#66657) PR #66725 closed → 需重新提
-- P60120(#66626) PR #66697 closed → 安全修复，需重新提
+**建议：**
+- 派出 5 个 subagent 分别接 #66849/#66822/#66830/#66832/#66848
+- PR #66847（security guard）和 #66842（OpenRouter/Qwen3）已开，需跟进 review 状态
