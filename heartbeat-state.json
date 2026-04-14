@@ -1,9 +1,9 @@
 {
-  "lastHeartbeat": "2026-04-13T10:30:00Z",
-  "lastXixiScan": "2026-04-13T09:53:00Z",
+  "lastHeartbeat": "2026-04-14T07:30:00Z",
+  "lastXixiScan": "2026-04-14T07:22:00Z",
   "lastPrCreatedAt": null,
   "inProgressFixes": [],
   "staleDays": 0,
-  "alert": null,
-  "notes": "xixi扫描正常运行（2026-04-13T09:53Z），发现8个新候选；cron误报error但scan实际成功"
+  "alert": "CRON健康严重退化：心跳/xixi/反馈cron全部超时失败；xixi扫描已手动触发；lastPrCreatedAt=null核心问题待解决",
+  "notes": "手动触发xixi扫描（cron连续47次失败）；心跳cron连续12次timeout；多个cron任务积压timeout需优化timeoutSeconds"
 }
