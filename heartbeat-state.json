@@ -1,11 +1,14 @@
 {
-  "lastHeartbeat": "2026-04-14T07:30:00Z",
-  "lastXixiScan": "2026-04-14T07:22:00Z",
-  "lastPrCreatedAt": "2026-04-14T08:10:00Z",
-  "inProgressFixes": [],
+  "lastHeartbeat": "2026-04-14T13:59:00Z",
+  "lastXixiScan": null,
+  "lastPrCreatedAt": null,
+  "inProgressFixes": [
+    "fix-66460 @ 2026-04-14T12:30 — cron exec completion 双重投递 — FAILED (silent, no output after 78min run)",
+    "fix-66469 @ 2026-04-14T12:30 — restoreMemoryPluginState 缺少 capability 保存/恢复 — FAILED (silent, no output after 78min run)"
+  ],
   "staleDays": 0,
-  "alert": "CRON\u5065\u5eb7\u4e25\u91cd\u9000\u5316\uff1a\u5fc3\u8df3/xixi/\u53cd\u9988cron\u5168\u90e8\u8d85\u65f6\u5931\u8d25\uff1bxixi\u626b\u63cf\u5df2\u624b\u52a8\u89e6\u53d1\uff1blastPrCreatedAt=null\u6838\u5fc3\u95ee\u9898\u5f85\u89e3\u51b3",
-  "notes": "\u624b\u52a8\u89e6\u53d1xixi\u626b\u63cf\uff08cron\u8fde\u7eed47\u6b21\u5931\u8d25\uff09\uff1b\u5fc3\u8df3cron\u8fde\u7eed12\u6b21timeout\uff1b\u591a\u4e2acron\u4efb\u52a1\u79ef\u538btimeout\u9700\u4f18\u5316timeoutSeconds",
-  "updatedAt": "2026-04-14T08:10:00Z",
-  "note": "PR #66417 - #66382 heartbeat exec-event relay fix. PR #66411 - #66283 cron agentTurn crash."
+  "alert": "⚠️ fix-66460 和 fix-66469 均失败(静默,无输出,运行约78分钟后结束); xixi-125 subagent 卡在 MiniMax-M2.5; 正在启动新 xixi 扫描",
+  "notes": "fix-66460/66469 静默失败,需要人工介入; aoao 任务被 gpt-5.4 usage limit 阻塞; 需要重启 xixi 扫描",
+  "updatedAt": "2026-04-14T13:59:00Z",
+  "note": "两个 fix 均静默失败,无输出; xixi 扫描已超时约 4 小时"
 }

@@ -1,38 +1,86 @@
 {
-  "updatedAt": "2026-04-13T19:35:00Z",
+  "updatedAt": "2026-04-14T13:50:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
-  "lastProactiveReachoutAt": "2026-04-13T07:40:00Z",
-  "note": "#65899 external (clawhub hook). #65902 dispatched to aoao. P60073 updated. P60074-77 pending.",
+  "lastProactiveReachoutAt": null,
+  "note": "第124轮扫描完成。方向1新发现14个候选，建议接单5个(#66573/#66564/#66561/#66558/#66535)。方向2新发现1个(#66565微信乱序)。方向4收到PR #66575/#66574 maintainer反馈(P1×2未解决)。inProgress维持高水位(#65584/#66135/#66393/#66391/#66421/#66443/#66436/#66433/#66424/#66423)。",
   "subagentFailures": [],
-  "subagentSuccesses": [
-    {
-      "issue": "#65835",
-      "runId": "0f309256-c9f2-434f-a302-8c82f3a452ad",
-      "completedAt": "2026-04-13T18:11:00Z",
-      "pr": "https://github.com/openclaw/openclaw/pull/65858",
-      "status": "done"
-    },
-    {
-      "issue": "#65899",
-      "runId": "76f6efc6-9eaa-4a72-9882-328de5afffa2",
-      "completedAt": "2026-04-13T19:21:00Z",
-      "status": "done_non_actionable",
-      "task": "Third-party clawhub hooks (clawvault/telegram-stickers) - NOT in openclaw/openclaw repo"
-    }
-  ],
+  "subagentSuccesses": [],
   "inProgressFixes": [
     {
-      "issue": "#65902",
-      "runId": "f55e05de-1125-4603-93c5-6c62d03a752e",
-      "dispatchedAt": "2026-04-13T19:35:00Z",
-      "task": "WhatsApp session discovery inconsistent with runtime status",
+      "issue": "#65584",
+      "runId": "af2e0e6e",
+      "dispatchedAt": "2026-04-14T07:39:00Z",
+      "task": "cron CLI commands succeed but hang instead of exiting cleanly",
+      "stage": "dispatched"
+    },
+    {
+      "issue": "#66135",
+      "runId": "96163316",
+      "dispatchedAt": "2026-04-14T15:19:00Z",
+      "task": "Background exec exit / cron --at / Claude CLI regression (2026.4.10)",
+      "stage": "dispatched"
+    },
+    {
+      "issue": "#66393",
+      "runId": "1cded531",
+      "dispatchedAt": "2026-04-14T15:19:00Z",
+      "task": "Image viewing not working in webchat",
+      "stage": "dispatched"
+    },
+    {
+      "issue": "#66391",
+      "runId": "fa5a5f46",
+      "dispatchedAt": "2026-04-14T15:19:00Z",
+      "task": "TUI tool calls fail on local Ollama",
+      "stage": "dispatched"
+    },
+    {
+      "issue": "#66421",
+      "runId": "22eba75e",
+      "dispatchedAt": "2026-04-14T17:27:00Z",
+      "task": "AutoClaw update overwrites/loses SOUL/MEMORY/IDENTITY",
+      "stage": "dispatched"
+    },
+    {
+      "issue": "#66443",
+      "runId": "f98b2500",
+      "dispatchedAt": "2026-04-14T17:27:00Z",
+      "task": "Overflow recovery duplicates role=user messages in session JSONL",
+      "stage": "dispatched"
+    },
+    {
+      "issue": "#66436",
+      "runId": "25831b4c",
+      "dispatchedAt": "2026-04-14T17:27:00Z",
+      "task": "ThrottleInterval 1s causes 37 MB error logs",
+      "stage": "dispatched"
+    },
+    {
+      "issue": "#66433",
+      "runId": "89cd476d",
+      "dispatchedAt": "2026-04-14T17:27:00Z",
+      "task": "Upgrading openclaw removes node-llama-cpp",
+      "stage": "dispatched"
+    },
+    {
+      "issue": "#66424",
+      "runId": "1a922637",
+      "dispatchedAt": "2026-04-14T17:27:00Z",
+      "task": "github-copilot/gpt-5.4 intermittently fails with 401",
+      "stage": "dispatched"
+    },
+    {
+      "issue": "#66423",
+      "runId": "58667cef",
+      "dispatchedAt": "2026-04-14T17:27:00Z",
+      "task": "only <tool_call> tags replied as text without tool call action",
       "stage": "dispatched"
     }
   ],
   "cronTasksReTriggered": [],
-  "xixiLastScanAt": "2026-04-13T11:09:00Z",
+  "xixiLastScanAt": "2026-04-14T13:50:00Z",
   "lastPrCreatedAt": "2026-04-13T18:11:00Z"
 }
