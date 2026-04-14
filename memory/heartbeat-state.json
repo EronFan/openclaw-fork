@@ -1,4 +1,19 @@
 {
-  "updatedAt": "2026-04-14T18:36:00Z",
-  "note": "xixi 扫描正常(<6h)"
+  "updatedAt": "2026-04-14T18:37:00Z",
+  "note": "xixi 扫描正常(<6h)",
+  "subagentSuccesses": [
+    {
+      "label": "fix-66668-plugin-uninstall-v2",
+      "pr": "https://github.com/openclaw/openclaw/pull/66737",
+      "completedAt": "2026-04-14T18:35:00Z"
+    },
+    {
+      "label": "fix-66626-config-secret-leak-v2",
+      "pr": "https://github.com/openclaw/openclaw/pull/66739",
+      "status": "auto-closed-by-r:too-many-prs",
+      "commit": "453950b301 on fix/config-source-config-leak-v2",
+      "note": "安全修复被 r:too-many-prs 策略阻断，需 maintainer 介入",
+      "completedAt": "2026-04-14T18:37:00Z"
+    }
+  ]
 }
