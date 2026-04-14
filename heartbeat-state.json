@@ -1,0 +1,9 @@
+{
+  "lastHeartbeat": "2026-04-13T10:30:00Z",
+  "lastXixiScan": "2026-04-13T09:53:00Z",
+  "lastPrCreatedAt": null,
+  "inProgressFixes": [],
+  "staleDays": 0,
+  "alert": null,
+  "notes": "xixi扫描正常运行（2026-04-13T09:53Z），发现8个新候选；cron误报error但scan实际成功"
+}
