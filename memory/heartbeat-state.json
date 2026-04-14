@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-14T18:01:00Z",
-  "lastHeartbeatAt": "2026-04-14T18:01:00Z",
-  "note": "xixi scan OK (3.5h ago). 4 subagent failures detected (OpenAI Codex hit limit). #66657 respawned. #66626 fix already in code. EronFan PRs #66703/#66704 awaiting review.",
+  "updatedAt": "2026-04-14T18:06:00Z",
+  "lastHeartbeatAt": "2026-04-14T18:06:00Z",
+  "note": "xixi scan OK (3.5h ago). #66657 PR#66725 created. EronFan PRs #66703/#66704 awaiting review. #66626 fix already in codebase.",
   "alertFlags": [
     "P60130(PR#66703): webchat image attachments - EronFan PR, awaiting merge review",
     "P60131(PR#66704): plugin uninstall - EronFan PR, awaiting merge review",
-    "Subagent failures: #66669, #66668, #66657, #66626 all failed due to OpenAI Codex usage limit (gpt-5.4 hit cap). #66657 respawned (this cycle). #66626 fix confirmed already in codebase."
+    "P60132(PR#66725): feishu @mention trim error - PR created, awaiting merge review"
   ],
   "inProgressFixes": [
     {
@@ -24,8 +24,9 @@
     },
     {
       "issue": "#66657",
-      "status": "respawned",
-      "note": "Subagent failed (OpenAI Codex limit). Root cause found (card-ux-launcher.ts trim). Respawned as fix-66657-feishu-trim-error-v2"
+      "pr": "#66725",
+      "status": "pr_created",
+      "note": "fix: .content?.trim() ?? \"\" at sequential-key.ts:15 and monitor.account.ts:459"
     }
   ],
   "subagentFailures": [
@@ -44,13 +45,6 @@
       "reason": "OpenAI Codex usage limit"
     },
     {
-      "issue": "#66657",
-      "label": "fix-66657-feishu-trim-error",
-      "failures": 2,
-      "firstFailedAt": "2026-04-14T17:46:00Z",
-      "reason": "OpenAI Codex usage limit; respawned"
-    },
-    {
       "issue": "#66626",
       "label": "fix-66626-config-secret-leak",
       "failures": 1,
@@ -59,6 +53,12 @@
     }
   ],
   "subagentSuccesses": [
+    {
+      "issue": "#66657",
+      "label": "fix-66657-feishu-trim-error-v2",
+      "completedAt": "2026-04-14T18:06:00Z",
+      "pr": "#66725"
+    },
     {
       "issue": "#66601",
       "label": "fix-66601-lossless-claw-regression",
