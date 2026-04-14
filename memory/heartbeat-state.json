@@ -1,4 +1,13 @@
 {
-  "updatedAt": "2026-04-14T19:39:00Z",
-  "note": "xixi 扫描正常(<6h)"
+  "updatedAt": "2026-04-14T21:06:00Z",
+  "note": "xixi 第125轮扫描完成 (04-15 05:06 CST)；已派出4个 fix subagent：#66797(group消息)、#66768(OpenRouter空内容)、#66752(ARM64)、##66681(health-monitor)；#66799 SECURITY 已标记待处理",
+  "inProgressFixes": [
+    {"runId": "57462ad4", "issue": 66797, "desc": "group消息静默丢弃 regression"},
+    {"runId": "bae3a5b7", "issue": 66768, "desc": "OpenRouter空内容 regression"},
+    {"runId": "6b644394", "issue": 66752, "desc": "ARM64 ERR_MODULE_NOT_FOUND"},
+    {"runId": "0a5f8ddb", "issue": 66681, "desc": "health-monitor崩溃 1行fix"}
+  ],
+  "subagentFailures": [],
+  "subagentSuccesses": [],
+  "pendingSecurity": {"issue": 66799, "desc": "agents.files.get operator.read 读取任意文件"}
 }

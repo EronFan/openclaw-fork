@@ -6443,3 +6443,31 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P60148 | [#66695](https://github.com/openclaw/openclaw/issues/66695) **XS** pre-commit hook assumes bare `pnpm` instead of Corepack-managed | 🔍 **PR #66696 review 机会**（方向1 第128轮 02:20 CST） | 作者 pfrederiksen 自提交 fix；size XS；根因：pre-commit 脚本硬编码 `pnpm` 二进制名，Corepack 环境下失败；maintainer 2 条评论讨论中；**快速 review 可立即 merge** |
 | P60149 | [#66696](https://github.com/openclaw/openclaw/pull/66696) **XS** Support Corepack-managed pnpm in pre-commit tooling | 🔍 **Review 机会**（方向4 第128轮 02:20 CST） | size XS by pfrederiksen；修复 pre-commit hook Corepack 兼容性问题；maintainer 已有 2 条讨论评论；**建议 Approve 推 merge** |
 | P60148 | 方向3末段贡献者文件区扫描无新候选 | ✅ 无（方向3 第128轮 02:20 CST） | byungsker/pashpashpash/xinhuagu/MoerAI/aether-ai-agent/chinar-amrutkar/Whoaa512/darkamenosa/BruceMacD/sliverp 末 10 人近 5 条 commit 无 .ts/.tsx 源码文件记录；无相关 open bug 发现 |
+
+---
+
+## 2026-04-15 xixi Scan (issues #66700-#66800)
+
+### ✅ 已覆盖 by Open PRs
+- **#66773** device.token.rotate 明文泄漏 → PR #66794 ✅
+- **#66769** skills.update 回显 apiKey/env → PR #66793 ✅
+- **#66766** Opus/Sonnet 4 显示 200k → PR #66790 ✅
+- **#66691** allowPrivateNetwork audio transcription → PR #66777 ✅
+- **#66695** pre-commit bare pnpm → PR #66776 ✅
+- **#66744** provider.models?.some is not a function → PR #66761 ✅
+
+### 🔴 Top Candidates — 立即派出 fix
+
+| 优先级 | Issue | 标题 | 原因 |
+|--------|-------|------|------|
+| P60150 | [#66799](https://github.com/openclaw/openclaw/issues/66799) | 🔒 **S SECURITY**: agents.files.get 允许 operator.read 读取任意 workspace 文件 | 关键安全漏洞；scope 检查缺失；fix 简单 |
+| P60151 | [#66797](https://github.com/openclaw/openclaw/issues/66797) | 🔥 **P1 regression**: 群组自然语言消息静默丢弃 (2026.4.11) | 长期 regression 链再发；session 注册成功但 agent 不触发；根因已缩窄 |
+| P60152 | [#66768](https://github.com/openclaw/openclaw/issues/66768) | 🔥 **P1 regression**: OpenRouter 返回空 content (2026.4.14) | 2026.4.12 正常；probe 报告 ok 但 chat 返回空；明确复现步骤 |
+| P60153 | [#66752](https://github.com/openclaw/openclaw/issues/66752) | 🔥 **P1 regression**: ARM64 npm 全局安装 ERR_MODULE_NOT_FOUND | build artifact hash 不匹配；影响所有树莓派用户；类似 #65471 |
+| P60154 | [#66756](https://github.com/openclaw/openclaw/issues/66756) | 🟠 **P2 regression**: Telegram 群组 slash 命令 2026.4.14 失效 | 2026.4.12 正常；rollback 恢复；多人确认 |
+| P60155 | [#66714](https://github.com/openclaw/openclaw/issues/66714) | 🟠 **P2 regression**: gateway 重启后 Telegram setMyCommands 未调用 | 重启后命令菜单空白；早期同 session 重启正常；时序/初始化问题 |
+| P60156 | [#66800](https://github.com/openclaw/openclaw/issues/66800) | 🟠 **P2**: gateway 重启后 Control UI WebSocket token_mismatch 导致 rate_limit 锁死 | dashboard 完全不可用；token 刷新机制断裂 |
+| P60157 | [#66786](https://github.com/openclaw/openclaw/issues/66786) | 🟠 **P2 regression**: 系统提示词不尊重 OPENCLAW_WORKSPACE_DIR | EFS 卷路径被忽略；agent 读写错误目录 |
+| P60158 | [#66784](https://github.com/openclaw/openclaw/issues/66784) | 🟠 **P2**: Comfy provider 配置被 validator 拒绝 (configSchema 未合并) | 捆绑插件完全不可用；阻塞 image/video/music 工作流 |
+| P60159 | [#66804](https://github.com/openclaw/openclaw/issues/66804) | 🟠 **P2**: MiniMax-M2.7 Active Memory 超时 (fts-only + reasoning=true) | 15s 超时后 57s 才放弃；summaryChars=0 |
+| P60160 | [#66681](https://github.com/openclaw/openclaw/issues/66681) | 🟠 **P2**: health-monitor 导致 gateway 崩溃 (log?.info 应为 log?.info) | 根因一行可修复；gateway 崩溃 |
