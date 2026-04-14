@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-04-14T21:13:00Z",
-  "note": "xixi 第125轮扫描完成；已派出4个 fix subagent；fix-66752 ARM64 PR 已创建",
+  "updatedAt": "2026-04-14T21:14:00Z",
+  "note": "fix-66768 subagent 被截断未完成 PR，已重新派出 v2 (runId 85887bd6)；fix-66797 和 fix-66681 仍在运行",
   "inProgressFixes": [
     {"runId": "57462ad4", "issue": 66797, "desc": "group消息静默丢弃 regression", "status": "in_progress"},
-    {"runId": "bae3a5b7", "issue": 66768, "desc": "OpenRouter空内容 regression", "status": "in_progress"},
+    {"runId": "85887bd6", "issue": 66768, "desc": "OpenRouter空内容 regression (v2重派)", "status": "in_progress"},
     {"runId": "0a5f8ddb", "issue": 66681, "desc": "health-monitor崩溃 1行fix", "status": "in_progress"},
     {"issue": 66752, "desc": "ARM64 ERR_MODULE_NOT_FOUND", "pr": "fix(update-cli): respawn plugin refresh after self-update", "status": "done"}
   ],
