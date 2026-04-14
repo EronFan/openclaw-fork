@@ -1,4 +1,25 @@
 {
-  "updatedAt": "2026-04-14T17:27:00Z",
-  "note": "xixi 扫描正常(<6h)"
+  "updatedAt": "2026-04-14T18:01:00Z",
+  "note": "xixi 扫描正常(<6h)",
+  "lastHeartbeatAt": "2026-04-14T18:00:00Z",
+  "alertFlags": [
+    "P60130(PR#66703): webchat image attachments - EronFan PR, awaiting merge review",
+    "P60131(PR#66704): plugin uninstall - EronFan PR, awaiting merge review"
+  ],
+  "inProgressFixes": [
+    {
+      "issue": "#66669",
+      "pr": "#66703",
+      "status": "pr_created",
+      "assignee": "EronFan",
+      "note": "awaiting maintainer review"
+    },
+    {
+      "issue": "#66668",
+      "pr": "#66704",
+      "status": "pr_created",
+      "assignee": "EronFan",
+      "note": "awaiting maintainer review"
+    }
+  ]
 }
