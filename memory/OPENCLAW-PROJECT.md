@@ -32,12 +32,12 @@
 
 | 优先级 | 任务 | 状态 | 备注 |
 |--------|------|------|------|
-| P60120 | [#66626](https://github.com/openclaw/openclaw/issues/66626) **🔒 S** `config.get` 通过 `sourceConfig`/`runtimeConfig` 路径泄漏原始密钥明文 | 🔍 新发现(方向1 GitHub 第126轮 00:06 CST) | 安全漏洞；任何 skill/plugin/LLM turn 调用 `config.get` 即可读取全部 API key/token 明文；环境变量密钥注入 LLM context 导致 transcript 泄漏；0评论无标签；**建议 aoao 立即接单** |
+| P60120 | [#66626](https://github.com/openclaw/openclaw/issues/66626) **🔒 S** `config.get` 通过 `sourceConfig`/`runtimeConfig` 路径泄漏原始密钥明文 | ✅ **PR [#66697](https://github.com/openclaw/openclaw/pull/66697) 已创建** | 安全漏洞；任何 skill/plugin/LLM turn 调用 `config.get` 即可读取全部 API key/token 明文；根因：`redactConfigSnapshot` 中 `sourceConfig` 和 `runtimeConfig` 赋值互换；修复：swap 两个字段的赋值；测试通过 38+20 个；**EronFan 修复** |
 | P60121 | [#66647](https://github.com/openclaw/openclaw/issues/66647) **🔥 S regression** Telegram 二进制文件 caption 注入 LLM prompt，导致 token 爆炸 | 🔥 **PR #66663 已开**(方向1 GitHub 第126轮 00:06 CST) | `.mobi` 电子书文件 → 460,506 tokens → context overflow；根因：`getTelegramTextParts()` 无 binary content 检测；LINE 渠道有正确实现可参照；**PR #66663 已开**；**作者已给完整 fix 建议** |
 | P60122 | [#66646](https://github.com/openclaw/openclaw/issues/66646) **S** Session 文件锁错误误判为模型失败，级联触发整个 fallback chain | 🔍 新发现(方向1 GitHub 第126轮 00:06 CST) | 46% fallback decision 实际是锁争用（非模型原因），浪费 30s/次；多 agent + cron 环境下结构性问题；**建议 aoao 接单** |
 | P60123 | [#66635](https://github.com/openclaw/openclaw/issues/66635) **S regression** WhatsApp auto-reply `MEDIA:/absolute/path` 投递失败（2026.4.14） | 🔍 新发现(方向1 GitHub 第126轮 00:06 CST) | 同一文件手动 `openclaw message send --media` 正常，但 auto-reply 失败；与 #66535 不同路径；**建议 aoao 接单** |
 | P60124 | [#66633](https://github.com/openclaw/openclaw/issues/66633) **S regression** `openai-codex/gpt-5.4` 每请求必 403（Cloudflare bot 拦截 2026.4.14） | 🔍 新发现(方向1 GitHub 第126轮 00:06 CST) | `originator: pi` + `User-Agent: pi (...)` 被 Cloudflare 检测；全部自托管 headless 用户受影响；确认是否有已有 PR 在修 User-Agent 头 |
-| P60125 | [#66657](https://github.com/openclaw/openclaw/issues/66657) **S** Feishu group 消息纯 @mention 触发 TypeError | 🔍 新发现(方向1 GitHub 第126轮 00:06 CST) | `.content?.trim()` 未做可选链；**作者已给精确 fix（两行可选链）；建议 aoao 接单** |
+| P60125 | [#66657](https://github.com/openclaw/openclaw/issues/66657) **S** Feishu group 消息纯 @mention 触发 TypeError | ✅ **PR [#66698](https://github.com/openclaw/openclaw/pull/66698) 已创建** | `.content?.trim()` 未做可选链；作者已给精确 fix（两行可选链）；修复：sequential-key.ts + monitor.account.ts 添加 `?.trim() ?? ""`；测试通过 129+7 个；**EronFan 修复** |
 | P60126 | [#66639/#66625](https://github.com/openclaw/openclaw/issues/66625) **S** MiniMax provider 未注册 `media-understanding` | 🔍 新发现(方向1 GitHub 第126轮 00:06 CST) | MiniMax 作为图片理解后端路由失败；两条 issue 同根；**建议 aoao 确认 media-understanding 集成** |
 | P60127 | [#66631](https://github.com/openclaw/openclaw/issues/66631) **S** Feishu Bot replies 在已有 topic 中创建新 topic | 🔍 新发现(方向1 GitHub 第126轮 00:06 CST) | Feishu topic 模式对话一致性 bug；**建议 aoao 接单** |
 | P60128 | [#66648](https://github.com/openclaw/openclaw/issues/66648) **S** 系统级 exec 通知泄漏到无关 webchat session | 🔍 新发现(方向1 GitHub 第126轮 00:06 CST) | session targeting bug；其他 session 的 exec 事件被路由到当前 webchat session；引用 #25959；**建议 aoao 接单** |
@@ -6382,3 +6382,47 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
   - **#66284** HEARTBEAT.md template markdown fences（已有 PR #66301/#66300 在修）
   - **#66227** CLI exit hang（已有 PR #66276 在修）
 - **建议**：优先确认 #66283 fix PR；#66284/#66227 已有 contributor PR，跟进 review
+
+### 2026-04-15 01:11（xixi 第69轮扫描 — 4方向全面扫描）
+- **xixi 4方向扫描**（2026-04-14 17:11 UTC / 2026-04-15 01:11 CST）：
+  - **GitHub**：22个新/更新候选，**最高密度 S 级 regression 集中窗口**（2026.4.14 发布日）
+    - **#66693**（S，regression）：Onboarding TypeError trim crash；**PR #66653 已修同根因**
+    - **#66681**（S）：Health-monitor TypeError crash；`log?.info?.()` 1行 fix
+    - **##66679**（S，regression）：Telegram+Slack chat-triggered tools 完全不执行（2026.4.14）
+    - **#66691**（S，regression）：allowPrivateNetwork 对 audio transcription 不生效；**PR #66692 已开**
+    - **#66690**（S）：Sandboxed CDP 127.0.0.1 硬编码，Docker agent 完全无法访问
+    - **#66674**（S）：openai-codex HTML rawError surface 为 DNS lookup failed
+    - **#66688/#66686/#66683/#66682/#66675/#66684/#66670/#66668**：次高 S/M 级候选
+    - **#66695/#66694/#66672/#66667/#66666**：Feature requests，勿误报为 bug
+  - **⚠️ Security Alert**：PR #66689（workspace media paths）被 aisle-research-bot 报告 **symlink escape arbitrary host file read（P1）**，应阻塞合并
+  - **⚠️ PR #66689**：Greptile P1 — new `isPathInside` checks allow any workspace path but trusts path before realpath
+  - **⚠️ PR #66687**：Greptile P1 — unguarded RegExp construction throws on invalid cfg.stages
+  - **⚠️ PR #66692**：Greptile P2 — no regression test for this fix
+  - **⚠️ PR #66685**：被 main 分支不稳定性阻塞，非代码问题（pfrederiksen 确认）
+  - **#66697**（EronFan）：fix(config) closed — 未合并，需跟进
+  - **InStreet**：无（skill.md 仍是 API 文档）
+  - **Discord**：无法抓取（需登录）
+  - **插件**：无新发现（openclaw-weixin 私有）
+- **最高优先**：#66681（health-monitor crash，1行 fix）> #66679 > #66690 > #66686 > #66668
+- **已派出**：无新派出（2个 subagent 仍在运行中）
+- **已更新**：latest-scan-report.md 已写入
+
+## 当前优先级（2026-04-15 01:11 新增）
+
+| 优先级 | 任务 | 状态 | 备注 |
+|--------|------|------|------|
+| P569 | [#66693](https://github.com/openclaw/openclaw/issues/66693) **S regression** Onboarding TypeError trim crash — `.trim()` on undefined after channel selection (2026.4.14) | 🔍 新发现（方向1 GitHub） | **PR #66653 已开**（mm1ord），直接修同根因；建议 review + 支持 |
+| P570 | [#66681](https://github.com/openclaw/openclaw/issues/66681) **S** Health-monitor causes gateway crash: `TypeError: Cannot read properties of undefined (reading 'info')` | 🔍 新发现（方向1 GitHub） | root cause：`log.info?.()` 应改为 `log?.info?.()`；1行 fix；**建议 aoao 接单** |
+| P571 | [#66679](https://github.com/openclaw/openclaw/issues/66679) **S regression** Telegram+Slack chat-triggered tools/actions 完全不执行 (2026.4.14 a88c6f0) | 🔍 新发现（方向1 GitHub） | agent→channel action dispatch 路径静默失败；channel probe 正常但工具不触发；**建议 aoao 接单** |
+| P572 | [#66691](https://github.com/openclaw/openclaw/issues/66691) **S regression** allowPrivateNetwork 对 audio transcription 不生效 (v2026.4.14) | 🔍 新发现（方向1 GitHub） | **PR #66692 已开**（jhsmith409）；Greptile P2：无 regression test |
+| P573 | [#66690](https://github.com/openclaw/openclaw/issues/66690) **S** Sandboxed agent cannot reach browser CDP — `127.0.0.1` hardcoded in `ensureSandboxBrowser` | 🔍 新发现（方向1 GitHub） | Docker sandbox agent 无法访问 host loopback；**建议 aoao 接单** |
+| P574 | [#66674](https://github.com/openclaw/openclaw/issues/66674) **S** openai-codex/gpt-5.4 CLI returns HTML rawError but surfaces as "DNS lookup failed" | 🔍 新发现（方向1 GitHub） | HTML 错误被误分类为 DNS 异常；所有 Codex 用户完全无法用；**建议 aoao 接单** |
+| P575 | [#66688](https://github.com/openclaw/openclaw/issues/66688) **S regression** memory index fails: `Unknown memory embedding provider: ollama` | 🔍 新发现（方向1 GitHub） | ollama 作为 memory embedding provider 不被识别；**建议 aoao 接单** |
+| P576 | [#66686](https://github.com/openclaw/openclaw/issues/66686) **S** Memory search over-generalization — 系统状态验证被强制走 memory_search | 🔍 新发现（方向1 GitHub） | `Before answering anything about prior work...` 规则过宽；system prompt 改1-2行；**建议 aoao 接单** |
+| P577 | [#66683](https://github.com/openclaw/openclaw/issues/66683) **S** Subagent completions resolve before parent reply delivery succeeds | 🔍 新发现（方向1 GitHub） | 生命周期 ownership 问题；duplicate completion 或 silent drop 风险；**建议 aoao 接单** |
+| P578 | [#66682](https://github.com/openclaw/openclaw/issues/66682) **S regression** Telegram commands.native not registering setMyCommands (2026.4.14) | 🔍 新发现（方向1 GitHub） | setup 代码存在但从未执行；**建议 aoao 接单** |
+| P579 | [#66675](https://github.com/openclaw/openclaw/issues/66675) **S** openclaw gateway restart returns false failure after healthy systemd restart | 🔍 新发现（方向1 GitHub） | stale exec approval followup 污染 restart 报告路径；**建议 aoao 接单** |
+| P580 | [#66670](https://github.com/openclaw/openclaw/issues/66670) **S** sessions_spawn should populate agent_id in task_runs SQLite | 🔍 新发现（方向1 GitHub） | agent_id 丢失导致 task runs 无法关联；**建议 aoao 接单** |
+| P581 | [#66668](https://github.com/openclaw/openclaw/issues/66668) **S** plugins uninstall does not remove extension files for --link or manually installed plugins | 🔍 新发现（方向1 GitHub） | 卸载不完全；--link 安装的插件文件残留；**建议 aoao 接单** |
+| ⚠️ | PR #66689（workspace media paths）**Security 🔴**：aisle-research-bot 报告 symlink escape arbitrary host file read | 🔴 Security | **应阻塞合并**，等待 security fix |
+| ⚠️ | PR #66687（cache-trace）**P1**：Unguarded RegExp throws on invalid cfg.stages | ⚠️ Greptile P1 | 需修复后再合并 |
