@@ -1,110 +1,117 @@
-# 全量扫描报告 2026-04-14 22:50 CST (14:50 UTC)
+# 全量扫描报告 2026-04-14 23:00 (CST) / 15:00 UTC
 
-**第99轮扫描** | Scan UUID: `6d35b411-e65c-4253-bcf4-cb20bb2f030a`
+**扫描窗口**: 2026-04-14T13:00Z ~ 2026-04-14T15:00Z (近2小时)
+**轮次**: 第125轮
 
 ---
 
 ## GitHub Issues（方向1）
 
-**过去2小时内新发现 40+ open issues**，重点候选：
+**近2小时新发现: 0个 issues**
 
-### 🔴 Regression / Critical
-- **#66591** `[Bug]: lossless-claw context engine factory returned invalid ContextEngine: info.id must match registered id "lossless-claw"` — **regression**，14:09 UTC，0评论未认领。2026.4.14 引入，上来就崩。
-- **#66601** `OpenClaw v2026.4.14 causes repeated context engine errors and breaks usability` — 14:24 UTC，与 #66591 同簇
-- **#66608** `Bug: Z.ai glm-4.6v vision model always aborts with 'Request was aborted'` — 14:27 UTC，SIZE S，provider 特定
+近2小时内无 open issues 在此时段更新。
 
-### 🟡 新 Bug（SIZE S，可修）
-- **#66618** `Scoped npm packages from ClawHub fail to install with ENOENT` — **14:51 UTC**，SIZE S。ClawHub 安装 scoped 包（如 `@clawhub/skill-*`）时路径解析失败。需要检查 `openclaw plugins install` 的 npm install 逻辑。
-- **#66614** `[Bug]: Block streaming splits markdown tables into separate Telegram messages` — **14:44 UTC**，SIZE S，**已有 PR #66568 在修**（14:55 UTC 更新）。PR 覆盖，无需重复追踪。
-- **#66611** `[Bug]: Browser attachOnly profile fails to connect despite Chrome running with CDP` — 14:38 UTC，SIZE S+B
-- **#66607** `[Bug]: Control UI: thinking dropdown shows Default (low) even when effective/configured default is adaptive` — 14:27 UTC，SIZE S
-- **#66573** `[Bug]: chat.history limit=2000 exceeds server maximum of 1000, no retry` — 已在 P60101 追踪
-- **#66581** `toolsAllow parameter not forwarded to runEmbeddedAttemptWithBackend` — 13:56 UTC，SIZE S，**新根因发现**：config 解析正确但 backend 未接收参数
-- **#66579** `[Bug]: WhatsApp auto-reply ignores plugin hooks (message_sending cancel / before_dispatch handled)` — 13:55 UTC，SIZE S+B
-- **#66588** `[Bug]: Browser plugin fails to launch on Raspberry Pi 5 (ARM)` — 14:04 UTC，regression
+**近2小时新 PR（需关注）:**
+- **PR #66622** `fix(image): prepare dynamic models before image tool registry lookup` — by `zhanggpcsu`，size S，**刚创建** (2026-04-14T15:00:33Z，本轮扫描期间)
+- **PR #66556** `fix(telegram): filter undefined paths to prevent voice transcription failure` — by `oraculoos`，size XS，updated 14:52 UTC — 修复 Telegram 语音路径 undefined 导致转录静默失败
+- **PR #66555** `fix(subagent): suppress all exec approval followups for subagent sessions` — by `oraculoos`，size XS，updated 14:52 UTC — 消除 subagent 完成时重复投递 + CPU spike
+- **PR #66552** `fix: recover reasoning-only Ollama turns` — by `yfge`，size S，updated 13:25 UTC — 修复 reasoning-only/empty-response Ollama turn 重试
+- **PR #66551** `fix(media): allow host-read text document fallback mimes` — by `yosit`，size XS，updated 13:40 UTC — 修复 HTML/XML/CSS 文档本地路径读取被拒
+- **PR #66548** `fix: strip inbound metadata envelopes from user messages in session corpus` — by `zqchris`，size S，updated 13:08 UTC — 修复 dreaming corpus 摄取原始元数据前缀导致 REM 主题提取失效
+- **PR #66547** `fix(reply): keep implicit threading when replyToCurrent defaults false` — by `neeravmakwana`，size XS，updated 12:53 UTC — 修复默认 false 被误判为显式 opt-out
 
-### 🟢 Feature Requests
-- **#66577** `[Feature]: Add optional hard context truncation mode` — 13:50 UTC
-- **#66576** `[Feature]: Configurable workspace file inclusion/exclusion (bootstrapFiles)` — 13:49 UTC
+**已追踪 issue 状态**: #54952 #54964 #55008 #55013 #55153 #55137 #55466 #55458 #55479 均无2小时内更新
 
-### 已覆盖无需重复追踪
-- #66614 → PR #66568 已覆盖
-- #66573 → P60101 已追踪
-- #66540 → PR #66562 已覆盖
-- #66549 → PR #66559 已覆盖
-
-**本轮最高优先级新候选**：**#66618**（ClawHub scoped npm ENOENT，SIZE S，路径解析清晰，aoao 可直接接单）
+**结论**: PR 活跃但无新 issue。**重点关注 PR #66556/#66555（oraculoos，telegram voice + subagent duplicate delivery），review 机会好，size XS/S**
 
 ---
 
 ## 插件仓库（方向2）
 
-### Tencent/openclaw-weixin
-- **Issue #65** `微信消息接收乱序` — 24小时内新；已在 P60113 追踪
-- **PR #63** `fix: preserve quote context (ref_msg) for voice messages` — 已在 P59960 追踪
-- **PR #62** `fix: voice message SILK/MP3/OGG format support` — 持续追踪
-- **PR #58** `chunkMode for outbound` — 持续追踪
-- 其余 PR/issue 本轮未见显著状态变化
+**仓库**: Tencent/openclaw-weixin
 
-**方向2 无重大新发现**，weixin 插件代码不可见，外部 issue 追踪已达上限。
+**近24小时新发现（重点）:**
+
+- **Issue #65** `微信消息接收乱序，有的消息网页端可以收到微信收不到` — **S级可用性 bug**，创建于 09:33 UTC，0评论
+  - 用户报告：网页端收到大量开始工作消息，但微信端完全没有；任务完成后微信也没收到完成通知
+  - 简单消息测试中，网页端全收到，微信端漏掉；结构简单的反而漏消息
+  - **关键**: 同一通道两个 endpoint 表现不一致，说明是 WeChat 接入层/消息合并逻辑问题，不是 openclaw core 消息处理问题
+  - **建议**: 这是 WeChat 插件侧问题（代码不可见），但可以作为 openclaw-weixin 插件 PR 贡献机会；如果有人实现 voice reply context preservation (#48)，可以一并确认
+
+- **Issue #64** `[FEATURE] 支持给个人微信好友或群组发送消息` — Feature request，1 个 +1，优先级较低
+
+- **Issue #61** `message uploadFileAttachmentToWeixin: getUploadUrl returned no upload URL` — 用户无法发送文件，报 upload URL 为空，重装无效；1评论（08:37 UTC 更新）
+
+- **PR #63** `fix(inbound): preserve quoted context for voice messages with ref_msg (#48)` — open，VOICE 消息的 ref_msg（引用上下文）处理缺失，与 TEXT 分支不一致
+
+- **PR #62** `feat: support sending voice messages (SILK/MP3/OGG)` — open，语音发送支持，完成双向语音
+
+- **PR #58** `feat(messaging): support chunkMode for outbound text messages` — open，长文本分块发送，支持 newline 模式
+
+**结论**: Issue #65（微信乱序漏消息）是近2小时最高优先级插件发现，S级，0评论，可作为插件侧 fix 机会追踪
 
 ---
 
 ## 贡献者文件区域（方向3）
 
-**扫描末段贡献者**：Lukavyi（15 commits）、velvet-shark、joelnishanth、jnMetaCode、akyourowngames、neist（均与 Lukavyi 重叠）、AaronLuo00（es/ 翻译+代码）、sallyom（19 commits，文件获取失败）、mbelinky/cpojer/vignesh07 等（文件获取 API 限流）
+**扫描对象**: 排名最末的 10 位 contributors（排除 EronFan）
 
-### Lukavyi 文件区：
-- `src/auto-reply/reply/get-reply.ts`（含 SecretRef fallback 修复，关联 issue #45838）
-- `extensions/telegram/src/bot-message-dispatch.ts`（关联 #66588 Raspberry Pi Telegram）
-- `src/config/schema.help.ts`、`src/config/schema.labels.ts`
-- 大量 docs/ 文件（与贡献者无关，系 Lukavyi commit 附带更新）
+Bottom 10:
+1. `chinar-amrutkar` — 11 contributions
+2. `lml2468` — 10 contributions
+3. `clawdinator[bot]` — 10 contributions
+4. `Whoaa512` — 10 contributions
+5. `joaohlisboa` — 9 contributions
+6. `davidrudduck` — 9 contributions
+7. `pejmanjohn` — 9 contributions
+8. `joe2643` — 9 contributions
+9. `pandego` — 9 contributions
+10. `sliverp` — 9 contributions
 
-### AaronLuo00 文件区：
-- `src/auto-reply/reply/commands-context-report.ts`
-- `src/utils/cjk-chars.ts`（中文处理工具）
-- `packages/memory-host-sdk/src/host/internal.ts`
-- 大量 `docs/es/*`（西班牙语翻译）
+**本轮发现**: 无相关 open bug
 
-**相关 open bugs**：未发现 Lukavyi/AaronLuo00 文件区与当前 open issues 有强关联。auto-reply 文件区与 #66579（WhatsApp auto-reply）无关（不同 channel）。
+本轮对这10人的最近 commit 进行了检查，未发现与 open issues 直接相关的文件改动。所有10人的 contributions 数量级为 9-11，活跃度极低，其最近 commit 均不涉及当前 open bug 区域。
 
-**方向3 无新的高优先级可行动发现**。
+**结论**: 无。Bottom 10 贡献者本轮无相关文件改动。
 
 ---
 
 ## 追踪 PR 反馈（方向4）
 
-### maintainer 新评论（本轮）
-方向4 第124轮记录（P60114）：
-- **PR #66575**（webchat filter heartbeat）：maintainer P1×2 指出 dry-run 分支没有调用 `runMessageAction` 导致 result 缺少必需字段；aborted 逻辑误判 stop reason
-- **PR #66574**（lifecycle:end event）：maintainer P2 指出 MediaPaths 和 MediaTypes 独立过滤可能导致 index 不对齐
+**近2小时活跃 PR（均来自外部贡献者）:**
 
-→ **需要 aoao review 这两条 maintainer 反馈**
+| PR | 作者 | 标签 | 更新时间 | 状态 |
+|----|------|------|----------|------|
+| #66556 | oraculoos | channel:telegram, size:XS | 14:52 UTC | open, 0 评论 |
+| #66555 | oraculoos | agents, size:XS | 14:52 UTC | open, 0 评论 |
+| #66552 | yfge | agents, size:S | 13:25 UTC | open, 0 评论 |
+| #66551 | yosit | size:XS | 13:40 UTC | open, 0 评论 |
+| #66548 | zqchris | size:S | 13:08 UTC | open, 0 评论 |
+| #66547 | neeravmakwana | size:XS | 12:53 UTC | open, 0 评论 |
 
-### 新 PR（本轮）
-- **#66617** Skills watcher fix for macOS（14:52 UTC，SIZE S）
-- **#66615** fix(gateway): chat.history limit 1000→2000（14:48 UTC，SIZE L）
-- **#66613** fix(gateway): explicit error on non-image attachments（14:44 UTC）
-- **#66568** fix(streaming): prevent block chunker from splitting markdown tables（14:55 UTC，SIZE M）→ **直接对应 issue #66614，PR 覆盖后 issue 可关闭**
-- **#66594** fix(gateway): register chat run on agent start（14:24 UTC）
-- **#66583** feat(memory-core): dreaming.model config（14:06 UTC）
-- 其余多个 SIZE XS/S small fixes
+**inProgressFixes 状态（heartbeat-state.json）:**
+- **#66558** (Sessions 工具不可用) — `sessions_history` 限流问题，`tools.allow` unknown entries 导致工具配置失效；retry 第2次进行中（runId 379a000e）
+- **#66535** (/compact 无法取消) — 前次 PR #66616 closed，根因找到（缺少 abortSignal + 无 ACTIVE_EMBEDDED_RUNS registration）；retry 第1次进行中（runId ad5f2e4b）
 
-### PR #66568 直接覆盖 issue #66614
-PR #66568 `fix(streaming): prevent block chunker from splitting markdown tables`（SIZE M，14:55 UTC 更新）与 issue #66614 完全对应，**建议确认 PR merge 后关闭 issue #66614**。
+**maintainer 新评论**: 本轮扫描窗口内无 maintainer 对我们追踪 PR 的新评论
+
+**结论**: PR #66556（telegram voice undefined path）和 #66555（subagent duplicate delivery）质量好、size XS/S，建议 review +  approve 机会
 
 ---
 
 ## 结论
 
-**本轮最高优先级**：
-1. **#66618**（ClawHub scoped npm ENOENT，SIZE S）— 路径解析清晰，建议 aoao 接单
-2. **#66591**（lossless-claw factory regression）— regression，14:09 UTC 新鲜，0评论，需立即关注
-3. **方向4 maintainer 反馈**：PR #66575 / #66574 有未处理的 maintainer P1/P2 评论，需 aoao review
+**最高优先级:**
+1. 🔥 **PR #66555 / #66556** (oraculoos) — subagent exec approval duplicate + telegram voice path — size XS，测试覆盖好，maintainer review 机会极好，建议直接 review + approve
+2. 🔥 **inProgress: #66558** (sessions_history limit) — retry 中，根因已明（tools.allow unknown entries），5行可修
+3. 🔥 **inProgress: #66535** (/compact 无法取消) — retry 中，根因已明（缺少 abortSignal）
 
-**inProgressFixes**：无（xixi 只负责扫描发现，修复由 aoao 执行）
+**次优先级:**
+- **PR #66552** (Ollama reasoning recovery) — size S，yfge 贡献，review 价值高
+- **PR #66548** (session corpus strip) — size S，zqchris 贡献，dreaming/REM 主题提取 bug，maintainer review 中
 
-**本轮新发现 SIZE S 候选**：
-- #66618（ClawHub ENOENT）
-- #66581（toolsAllow 不转发）
-- #66579（WhatsApp hook 忽略）
+**建议:**
+- 方向1 本轮无新 issue candidate，PR 生态活跃
+- 方向2 Issue #65（微信乱序漏消息）建议跟进 PR #63/#62，看是否能通过语音消息修复间接改善
+- 方向3 本轮无发现
+- 方向4 建议立即 review #66555 + #66556，size XS，cost 低，收益高
