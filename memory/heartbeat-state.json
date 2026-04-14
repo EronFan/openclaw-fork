@@ -1,46 +1,27 @@
 {
-  "updatedAt": "2026-04-14T16:44:00Z",
+  "updatedAt": "2026-04-14T16:51:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": null,
-  "note": "xixi 扫描正常(15:00 UTC, <3h)。#66535 需人工介入。",
+  "note": "fix-66601 subagent completed (16:49 CST). PR #66680 created. #66669 and #66668 still pending aoao.",
   "subagentFailures": [],
-  "subagentSuccesses": [
-    {
-      "issue": "#66573",
-      "runId": "792910f4",
-      "dispatchedAt": "2026-04-14T14:19:00Z",
-      "completedAt": "2026-04-14T14:29:00Z",
-      "stage": "PR #66610 CREATED → CLOSED (P1 block)"
-    },
-    {
-      "issue": "#66561",
-      "runId": "fb87df63",
-      "dispatchedAt": "2026-04-14T14:14:00Z",
-      "completedAt": "2026-04-14T14:20:00Z",
-      "stage": "PR #66599 CREATED → CLOSED (P1 block)"
-    },
-    {
-      "issue": "#66564",
-      "runId": "cron-2026-04-14-1356",
-      "dispatchedAt": "2026-04-14T14:03:00Z",
-      "completedAt": "2026-04-14T14:14:00Z",
-      "stage": "PR #66596 CREATED → CLOSED"
-    }
-  ],
+  "subagentSuccesses": [],
   "inProgressFixes": [
     {
-      "issue": "#66535",
-      "runId": "ad5f2e4b-a470-4ad5-a30a-2bf9b07e1b49",
-      "dispatchedAt": "2026-04-14T14:45:00Z",
-      "completedAt": "2026-04-14T15:01:00Z",
-      "stage": "FAILED — 4th gateway timeout; needs manual intervention"
+      "issue": "#66601",
+      "desc": "lossless-claw context engine factory validation regression",
+      "dispatchedAt": "2026-04-14T16:35:00Z",
+      "completedAt": "2026-04-14T16:49:00Z",
+      "pr": "#66680",
+      "note": "PR created. Removed infoId !== engineId strict check in registry.ts + removed mismatched-info-id test case."
     }
   ],
   "cronTasksReTriggered": [],
-  "xixiLastScanAt": "2026-04-14T15:00:00Z",
-  "xixiNewScanTriggeredAt": "2026-04-14T15:00:00Z",
-  "lastPrCreatedAt": "2026-04-14T15:00:33Z"
+  "xixiLastScanAt": "2026-04-14T16:34:00Z",
+  "xixiNewScanTriggeredAt": "2026-04-14T16:34:00Z",
+  "lastPrCreatedAt": "2026-04-14T16:47:01Z",
+  "gatewayTimeoutAlert": false,
+  "gatewayTimeoutIssues": []
 }
