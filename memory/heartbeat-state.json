@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-04-14T16:51:00Z",
+  "updatedAt": "2026-04-14T17:02:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": null,
-  "note": "fix-66601 subagent completed (16:49 CST). PR #66680 created. #66669 and #66668 still pending aoao.",
+  "note": "fix-66601 PR #66680 created. Two subagents dispatched: fix-66669-66668-ui-cli and fix-66626-66657-security-feishu.",
   "subagentFailures": [],
   "subagentSuccesses": [],
   "inProgressFixes": [
@@ -14,13 +14,36 @@
       "desc": "lossless-claw context engine factory validation regression",
       "dispatchedAt": "2026-04-14T16:35:00Z",
       "completedAt": "2026-04-14T16:49:00Z",
-      "pr": "#66680",
-      "note": "PR created. Removed infoId !== engineId strict check in registry.ts + removed mismatched-info-id test case."
+      "pr": "#66680"
+    },
+    {
+      "issue": "#66669",
+      "desc": "Control UI 图片附件不渲染",
+      "dispatchedAt": "2026-04-14T17:00:00Z",
+      "subagent": "fix-66669-66668-ui-cli"
+    },
+    {
+      "issue": "#66668",
+      "desc": "plugins uninstall 对 --link 无效",
+      "dispatchedAt": "2026-04-14T17:00:00Z",
+      "subagent": "fix-66669-66668-ui-cli"
+    },
+    {
+      "issue": "#66626",
+      "desc": "config.get 明文泄漏 API keys（安全漏洞）",
+      "dispatchedAt": "2026-04-14T17:00:00Z",
+      "subagent": "fix-66626-66657-security-feishu"
+    },
+    {
+      "issue": "#66657",
+      "desc": "Feishu group 纯 @mention 触发 TypeError",
+      "dispatchedAt": "2026-04-14T17:00:00Z",
+      "subagent": "fix-66626-66657-security-feishu"
     }
   ],
   "cronTasksReTriggered": [],
   "xixiLastScanAt": "2026-04-14T16:34:00Z",
-  "xixiNewScanTriggeredAt": "2026-04-14T16:34:00Z",
+  "xixiNewScanTriggeredAt": null,
   "lastPrCreatedAt": "2026-04-14T16:47:01Z",
   "gatewayTimeoutAlert": false,
   "gatewayTimeoutIssues": []
