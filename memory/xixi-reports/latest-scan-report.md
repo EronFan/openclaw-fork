@@ -1,157 +1,67 @@
-# 全量扫描报告 2026-04-15 01:11 CST (2026-04-14 17:11 UTC)
+# 全量扫描报告 2026-04-15 02:20 CST (2026-04-14 18:20 UTC)
 
 ---
 
 ## GitHub Issues（方向1）
 
-**发现了 22 个新/更新候选**，全部集中在 **2026.4.14 发布日 regression 爆发**——这是迄今为止最高密度的 S 级集中窗口。
+**发现 1 个新候选**：`#66695` — pre-commit hook assumes bare `pnpm` instead of Corepack-managed pnpm
 
-### 🔴 最高优先级（直接 fix 候选）
-
-| # | 标题 | 优先级 | 根因 | 备注 |
-|---|------|--------|------|------|
-| **#66693** | Onboarding `TypeError: Cannot read properties of undefined (reading 'trim')` (2026.4.14) | **S regression** | `.trim()` on undefined after channel selection | 两个独立 reporter 确认；**PR #66653 已修同根因** |
-| **#66677** | 同 #66693 — Select channel trim crash (duplicate) | **S regression** | 同上 | 合并追踪 |
-| **#66681** | Health-monitor causes gateway crash: `TypeError: Cannot read properties of undefined (reading 'info')` | **S** | `log.info?.()` 保护了 `info` 但没保护 `log`；应改为 `log?.info?.()` | **1行 fix，root cause 极清晰** |
-| **#66679** | Telegram 和 Slack chat-triggered tools/actions 完全不执行 (2026.4.14 a88c6f0) | **S regression** | agent→channel action dispatch 路径静默失败 | channel probe 正常但工具不触发；跨 Telegram+Slack 两个主流渠道 |
-| **#66691** | `models.providers.*.request.allowPrivateNetwork` 不再对 audio transcription 生效 (v2026.4.14) | **S regression** | 两处根因：① `resolveProviderExecutionContext` 未合并 provider-level request config ② `resolveProviderRequestPolicyConfig` 忽略 `params.request?.allowPrivateNetwork` | **PR #66692 已开**（jhsmith409）；Greptile P2：**无 regression test** |
-| **#66690** | Sandboxed agent cannot reach browser CDP — `127.0.0.1` hardcoded in `ensureSandboxBrowser` | **S** | Docker sandbox agent 无法访问 host loopback CDP；需用容器内部 DNS 名 | 文档推荐的 sandbox+browser 组合完全不可用 |
-| **#66674** | openai-codex/gpt-5.4 CLI 返回 HTML rawError 但 surface 为"DNS lookup failed" (2026.4.14) | **S** | HTML provider 错误被误分类为 DNS 异常；`rawErrorPreview` 含 HTML | 所有 Codex 用户完全无法用 |
-
-### 🟡 次高优先级（建议 aoao 接单）
-
-| # | 标题 | 优先级 | 备注 |
-|---|------|--------|------|
-| **#66688** | `memory index` fails with `Unknown memory embedding provider: ollama` | **S regression** | ollama 作为 memory embedding provider 不被识别 |
-| **#66686** | Memory search over-generalization: 系统状态验证被强制走 memory_search | **S** | `Before answering anything about prior work...` 规则过宽；系统状态验证应直接调 API |
-| **#66683** | Subagent completions resolve before parent reply delivery succeeds | **S** | 生命周期 ownership 问题；可能导致 duplicate completion 或 silent drop |
-| **#66682** | Telegram `commands.native` 不注册 setMyCommands (2026.4.14) | **S regression** | 无任何日志/调用；setup 代码存在但从未执行 |
-| **#66675** | `openclaw gateway restart` 返回 false failure after healthy systemd restart | **S** | 疑似 stale exec approval followup 污染 restart 报告路径 |
-| **#66684** | Security scan findings: remote script execution and credential-pattern hits | **S** | ClawHavoc/ClawSafe 静态扫描工具报告；需人工 triage |
-| **#66670** | sessions_spawn should populate agent_id in task_runs SQLite | **S** | Feature/bug；agent_id 丢失导致 task runs 无法关联 |
-| **#66668** | `plugins uninstall` does not remove extension files for --link or manually installed plugins | **S** | 卸载不完全；--link 安装的插件文件残留 |
-
-### 🟠 Feature Requests（勿误报为 bug）
-
-- **#66695** — pre-commit hook assumes bare pnpm instead of Corepack-managed pnpm（enhancement）
-- **#66694** — Feature: Building a Smarter OpenClaw（AI autonomous handling roadmap）
-- **#66672** — Feature: Safe AI Workflow Modes: Ask, Plan, Modify（roadmap）
-- **#66667/#66666** — Feature Request: before_delivery / ` hook for reply interception（功能请求）
+**关键发现**：
+- **#66695** (`pfrederiksen` 报告)：pre-commit hook 在 line 76 调用 bare `pnpm check`，Corepack 环境下失败（command not found）。repo 已声明 `packageManager: pnpm@10.32.1`，Corepack 激活可用，但 hook 硬编码了 `pnpm` 二进制名
+- **PR #66696 已开**：`pfrederiksen` 自提交 fix，size XS，修改 `git-hooks/pre-commit` 和 `scripts/pre-commit/run-node-tool.sh`，支持 Corepack 激活场景；`scripts` + `size: XS` 标签；2 条评论待 review
+- 根因极清晰（pre-commit 脚本 1-2 行即可修），**建议 review PR #66696**
+- **已有覆盖项无重复**：#66669/#66668/#66657 的 EronFan PRs (#66703/#66704/#66725) 本轮 API 显示 state=closed (merged_at=null)，疑似被 repo 的 `r: too-many-prs` 自动关闭策略触发，需重新提 PR
 
 ---
 
 ## 插件仓库（方向2）
 
-**无新发现**。
-
-- `openclaw/openclaw-weixin` — 仓库不存在（私有）
-- `Tencent/openclaw-weixin` — 近2小时内无新 issues 或 PRs
-- 其他 openclaw 插件 — 无公开新 activity
+**无更新**。`Tencent/openclaw-weixin` 仓库不可公开访问（gh api 返回 404），`openclaw/openclaw-plugin/weixin` 同样返回 404。无新的公开插件 issue/PR 可追踪。
 
 ---
 
 ## 贡献者文件区域（方向3）
 
-扫描了排名最末的 **10 位贡献者**（45~81 次贡献），最近 3 条 commit 变更文件：
+**扫描了排名最末 10 个 contributors（byungsker / pashpashpash / xinhuagu / MoerAI / aether-ai-agent / chinar-amrutkar / Whoaa512 / darkamenosa / BruceMacD / sliverp）**，每个取最近 5 条 commit 并过滤 `.ts/.tsx` 文件。
 
-| Contributor | 贡献数 | 最近文件区 | 相关 Open Bug |
-|------------|--------|-----------|-------------|
-| **huntharo** | 81 | `src/plugins/plugin-sdk/`, `extensions/telegram/`, `src/agents/` | ⚠️ #66693（onboarding trim crash）在 Telegram setup 路径；PR #66653 已修；huntharo 的 plugin-sdk bundle error context 改动可能影响其他 setup 路径 |
-| **bmendonca3** | 69 | `extensions/feishu/`, `src/plugins/` | 无直接新 bug 匹配 |
-| **mcaxtr** | 69 | `extensions/whatsapp/`, `extensions/tts/` | 无直接新 bug 匹配 |
-| **onutc** | 67 | `scripts/ci/`, `docs/`, `src/config/` | 无直接新 bug 匹配 |
-| **jalehman** | 66 | `src/agents/`, `extensions/telegram/`, `src/channels/` | 与 #66682（Telegram setMyCommands）文件区重叠；与 #66683（subagent completions）agents 文件区重叠 |
-| **eleqtrizit** | 62 | `src/memory/`, `src/gateway/`, `src/media/` | 与 #66686（memory search over-generalization）直接重叠；刚提了 #66636 `fix(agents): tighten workspace file opens` |
-| **osolmaz** | 62 | `src/gateway/`, `src/agents/` | 无直接新 bug 匹配 |
-| **Glucksberg** | 59 | `src/hooks/`, `src/media-understanding/` | 与 #66691（allowPrivateNetwork audio）文件区部分重叠 |
-| **altaywtf** | 54 | `scripts/qa/`, `.github/workflows/` | 无直接新 bug 匹配 |
-| **quotentiroler** | 45 | `scripts/credits/` | 无直接新 bug 匹配 |
+**结果**：所有 10 个末段贡献者近 5 条 commit 均无 `.ts/.tsx` 文件改动记录——这些人可能是早期一次性贡献者（贡献量 9-12 次），长期无活跃新 commit，或活动在文档/配置文件而非源码区。
 
-**关键发现**：eleqtrizit（memory/gateway）和 jalehman（telegram/agents）是本批中对当前 S 级 bug 覆盖最密集的贡献者。eleqtrizit 刚提了 #66636（workspace file opens），其 memory 文件区与 #66686 直接重叠；jalehman 的 telegram 文件区与 #66682/#66683 重叠。
+**结论**：无相关 open bug 发现；文件区扫描无新候选。
 
 ---
 
 ## 追踪 PR 反馈（方向4）
 
-### ⚠️ Security Alert — PR #66689
+**已追踪 PR 状态变化**：
 
-**PR #66689**（`fix: allow workspace-rooted absolute media paths in auto-reply`，joelnishanth，size S）：
-- **aisle-research-bot 报告 🔴 High Security Issue**：Symlink escape allows arbitrary host file read
-- Greptile P1：新增 `isPathInside` 检查允许任何 workspace/sandbox 内的路径，但 `realpath` 前信任 path → 符号链接逃脱
-- **建议**：阻塞此 PR，等 security fix 再合并
-
-### Greptile 反馈摘要
-
-| PR | 分数 | 问题 |
-|----|------|------|
-| **#66689** | P1 | Symlink escape arbitrary host file read（security 🔴）|
-| **#66687** | P1 | Unguarded `RegExp` construction throws on invalid `cfg.stages` |
-| **#66653** | P2 | Type signature doesn't reflect the null guard |
-| **#66692** | P2 | No regression test for this fix |
-
-### Maintainer 反馈
-
-| PR | 人 | 反馈 |
-|----|---|------|
-| **#66685** | pfrederiksen | PR 被 `main` 不稳定性阻塞，非本 PR 代码问题 |
-
-### PR 状态
-
-| PR | 作者 | 内容 | 状态 |
+| PR | 标题 | 状态 | 备注 |
 |----|------|------|------|
-| **#66697** | EronFan | fix(config): correct sourceConfig/runtimeConfig assignment | ❌ **Closed（未合并）** |
-| **#66673** | samzong | feat: add doctor.memory.remHarness probe | ✅ Open |
-| **#66692** | jhsmith409 | fix(audio): restore allowPrivateNetwork for self-hosted STT | ✅ Open，Greptile P2 |
-| **#66689** | joelnishanth | fix: workspace-rooted absolute media paths | ✅ Open，**Security 🔴 issue** |
-| **#66687** | wzhgba | feat(cache-trace): capture stream-context tools | ✅ Open，Greptile P1 |
-| **#66685** | pfrederiksen | suppress expired exec approval followup warnings | ✅ Open，被 main 阻塞 |
-| **#66678** | GodsBoy | accept third-party context engines info.id mismatch | ✅ Open |
-| **#66653** | mm1ord | fix(telegram): add null safety to .trim() calls | ✅ Open，Greptile P2 |
-| **#66636** | eleqtrizit | fix(agents): tighten workspace file opens | ✅ Open |
+| **#66696** | Support Corepack-managed pnpm in pre-commit tooling | **open, 2 comments** | size XS by pfrederiksen；maintainer 2 评论讨论；**review 机会** |
+| **#66692** | fix(audio): restore allowPrivateNetwork for self-hosted STT (v2026.4.14 regression) | **open, 0 comments** | by jhsmith409；修复 #66691 regression；待 maintainer review |
+| **#66689** | fix: allow workspace-rooted absolute media paths in auto-reply | **open, 1 assignee (gumadeiras)** | by joelnishanth；修复 #66635；size M；已 assign maintainer |
+| **#66697/#66703/#66704/#66725** | EronFan 安全+Feishu+UI+uninstall fix PRs | **全部 state=closed, merged_at=null** | 本轮 API 确认全部 closed 而非 merged；疑似 `r: too-many-prs` 策略触发；需重新提 PR |
 
-### 新 PR 发现
-
-- **#66697**（EronFan）：fix(config): correct sourceConfig/runtimeConfig — **已关闭，未合并**，需跟进
-- **#66696**（pfrederiksen）：Support Corepack-managed pnpm in pre-commit tooling
+**EronFan PRs 重新提 PR 建议**：
+- `#66703`（webchat 用户图片附件 — P60130）：需重新提 PR，maintainer 已 review (5 review_comments) 但被关闭
+- `#66704`（plugins uninstall — P60131）：需重新提 PR，1 review_comment 但被关闭  
+- `#66725`（feishu @mention trim — P60125）：需重新提 PR，1 review_comment 但被关闭
 
 ---
 
 ## 结论
 
-### 最高优先级
+**最高优先级**：
+1. 🔴 **EronFan 3 个 PR 被关闭**（#66703/#66704/#66725），安全 bug（#66626）和 Feishu bug（#66657）修复丢失，需在低活跃期重新提 PR 推 merge
+2. 🔴 **PR #66696 review**：size XS，根因清晰，maintainer 已参与讨论，快速 Approve 可立即 merge
+3. 🟡 **PR #66692**（allowPrivateNetwork regression）：jhsmith409 修的 regression，可 review 确认
+4. 🟡 **PR #66689**（WhatsApp media path）：已有 maintainer assign，继续追踪 merge 窗口
 
-**#66693/#66677（onboarding trim crash）最紧急**：
-- 影响所有 2026.4.14 新安装用户
-- 两个独立 reporter 确认同根因
-- **PR #66653 已开**（mm1ord），直接修了同根因
-- **建议**：立即 review #66653 + 支持
+**建议**：
+- aoao 接单方向：重新提 EronFan 的 3 个 PR（优先 #66626 config secret leak 安全修复）
+- xixi 调研方向：无新发现，方向3末段贡献者无活跃源码文件
 
-**#66681（health-monitor crash）次紧急**：
-- 1行 fix（`log?.info?.()`），root cause 清晰
-- **建议 aoao 直接接单，5分钟可 PR**
-
-**⚠️ #66689（workspace media paths）security issue 阻塞**：
-- aisle-research-bot 报告 symlink escape → arbitrary host file read
-- **必须修复后再合并**
-
-**#66691/#66692（allowPrivateNetwork audio）已有 PR**：
-- PR #66692 已开（jhsmith409，size XS），Greptile P2 提示无 regression test
-- 建议 review 时要求补充测试
-
-### 建议 aoao 接单顺序
-
-1. **#66681** — health-monitor crash，1行 fix，5分钟可 PR
-2. **#66679** — chat-triggered tools Telegram/Slack regression，S级，需调研 agent→channel dispatch 路径
-3. **#66690** — sandboxed CDP unreachable，设计问题，稍复杂
-4. **#66686** — memory search over-generalization，system prompt 改1-2行
-5. **#66668** — plugins uninstall 不删除 extension files
-
-### inProgressFixes
-
-（当前扫描期间无新 subagent 派出，无 in-progress fixes）
-
----
-
-*报告时间：2026-04-14 17:11 UTC / 2026-04-15 01:11 CST*
-*扫描工具：xixi 全量扫描 cron*
-*数据来源：GitHub API v3, gh cli*
+**inProgressFixes 更新**：
+- P60130(#66669) PR #66703 closed → 需重新提
+- P60131(#66668) PR #66704 closed → 需重新提
+- P60125(#66657) PR #66725 closed → 需重新提
+- P60120(#66626) PR #66697 closed → 安全修复，需重新提

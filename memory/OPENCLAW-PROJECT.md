@@ -6437,3 +6437,7 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P581 | [#66668](https://github.com/openclaw/openclaw/issues/66668) **S** plugins uninstall does not remove extension files for --link or manually installed plugins | 🔍 新发现（方向1 GitHub） | 卸载不完全；--link 安装的插件文件残留；**建议 aoao 接单** |
 | ⚠️ | PR #66689（workspace media paths）**Security 🔴**：aisle-research-bot 报告 symlink escape arbitrary host file read | 🔴 Security | **应阻塞合并**，等待 security fix |
 | ⚠️ | PR #66687（cache-trace）**P1**：Unguarded RegExp throws on invalid cfg.stages | ⚠️ Greptile P1 | 需修复后再合并 |
+
+| P60146 | [#66695](https://github.com/openclaw/openclaw/issues/66695) **XS** pre-commit hook assumes bare pnpm instead of Corepack-managed pnpm | 🔍 **PR #66696 已开**（方向1 第128轮 02:20 CST） | Corepack 环境（如 `corepack enable`）下 repo hook 报 `pnpm: command not found`；repo 已声明 `packageManager: pnpm@10.32.1`；fix 在 pre-commit 脚本激活 Corepack；size XS；maintainer 已有 2 评论讨论；**建议 review PR #66696** |
+| P60147 | EronFan PRs #66703/#66704/#66725/#66697 被 `r: too-many-prs` 策略关闭 | ⚠️ **需重新提 PR**（方向4 第128轮 02:20 CST） | API 确认 4 个 PR state=closed/merged_at=null（#66703 webchat图片附件 / #66704 plugin uninstall / #66725 feishu @mention / #66697 config secret leak）；maintainer 已 review（#66703 有 5 review_comments），但被自动关闭策略触发；安全修复（P60120 #66626）需优先重新提 PR |
+| P60148 | 方向3末段贡献者文件区扫描无新候选 | ✅ 无（方向3 第128轮 02:20 CST） | byungsker/pashpashpash/xinhuagu/MoerAI/aether-ai-agent/chinar-amrutkar/Whoaa512/darkamenosa/BruceMacD/sliverp 末 10 人近 5 条 commit 无 .ts/.tsx 源码文件记录；无相关 open bug 发现 |
