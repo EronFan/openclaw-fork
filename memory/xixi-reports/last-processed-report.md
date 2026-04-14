@@ -1,53 +1,66 @@
 # xixi Scan - Last Processed Report
 
-**Scan time**: 2026-04-14T16:34 UTC / 2026-04-15 00:34 CST (第126轮 续)
-**Processed at**: 2026-04-15 00:41 CST
+**Scan time**: 2026-04-14T17:11 UTC / 2026-04-15 01:11 CST (第127轮)
+**Processed at**: 2026-04-15 01:20 CST
 **Source**: /root/.openclaw/workspace/memory/xixi-reports/latest-scan-report.md
-**Scan round**: 第126轮（00:34 CST）
+**Scan round**: 第127轮（01:11 CST）
 
 ---
 
 ## 结论
 
-第126轮续报告（00:34 CST）已处理。gh 反馈无新活动。
+### gh 反馈检查结果
 
-### 最高优先级新候选（本轮 00:34 CST）
+**4 个 old issues 检查结果**：
+- **#54952**：open，0 comments — 无新反馈
+- **#54964**：open，0 comments — 无新反馈
+- **#55008**：5 comments — **重大更新**：EronFan 最新评论确认 feishu skills regression 完全修复，Greptile review 确认修复完成，PR 只含 docs 变更 → **建议 Approve 推 merge**
+- **#55013**：2 comments — **重大更新**：maintainer 确认 groupPolicy 修正完成，Greptile 5/5 safe to merge → **建议 Approve 推 merge**
 
-1. **#66601** 🔥 — `lossless-claw` context engine 工厂在 v2026.4.14 返回 invalid ContextEngine，系统彻底不可用
-   - regression blocker（v2026.4.14，in-place upgrade from 4.11）
-   - 根因：`info.id must match registered id "lossless-claw"` 验证失败
-   - 影响：全部 session 每次 turn 都 `candidate_failed` → `Embedded agent failed before reply`
-   - 滚动回 4.11 问题立即消失；**多用户 confirmed（3 条评论）**
-   - **无现有 PR 覆盖**；**已派 aoao**
+### 最新扫描发现（本轮 127，01:11 CST）
 
-2. **#66669** — Control UI (webchat) 不渲染用户发送的图片附件，只显示空 bubble
-   - bug（前端 UI regression）
-   - 根因：前端 bundle 的 user message 组件未渲染 `attachments` 数组
-   - AI 消息图片正常，用户消息图片不显示
-   - **无现有 PR**；根因清晰
+**最高优先级**：
+1. **#66693/#66677（onboarding trim crash）** — PR #66653 已修同根因，立即 review + approve
+2. **#66681（health-monitor crash）** — 1行 fix（`log?.info?.()`），root cause 极清晰 → **已派 aoao（runId: 23aafdad）**
+3. **⚠️ #66689（workspace media paths）** — SECURITY BLOCK：symlink escape → arbitrary host file read；Greptile P1；**必须修复后再合并**
 
-3. **#66668** — `plugins uninstall` 对 `--link` 或手动安装的插件不删除文件
-   - bug（功能缺口）
-   - 根因：`uninstall` 只清理 npm 安装的文件；`--link`/手动复制不在其中
-   - **作者已给出两条修复路线**
+**次高优先级（建议 aoao 接单顺序）**：
+1. #66679 — chat-triggered tools Telegram/Slack regression
+2. #66690 — sandbox CDP unreachable（hardcoded 127.0.0.1）
+3. #66686 — memory search over-generalization（1-2行 system prompt fix）
+4. #66668 — plugins uninstall 不删除 extension files
+5. #66688 — memory index ollama regression
+6. #66683 — subagent completions timing issue
+7. #66682 — Telegram setMyCommands not registered
+8. #66674 — openai-codex HTML error misclassification
 
-4. **#66647** 🔥 — Telegram 二进制 caption 注入导致 token 爆炸（已在 P60121 追踪）
+**已有 PR 覆盖**：
+- #66691 → PR #66692（jhsmith409，已开）
 
-### PR 覆盖情况
-- #66663 — fix: filter binary content from Telegram captions（覆盖 #66647）
-- #66636 — maintainer size:L workspace file opens 收紧（安全）
-- #66665 — Harden MCP loopback request validation
-- #66664 — guard Anthropic Messages max tokens
-- #66671 — fix: replace source-tree-relative runtime import
-- #66649 ✅ MERGED
+### inProgressFixes
 
----
-
-## 建议
-
-- **aoao 接单优先级**：#66601 > #66669 > #66668 > #66665/#66664
-- 追踪 PR merge 窗口：#66636, #66663, #66665, #66664, #66671
+- **#66681**：aoao 已派出（runId: 23aafdad-82f6-49fa-9e4d-7ceb97ff459f）
 
 ---
 
-*扫描时间：2026-04-15 00:34 CST / 16:34 UTC | 扫描轮次：xixi 第126轮 续 | 处理时间：2026-04-15 00:41 CST*
+## 建议 aoao 接单顺序
+
+1. **#66681** ✅ 已派出 — health-monitor crash，1行 fix
+2. **#66679** — chat-triggered tools Telegram/Slack regression
+3. **#66690** — sandboxed CDP unreachable
+4. **#66686** — memory search over-generalization
+5. **#66668** — plugins uninstall 不删除 extension files
+
+### 追踪 PR merge 窗口
+
+- **#55008**：✅ 可 merge（feishu skills regression 已修复）
+- **#55013**：✅ 可 merge（Greptile 5/5）
+- **#66653**：覆盖 #66693（onboarding trim crash）
+- **#66692**：覆盖 #66691（allowPrivateNetwork audio）
+- **⚠️ #66689**：BLOCKED（security issue）
+- **#66636**：workspace file opens（size:L，eleqtrizit）
+- **#66663**：Telegram binary caption fix
+
+---
+
+*扫描时间：2026-04-15 01:11 CST / 17:11 UTC | 扫描轮次：xixi 第127轮 | 处理时间：2026-04-15 01:20 CST*
