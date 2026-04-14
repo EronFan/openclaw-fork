@@ -38,15 +38,23 @@
       "issue": "#66558",
       "runId": "c415139e-6cf1-4934-a33e-ad6be70e3116",
       "dispatchedAt": "2026-04-14T14:32:00Z",
-      "stage": "fixing",
+      "completedAt": "2026-04-14T14:50:00Z",
+      "stage": "FAILED — subagent gateway timeout; no PR created",
+      "note": "Sessions tools not in coding profile — tools.allow unknown entries"
+    },
+    {
+      "issue": "#66558",
+      "runId": "379a000e-419f-4516-ae41-c117cd60199c",
+      "dispatchedAt": "2026-04-14T14:50:00Z",
+      "stage": "retrying",
       "note": "Sessions tools not in coding profile — tools.allow unknown entries"
     },
     {
       "issue": "#66535",
-      "runId": "a3e18107-929c-42c5-bd45-2522c2b25de0",
-      "dispatchedAt": "2026-04-14T14:32:00Z",
-      "stage": "fixing",
-      "note": "/compact command cannot be canceled"
+      "runId": "ad5f2e4b-a470-4ad5-a30a-2bf9b07e1b49",
+      "dispatchedAt": "2026-04-14T14:45:00Z",
+      "stage": "retrying",
+      "note": "Previous attempt PR #66616 closed; root cause found (missing abortSignal + no ACTIVE_EMBEDDED_RUNS registration)"
     }
   ],
   "cronTasksReTriggered": [],
