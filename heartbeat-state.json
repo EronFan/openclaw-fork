@@ -1,11 +1,11 @@
 {
   "lastHeartbeat": "2026-04-14T07:30:00Z",
   "lastXixiScan": "2026-04-14T07:22:00Z",
-  "lastPrCreatedAt": "2026-04-14T07:48:00Z",
+  "lastPrCreatedAt": "2026-04-14T08:10:00Z",
   "inProgressFixes": [],
   "staleDays": 0,
   "alert": "CRON\u5065\u5eb7\u4e25\u91cd\u9000\u5316\uff1a\u5fc3\u8df3/xixi/\u53cd\u9988cron\u5168\u90e8\u8d85\u65f6\u5931\u8d25\uff1bxixi\u626b\u63cf\u5df2\u624b\u52a8\u89e6\u53d1\uff1blastPrCreatedAt=null\u6838\u5fc3\u95ee\u9898\u5f85\u89e3\u51b3",
   "notes": "\u624b\u52a8\u89e6\u53d1xixi\u626b\u63cf\uff08cron\u8fde\u7eed47\u6b21\u5931\u8d25\uff09\uff1b\u5fc3\u8df3cron\u8fde\u7eed12\u6b21timeout\uff1b\u591a\u4e2acron\u4efb\u52a1\u79ef\u538btimeout\u9700\u4f18\u5316timeoutSeconds",
-  "updatedAt": "2026-04-14T07:48:00Z",
-  "note": "PR #66411 created - #66283 cron agentTurn crash fix"
+  "updatedAt": "2026-04-14T08:10:00Z",
+  "note": "PR #66417 - #66382 heartbeat exec-event relay fix. PR #66411 - #66283 cron agentTurn crash."
 }
