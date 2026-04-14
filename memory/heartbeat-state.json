@@ -1,29 +1,12 @@
 {
-  "updatedAt": "2026-04-14T15:07:00Z",
+  "updatedAt": "2026-04-14T15:10:00Z",
   "calendarCheckedAt": null,
   "emailCheckedAt": null,
   "mentionsCheckedAt": null,
   "weatherCheckedAt": null,
   "lastProactiveReachoutAt": null,
-  "note": "xixi 扫描正常(15:00 UTC)。#66535 已失败4次(≥3)，标记为需人工介入。#66558 第3次尝试中。",
-  "subagentFailures": [
-    {
-      "issue": "#66558",
-      "runId": "c415139e-6cf1-4934-a33e-ad6be70e3116",
-      "dispatchedAt": "2026-04-14T14:32:00Z",
-      "failedAt": "2026-04-14T14:50:00Z",
-      "attempts": 2,
-      "note": "gateway timeout both times; partial code found (resolveToolProfilePolicy)"
-    },
-    {
-      "issue": "#66535",
-      "runId": "a3e18107-929c-42c5-bd45-2522c2b25de0",
-      "dispatchedAt": "2026-04-14T14:32:00Z",
-      "failedAt": "2026-04-14T14:50:00Z",
-      "attempts": 3,
-      "note": "3 failures; root cause found (missing abortSignal + no ACTIVE_EMBEDDED_RUNS); PR #66616 created but closed"
-    }
-  ],
+  "note": "xixi 扫描正常(15:00 UTC)。#66558 3rd attempt 完成(subagent list 空,未报失败)。#66535 需人工介入。",
+  "subagentFailures": [],
   "subagentSuccesses": [
     {
       "issue": "#66573",
@@ -31,7 +14,7 @@
       "dispatchedAt": "2026-04-14T14:19:00Z",
       "completedAt": "2026-04-14T14:29:00Z",
       "stage": "PR #66610 CREATED → CLOSED (P1 block)",
-      "note": "sessions_history limit retry — P1: catch swallows all errors"
+      "note": "sessions_history limit retry"
     },
     {
       "issue": "#66561",
@@ -39,7 +22,7 @@
       "dispatchedAt": "2026-04-14T14:14:00Z",
       "completedAt": "2026-04-14T14:20:00Z",
       "stage": "PR #66599 CREATED → CLOSED (P1 block)",
-      "note": "hasTimeoutHint AbortError guard — P1: early return bypasses timeout detection"
+      "note": "hasTimeoutHint AbortError guard"
     },
     {
       "issue": "#66564",
@@ -52,23 +35,16 @@
   ],
   "inProgressFixes": [
     {
-      "issue": "#66558",
-      "runId": "67871938-8148-4aca-94f7-594b63d81e16",
-      "dispatchedAt": "2026-04-14T14:56:00Z",
-      "stage": "final attempt (3rd)",
-      "note": "3rd attempt; previous found resolveToolProfilePolicy code refs"
-    },
-    {
       "issue": "#66535",
       "runId": "ad5f2e4b-a470-4ad5-a30a-2bf9b07e1b49",
       "dispatchedAt": "2026-04-14T14:45:00Z",
       "completedAt": "2026-04-14T15:01:00Z",
       "stage": "FAILED — 4th gateway timeout; needs manual intervention",
-      "note": "4 failures total; root cause: missing abortSignal + no ACTIVE_EMBEDDED_RUNS registration; PR #66616 created then closed"
+      "note": "Root cause known; PR #66616 created then closed"
     }
   ],
   "cronTasksReTriggered": [],
   "xixiLastScanAt": "2026-04-14T15:00:00Z",
-  "xixiNewScanTriggeredAt": "2026-04-14T14:56:00Z",
+  "xixiNewScanTriggeredAt": "2026-04-14T15:00:00Z",
   "lastPrCreatedAt": "2026-04-14T15:00:33Z"
 }
