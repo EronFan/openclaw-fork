@@ -1,4 +1,14 @@
 {
-  "updatedAt": "2026-04-14T23:43:00Z",
-  "note": "xixi 扫描正常(21:02 UTC, ~2.7h)"
+  "updatedAt": "2026-04-15T07:52:00Z",
+  "note": "xixi 扫描正常(05:02 GMT+8, <3h)，aoao fix-66822 失败(GPT-5.4 rate-limit ~55h + MiniMax timeout)，待模型恢复重试",
+  "subagentFailures": [
+    {
+      "issue": "#66822",
+      "task": "fix-66822",
+      "failedAt": "2026-04-15T07:41:00Z",
+      "reason": "All models failed: GPT-5.4 rate_limit (~3295min), MiniMax timeout",
+      "count": 1,
+      "status": "blocked_by_infrastructure"
+    }
+  ]
 }
