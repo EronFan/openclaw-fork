@@ -58,6 +58,8 @@
 | P60170 | [#66940](https://github.com/openclaw/openclaw/issues/66940) **S** MCP streamable-http 缺少 Accept header → 模型端无法解析响应 | 🔍 **新发现**(方向1 GitHub 第130轮 10:53 CST) | `Accept: application/json, text/event-stream` 缺失；curl 直接复现；1行 fix；**建议 aoao 接单** |
 | P60171 | [#66925](https://github.com/openclaw/openclaw/issues/66925) **B** memory plugin registerMemoryCapability 直接赋值覆盖而非合并 | 🔍 **新发现**(方向1 GitHub 第130轮 10:53 CST) | publicArtifacts 被 active-memory 覆盖导致 wiki bridge 返回 0 条目；赋值 vs 合并语义错误；**建议 aoao 接单** |
 | P60172 | [#66926](https://github.com/openclaw/openclaw/issues/66926) **M** google-generative-ai reasoning mode 破坏 tool calling — Gemma 4 26B | 🔍 **新发现**(方向1 GitHub 第130轮 10:53 CST) | reasoning_content 导致 tool call 参数格式错误；**建议 aoao 接单确认** |
+| P60173 | [Tencent/openclaw-weixin #66](https://github.com/Tencent/openclaw-weixin/issues/66) **S** 微信消息重复：用户发送1条消息，openclaw处理并回复2次 | 🔍 **新发现**(方向2 插件 第131轮 11:48 CST) | 根因已定位：ACK 机制缺失（HTTP 响应层未返回空 body 200），用 `sendMessageWeixin` "快速回复"代替导致微信超时重试；`contextToken` undefined 叠加；**maintainer 已给出精确根因分析，建议跟进修复 PR** |
+| P60174 | [Tencent/openclaw-weixin #52](https://github.com/Tencent/openclaw-weixin/issues/52) **XS** 个人账户登录微信（非bot）给好友发消息 | 🔍 **新发现**(方向2 插件 第131轮 11:48 CST) | 功能请求，非 bug；**低优先级** |
 
 | P60154 | [方向4] #66697 config.get 安全漏洞 - **已关闭**，需确认是否修正后 reopen | 👀 **状态变化**(方向4 第128轮 10:21 CST) | Codex 指出 sourceConfig/runtimeConfig 映射错误；**需确认修正方案** |
 
@@ -6571,3 +6573,39 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | fix-whatsapp-66920-66917 | #66920 + #66917 WhatsApp 群消息+重连 | ⏳ 运行中 | 10:50 CST |
 | fix-66934 | #66934 Webchat sender label | ⏳ 运行中 | 10:50 CST |
 | fix-66941 | #66941 WeChat gateway crash | 🚨 **待派出**（CRASH 优先） | 10:53 CST |
+
+## 2026-04-15 13:00 CST 新发现（方向1 GitHub 第131轮）
+
+| P60253 | [#66978](https://github.com/openclaw/openclaw/issues/66978) | 🔥🔥 **S regression**: sessions_spawn(mode="run") timeout — child Claude Code completes but parent never receives final completion payload | `mode="run"` 设计为一次性执行，孩子干完活爹不知道，父 session 无感知孩子完成；导致 parent 无限期等待或误判失败；根因：completion relay 未传回父 session；**最高优先级 regression**，**建议立即派出 fix** |
+| P60254 | [#66963](https://github.com/openclaw/openclaw/issues/66963) | 🔥🔥 **S crash**: agent crashes on startup — `ReferenceError: Cannot read properties of undefined (reading 'trim')` in buildPollSchema | Gateway 启动即崩，5分钟前新鲜报告；buildPollSchema 中 undefined.trim()；**建议优先派出 fix** |
+| P60255 | [#66971](https://github.com/openclaw/openclaw/issues/66971) | 🔒 **S security**: exec queue-health/surge-plan hardcodes `security=allowlist` — bypasses global exec security config | `security=allowlist` 硬编码在 exec 调用里，全局 `plugins.allow`/`exec.security` 配置被绕过；安全边界失效；无标签（漏标）；**建议加 bug+security 标签 + 派出 fix** |
+| P60256 | [#66975](https://github.com/openclaw/openclaw/issues/66975) + [#66950](https://github.com/openclaw/openclaw/issues/66950) | 🟠 **S regression**: Telegram bot commands disappear after upgrading to 2026.4.14 | 两个独立 reporter 确认同一问题；#66950 有 commit hash（323493f）；**疑似同根**：2026.4.14 升级后 setMyCommands 失效；#66939 (maintainer) 已 merge，**需确认是否完全覆盖** |
+| P60257 | [#66982](https://github.com/openclaw/openclaw/issues/66982) | 🟠 **S**: Exec completion relay creates orphan sessions with missing result context | exec 完成后 relay 未清理 session，导致 orphan session 累积；内存泄漏；**建议派出 fix** |
+| P60258 | [#66977](https://github.com/openclaw/openclaw/issues/66977) | 🟠 **S**: sqlite-vec extension cannot load on macOS — node:sqlite compiled with OMIT_LOAD_EXTENSION | macOS 上 sqlite-vec 扩展无法加载，向量搜索不可用；**建议派出 fix** |
+| P60259 | [#66973](https://github.com/openclaw/openclaw/issues/66973) | 🟡 **S bug:behavior**: sessions_spawn defaults to thread-bound persistent mode, turning one-shot tests into permanent bindings | `mode="run"` 应一次性，但实际默认 thread-bound persistent，导致测试用例变成永久绑定；**建议派出 fix** |
+| P60260 | [#66946](https://github.com/openclaw/openclaw/issues/66946) | 🟡 **S bug:behavior**: Control UI 路径重复导致404错误，聊天功能无法使用 | 中文标题；Control UI 路由问题；聊天功能不可用；**建议派出 fix** |
+| P60261 | [#66952](https://github.com/openclaw/openclaw/issues/66952) | 🟡 **S**: openai-codex OAuth refresh race + models status misreports expired Codex profiles as OK | token refresh 竞态；状态误报；**建议派出 fix** |
+
+## 2026-04-15 13:00 CST 新 Merge 确认（方向4）
+
+| PR | 标题 | 状态 | 备注 |
+|----|------|------|------|
+| #66987 | fix: avoid running native pnpm binaries through node | ✅ **刚 merge（maintainer）** | 安全 fix |
+| #66986 | fix(gateway): redact apiKey and secret env values in skills.update response | ✅ **刚 merge（maintainer）** | 安全 fix，覆盖 #66969 |
+| #66969 | fix(openai-codex): default undefined model.api to openai-codex-responses | ✅ **刚 merge** | openai-codex 默认修复 |
+| #66985 | fix(agents): resolve requestedNode to canonical ID before boundNode comparison | ✅ **刚 merge** | agents fix |
+| #66948 | fix(memory-core): default dreaming storage to "separate" | ✅ **刚 merge** | memory fix，覆盖 #66947 |
+| #66966 | fix(mcp): add required Accept header for streamable-http transport | ✅ **刚 merge** | 覆盖 #66940 |
+
+## 2026-04-15 13:00 CST 新 Open PR（方向4 — 待 review）
+
+| PR | 标题 | Size | 备注 |
+|----|------|------|------|
+| #66980 | fix(theme): accessibility tweaks for Matrix/Cyberpunk (PR #66387) | L | 需要 review |
+| #66987 | fix: avoid running native pnpm binaries through node | S | maintainer，刚 merge |
+| #66976 | fix(whatsapp): remove redundant root Baileys install blocker | S | 需要 review |
+
+## 2026-04-15 13:00 CST 插件更新（方向2）
+
+| P60262 | [Tencent/openclaw-weixin #68](https://github.com/Tencent/openclaw-weixin/issues/68) | 🟢 **XS**: 上传媒体文件到CDN时报500超时时的优化 | 10分钟前更新；功能优化请求；低优先级 |
+| P60173 | [Tencent/openclaw-weixin #66](https://github.com/Tencent/openclaw-weixin/issues/66) | 🔍 **S**: 微信消息重复（用户1条→openclaw回复2次） | 已在 P60173 追踪；根因已确认；待修复 PR；**维持追踪** |
