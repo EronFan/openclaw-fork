@@ -81,8 +81,8 @@
 
 **具体规则**：
 1. `arkcode/deepseek-v3-1-terminus` 不支持 coding plan，禁止进入任何 cron 或 agent 的 fallback 链
-2. 所有 cron 任务默认模型：`minimax/MiniMax-M2.7`
-3. aoao subagent 默认模型：`minimax/MiniMax-M2.7`
+2. 所有 cron 任务默认模型：`minimax/MiniMax-M2.5`
+3. aoao subagent 默认模型：`minimax/MiniMax-M2.5`
 4. `bujing/claude-haiku-4-5-20251001` 额度已满（2026-04-06），禁止再作为 fallback 或直接调用
 5. 模型 fallback 链里出现 404/UnsupportedModel/额度耗尽 时，立即将该模型从 fallback 链移除，换成已知可靠的模型
 6. 每次修复后必须验证 cron 状态恢复正常（status=ok）
