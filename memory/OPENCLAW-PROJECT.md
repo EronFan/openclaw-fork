@@ -6711,3 +6711,60 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P60183 | [#67162](https://github.com/openclaw/openclaw/issues/67162) **🔴 S regression** TypeError: Cannot read properties of undefined (reading 'trim') | 🔍 待认领 | 用户自修复 patch 给出但 regression 仍在；需正式 PR + 测试；**建议接单** |
 | P60184 | [#67170](https://github.com/openclaw/openclaw/issues/67170) **🔴 S** talk-voice plugin audio delivery failure to Telegram | 🔍 待认领 | ElevenLabs 音频无法送达 Telegram；根因不明确；需进一步调查 |
 | P60185 | [#67158](https://github.com/openclaw/openclaw/issues/67158) **🔴 S regression** openai-codex gpt-5.1/5.2/5.3 rejected on ChatGPT/Codex OAuth | 🔍 待认领 | gpt-5.4 唯一可用；疑似 Cloudflare bot 拦截；**建议确认** |
+
+### xixi Scan #66951-#67200 结果 (2026-04-15 21:20 CST)
+
+| 优先级 | Issue | 描述 | 状态 | 备注 |
+|--------|-------|------|------|------|
+| P60186 | [#67057](https://github.com/openclaw/openclaw/issues/67057) **🔴 S** dreaming-narrative会话累积导致Telegram通讯完全阻塞（5分钟延迟→完全阻塞） | 🔍 待认领 | 77个dreaming会话占用资源；消息队列被阻塞；建议：限制concurrent dreaming sessions或增加idle cleanup；inProgressFixes: fix-67057 |
+| P60187 | [#67029](https://github.com/openclaw/openclaw/issues/67029) **🔴 S** memory-core dreaming cleanup失败 - missing `operator.admin` RBAC scope | 🔍 待认领 | cleanup操作需要operator.admin权限但session缺少；sessions持续泄漏；建议接单 |
+| P60188 | [#67035](https://github.com/openclaw/openclaw/issues/67035) **🔴 M regression** Windows chat UI: input text swallowed, streamed replies invisible until refresh | 🔍 待认领 | 2026.4.14 regression；Windows特有；input字段与chat window状态不同步；建议接单 |
+| P60189 | [#67091](https://github.com/openclaw/openclaw/issues/67091) **🔴 M** sessions_spawn defaults to thread-bound persistent mode - 一次性的测试变成永久绑定 | 🔍 待认领 | sessions_spawn(..., mode="run")实际变成thread-bound persistent；测试套件受影响；根因在session mode resolution |
+| P60190 | [#67136](https://github.com/openclaw/openclaw/issues/67136) **🔴 M** Write tool falsely reports successful write of X bytes but no file created | 🔍 待认领 | 静默数据丢失；tool报告成功但文件不存在；需检查write确认逻辑 |
+| P60191 | [#67151](https://github.com/openclaw/openclaw/issues/67151) **🔴 M** Discord inbound messages containing `https` stripped before reaching agent | 🔍 待认领 | URL被当作spam过滤或内容清理被过度应用；需检查Discord消息处理pipeline |
+| P60192 | [#67087](https://github.com/openclaw/openclaw/issues/67087) **M** Browser tool downloads to temp instead of configured downloads path in CDP mode | 🔍 待认领 | CDP模式下下载路径硬编码到temp；用户配置的downloads路径被忽略 |
+| P60193 | [#67081](https://github.com/openclaw/openclaw/issues/67081) **M** WebChat user message not displayed until assistant response arrives | 🔍 待认领 | 用户消息发送后不立即显示；要等assistant回复才一起出现；UX regression |
+| P60194 | [#67133](https://github.com/openclaw/openclaw/issues/67133) **M** hooks未触发和定时任务执行历史缺失 | 🔍 待调查 | 描述不够详细；需更多信息才能开始fix |
+
+### PR追踪（2026-04-15 新增）
+
+| PR | 修复 | 状态 |
+|----|------|------|
+| [#67186](https://github.com/openclaw/openclaw/pull/67186) | fix(cron): classify runs as error when summary narrates denial token | OPEN |
+| [#67185](https://github.com/openclaw/openclaw/pull/67185) | fix(sessions): dedupe redundant delivery mirrors | OPEN |
+| [#67184](https://github.com/openclaw/openclaw/pull/67184) | fix(chat): support non-image attachments in webchat file upload | OPEN |
+| [#67179](https://github.com/openclaw/openclaw/pull/67179) | systemd scope fix | OPEN |
+| [#67175](https://github.com/openclaw/openclaw/pull/67175) | fix(logging): honor logging.file in bundled gateway runtime | OPEN |
+| [#67174](https://github.com/openclaw/openclaw/pull/67174) | Teams: support separate graphTenantId for cross-tenant Graph API access | OPEN |
+| [#67169](https://github.com/openclaw/openclaw/pull/67169) | fix(telegram): protect against accidental command menu clearing (#66958) | OPEN |
+| [#67163](https://github.com/openclaw/openclaw/pull/67163) | fix(commands): resolve auto setting during startup with empty registry | OPEN |
+| [#67159](https://github.com/openclaw/openclaw/pull/67159) | fix(openai-codex): normalize stale /backend-api/v1 baseUrl | OPEN |
+| [#67155](https://github.com/openclaw/openclaw/pull/67155) | feat(ui/sessions): add Hide system toggle to Sessions tab | OPEN |
+| [#67145](https://github.com/openclaw/openclaw/pull/67145) | fix onboard crash from missing bundled channel fallback metadata | OPEN |
+| [#67115](https://github.com/openclaw/openclaw/pull/67115) | fix: detect GUI on macOS correctly when SSH env vars present | OPEN |
+| [#67110](https://github.com/openclaw/openclaw/pull/67110) | fix(infra): skip SSH-no-display short-circuit on darwin/win32 | OPEN |
+| [#67108](https://github.com/openclaw/openclaw/pull/67108) | fix: tolerate concurrent temp dir permission repair | OPEN |
+| [#67091](https://github.com/openclaw/openclaw/pull/67091) | fix(dreaming): use ingestion date for dayBucket | OPEN |
+| [#67090](https://github.com/openclaw/openclaw/pull/67090) | fix(post-compaction): support H1 headings in extractSections | OPEN |
+| [#67089](https://github.com/openclaw/openclaw/pull/67089) | security: add config HMAC integrity + scope enforcement | OPEN |
+| [#67086](https://github.com/openclaw/openclaw/pull/67086) | fix(terminal): tolerate undefined path in formatDocsLink | OPEN |
+| [#67083](https://github.com/openclaw/openclaw/pull/67083) | fix(telegram): apply allowH2:false to polling dispatcher | OPEN |
+| [#67082](https://github.com/openclaw/openclaw/pull/67082) | [Dashboard] Fix exec approval modal overflow | OPEN |
+| [#67080](https://github.com/openclaw/openclaw/pull/67080) | feat(plugins): narrow gateway route loads from manifests | OPEN |
+| [#67077](https://github.com/openclaw/openclaw/pull/67077) | fix(auth-profiles): make post-success bookkeeping saves non-fatal | OPEN |
+| [#67073](https://github.com/openclaw/openclaw/pull/67073) | fix(dreaming): use isolated sessionTarget instead of main | OPEN |
+| [#67069](https://github.com/openclaw/openclaw/pull/67069) | feat(feishu): pass thread_id as MessageThreadId | OPEN |
+| [#67066](https://github.com/openclaw/openclaw/pull/67066) | fix(dreaming): use ingestion date for dayBucket (dup) | OPEN |
+| [#67063](https://github.com/openclaw/openclaw/pull/67063) | fix(plugins): include memory slot plugin in primary wiki CLI scope | OPEN |
+| [#67059](https://github.com/openclaw/openclaw/pull/67059) | fix(heartbeat): preserve persona and exec context in isolated sessions | OPEN |
+| [#67054](https://github.com/openclaw/openclaw/pull/67054) | fix(slack): honor dmHistoryLimit for 1:1 DMs | OPEN |
+| [#67049](https://github.com/openclaw/openclaw/pull/67049) | fix: drain system events on /new session reset | OPEN |
+| [#67041](https://github.com/openclaw/openclaw/pull/67041) | fix: add redaction patterns for JWTs, Basic auth, custom headers | OPEN |
+| [#67037](https://github.com/openclaw/openclaw/pull/67037) | fix(ui): skip session.message reloads during active chat | OPEN |
+| [#67036](https://github.com/openclaw/openclaw/pull/67036) | fix(ui): filter leaked control ui transcript rows | OPEN |
+| [#67033](https://github.com/openclaw/openclaw/pull/67033) | fix(discord): unblock gateway CI checks | OPEN |
+| [#67027](https://github.com/openclaw/openclaw/pull/67027) | fix(cli): explicitly skip plugin loading for cron subcommand | OPEN |
+| [#67025](https://github.com/openclaw/openclaw/pull/67025) | fix(plugins): register HTTP routes for setup-runtime after deferred load | OPEN |
+| [#67024](https://github.com/openclaw/openclaw/pull/67024) | fix: don't classify 400/422 with no body as format error | OPEN |
+| [#67023](https://github.com/openclaw/openclaw/pull/67023) | fix(memory-core): prevent dreaming-narrative session leaks | OPEN |
+| [#67022](https://github.com/openclaw/openclaw/pull/67022) | fix(poll-params): inline shared name arrays to avoid TDZ on CLI startup | OPEN |
