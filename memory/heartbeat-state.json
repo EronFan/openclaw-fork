@@ -1,4 +1,50 @@
 {
-  "updatedAt": "2026-04-15T02:54:00Z",
-  "note": "xixi 扫描已更新(02:33 UTC)"
+  "updatedAt": "2026-04-15T02:55:00Z",
+  "note": "xixi-129完成，5个fix已派出，fix-66941新派出",
+  "lastXixiScan": "2026-04-15T02:53:00Z",
+  "lastPrCreatedAt": null,
+  "xixiScan": {
+    "label": "xixi-129",
+    "completedAt": "2026-04-15T02:53:00Z",
+    "lastCompletedRound": 129
+  },
+  "inProgressFixes": [
+    {
+      "id": "fix-66936",
+      "issue": "#66936",
+      "desc": "CLI SecretRef + 进程不退出",
+      "spawnedAt": "2026-04-15T02:50:00Z"
+    },
+    {
+      "id": "fix-66937",
+      "issue": "#66937",
+      "desc": "lmstudio api key强制要求",
+      "spawnedAt": "2026-04-15T02:50:00Z"
+    },
+    {
+      "id": "fix-whatsapp-66920-66917",
+      "issue": "#66920 + #66917",
+      "desc": "WhatsApp群消息回归 + 408/499重连（同根）",
+      "spawnedAt": "2026-04-15T02:50:00Z"
+    },
+    {
+      "id": "fix-66934",
+      "issue": "#66934",
+      "desc": "Webchat sender label缺失",
+      "spawnedAt": "2026-04-15T02:50:00Z"
+    },
+    {
+      "id": "fix-66941",
+      "issue": "#66941",
+      "desc": "QClaw wechat-access无法连接，Gateway进程不启动",
+      "severity": "S-crash",
+      "spawnedAt": "2026-04-15T02:55:00Z",
+      "runId": "ab09c747-77b3-41ba-9471-6d727f30fb72",
+      "note": "CRASH级别，与#66561(PR #66599 CLOSED未合并)同根因家族"
+    }
+  ],
+  "alert": {
+    "level": "HIGH",
+    "msg": "PR #66599 (fix-66561) 被 CLOSED 未合并。WeChat crash #66941 与#66561同根因，已派出 fix-66941"
+  }
 }

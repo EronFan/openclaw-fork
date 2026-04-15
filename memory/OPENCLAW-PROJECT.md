@@ -6545,3 +6545,23 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | #66930 | fix(context-engine): gracefully degrade on third-party plugin failure | maintainer label | 等待 merge |
 | #66928 | fix(gateway): redact apiKey/secret in skills.update response | size XS | 等待 review |
 | #66921 | fix(security): add model_spawn to gateway HTTP tool denylist | size XS | 等待 review |
+
+## 🔴 CRITICAL ALERT — 2026-04-15 10:53 CST
+
+| 优先级 | Issue | 标题 | 备注 |
+|--------|-------|------|------|
+| P60246 | [#66941](https://github.com/openclaw/openclaw/issues/66941) | 🔥🔥 **S crash**: QClaw客服号(wechat-access)无法连接，Gateway进程不启动 | **7分钟前报告**（10:46 CST）；gateway startup crash；与 #66561（PR #66599 CLOSED，未合并）**同根因家族**；0评论；**建议立即派出 fix** |
+
+**⚠️ 重要：** PR #66599（fix-66561: AbortError misclassified as timeout）被 CLOSED，未合并。WeChat crash #66941 与 #66561 症状相同（gateway 进程 crash），根因可能相同或相关。需重新分析根因并提 PR。
+
+---
+
+## 2026-04-15 10:53 CST 已派出 Fix 状态
+
+| Fix ID | Issue | 状态 | 派出时间 |
+|--------|-------|------|----------|
+| fix-66936 | #66936 CLI SecretRef + 进程不退出 | ⏳ 运行中 | 10:50 CST |
+| fix-66937 | #66937 lmstudio api key | ⏳ 运行中 | 10:50 CST |
+| fix-whatsapp-66920-66917 | #66920 + #66917 WhatsApp 群消息+重连 | ⏳ 运行中 | 10:50 CST |
+| fix-66934 | #66934 Webchat sender label | ⏳ 运行中 | 10:50 CST |
+| fix-66941 | #66941 WeChat gateway crash | 🚨 **待派出**（CRASH 优先） | 10:53 CST |

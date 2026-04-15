@@ -1,74 +1,141 @@
-# 全量扫描报告 2026-04-15 10:40 CST
-
-## GitHub Issues（方向1）
-**发现了 10 个新候选**
-
-### 🔴 S级（建议立即接单）
-- **#66940** MCP Accept header 缺失 — streamable-http MCP 请求缺少 `Accept: application/json, text/event-stream`，导致模型端无法正确解析响应；curl 可直接复现；修复只需在 headers 中加一行；根因清晰
-- **#66916** Slack regression 4.14 — 审批按钮对长命令失效；同一 regression 在不同 reporter 处独立报告；approval 逻辑在 4.14 被改动；需 review 相关 commit
-- **#66895** modelOverrideSource="auto" 持久化无 TTL — auto-failover 写入 override 后永不清除，重启/reset 也不生效；guard 只保护 user source，auto source 无保护机制；长期污染配置
-
-### 🟠 B级（建议 aoao 接单）
-- **#66925** memory plugin 覆盖问题 — `registerMemoryCapability` 使用直接赋值而非合并，`publicArtifacts` 被覆盖导致 wiki bridge 返回 0 条目；覆盖 vs 合并语义错误
-- **#66886** gateway 内存泄漏 — 长跑 gateway RSS 持续增长；疑似未关闭 handle 或全局状态累积；需要 heap snapshot 对比定位
-- **#66885** Telegram event loop 冻结 — regression 4.12；undici HTTP/2+IPv6 在 Windows 上每 10-12min 冻结 90-200s；web_fetch 在 4.7 已修复但 Telegram polling 未应用
-- **#66936** CLI SecretRef + hang — `buildProviderStatusIndex()` 无法解析 SecretRef 导致 agents list 失败；所有 agents 子命令完成后进程不退出（unclosed handles）
-
-### 🟡 C级
-- **#66937** lmstudio 误要求 api key — 本地 LM Studio 不需要 api key，但 provider onboarding 强制要求；local provider 判断逻辑有误
-
-### 🟢 XS级
-- **#66934** Webchat sender label 显示 'openclaw-control-ui' 而非 'you' — UI 小 bug；input 字段与 chat window 状态不同步
+# xixi-report.md — OpenClaw Issues Scan
+**扫描时间（北京时间）:** 2026-04-15 10:53  
+**扫描时间（UTC）:** 2026-04-15 02:53  
+**数据范围:** open issues 最近更新（约 2026-04-14 20:30 ~ 2026-04-15 02:53 UTC）
 
 ---
 
-## 插件仓库（方向2）
-**openclaw-weixin 仓库不存在（404）**，扫描无结果
-
-其他相关插件仓库（openclaw-* organization）未单独扫描，超出本次范围。
+## 新 issue 总数
+约 **50+ 个**（过去 ~6 小时内有更新的 open issues）
 
 ---
 
-## 贡献者文件区域（方向3）
-**扫描了 10 名末段 contributors 的文件区，未发现新的未认领高优先级 bug**
+## 按优先级分类
 
-末段 contributors（已排除 EronFan）：huntharo, mcaxtr, bmendonca3, jalehman, onutc, eleqtrizit, osolmaz, Glucksberg, altaywtf, quotentiroler
+### 🔴 S 级（Regression / P0-P1 / 数据/功能性破坏 / bug:crash）
 
-本轮次贡献者的最近文件区未发现新的、未被追踪的 open bug 与其重叠。
+| # | 标题 | 类型 | 时间(UTC) | 备注 |
+|---|------|------|-----------|------|
+| **66942** | TypeError: Cannot read properties of undefined (reading 'trim') | **bug:crash** | 02:52 | 已知 duplicate，fix PR #66882 已提（nikilster） |
+| **66941** | QClaw客服号(wechat-access)无法连接，Gateway进程不启动 | **bug:crash** | 02:46 | 新鲜出炉（7 min ago），gateway 进程 crash，无 PR |
+| **66916** | Malformed tool calls on longer requests for approval button on Slack | **Bug+Regression** | 01:44 | Slack approval button 在长命令时崩溃，sessions_send 找不到 session |
+| **66892** | [MiniMax Model] Tool call ID format error (code 2013) causes LCM compaction failure | **bug:crash** | 00:53 | MiniMax LCM compaction 崩溃，无 PR |
+| **66885** | Telegram polling stall + subagent announce timeout on Windows | **Bug+Regression** | 00:50 | ✅ PR #66889 已合并（neeravmakwana） |
+| **66887** | Single plugin failure causes complete gateway outage | **Bug** | 00:36 | Magicray1217 称将提 PR（存疑，疑似 spam） |
+| **66797** | Group natural-language messages silently dropped in 2026.4.11 | **Bug** | 20:50 | 影响 group 会话，kpiy88 确认 2026.4.14 仍然 broken |
+| **66786** | System Prompt doesn't respect OPENCLAW_WORKSPACE_DIR | **Regression** | 20:31 | 严重功能 regression，无 PR |
+| **66785** | Umbrel openclaw version 2026.4.12 setup wizard - impossible | **Bug+Regression** | 20:30 | setup wizard regression |
+| **66768** | Empty completed turns in ghcr.io/openclaw/openclaw:2026.4.14 | **Bug+Regression** | 20:27 | openrouter 用户确认，仍 broken in 2026.4.14 |
+| **66752** | ERR_MODULE_NOT_FOUND audit-Cb4RZuLD.js on ARM64 npm global inst | **Bug+Regression** | 19:16 | ARM64 regression，无 PR |
+
+### 🟡 M 级（中等优先级）
+
+| # | 标题 | 标签 | 时间(UTC) |
+|---|------|------|-----------|
+| **66940** | MCP streamable-http: missing Accept header causes connection failure | - | 02:30 |
+| **66937** | lmstudio provider does not allow to skip api key | bug | 02:21 |
+| **66936** | CLI `openclaw agents list` fails with unresolved SecretRef | bug | 02:21 |
+| **66934** | Webchat: sender label shows 'openclaw-control-ui' instead of 'you' | - | 02:13 |
+| **66926** | google-generative-ai reasoning mode breaks tool calling — Gemma 4 26B | - | 02:45 |
+| **66925** | registerMemoryCapability is overwrite-only | bug | 01:44 |
+| **66920** | WhatsApp group inbound messages silently drop after repeated 408 reconnects | - | 01:42 |
+| **66917** | WhatsApp Stability: Persistent 408/499 Disconnects & Group Inbound Fail | - | 01:38 |
+| **66895** | modelOverrideSource="auto" persists indefinitely after failover | bug:behavior | 01:07 |
+| **66886** | Memory leak: gateway process persistent memory growth | - | 01:41 |
+| **66879** | Mac App image send reaches agent as text only | bug | 00:04 |
+| **66875** | Webchat race: chat final / session.message / sessions.changed triggers | - | 01:17 |
+| **66867** | Race condition in `ensureTrustedFallbackDir`: concurrent subprocess | - | 00:36 |
+| **66866** | excessive RESUMEs from Discord Gateway integration (carbon) | bug+regression | 23:18 |
+| **66799** | agents.files.get allows operator.read callers to read arbitrary files | bug:behavior | 20:42 |
+| **66773** | device.token.rotate returns plaintext device tokens | bug:behavior | 20:05 |
+| **66769** | skills.update echoes raw apiKey and env secrets in gateway response | bug:behavior | 00:34 |
+
+### 🟢 L 级（feature / size: S-XS）
+
+约 30+ 个，多为 size: S/XS 的 fix/feat。
 
 ---
 
-## 追踪 PR 反馈（方向4）
-**⚡ 方向4本轮极为活跃，发现多个关键 maintainer / bot 评论**
+## Top 3 详细分析
 
-### 活跃 PR 评论
-- **#66930** (maintainer PR: fix context-engine third-party plugin graceful degradation) — openperf 开了一个 S 级 maintainer PR，2h 内无新评论，需跟进 merge 窗口
-- **#66939** (fix telegram duplicate preview) — rubencu 的 PR，Greptile P2 指出 `consoleSpy` 未在 `finally` 中 restore，会泄漏到后续测试；建议要求作者修复
-- **#66939** — chatgpt-codex-connector bot P1 指出 `pendingCompactionReplayBoundary` 在 queue drain 前就被 reset，compaction retry 时会重新出现 duplicate preview；P2 指出 retry 无 partial chunk 时 boundary 从未被 resolve
+### 1️⃣ #66941 — QClaw客服号(wechat-access)无法连接，Gateway进程不启动（最高优先级）
+**严重程度:** 🔴 S（bug:crash，P0）  
+**发现时间:** 2026-04-15 02:46 UTC（约 7 分钟前）  
+**标签:** bug:crash  
+**评论数:** 0
 
-### 新发现（PR 上的代码质量 comment）
-- `extensions/telegram/src/bot-message-dispatch.ts` — Greptile 指出 `onCompactionStart` 中 `pendingCompactionReplayBoundary` 判断逻辑重复，建议重构
-- `#66930` 相关代码 — maintainer PR，Greptile 指出 test file `src/context-engine/context-engine.test.ts` 中 `consoleSpy` 需要用 `afterEach(() => { vi.restoreAllMocks(); })` 统一清理
+**问题描述:**
+Gateway 进程完全不启动，WeChat 接入层（wechat-access）无法连接。这是一个 crash 级别的 bug，新鲜报告，暂无任何人接手。
 
-### 项目文件状态检查
-- **#66522** (Session index 重启后丢失) — 磁盘文件存在但 sessions.json 索引丢失，数据丢失级别；建议立即接单
-- **#66936** (CLI SecretRef hang) — 新发现，S 级，根因清晰
-- **#66937** (lmstudio api key) — 新发现，S 级
-- **#66920/#66917** (WhatsApp 群消息静默丢弃) — 新发现，S regression，建议合并追踪
-- **#66653** (Onboarding TypeError) — PR 已开 mergeable，建议 approve
-- **#66692** (audio transcription allowPrivateNetwork) — PR 已开，Greptile P2 指出缺少 regression test，建议补充
+**影响范围:** 所有使用 WeChat 接入的用户
+
+**是否值得提 PR:** ✅ **建议接单**。crash 级别，需要尽快确认根因并修复。
 
 ---
 
-## 结论
-**本轮最高优先级：**
+### 2️⃣ #66916 — Malformed tool calls on longer requests for approval button on Slack（regression）
+**严重程度:** 🔴 S（Regression + bug:behavior，P1）  
+**发现时间:** 2026-04-15 01:44 UTC（约 1 小时前）  
+**标签:** bug, regression  
+**评论数:** 0（无人接手）
 
-1. **[S，建议接单] #66940** MCP Accept header — 根因极清晰，1行 fix，可快速 close
-2. **[S，建议接单] #66936** CLI SecretRef + hang — 两条独立 bug（解析失败+进程不退出），但根因都在 agents/index.ts
-3. **[S，建议跟进] #66930** maintainer PR — context-engine graceful degradation，maintainer 亲写，需确认 merge 窗口
-4. **[S，建议确认] #66937** lmstudio api key — onboarding 逻辑错误，local provider 判断缺失
+**问题描述:**
+升级到 2026.4.14 后，Slack 的 allow-once approval button 在处理较长命令时崩溃：
+- 按钮完全失效（长命令必定失败，短命令如 "pwd" 正常）
+- `sessions_send` 无法找到 Slack session key
+- 根因指向 tool call 在较长请求时被 malformed
 
-**建议动作：**
-- aoao 或 xixi 立即接单 #66940 和 #66936（根因已在 summary 中）
-- review #66930 是否可 approve（maintainer PR，mergeable）
-- #66939 的 Greptile/chatgpt-codex-connector 评论需要作者响应，建议要求作者修复 test + compaction boundary 问题
+**根因分析:**
+sessions_send 找不到 session key，可能是 tool call ID 生成或 session 路由在新版本中有 regression。
+
+**影响范围:** 所有 Slack 接入用户（approval 按钮完全失效）
+
+**是否值得提 PR:** ✅ **建议接单**。regression，根因在 sessions 路由 + tool call 生成，size 可能不大。
+
+---
+
+### 3️⃣ #66786 — System Prompt doesn't respect OPENCLAW_WORKSPACE_DIR（regression）
+**严重程度:** 🔴 S（Regression，P1）  
+**发现时间:** 2026-04-14 20:31 UTC（约 6 小时前）  
+**标签:** bug, regression  
+**评论数:** 0
+
+**问题描述:**
+系统 prompt 的 workspace 路径不尊重 `OPENCLAW_WORKSPACE_DIR` 环境变量配置。这是一个严重的功能 regression，影响所有通过环境变量配置 workspace 的用户。
+
+**根因:**
+可能是 2026.4.14 workspace 路径解析逻辑变更导致。
+
+**影响范围:** Headless Linux (EC2/ECS) 等通过环境变量配置 workspace 的用户
+
+**是否值得提 PR:** ✅ **建议接单**。regression，根因清晰（OPENCLAW_WORKSPACE_DIR 处理），修复路径明确。
+
+---
+
+## inProgressFixes（当前已有进展）
+
+| 状态 | Issue # | PR # | 动作 |
+|------|---------|------|------|
+| ✅ Merged | #66885 | #66889 | Telegram polling stall 修复（neeravmakwana） |
+| ⏳ Open | #66942 | #66882 | TypeError fix（nikilster，guard clack text prompt）|
+| ⏳ Open | #66887 | - | Single plugin failure 导致 gateway outage（Magicray1217 声称要修，存疑） |
+
+**注意:** heartbeat-state.json 中记录 `fix-66561 @ PR #66599`，但当前 PR 列表中未见 #66599，需 main agent 确认状态。
+
+---
+
+## 建议汇总
+
+| 优先级 | Issue # | 建议动作 |
+|--------|---------|----------|
+| 🔴 S | #66941 | ✅ **立即派单**：crash，7分钟前新鲜报告，无人接手 |
+| 🔴 S | #66916 | ✅ **建议接单**：Slack approval button regression，sessions_send 路由问题 |
+| 🔴 S | #66786 | ✅ **建议接单**：OPENCLAW_WORKSPACE_DIR regression |
+| 🟡 M | #66768 | ⚠️ **观察**：openrouter empty turns regression，仍 broken in 2026.4.14 |
+| 🟡 M | #66752 | ⚠️ **观察**：ARM64 ERR_MODULE_NOT_FOUND |
+| ✅ | #66885 | 已 merge，无需处理 |
+| ⏳ | #66942 | PR #66882 open 中，关注 merge 状态 |
+
+---
+
+*xixi-report.md generated at 2026-04-15 02:53 UTC*
