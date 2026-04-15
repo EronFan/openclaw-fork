@@ -1,3 +1,52 @@
 {
-  "updatedAt": "2026-04-15T16:31:00Z"
+  "updatedAt": "2026-04-16T00:35:00Z",
+  "note": "xixi 00:35 CST: fix-67264→PR#67287 merged; fix-67267→PR#67289 created; fix-67257 timed out - re-dispatched v2; fix-67270-v2 running; 2 subagents running for #67261/50; fix-67173→PR#67258 (maintainer fallback) still OPEN",
+  "lastPrCreatedAt": "2026-04-16T00:18:00Z",
+  "inProgressFixes": [
+    {
+      "issue": 67264,
+      "status": "PR_MERGED",
+      "pr": 67287
+    },
+    {
+      "issue": 67267,
+      "status": "PR_CREATED",
+      "pr": 67289
+    },
+    {
+      "issue": 67270,
+      "status": "in_progress",
+      "runId": "221db5b1-d0d2-4ca5-8faa-ade3e7f79a7f"
+    },
+    {
+      "issue": 67261,
+      "status": "in_progress",
+      "desc": "Venice model responses missing id/status → crash"
+    },
+    {
+      "issue": 67257,
+      "status": "REDISPATCHED_V2",
+      "desc": "Telegram plugin missing register/activate - timed out, re-dispatched",
+      "runId": "053f1ef8-4224-431a-a820-1b90b9dcb1d3"
+    },
+    {
+      "issue": 67250,
+      "status": "in_progress",
+      "desc": "Control UI streaming text disappears when tool calls hidden"
+    },
+    {
+      "issue": 67273,
+      "status": "open_pr",
+      "desc": "Fix heartbeat async exec delivery leaks - PR #67273 still OPEN"
+    },
+    {
+      "issue": 67173,
+      "status": "TIMEOUT",
+      "desc": "fix-67173-v2 timed out; PR#67258 (maintainer fallback) still OPEN"
+    }
+  ],
+  "pendingIssues": [
+    {"issue": 67260, "desc": "Native Ollama primary falls back in long-lived Telegram session"},
+    {"issue": 67256, "desc": "WeCom MEDIA: instruction file sending fails"}
+  ]
 }
