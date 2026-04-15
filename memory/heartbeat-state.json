@@ -1,4 +1,46 @@
 {
-  "updatedAt": "2026-04-15T02:33:00Z",
-  "note": "xixi 扫描已更新"
+  "updatedAt": "2026-04-15T02:50:00Z",
+  "note": "xixi-129扫描已派出 + 4个fix已派出",
+  "inProgressFixes": [
+    {
+      "id": "fix-66936",
+      "issue": "#66936",
+      "desc": "CLI SecretRef + 进程不退出",
+      "spawnedAt": "2026-04-15T02:50:00Z",
+      "runId": "33780dfd-11f9-48af-9ae4-b9029407cfbf"
+    },
+    {
+      "id": "fix-66937",
+      "issue": "#66937",
+      "desc": "lmstudio api key强制要求",
+      "spawnedAt": "2026-04-15T02:50:00Z",
+      "runId": "df52d919-a145-4750-b6e2-c0df970fe139"
+    },
+    {
+      "id": "fix-whatsapp-66920-66917",
+      "issue": "#66920 + #66917",
+      "desc": "WhatsApp群消息回归 + 408/499重连（同根）",
+      "spawnedAt": "2026-04-15T02:50:00Z",
+      "runId": "fb98ddb4-78c0-4926-839d-0be666754eb2"
+    },
+    {
+      "id": "fix-66934",
+      "issue": "#66934",
+      "desc": "Webchat sender label缺失",
+      "spawnedAt": "2026-04-15T02:50:00Z",
+      "runId": "efc02942-3d55-4dde-bd9f-3594a523df48"
+    }
+  ],
+  "xixiScan": {
+    "label": "xixi-129",
+    "runId": "780901ea-c459-4151-816e-2cdb387aa980",
+    "spawnedAt": "2026-04-15T02:50:00Z",
+    "lastCompletedRound": 128
+  },
+  "lastPrCreatedAt": null,
+  "execFailure": {
+    "host": "vivid-bi",
+    "signal": "SIGKILL",
+    "note": "previous xixi exec killed, recovered"
+  }
 }

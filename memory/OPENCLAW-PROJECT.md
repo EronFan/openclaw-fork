@@ -33,6 +33,29 @@
 | 优先级 | 任务 | 状态 | 备注 |
 |--------|------|------|------|
 | P60146 | [#66522](https://github.com/openclaw/openclaw/issues/66522) **🔴 S** Session index 重启后重建，历史 session 全部消失（磁盘文件还在但索引丢失） | 🔍 待处理 | 磁盘文件存在但 sessions.json 索引丢失，数据丢失级别；**建议立即接单** |
+| P60147 | [#66936](https://github.com/openclaw/openclaw/issues/66936) **S** CLI: `openclaw agents list` fails with unresolved SecretRef; CLI process hangs after completion | 🔍 **新发现**(方向1 GitHub 第128轮 10:21 CST) | Bug1: buildProviderStatusIndex() 无法解析 SecretRef → agents list 失败；Bug2: 所有 agents 子命令完成后进程不退出（unclosed handles）；**根因清晰，建议接单** |
+| P60148 | [#66937](https://github.com/openclaw/openclaw/issues/66937) **S** lmstudio provider does not allow to skip api key | 🔍 **新发现**(方向1 GitHub 第128轮 10:21 CST) | 本地 LM Studio 不需要 API key，但 onboarding 强制要求；阻断本地开发者使用；**建议接单** |
+| P60149 | [#66934](https://github.com/openclaw/openclaw/issues/66934) **XS** Webchat: sender label shows 'openclaw-control-ui' instead of 'you' | 🔍 **新发现**(方向1 GitHub 第128轮 10:21 CST) | UI 小 bug；senderLabel 提取逻辑问题；input 字段与 chat window 状态不同步；**低优先级** |
+| P60150 | [#66920](https://github.com/openclaw/openclaw/issues/66920) **S regression** WhatsApp group inbound messages silently drop after repeated 408 reconnect cycles | 🔍 **新发现**(方向1 GitHub 第128轮 10:21 CST) | 2026.4.12 修复了 DM 但群消息订阅仍失效；与 #66917 同根；需重启 gateway 才能恢复；**建议 aoao 接单** |
+| P60151 | [#66917](https://github.com/openclaw/openclaw/issues/66917) **S** WhatsApp Stability: Persistent 408/499 Disconnects & Group Inbound Failure | 🔍 **新发现**(方向1 GitHub 第128轮 10:21 CST) | 双账号 + Baileys 写入竞态导致 auth.json 损坏；群消息累积状态降解；**建议与 #66920 合并追踪** |
+| P60152 | [方向4] #66653 Onboarding TypeError - Greptile 建议更新 type signature | 👀 **新评论**(方向4 第128轮 10:21 CST) | Greptile 评论：参数类型 `raw: string` 应改为 `raw: string | null | undefined`；**建议作者响应** |
+| P60153 | [方向4] #66692 audio transcription - Greptile 指出缺少 regression test | 👀 **新评论**(方向4 第128轮 10:21 CST) | Greptile P2 评论：没有自动化测试覆盖 `allowPrivateNetwork` 字段；**建议作者补充测试** |
+| P60155 | [#66940](https://github.com/openclaw/openclaw/issues/66940) **🔴 S** MCP streamable-http 缺少 Accept header → 模型端无法解析响应 | 🔍 **新发现**(方向1 GitHub 第129轮 10:40 CST) | `Accept: application/json, text/event-stream` 缺失；curl 直接复现；根因清晰，1行 fix；**建议立即接单** |
+| P60156 | [#66916](https://github.com/openclaw/openclaw/issues/66916) **S regression** Slack 4.14 approval 按钮对长命令失效 | 🔍 **新发现**(方向1 GitHub 第129轮 10:40 CST) | 审批按钮功能 regression；4.14 改动 approval 逻辑；多 reporter 独立确认；**建议接单** |
+| P60157 | [#66895](https://github.com/openclaw/openclaw/issues/66895) **S** modelOverrideSource="auto" 持久化无 TTL/no clear-on-success | 🔍 **新发现**(方向1 GitHub 第129轮 10:40 CST) | auto-failover 写入 override 永不清除，重启/reset 也失效；guard 只保护 user source；**建议接单** |
+| P60158 | [#66925](https://github.com/openclaw/openclaw/issues/66925) **B** memory plugin registerMemoryCapability 直接赋值覆盖而非合并 | 🔍 **新发现**(方向1 GitHub 第129轮 10:40 CST) | publicArtifacts 被 active-memory 覆盖导致 wiki bridge 返回 0 条目；赋值 vs 合并语义错误；**建议 aoao 接单** |
+| P60159 | [#66886](https://github.com/openclaw/openclaw/issues/66886) **B** gateway 长跑 RSS 持续增长 — 疑似未关闭 handle | 🔍 **新发现**(方向1 GitHub 第129轮 10:40 CST) | 内存泄漏；需 heap snapshot 对比；**建议 aoao 接单** |
+| P60160 | [#66885](https://github.com/openclaw/openclaw/issues/66885) **B regression** Telegram event loop 冻结 90-200s（4.12）— undici HTTP/2+IPv6 Windows | 🔍 **新发现**(方向1 GitHub 第129轮 10:40 CST) | web_fetch 4.7 已修复但 Telegram polling 未应用；**建议 aoao 接单** |
+| P60161 | [#66936](https://github.com/openclaw/openclaw/issues/66936) **S** CLI: agents list 无法解析 SecretRef + 进程 hang | 🔍 **新发现**(方向1 GitHub 第129轮 10:40 CST) | buildProviderStatusIndex() 无法解析 SecretRef；所有 agents 子命令完成后不退出；**根因清晰，建议接单** |
+| P60162 | [#66937](https://github.com/openclaw/openclaw/issues/66937) **S** lmstudio provider 误要求 api key（本地不需 key） | 🔍 **新发现**(方向1 GitHub 第129轮 10:40 CST) | onboarding 强制要求 api key；local provider 判断逻辑缺失；**建议接单** |
+| P60163 | [#66934](https://github.com/openclaw/openclaw/issues/66934) **XS** Webchat sender label 显示 'openclaw-control-ui' 而非 'you' | 🔍 **新发现**(方向1 GitHub 第129轮 10:40 CST) | UI 小 bug；senderLabel 提取逻辑问题；**低优先级** |
+| P60164 | [方向4] #66939 Greptile P2: consoleSpy 未在 finally 中 restore — 会泄漏到后续测试 | 👀 **新评论**(方向4 第129轮 10:40 CST) | `src/context-engine/context-engine.test.ts` 测试隔离问题；建议作者用 `afterEach(() => { vi.restoreAllMocks(); })` 修复 |
+| P60165 | [方向4] #66939 chatgpt-codex-connector P1+P2: pendingCompactionReplayBoundary reset 时机错误 + retry 无 partial 时 boundary 从未 resolve | 👀 **新评论**(方向4 第129轮 10:40 CST) | compaction retry 时 duplicate preview 会重新出现；建议作者响应 Greptile 和 bot 评论 |
+| P60166 | [#66930](https://github.com/openclaw/openclaw/pull/66930) **maintainer S** context-engine graceful degradation on third-party plugin failure | 🔍 **新发现**(方向1 GitHub 第129轮 10:40 CST) | maintainer 亲写 S 级 PR；2h 内无新评论；需跟进 merge 窗口；**建议确认** |
+
+| P60154 | [方向4] #66697 config.get 安全漏洞 - **已关闭**，需确认是否修正后 reopen | 👀 **状态变化**(方向4 第128轮 10:21 CST) | Codex 指出 sourceConfig/runtimeConfig 映射错误；**需确认修正方案** |
+
+| P60146 | [#66522](https://github.com/openclaw/openclaw/issues/66522) **🔴 S** Session index 重启后重建，历史 session 全部消失（磁盘文件还在但索引丢失） | 🔍 待处理 | 磁盘文件存在但 sessions.json 索引丢失，数据丢失级别；**建议立即接单** |
 | P60147 | [#66591](https://github.com/openclaw/openclaw/issues/66591) **🔴 S** lossless-claw regression — 2026.4.14 完全无法使用 | ✅ **已关闭** | 已通过 lossless-claw 0.9 更新解决；2026-04-14 15:47 确认关闭 |
 | P60148 | [#66519](https://github.com/openclaw/openclaw/issues/66519) **🔴 S** Subagent completion 重复 delivery 两条消息，CPU 100% | ✅ **已关闭** | 与 #66151 同根；#66265 修复后解决；2026-04-14 17:45 确认关闭 |
 | P60149 | [#66653](https://github.com/openclaw/openclaw/pull/66653) Onboarding TypeError | 🔲 待 review | PR 已开，mergeable，建议 approve |
@@ -6501,3 +6524,24 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P60238 | [#66916](https://github.com/openclaw/openclaw/issues/66916) | 🔥 **S regression**: Slack approval button 对长命令失效 + sessions.resolve 误判 Slack user ID | 2026.4.14 更新后 Slack approval buttons 对含空格的长命令完全失效；sessions.resolve 把 Slack user ID 当作 session key 导致路由失败；**建议 aoao 派单修复**
 | P60239 | [#66923](https://github.com/openclaw/openclaw/issues/66923) | 🟠 **S**: GPT-4.1 family passes through unmanaged | gpt-4.1-nano/mini 不在 registry 里，用户配置后无 exec profile/optimizations，静默降级；**建议审查 registry 补录**
 | P60240 | [#66927](https://github.com/openclaw/openclaw/issues/66927) | 🟠 **Feature**: deterministic handoff from user-invocable skills to plugin tools | 新功能请求：无 user 触发 skill 可预测调度到 plugin tools；低优先级
+
+## 2026-04-15 10:30 CST 新发现（方向1 GitHub 第129轮）
+
+| 优先级 | Issue | 标题 | 备注 |
+|--------|-------|------|------|
+| P60241 | [#66940](https://github.com/openclaw/openclaw/issues/66940) | 🔥 **S**: MCP streamable-http missing Accept header causes connection failure | streamable-http MCP server（如 Zhipu BigModel）连接失败，缺少 `Accept: application/json` header；0评论；**根因清晰，建议接单** |
+| P60242 | [#66937](https://github.com/openclaw/openclaw/issues/66937) | 🔥 **S**: lmstudio provider does not allow to skip api key | LM Studio 本地运行不需要 API key，但 onboarding 强制要求填写，阻断本地开发者首配；0评论；**5行可修，建议接单** |
+| P60243 | [#66920](https://github.com/openclaw/openclaw/issues/66920) | 🟠 **S regression**: WhatsApp group inbound messages silently drop after repeated 408 reconnect cycles | 已在 P60150 追踪；2026.4.12 修复了 DM 但群消息订阅仍失效；与 #66917 同根 |
+| P60244 | [#66917](https://github.com/openclaw/openclaw/issues/66917) | 🟠 **S**: WhatsApp Stability: Persistent 408/499 Disconnects & Group Inbound Failure | 已在 P60151 追踪；Baileys auth.json 损坏 + 群消息累积状态降解 |
+| P60245 | [#66916](https://github.com/openclaw/openclaw/issues/66916) | 🟠 **S regression**: Slack malformed tool calls on longer requests + bad session routing | 已在 P60238 追踪 |
+
+## 2026-04-15 10:30 CST 追踪 PR 状态（方向4 第129轮）
+
+| PR | 标题 | 新反馈 | 状态 |
+|----|------|--------|------|
+| #66653 | Onboarding TypeError | Greptile P2：参数类型应加 null/undefined guard | 待 author 响应 |
+| #66692 | audio transcription allowPrivateNetwork | Greptile P2：无 regression test | 待 author 响应 |
+| #66939 | fix(telegram): avoid duplicate preview after compaction retry | 1 comment + 3 reviews | 持续追踪 merge |
+| #66930 | fix(context-engine): gracefully degrade on third-party plugin failure | maintainer label | 等待 merge |
+| #66928 | fix(gateway): redact apiKey/secret in skills.update response | size XS | 等待 review |
+| #66921 | fix(security): add model_spawn to gateway HTTP tool denylist | size XS | 等待 review |
