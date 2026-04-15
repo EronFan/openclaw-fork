@@ -6955,3 +6955,64 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 ### 插件仓库（方向2 第139轮 05:31 CST）
 - **Tencent/openclaw-weixin**: 45 open issues，repo 公开但 API 不可访问（可能 private 或需认证）；**无新发现**
 - 已有 P60220 追踪微信插件 #70 (IMA Knowledge Base)
+
+| P60300 | [#67394](https://github.com/openclaw/openclaw/issues/67394) **🟠 S regression** WhatsApp group auto-reply silently fails — reply generates but never delivers | 🔍 **新发现**(第140轮 05:37 CST) | bug+regression标签；2026.4.14；WhatsApp 群组自动回复生成但从不投递；消息到达 agent、agent 推理正常，但从不送达群组；**建议 aoao 接单** |
+| P60301 | [#67396](https://github.com/openclaw/openclaw/issues/67396) **🟠 S** Telegram silently drops messages exceeding 4096 characters | 🔍 **新发现**(第140轮 05:37 CST) | 无 error 无截断无 partial indicator；静默失败；**建议 aoao 接单** |
+| P60302 | [#67400](https://github.com/openclaw/openclaw/issues/67400) **🟠 S bug** sub-agent sessions circular dependency: mode="session" vs thread=true | 🔍 **新发现**(第140轮 05:37 CST) | bug标签；persistent sub-agent sessions 无法创建；mode="session" 和 thread=true 互斥；block ACP 功能；1条评论；**建议 aoao 接单确认** |
+| P60303 | [#67399](https://github.com/openclaw/openclaw/issues/67399) **🟠 S** Circuit breaker for repeated tool failures — agent 无限重试同一失败工具，烧tokens | 🔍 **新发现**(第140轮 05:37 CST) | 设计缺失；无 circuit breaker；相同失败工具无限重试；**建议 aoao 接单** |
+| P60304 | [#67393](https://github.com/openclaw/openclaw/issues/67393) **🟠 S crash** VM bloat 22GB+ immediately on Gateway startup | 🔍 **新发现**(第140轮 05:37 CST) | bug+crash；与 #66886 内存泄漏相关；之前被标记 won't-fix 但问题仍存在；**建议 aoao 接单确认根因** |
+| P60305 | [#67402](https://github.com/openclaw/openclaw/issues/67402) **🟡 M** Internal control/update messages leak into normal chat sessions after gateway restarts | 🔍 **新发现**(第140轮 05:37 CST) | 内部消息混入用户会话；assistant 误回复内部事件；**建议 aoao 接单** |
+| P60306 | [方向4] #67376 MCP loopback bearer token bind — chatgpt-codex-connector[bot] P1: clearActiveMcpLoopbackRuntime() 无条件清除全局 runtime，race with closeMcpLoopbackServer() | 👀 **新评论**(第140轮 05:37 CST) | P1: `ensureMcpLoopbackServer()` 可在 close 期间启动新 server 然后被旧 close 回调清掉；P2: token revocation 在 cleanup 之后，异常时 unregister 不执行导致 token 泄漏；**需 maintainer 或作者确认 fix** |
+
+---
+
+## 第135轮 xixi 扫描状态 (2026-04-16 05:37 CST)
+
+**⚠️ xixi 扫描异常：** xixi.sh 脚本不存在，`memory/xixi-reports/latest-scan-report.md` 最后修改时间为 `2026-04-15 21:11 CST`（约 8.5 小时前）。xixi 扫描可能已掉线。
+
+### 本轮新发现 S/M 级 Bug（自 2026-04-15 12:00 CST 以来）
+
+| 优先级 | Issue | 标题 | 备注 |
+|--------|-------|------|------|
+| 🔴 S | [#67393](https://github.com/openclaw/openclaw/issues/67393) | 内存暴涨（22GB+ VIRT），gateway 立即崩溃 | bug:crash，0评论 |
+| 🔴 S | [#67394](https://github.com/openclaw/openclaw/issues/67394) | WhatsApp 群组 auto-reply 静默失败 | regression，0评论 |
+| 🔴 S | [#67378](https://github.com/openclaw/openclaw/issues/67378) | WhatsApp 出站消息产生幽灵 chats（缺少 LINKED devices） | bug，0评论 |
+| 🟠 M | [#67314](https://github.com/openclaw/openclaw/issues/67314) | Misleading "Context limit exceeded" 错误（heartbeat model bleed） | bug:behavior，已在追踪 |
+| 🟠 M | [#67308](https://github.com/openclaw/openclaw/issues/67308) | Heartbeat 每天烧掉 3 亿 tokens（config 被忽略） | bug:behavior，已在追踪 |
+| 🟠 M | [#67334](https://github.com/openclaw/openclaw/issues/67334) | Ollama timeout persists (2026.4.14 embedded runtime) | bug:crash，0评论 |
+| 🟠 M | [#67353](https://github.com/openclaw/openclaw/issues/67353) | Onboarding crash: trim on undefined | bug:crash，0评论 |
+| 🟡 M | [#67400](https://github.com/openclaw/openclaw/issues/67400) | Agent 无法创建 persistent sub-agent sessions | bug，0评论 |
+| 🟡 M | [#67323](https://github.com/openclaw/openclaw/issues/67323) | MSTeams DM 消息重复（队列重放未去重） | 已在追踪 |
+
+### PR 合并状态更新
+
+**新合并 PR（2026-04-15 20:00+ UTC）：**
+- PR #67325 `fix(matrix): skip pairing-store reads for room auth` ✅ merged
+- PR #67315 `fix(memory-core): skip dreaming transcript ingestion` ✅ merged  
+- PR #67303 `fix: tighten trusted tool media passthrough` ✅ merged
+- PR #67298 `fix(gateway): enforce localRoots containment` ✅ merged
+- PR #67294 `fix(matrix): block DM pairing-store entries` ✅ merged
+- PR #67281 `fix: dedupe replayed exec.finished node events` ✅ merged
+- PR #67277 `fix(context-window): Tighten context limits and bound memory excerpts` ✅ merged
+- PR #67091 `fix(dreaming): use ingestion date for dayBucket` ✅ merged
+- PR #67086 `fix(terminal): tolerate undefined path` ✅ merged
+
+**新提 PR（2026-04-15 20:00+ UTC）：**
+- PR #67403 `fix(memory-wiki): support token-overlap search` — 刚提，0评论
+- PR #67401 `fix(stability): session skills snapshot, tool-loop guard, TUI watchdog` — 刚提
+- PR #67398 `fix(heartbeat): route outbound mirror to isolated session key` — 刚提
+- PR #67395 `fix install on Windows: pnpm.exe runner + Lobster fallback` — 刚提
+- PR #67382 `Fix` — 刚提（无描述）
+- PR #67381 `fix: show heartbeat model bleed hint on context overflow error` — 修复 P60238
+- PR #67380 `fix(channels): improve error logging for bundled channel loading` — 刚提
+- PR #67376 `fix(gateway): bind loopback MCP scope to per-backend bearer token` — 刚提
+- PR #67374 `fix: handle undefined rawValue in setup wizard` — 刚提
+- PR #67372 `docs(gateway): correct protocol.md schema path` — 刚提
+- PR #67365 `fix: Guard against undefined channel input in onboarding (trim crash)` — 修复 #67291/#67347/#67353/#67358
+- PR #67341 `fix(amazon-bedrock-mantle): add discovery.enabled config gate` — 修复 P60240
+
+**已提 PR 状态更新：**
+- PR #67281 dedupe exec.finished → ✅ **merged** (原 P60223)
+- PR #67277 context-window Tighten → ✅ **merged** (原 P60222)
+- PR #67279 WhatsApp harden creds saves → P60221 maintainer 尚未 merge，mergeable=true
+
