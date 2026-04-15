@@ -1,31 +1,4 @@
 {
-  "updatedAt": "2026-04-15T15:01:00Z",
-  "note": "xixi 22:54 CST scan processed; 3 aoao dispatched (fix-67252/67251/67250); fix-67173 still open PR#67258",
-  "lastPrCreatedAt": "2026-04-15T14:54:00Z",
-  "inProgressFixes": [
-    {
-      "issue": 67173,
-      "pr": 67258,
-      "status": "open",
-      "desc": "followup drain on surface_error timeout"
-    },
-    {
-      "issue": 67252,
-      "status": "dispatched",
-      "runId": "b986d601-d652-45ad-bc54-6181f4cf390c",
-      "desc": "feishu_doc write missing pagination in clearDocumentContent"
-    },
-    {
-      "issue": 67251,
-      "status": "dispatched",
-      "runId": "927cbca0-8f85-4c57-a3e5-7cfa7f4ff2b2",
-      "desc": "Windows CLI subcommand hang SIGKILL 2026.4.14 regression"
-    },
-    {
-      "issue": 67250,
-      "status": "dispatched",
-      "runId": "cf3c82bf-71d1-4425-a856-deea487e1104",
-      "desc": "Control UI streaming text disappears when tool calls hidden"
-    }
-  ]
+  "updatedAt": "2026-04-15T16:15:00Z",
+  "note": "xixi 新报告已生成"
 }
