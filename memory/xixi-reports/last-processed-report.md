@@ -1,33 +1,34 @@
 # Last Processed xixi Scan Report
 
-**Scan range:** issues #66951–#67050 | PRs #66951–#67050
-**Timestamp:** 2026-04-15T13:44 GMT+8 (05:44 UTC)
+**Scan range:** issues #67051–#67150 | PRs #67051–#67150
+**Timestamp:** 2026-04-15T16:18 GMT+8 (08:18 UTC)
 **Report location:** xixi-reports/latest-scan-report.md
 
 ## Quick Status
 
-- Issues in range: ~130 open + closed
-- Top Candidates: 2 new identified (#66975 S regression, #65428 S)
-- PRs worth watching: #67005, #67003 (maintainer reviewed, ready to merge)
+- New S-level candidates: #66885, #67057, #66975
+- #66975 already has fix-66975 in progress
+- #66885 and #67057 are new (no fix spawned yet)
 
-## Key Fixes Needed (no PR yet)
+## Key S-level Fixes Needed (no PR yet)
 
-1. [#66975](https://github.com/openclaw/openclaw/issues/66975) — **S regression** Telegram bot commands 升级 2026.4.14 后全部消失，Bot Menu 按钮丢失
-2. [#65428](https://github.com/openclaw/openclaw/issues/65428) — OAuth session reset（已在 P59944 区域追踪）
+1. [#66885](https://github.com/openclaw/openclaw/issues/66885) — **S regression** Telegram event loop 冻结 90-200s（4.12）— undici HTTP/2+IPv6 Windows。`allowH2: false` 在 4.7 加到 web_fetch 但 Telegram polling dispatcher 未应用。**与 #67034 同根，1行 fix**。已派出 fix-66885。
+2. [#67057](https://github.com/openclaw/openclaw/issues/67057) — **S regression** dreaming-narrative 导致 Telegram 通讯严重阻塞。77个 dreaming-narrative 会话占82%活跃会话，Load Avg 45.67，消息处理被梦境会话阻塞。已派出 fix-67057。
+3. [#66975](https://github.com/openclaw/openclaw/issues/66975) — **S regression** Telegram bot commands disappear after upgrading to 2026.4.14。已在 fix-66975 追踪。
 
-## PRs to Watch (maintainer reviewed)
+## M-level Candidates
 
-- **#67005** fix(ollama): simplify cloud onboarding — maintainer reviewed, ready to merge
-- **#67003** fix(security): 7 P1 hardening fixes — maintainer reviewed, ready to merge
-- **#66985** fix(agents): resolve requestedNode to canonical ID — new, no maintainer review yet
+- #67035 Windows chat UI regression（与 #67028 同根）
+- #67034 Telegram 16-account avalanche（与 #66885 同根）
+- #67028 WebChat messages disappear（history reload race condition）
+- #67019 GLM-4.7 garbled output
 
 ## Conclusions
 
-- **Highest priority: #66975** (Telegram commands regression, changelog-related, Bot Menu lost)
-- Second: **#65428** (OAuth session reset, root cause clear)
-- Direction 4: **#67005** and **#67003** maintainer reviewed, can approve+merge now
+- 3个新 S 级：#66885、#67057 已派出 fix；#66975 已在 fix-66975
+- 反馈检查：#54952/#54964/#55008/#55013 均无新评论，状态不变
 
 ## Next Scan Range
 
-- Issues: #67051–#67150
-- PRs: #67051–#67150
+- Issues: #67151–#67250
+- PRs: #67151–#67250
