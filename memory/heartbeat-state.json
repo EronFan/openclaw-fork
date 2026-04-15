@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-04-15T07:52:00Z",
-  "note": "xixi 扫描正常(05:02 GMT+8, <3h)，aoao fix-66822 失败(GPT-5.4 rate-limit ~55h + MiniMax timeout)，待模型恢复重试",
-  "subagentFailures": [
-    {
-      "issue": "#66822",
-      "task": "fix-66822",
-      "failedAt": "2026-04-15T07:41:00Z",
-      "reason": "All models failed: GPT-5.4 rate_limit (~3295min), MiniMax timeout",
-      "count": 1,
-      "status": "blocked_by_infrastructure"
-    }
-  ]
+  "updatedAt": "2026-04-15T08:01:00Z",
+  "note": "xixi 扫描正常(05:02 GMT+8, ~3h前)；3个 aoao 任务失败(GPT-5.4 rate-limit ~5h + MiniMax timeout)，模型基础设施故障，无法重试，待恢复",
+  "modelStatus": {
+    "openai-codex/gpt-5.4": "rate_limited ~5h",
+    "minimax/MiniMax-M2.1": "timeout_unresponsive"
+  },
+  "blockedTasks": [
+    {"issue": "#66822", "task": "fix-66822"},
+    {"issue": "#66849", "task": "fix-66849"},
+    {"issue": "#66832", "task": "fix-66832"}
+  ],
+  "subagentFailures": []
 }
