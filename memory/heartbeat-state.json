@@ -1,46 +1,4 @@
 {
-  "updatedAt": "2026-04-15T08:29:00Z",
-  "note": "fix-66975 PR#67075 完成。fix-66885和fix-67057进行中。内存guardian正常运行。",
-  "lastXixiScan": "2026-04-15T08:18:00Z",
-  "lastPrCreatedAt": "2026-04-15T08:25:00Z",
-  "xixiScan": {
-    "label": "xixi-132",
-    "completedAt": "2026-04-15T08:18:00Z",
-    "lastCompletedRound": 132
-  },
-  "inProgressFixes": [
-    {
-      "id": "fix-66885",
-      "issue": "#66885",
-      "desc": "Telegram event loop 冻结 90-200s — undici HTTP/2+IPv6 Windows",
-      "severity": "S-regression",
-      "spawnedAt": "2026-04-15T08:25:00Z"
-    },
-    {
-      "id": "fix-67057",
-      "issue": "#67057",
-      "desc": "dreaming-narrative 导致 Telegram 通讯严重阻塞",
-      "severity": "S-regression",
-      "spawnedAt": "2026-04-15T08:25:00Z"
-    }
-  ],
-  "completedPRs": [
-    {
-      "id": "fix-65428",
-      "issue": "#65428",
-      "pr": "#67071",
-      "desc": "OAuth session reset after token refresh",
-      "completedAt": "2026-04-15T08:19:00Z"
-    },
-    {
-      "id": "fix-66975",
-      "issue": "#66975",
-      "pr": "#67075",
-      "desc": "Telegram bot commands disappear after 2026.4.14 regression",
-      "completedAt": "2026-04-15T08:25:00Z"
-    }
-  ],
-  "subagentFailures": [],
-  "subagentSuccesses": ["fix-65428", "fix-66975"],
-  "alert": null
+  "updatedAt": "2026-04-15T08:30:00Z",
+  "note": "xixi 扫描已更新"
 }
