@@ -1,12 +1,12 @@
 {
-  "lastHeartbeat": "2026-04-14T22:20:00Z",
-  "lastXixiScan": null,
-  "lastPrCreatedAt": "2026-04-14T22:20:00Z",
+  "lastHeartbeat": "2026-04-15T02:53:00Z",
+  "lastXixiScan": "2026-04-15T02:53:00Z",
+  "lastPrCreatedAt": null,
   "inProgressFixes": [
-    "fix-66561 @ 2026-04-14T22:20 — AbortError misclassified as timeout — PR CREATED (#66599)"
+    "fix-66941 @ 2026-04-15T02:53 — WeChat (wechat-access) gateway crash — NEEDS TRIAGE"
   ],
   "staleDays": 0,
-  "alert": null,
-  "notes": "fix #66561: hasTimeoutHint() adds AbortError guard — prevents SSE stream abort being misclassified as 408 timeout; PR #66599; fix #66564: Control UI polling PR #66596 also merged",
-  "updatedAt": "2026-04-14T22:20:00Z"
+  "alert": "PR #66599 (fix-66561 AbortError/timeout) was CLOSED without merge. WeChat crash issue #66941 is fresh (7min ago) and appears related. Main agent should triage ASAP.",
+  "notes": "fix-66561 (PR #66599) was closed without merge — regression not resolved. #66941 (WeChat crash) is likely same root cause family. Top candidates: #66941, #66916, #66786",
+  "updatedAt": "2026-04-15T02:53:00Z"
 }
