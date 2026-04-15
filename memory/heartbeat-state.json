@@ -1,3 +1,7 @@
 {
-  "updatedAt": "2026-04-15T10:13:00Z"
+  "updatedAt": "2026-04-15T12:41:00Z",
+  "lastPrCreatedAt": "2026-04-15T12:40:00Z",
+  "lastPrNumber": 11,
+  "lastPrRepo": "EronFan/openclaw-fork",
+  "note": "#67118 fix PR created on eronfan fork (no upstream access); fix: throw FailoverError when embedded run returns meta.error"
 }

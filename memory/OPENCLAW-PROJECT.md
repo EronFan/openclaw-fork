@@ -60,6 +60,18 @@
 | P60172 | [#66926](https://github.com/openclaw/openclaw/issues/66926) **M** google-generative-ai reasoning mode 破坏 tool calling — Gemma 4 26B | 🔍 **新发现**(方向1 GitHub 第130轮 10:53 CST) | reasoning_content 导致 tool call 参数格式错误；**建议 aoao 接单确认** |
 | P60173 | [Tencent/openclaw-weixin #66](https://github.com/Tencent/openclaw-weixin/issues/66) **S** 微信消息重复：用户发送1条消息，openclaw处理并回复2次 | 🔍 **新发现**(方向2 插件 第131轮 11:48 CST) | 根因已定位：ACK 机制缺失（HTTP 响应层未返回空 body 200），用 `sendMessageWeixin` "快速回复"代替导致微信超时重试；`contextToken` undefined 叠加；**maintainer 已给出精确根因分析，建议跟进修复 PR** |
 | P60174 | [Tencent/openclaw-weixin #52](https://github.com/Tencent/openclaw-weixin/issues/52) **XS** 个人账户登录微信（非bot）给好友发消息 | 🔍 **新发现**(方向2 插件 第131轮 11:48 CST) | 功能请求，非 bug；**低优先级** |
+| P60175 | [#67093](https://github.com/openclaw/openclaw/issues/67093) **🔴 S regression** Discord Channel Leaking Raw Tool Call Syntax | 🔥 **aoao 已派出**(runId ed2e2d63 第131轮 20:13 CST) | 2026.4.14 regression；Discord 漏出原始 `<<parameterparameter>...` 工具语法；model fallback 到 OpenRouter 时触发；**建议立即接单** |
+| P60176 | [#67092](https://github.com/openclaw/openclaw/issues/67092) **🔴 S regression** Malformed reasoning output leaks into user-visible and persisted text | 🔥 **aoao 已派出**(方向1 GitHub 第131轮 20:13 CST) | reasoning prose 伴随 `</think>` 被写入 session.jsonl；Ollama；workaround 已给，代码 fix 需加固 sanitize 逻辑；**建议 aoao 接单** |
+| P60177 | [#67118](https://github.com/openclaw/openclaw/issues/67118) **🔴 S** Cron isolated agentTurn may not advance to model fallback when embedded run returns meta.error | ✅ **PR#11 on eronfan fork** | ✅ 已完成fix并提PR；根因：`runResult.meta.error` 未被 throw 导致 `runWithModelFallback` 不推进；修复：在 `createCronPromptExecutor` 中当 `result.meta?.error` 存在时 throw `FailoverError`；**无法push upstream，需范总处理** |
+| P60178 | [#67120](https://github.com/openclaw/openclaw/issues/67120) **🟡 M** Feishu voice messages not transcribed — raw file_key delivered instead of text | 🔍 **新发现**(方向1 GitHub 第131轮 20:13 CST) | Feishu 语音消息只收到 JSON 而非转写文本；`speech_to_text` 字段未提取；建议 aoao 接单确认 |
+| P60179 | [#67173](https://github.com/openclaw/openclaw/issues/67173) **🔴 S** Queued messages silently dropped after agent run timeout | 🔥 **inProgressFixes**(第132轮 20:21 CST) | Agent run 超时终止后队列消息静默丢弃；`surface_error` failover path 未调用 `scheduleFollowupDrain`；纯内存 `FOLLOWUP_QUEUES` Map 服务重启丢失；用户体验极差（无响应无错误）；根因清晰；**fix-67173 已派出** |
+| P60180 | [#67171](https://github.com/openclaw/openclaw/issues/67171) **🔴 S** config set strips `${VAR}` substitution sentinels（安全相关） | 🔍 **新发现**(第132轮 20:21 CST) | `openclaw configure`/`config set` 将 resolved 值写回磁盘，环境变量占位符被还原为明文 secret；安全漏洞（与 #62438 同簇）；根因：写路径从 in-memory resolved config 序列化而非 source view；修复方向明确（维护 source view 并行）；**建议立即接单** |
+| P60181 | [#67172](https://github.com/openclaw/openclaw/issues/67172) **🔴 S** Cron classifier sets status=ok on denial tokens | 🔍 **新发现**(第132轮 20:21 CST) | Cron run 含 `SYSTEM_RUN_DENIED` 等拒绝令牌但 `status` 仍为 `ok`；`resolveRunOutcome` 只检查 `hasFatalErrorPayload` 不看 summary text；监控集成误判 green cron 实际失败；相关 #65950 #65988；1 token 匹配列表 + finalize 前加检查；**建议接单** |
+| P60182 | [#67168](https://github.com/openclaw/openclaw/issues/67168) **🔴 S regression** logging.file config not applied | 🔍 **新发现**(第132轮 20:21 CST) | `logging.file` 配置被读取但未应用，日志仍写 `/tmp/openclaw/` 而非配置路径；根因：文件 logger 在读取配置前初始化，之后不再切换；用户配置完全无效；1行 fix；**建议立即接单** |
+| P60183 | [#67162](https://github.com/openclaw/openclaw/issues/67162) **🟠 S regression** TypeError on undefined trim (channel selection) | 🔍 **新发现**(第132轮 20:21 CST) | 空标题 bug，`path.trim()` 在 undefined 上调用；用户已自修复（sed 补丁）但 regression 仍在，需正式 PR；确认 patch 对应源码位置，补自动化测试 |
+| P60184 | [#67170](https://github.com/openclaw/openclaw/issues/67170) **🟠 S** talk-voice audio delivery failure to Telegram | 🔍 **新发现**(第132轮 20:21 CST) | ElevenLabs 生成的音频无法送达 Telegram，ffmpeg 已安装，无明确 error；根因不明确，需调研 delivery path |
+| P60185 | [#67152](https://github.com/openclaw/openclaw/issues/67152) **🟡 B** memory-core dreaming uses request-scoped subagent outside gateway request | 🔍 **新发现**(第132轮 20:21 CST) | dreaming narrative 生成在 gateway request 作用域外，导致 fallback generation + cleanup warnings；建议 aoao 接单 |
+| P60186 | [#67151](https://github.com/openclaw/openclaw/issues/67151) **🟡 S regression** Discord inbound messages containing `https` stripped | 🔍 **新发现**(第132轮 20:21 CST) | Discord 消息含 `https` 时被剥离，URL 不到达 agent；需回归检查 |
 
 | P60154 | [方向4] #66697 config.get 安全漏洞 - **已关闭**，需确认是否修正后 reopen | 👀 **状态变化**(方向4 第128轮 10:21 CST) | Codex 指出 sourceConfig/runtimeConfig 映射错误；**需确认修正方案** |
 
@@ -218,7 +230,7 @@ P342 | Tencent/openclaw-weixin [#55](https://github.com/Tencent/openclaw-weixin/
 | P1 | Diagnostics gap issue | 🔍 仍开放 (#54952) | gh api 确认 state=open，comments=0；误判为 404；重新追踪，等 review 机会 |
 | P1b | Session zombie state after init failure | 🔍 仍开放 (#54964) | gh api 确认 state=open，comments=0；误判为 404；重新追踪 |
 | P3 | docs(cli/message) clarify plugin extensibility | ✅ **PR 可 merge（#55008）** | **Greptile P1→已修复**：feishu skills 意外移除被 EronFan 捕获，maintainer 已恢复（bb2ea2f7e4 + b14be82db1）；最新 Greptile review 确认修复完成；PR 只含 docs 变更，**建议 Approve 推 merge** |
-| P3b | docs(channels/feishu) routing fallback clarification | ✅ **PR 可 merge（#55013）** | **Greptile 5/5 Safe to merge**；maintainer 已修复所有 P1（groupPolicy → access-control gate）；最新评论显示 maintainer 确认 groupPolicy 修正完成；剩两个 P2 nit（非阻塞）；**建议 Approve 推 merge** |
+| P3b | docs(channels/feishu) routing fallback clarification | ✅ **PR 可 merge（#55013）** | **Greptile 5/5 Safe to merge + maintainer 修正 groupPolicy**；maintainer 确认 groupPolicy 修正完成；剩两个 P2 nit（非阻塞）；**建议 Approve 推 merge** |
 | P2 | docs(channels/feishu) routing fallback clarification | ✅ PR 已创建 (#55013) | 等 review |
 | P4 | Review #55153 (Kimi malformed-args fix) | ✅ Approve ✅ 已发 review | 等 author 回复 |
 | P5 | Review #55137 (ACP terminal ANSI stripping) | ✅ Approve+question ✅ 已发 review | 等 author 确认 sanitize 不一致问题 |
@@ -6687,3 +6699,15 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 - **#67069** feat(feishu): pass thread_id as MessageThreadId in inbound context — size XS by Etoilelune
 - **#67066** fix(dreaming): use ingestion date for dayBucket — size XS by leaderlemon
 - **#67063** fix(plugins): include memory slot plugin in primary wiki CLI scope — size S by sahilsatralkar (fixes #66082)
+
+### 新发现候选（方向1 第132轮 12:21 UTC / 20:21 CST）
+
+| 优先级 | 任务 | 状态 | 备注 |
+|--------|------|------|------|
+| P60179 | [#67173](https://github.com/openclaw/openclaw/issues/67173) **🔴 S** Queued messages silently dropped after agent run timeout — followup drain not triggered | 🔥 **立即派出 fix** | `surface_error` path 未调用 `scheduleFollowupDrain`；`FOLLOWUP_QUEUES` 纯内存；用户看到 `queueDepth=1` 静默丢消息；根因清晰；**inProgressFixes: fix-67173** |
+| P60180 | [#67171](https://github.com/openclaw/openclaw/issues/67171) **🔴 S security** config set strips `${VAR}` substitution sentinels — secrets written as plaintext | 🔍 待认领 | `openclaw configure`/`config set` 从 resolved in-memory 写回，丢失 source `${VAR}`；安全漏洞；报告极详细；**建议接单** |
+| P60181 | [#67172](https://github.com/openclaw/openclaw/issues/67172) **🔴 S** Cron classifier sets status=ok when run summary contains denial tokens | 🔍 待认领 | `SYSTEM_RUN_DENIED` 等 denial token 出现在 summary 但 `status=ok`；根因：`resolveRunOutcome` 只检查 `hasFatalErrorPayload`；**建议接单** |
+| P60182 | [#67168](https://github.com/openclaw/openclaw/issues/67168) **🔴 S regression** logging.file config is read but not applied — logs always write to /tmp/openclaw/ | 🔍 待认领 | 文件 logger 在读配置前初始化，之后不再切换；用户配置完全无效；**建议接单** |
+| P60183 | [#67162](https://github.com/openclaw/openclaw/issues/67162) **🔴 S regression** TypeError: Cannot read properties of undefined (reading 'trim') | 🔍 待认领 | 用户自修复 patch 给出但 regression 仍在；需正式 PR + 测试；**建议接单** |
+| P60184 | [#67170](https://github.com/openclaw/openclaw/issues/67170) **🔴 S** talk-voice plugin audio delivery failure to Telegram | 🔍 待认领 | ElevenLabs 音频无法送达 Telegram；根因不明确；需进一步调查 |
+| P60185 | [#67158](https://github.com/openclaw/openclaw/issues/67158) **🔴 S regression** openai-codex gpt-5.1/5.2/5.3 rejected on ChatGPT/Codex OAuth | 🔍 待认领 | gpt-5.4 唯一可用；疑似 Cloudflare bot 拦截；**建议确认** |

@@ -1,37 +1,39 @@
 # Last Processed xixi Scan Report
 
-**Scan range:** issues #67051–#67150 | PRs #67051–#67150
-**Timestamp:** 2026-04-15T17:04 GMT+8 (09:04 UTC)
+**Scan range:** issues #67251–#67350 | PRs #67251–#67350
+**Timestamp:** 2026-04-15T20:21 GMT+8 (12:21 UTC)
 **Report location:** xixi-reports/latest-scan-report.md
 
 ## Quick Status
 
-- New S-level candidates: #67092, #67093, #67084, #67076, #67074
-- #67092 and #67093 → aoao 已派出 fix
-- #67084 → 已派出（与 #66848 同根）
-- #67076 + #67074 → 同根因 regression，持续催促 #66653 merge
+- New S-level candidates: #67173, #67171, #67172, #67168, #67162, #67170, #67151
+- #67173 → inProgressFixes (fix-67173 dispatched)
+- #67171 → S security config set strip — suggested immediate take
+- #67172 → S cron classifier denial tokens — suggested take
+- #67168 → S regression logging.file — suggested immediate take
+- #67162 → S regression TypeError trim — user self-fixed, needs formal PR
+- #67170 → S talk-voice Telegram delivery — needs investigation
+- #67151 → S regression Discord https stripping — needs regression check
 
-## Key S-level Fixes (no PR yet)
+## Key S-level Fixes
 
-1. [#67092](https://github.com/openclaw/openclaw/issues/67092) **S regression** — reasoning 输出泄漏。孤立</think>无对应Opening tag，sanitizer失效。用户可见原始 reasoning + 写入 session .jsonl。workaround：取最后一个</think>后文本。**aoao 已派出**。
-2. [#67093](https://github.com/openclaw/openclaw/issues/67093) **S** — Discord 泄漏原始 tool call XML。fallback 绕过 response-parsing 层。**aoao 已派出**。
-3. [#67084](https://github.com/openclaw/openclaw/issues/67084) **S regression** — Active Memory + Codex timeout spam。与 #66848 同根。已派出 fix。
-4. [#67076](https://github.com/openclaw/openclaw/issues/67076) + [#67074](https://github.com/openclaw/openclaw/issues/67074) **S regression** — Onboarding trim TypeError 持续出现。同根因 bug，PR #66653 已 mergeable 但未合并。**需催促 maintainer**。
+1. [#67173](https://github.com/openclaw/openclaw/issues/67173) **S** — Queued messages dropped after agent timeout. `surface_error` path missing `scheduleFollowupDrain`. **inProgressFixes: fix-67173**
+2. [#67171](https://github.com/openclaw/openclaw/issues/67171) **S security** — config set strips `${VAR}` sentinels, writes resolved secrets to disk.
+3. [#67172](https://github.com/openclaw/openclaw/issues/67172) **S** — Cron classifier sets status=ok on denial tokens (SYSTEM_RUN_DENIED etc.).
+4. [#67168](https://github.com/openclaw/openclaw/issues/67168) **S regression** — logging.file config not applied, logs still go to /tmp/openclaw/.
 
-## PR Merge 状态
+## Feedback Check (this cycle)
 
-- #66930 ✅ 已合并（07:02 UTC）
-- #66692 ✅ 已合并（02:36 UTC）
-- #66653 🔴 仍 OPEN，mergeable，紧急催促 merge
+- #54952: 0 comments (no change)
+- #54964: 0 comments (no change)
+- #55008: 5 comments — Greptile regression caught (feishu skills removed), EronFan fixed (bb2ea2f7e4 + b14be82db1), **PR ready to merge**
+- #55013: 2 comments — Greptile 5/5 Safe to merge + maintainer corrected groupPolicy, **PR ready to merge**
 
-## 反馈检查结果
+## OPENCLAW-PROJECT.md Updated
 
-- #54952: 0 comments（无变化）
-- #54964: 0 comments（无变化）
-- #55008: 5 comments — Greptile P1 regression（feishu skills 意外移除）
-- #55013: 2 comments — Greptile 5/5 Safe to merge
+Added P60179–P60186 to「当前优先级」table.
 
 ## Next Scan Range
 
-- Issues: #67151–#67250
-- PRs: #67151–#67250
+- Issues: #67351–#67450
+- PRs: #67351–#67450

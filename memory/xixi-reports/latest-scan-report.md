@@ -1,103 +1,98 @@
-# 全量扫描报告 2026-04-15 17:04 CST
+# 全量扫描报告 2026-04-15 12:21 UTC (20:21 CST)
 
 ## GitHub Issues（方向1）
 
-本次扫描（过去 2 小时）发现 **16 个新 open issue**，其中 **5 个 regression/bug** 需重点关注：
+**新发现 17 个候选**（最近 2 小时共 22 个 open issues/PRs 更新），重点候选：
 
-### 🔴 Top Candidates（新发现，未追踪）
+### 🔴 Top Candidate: #67173 S级 — Queued messages silently dropped after agent run timeout
+- **描述**：Agent run 超时终止后，队列中的消息被静默丢弃（`queueDepth=1` 但无 `scheduleFollowupDrain` 调用）
+- **根因**：`surface_error` failover path 未调用 followup drain；`FOLLOWUP_QUEUES` Map 为纯内存，服务重启丢失
+- **影响**：用户体验极差——发送消息无响应，且无任何错误提示，需手动发消息才能恢复
+- **触发场景**：Telegram topic + Bedrock Claude Opus 4.6 + `timeoutSeconds: 1800` + `maxConcurrent: 12`
+- **报告质量**：极高（含完整 timeline + 分析 + 修复方向）
+- **行动**：立即派出 subagent 复现并修复
 
-**1. #67092（S regression）— Malformed reasoning 输出泄漏进用户可见文本和持久化历史**
-- URL: https://github.com/openclaw/openclaw/issues/67092
-- 根因：`</think>` 标签只出现在结尾但无对应 `<think>` 开标签时，sanitizer 无法识别并清除 reasoning prose
-- 影响：Ollama 环境下用户看到原始 reasoning 内容 + 写入 session .jsonl 历史
-- 已有 workaround（社区提供）：取最后一个 `</think>` 后的文本作为 safe output
-- 建议：立即接单，1-2行 sanitizer 增强
+### 🔴 #67171 S级 — config set strips `${VAR}` substitution sentinels（安全相关）
+- **描述**：`openclaw configure` / `config set` 将 resolved 值写回磁盘，导致环境变量占位符被还原为明文 secret
+- **根因**：写路径从 in-memory resolved config 序列化，而非 source view
+- **影响**：operator 刻意用 `${VAR}` 隐藏 secret 的努力白费，secret 以明文进入 `openclaw.json` 和备份
+- **报告质量**：极高（含 diff 示例 + 相关安全 issue #62438）
+- **建议**：接单，修复方向明确（维护 source view 并行）
 
-**2. #67093（S）— Discord channel 泄漏原始 tool call XML 语法**
-- URL: https://github.com/openclaw/openclaw/issues/67093
-- 根因：Gateway 在 model fallback 时绕过了 response-parsing 层，Discord provider 收到原始 `<<parameterparameter>...</function>` 标签
-- 影响：Discord 用户看到系统内部 tool call 语法而非自然语言回复；Telegram 正常
-- 关联：`FailoverError: No API key for google` → fallback 到 OpenRouter 触发
-- 建议：立即接单，response parsing 路径检查
+### 🔴 #67172 S级 — Cron classifier sets status=ok on denial tokens
+- **描述**：Cron run 的 summary 含 `SYSTEM_RUN_DENIED` 等拒绝令牌，但 `status` 仍为 `ok`
+- **根因**：`resolveRunOutcome` 只检查 `hasFatalErrorPayload`，不看 summary text
+- **影响**：监控集成看到 green cron 实际已失败，operator 无法感知
+- **报告质量**：极高（含 token 列表 + 相关 issue #65950 #65988）
+- **建议**：接单，1 token 匹配列表 + 在 finalize 前加检查
 
-**3. #67084（S regression）— Active Memory ON + Codex 导致 Session Timeout Spam**
-- URL: https://github.com/openclaw/openclaw/issues/67084
-- 根因：Active Memory 与 Codex OAuth refresh_token 冲突，embedded run 全部 terminated
-- 影响：webchat 每次 1 条消息后卡死，session 完全不可用；关闭 Active Memory 后恢复
-- 建议：立即接单（与 #66848 同根，AOAO 已派出 fix）
+### 🔴 #67168 S级 regression — logging.file config not applied
+- **描述**：`logging.file` 配置被读取但未应用，日志仍写 `/tmp/openclaw/` 而非配置的路径
+- **根因**：文件 logger 在读取配置前初始化，之后不再切换
+- **影响**：用户配置日志路径完全无效，关键日志可能丢失
+- **报告质量**：高（含验证步骤和日志对比）
+- **建议**：接单，1行 fix
 
-**4. #67076 + #67074（S regression x2）— Onboarding trim TypeError 持续出现**
-- #67076: https://github.com/openclaw/openclaw/issues/67076
-- #67074: https://github.com/openclaw/openclaw/issues/67074
-- 注意：根因已由 **PR #66653** 修复，但该 PR 至今未合并（mergeable 状态）
-- 今日又出现 2 个新 reporter 独立报告同类错误（Discord onboarding + 4.12 版 QuickStart Skip for now）
-- **最高优先级：催促 maintainer 合并 #66653**
+### 🟠 #67162 S级 regression — TypeError on undefined trim (channel selection)
+- **描述**：空标题 bug，根因是 `path.trim()` 在 undefined 上调用
+- **用户已自修复**：`sed` 补丁给出，但 regression 仍在，需正式 PR
+- **建议**：确认 patch 对应源码位置，补自动化测试
 
-### 其他新发现 bug
+### 🟠 #67170 S级 — talk-voice audio delivery failure to Telegram
+- **描述**：ElevenLabs 生成的音频无法送达 Telegram，ffmpeg 已安装，无明确 error
+- **根因**：不明确，需进一步调查
+- **报告质量**：中（环境信息完整但缺 error 日志）
 
-| Issue | 标题 | 标签 | 评估 |
-|-------|------|------|------|
-| #67085 | Managed HOOK.md hooks silently no-op on before/after_tool_call | - | M，建议观察 |
-| #67087 | Browser tool CDP mode downloads to temp instead of configured path | bug | M，文件名/路径逻辑问题 |
-| #67057 | dreaming-narrative 导致 Telegram 通讯严重阻塞 | bug | S，建议跟进（已在 P60157 区域） |
-| #67088 | dashboard falsely reports "No GUI detected" on macOS with SSH_* env | bug | L，macOS 特定 |
-| #67053 | TUI streaming indicator stays active after response finishes | bug | L |
+### 🟡 #67158 S级 regression — openai-codex gpt-5.1/5.2/5.3 rejected on OAuth
+- **描述**：ChatGPT/Codex OAuth 仅 gpt-5.4 可用，gpt-5.1/5.2/5.3 均被 403
+- **建议**：确认是否 Cloudflare bot 拦截
+
+### 🟡 #67152 B级 — memory-core dreaming uses request-scoped subagent outside gateway request
+- **描述**：dreaming narrative 生成在 gateway request 作用域外，导致 fallback generation + cleanup warnings
+- **建议**：中优先级，建议 aoao 接单
+
+### 🟡 #67151 S级 regression — Discord inbound messages containing `https` stripped
+- **描述**：Discord 消息含 `https` 时被剥离，URL 不到达 agent
+- **建议**：回归检查
 
 ---
 
 ## 插件仓库（方向2）
 
-**发现 2 个 weixin 插件新动态：**
-
-### weixin #53（Bug，已更新 2026-04-15 08:34 CST）
-- AI 承诺设置定时提醒后，实际未创建 cron 任务，且无法通过聊天记录回忆
-- 严重性：高（功能直接失效）
-- 建议：跟进 #53，排查 weixin 插件定时任务注册链路
-
-### weixin #50（Bug，已更新 2026-04-15 09:02 CST）
-- openclaw 定时推送无法在微信触发
-- 可能是 weixin 出站通知路由问题
-- 建议：确认是入站还是出站问题
-
-**已追踪项无变化：**
-- #66（P60173 区域）：微信消息重复，maintainer 已给精确根因分析，等待 fix PR
+**无新发现**。openclaw-weixin 为私有仓库，无公众可见 issue。
 
 ---
 
 ## 贡献者文件区域（方向3）
 
-扫描 bottom 10 contributors（T5-AndyML, Anandesh-Sharma, alexfilatov, Alex-Alaniz, al3mart, akoscz, Aftabbs, aaronveklabs, AkashKobal, AI-Reviewer-QS）。
+扫描排名最低 10 位贡献者：
+- `sliverp`(10), `clawdinator[bot]`(10), `Whoaa512`(10), `lml2468`(10), `anonymous`(10), `anonymous`(11), `aether-ai-agent`(11), `chinar-amrutkar`(11), `MoerAI`(11), `christianklotz`(11)
 
-**分析结论：**
-- 该 10 位 contributors 贡献量极低（各 1-3 次 commit），历史 commit 几乎全部已覆盖
-- 未发现新的未被追踪的 open bug 关联到这些文件区域
-- 无需额外派出 fix
+**结果**：无。
+- 7/10 为 anonymous/bot 账号，API 无法查询其 commit
+- 3/10（sliverp, MoerAI, Whoaa512, lml2468, chinar-amrutkar, christianklotz）在 `gh api --author=` 查不到 openclaw repo commits（可能是脚本/PR 作者而非直接 committer，或贡献在 fork 中）
 
 ---
 
 ## 追踪 PR 反馈（方向4）
 
-| PR | 标题 | 状态 | 新动态 |
-|----|------|------|--------|
-| **#66930** | context-engine graceful degradation | ✅ **已合并**（2026-04-15 07:02 UTC） | 3 reviews，maintainer PR，已 merge |
-| **#66692** | audio transcription allowPrivateNetwork | ✅ **已合并**（2026-04-15 02:36 UTC） | Greptile P2 评论无 regression test，已 merge |
-| **#66653** | Onboarding TypeError trim | 🔴 **仍 OPEN，mergeable** | **⚠️ 同根因 bug 持续出现新 reporter**；今日又出现 #67076 + #67074；**紧急催促 merge** |
+**无新 maintainer 评论**（最近 2 小时内 PR 评论均来自历史 PRs，无最近活跃 PR 的新评论）。
 
-**结论：**
-- #66930 和 #66692 均已合并 ✅
-- **#66653 是最大阻塞**：该 PR 早已 mergeable，但 maintainer 未处理，导致 trim TypeError 持续出现新 reporter
+**已追踪 PR 状态**：
+- #67169（fix telegram command menu clearing）— 刚更新，open 状态
+- #66958 关联，Linux2010 提交
+- heartbeat `lastPrCreatedAt: 2026-04-15T11:04:32Z`（#67099 已 merge）
+- 最近 2 小时新提 PR：#67169 #67163 #67159 #67157 #67156 #67155 #67153 #67149 #67148 #67147 #67146 #67145 #67144 #67143 #67142 #67137 等，均为 XS-S 级 fix/feat
 
 ---
 
-## 结论
+## Top Candidate 派出
 
-**最高优先级：**
+**立即派出 subagent 修复 #67173**（Queued messages dropped after agent run timeout）。
 
-1. **🔴 #66653 紧急催促 merge** — Onboarding TypeError trim，PR 已 open 超过 1 天，mergeable 但无人处理；今日 #67074 + #67076 继续报告同根因 bug
-2. **🔴 #67092（S regression）— reasoning 输出泄漏** — 1-2 行 sanitizer fix，建议立即接单
-3. **🔴 #67093（S）— Discord 泄漏原始 tool call** — response parsing 路径 regression，建议立即接单
-4. **🟠 #67084（S regression）— Active Memory + Codex timeout spam** — 与 #66848 同根，建议确认 aoao fix 状态
+根因线索：
+1. `scheduleFollowupDrain` via `finalizeWithFollowup` 在 `surface_error` path 未被调用
+2. `FOLLOWUP_QUEUES` Map 为纯内存，需配合 `resetAllLanes()` 保全 command lane queue 的模式
+3. 修复点：`embedded run timeout` 终止后，加一条 `scheduleFollowupDrain` 调用
 
-**建议：**
-- 主线任务：派人接单 #67092 和 #67093（均为 regression，直接影响用户体验）
-- 阻塞疏通：联系 maintainer 催促合并 #66653
+**inProgressFixes**: fix-67173
