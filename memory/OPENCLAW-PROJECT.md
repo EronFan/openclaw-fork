@@ -6609,3 +6609,14 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 
 | P60262 | [Tencent/openclaw-weixin #68](https://github.com/Tencent/openclaw-weixin/issues/68) | 🟢 **XS**: 上传媒体文件到CDN时报500超时时的优化 | 10分钟前更新；功能优化请求；低优先级 |
 | P60173 | [Tencent/openclaw-weixin #66](https://github.com/Tencent/openclaw-weixin/issues/66) | 🔍 **S**: 微信消息重复（用户1条→openclaw回复2次） | 已在 P60173 追踪；根因已确认；待修复 PR；**维持追踪** |
+
+## 2026-04-15 13:44 CST 全量扫描更新（第132轮）
+
+| 优先级 | 任务 | 状态 | 备注 |
+|--------|------|------|------|
+| P60263 | [#67002](https://github.com/openclaw/openclaw/issues/67002) **enhancement** Independent workspace for every channel | 🔍 **新发现**(方向1 第132轮 13:44 CST) | enhancement 请求；多团队共享 channel 场景；无标签；**低优先级，跳过** |
+| P60264 | [方向4] **PR #67005** fix(ollama): simplify cloud onboarding — maintainer label, size M, 2 comments, updated 05:47 UTC | 👀 **maintainer 已 review（方向4 第132轮 13:44 CST）** | **merge 窗口期，随时可 approve** |
+| P60265 | [方向4] **PR #67003** fix(security): 7 P1 hardening fixes — maintainer label, size L, 2 comments, updated 05:47 UTC | 👀 **maintainer 已 review（方向4 第132轮 13:44 CST）** | **merge 窗口期，随时可 approve** |
+| P60266 | [方向4] **PR #66976** fix(whatsapp): remove redundant root Baileys install blocker — 1 comment, maintainer=NO | 👀 **待 review（方向4 第132轮 13:44 CST）** | WhatsApp regression 相关；无 maintainer 标签；**建议 review** |
+| P60267 | [#66975](https://github.com/openclaw/openclaw/issues/66975) **🔴 S regression** Telegram bot commands disappear after upgrading to 2026.4.14 | 🔍 **新发现**(方向1 第132轮 13:44 CST) | Changelog 明确相关（"restore plugin-registry-backed auto defaults"）；命令完全不显示；Bot Menu 按钮丢失；2个 reporter；**建议立即派出 fix** |
+| P60268 | [#65428](https://github.com/openclaw/openclaw/issues/65428) **🔴 S** resolveCliAuthEpoch() hashes accessToken+refreshToken+expiresAt causing session reset on OAuth token refresh | 🔍 **新发现**(方向1 第132轮 13:44 CST) | OAuth token refresh 后 session 静默 reset；根因清晰（应只 hash refreshToken）；已在 P60144 区域追踪过但需确认是同 issue 还是新 activity；**建议跟进根因定位** |
