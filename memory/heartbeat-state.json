@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-04-15T09:04:00Z",
-  "note": "第132轮全量扫描完成。新发现：#67092(S reasoning泄漏)、#67093(S Discord raw tool syntax)、#67084(S regression Active Memory+Codex)。#66653紧急催促merge。#66930和#66692已merge。",
+  "updatedAt": "2026-04-15T09:13:00Z",
+  "note": "第132轮全量扫描完成(17:04 CST)。新发现S级：#67092(reasoning泄漏)、#67093(Discord raw tool syntax)、#67084(Active Memory+Codex spam)、#67076/#67074(同#66653根因)。fix-67057 subagent因529过载失败2次，已重启。xixi cron处理新S findings中。",
   "lastXixiScan": "2026-04-15T09:04:00Z",
   "lastPrCreatedAt": "2026-04-15T08:29:00Z",
   "xixiScan": {
@@ -14,7 +14,25 @@
       "issue": "#67057",
       "desc": "dreaming-narrative 导致 Telegram 通讯严重阻塞",
       "severity": "S-regression",
-      "spawnedAt": "2026-04-15T08:25:00Z"
+      "spawnedAt": "2026-04-15T08:25:00Z",
+      "status": "subagent-failed-2x-529-overload-restarted",
+      "latestAttemptSession": "8616b773-78a9-4643-b54e-ae7226b6d6c8"
+    },
+    {
+      "id": "fix-67092",
+      "issue": "#67092",
+      "desc": "reasoning 输出泄漏 trailing </thinking> 无开标签",
+      "severity": "S-regression",
+      "spawnedAt": "2026-04-15T09:04:00Z",
+      "status": "spawned-by-xixi-cron"
+    },
+    {
+      "id": "fix-67093",
+      "issue": "#67093",
+      "desc": "Discord channel 泄漏原始 tool call XML 语法",
+      "severity": "S",
+      "spawnedAt": "2026-04-15T09:04:00Z",
+      "status": "spawned-by-xixi-cron"
     }
   ],
   "completedPRs": [
@@ -54,7 +72,22 @@
       "completedAt": "2026-04-15T07:02:00Z"
     }
   ],
-  "subagentFailures": [],
+  "subagentFailures": [
+    {
+      "sessionId": "8616b773-78a9-4643-b54e-ae7226b6d6c8",
+      "issue": "#67057",
+      "reason": "529 overloaded - LLM服务过载，3次重试均失败",
+      "failedAt": "2026-04-15T09:10:00Z",
+      "failureCount": 1
+    },
+    {
+      "sessionId": "959040e5-7eab-4875-aab8-59b1f8eb26d1",
+      "issue": "#67057",
+      "reason": "529 overloaded - LLM服务过载，进程被SIGKILL",
+      "failedAt": "2026-04-15T09:08:00Z",
+      "failureCount": 2
+    }
+  ],
   "subagentSuccesses": ["fix-65428", "fix-66975", "fix-66885", "fix-66692", "fix-66930"],
   "alert": null
 }
