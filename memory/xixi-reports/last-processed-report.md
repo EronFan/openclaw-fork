@@ -1,32 +1,35 @@
 # Last Processed xixi Scan Report
 
 **Scan range:** issues #67051–#67150 | PRs #67051–#67150
-**Timestamp:** 2026-04-15T16:18 GMT+8 (08:18 UTC)
+**Timestamp:** 2026-04-15T17:04 GMT+8 (09:04 UTC)
 **Report location:** xixi-reports/latest-scan-report.md
 
 ## Quick Status
 
-- New S-level candidates: #66885, #67057, #66975
-- #66975 already has fix-66975 in progress
-- #66885 and #67057 are new (no fix spawned yet)
+- New S-level candidates: #67092, #67093, #67084, #67076, #67074
+- #67092 and #67093 → aoao 已派出 fix
+- #67084 → 已派出（与 #66848 同根）
+- #67076 + #67074 → 同根因 regression，持续催促 #66653 merge
 
-## Key S-level Fixes Needed (no PR yet)
+## Key S-level Fixes (no PR yet)
 
-1. [#66885](https://github.com/openclaw/openclaw/issues/66885) — **S regression** Telegram event loop 冻结 90-200s（4.12）— undici HTTP/2+IPv6 Windows。`allowH2: false` 在 4.7 加到 web_fetch 但 Telegram polling dispatcher 未应用。**与 #67034 同根，1行 fix**。已派出 fix-66885。
-2. [#67057](https://github.com/openclaw/openclaw/issues/67057) — **S regression** dreaming-narrative 导致 Telegram 通讯严重阻塞。77个 dreaming-narrative 会话占82%活跃会话，Load Avg 45.67，消息处理被梦境会话阻塞。已派出 fix-67057。
-3. [#66975](https://github.com/openclaw/openclaw/issues/66975) — **S regression** Telegram bot commands disappear after upgrading to 2026.4.14。已在 fix-66975 追踪。
+1. [#67092](https://github.com/openclaw/openclaw/issues/67092) **S regression** — reasoning 输出泄漏。孤立</think>无对应Opening tag，sanitizer失效。用户可见原始 reasoning + 写入 session .jsonl。workaround：取最后一个</think>后文本。**aoao 已派出**。
+2. [#67093](https://github.com/openclaw/openclaw/issues/67093) **S** — Discord 泄漏原始 tool call XML。fallback 绕过 response-parsing 层。**aoao 已派出**。
+3. [#67084](https://github.com/openclaw/openclaw/issues/67084) **S regression** — Active Memory + Codex timeout spam。与 #66848 同根。已派出 fix。
+4. [#67076](https://github.com/openclaw/openclaw/issues/67076) + [#67074](https://github.com/openclaw/openclaw/issues/67074) **S regression** — Onboarding trim TypeError 持续出现。同根因 bug，PR #66653 已 mergeable 但未合并。**需催促 maintainer**。
 
-## M-level Candidates
+## PR Merge 状态
 
-- #67035 Windows chat UI regression（与 #67028 同根）
-- #67034 Telegram 16-account avalanche（与 #66885 同根）
-- #67028 WebChat messages disappear（history reload race condition）
-- #67019 GLM-4.7 garbled output
+- #66930 ✅ 已合并（07:02 UTC）
+- #66692 ✅ 已合并（02:36 UTC）
+- #66653 🔴 仍 OPEN，mergeable，紧急催促 merge
 
-## Conclusions
+## 反馈检查结果
 
-- 3个新 S 级：#66885、#67057 已派出 fix；#66975 已在 fix-66975
-- 反馈检查：#54952/#54964/#55008/#55013 均无新评论，状态不变
+- #54952: 0 comments（无变化）
+- #54964: 0 comments（无变化）
+- #55008: 5 comments — Greptile P1 regression（feishu skills 意外移除）
+- #55013: 2 comments — Greptile 5/5 Safe to merge
 
 ## Next Scan Range
 

@@ -6655,3 +6655,35 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 - **🔴 阻塞：#66653 紧急催促 merge**（trim TypeError，PR mergeable 但未处理，同根因 bug 持续出现新 reporter #67076/#67074）
 - 次高：#67084（Active Memory + Codex timeout spam，已在 P60224 区域同根因追踪）
 - 方向4：#67005 和 #67003 maintainer 已 review，随时可 approve
+
+---
+
+## 更新 (2026-04-15 18:13 CST)
+
+### xixi 扫描新发现（方向1 第132轮 17:04 CST）
+
+| 优先级 | Issue | 描述 | 状态 | 备注 |
+|--------|-------|------|------|------|
+| P60175 | [#67092](https://github.com/openclaw/openclaw/issues/67092) **S regression** reasoning 输出泄漏进用户可见文本和持久化历史 | 孤立</think> 标签未被 sanitizer 清除；workaround 可行 | 🔥 **aoao 已派出** | 根因清晰，1-2行 fix |
+| P60176 | [#67093](https://github.com/openclaw/openclaw/issues/67093) **S** Discord channel 泄漏原始 tool call XML 语法 | fallback 绕过 response-parsing 层 | 🔥 **aoao 已派出** | response parsing 路径检查 |
+| P60177 | [#67084](https://github.com/openclaw/openclaw/issues/67084) **S regression** Active Memory + Codex 导致 Session Timeout Spam | 与 #66848 同根；AOAO 已派出 fix | 🔍 **已派出** | 确认 fix-66848 覆盖 |
+| P60178 | [#67076](https://github.com/openclaw/openclaw/issues/67076) + [#67074](https://github.com/openclaw/openclaw/issues/67074) **S regression** Onboarding trim TypeError 持续出现 | 同根因 bug，PR #66653 已 mergeable 但未合并；今日又出现2个新 reporter | 👀 **需 maintainer 催促** | **紧急：催促 merge #66653** |
+
+### PR 追踪更新（方向4 第132轮 17:04 CST）
+
+| PR | 状态 | 新动态 |
+|----|------|--------|
+| **#66930** context-engine graceful degradation | ✅ **已合并**（07:02 UTC） | |
+| **#66692** audio transcription allowPrivateNetwork | ✅ **已合并**（02:36 UTC） | |
+| **#66653** Onboarding TypeError trim | 🔴 **仍 OPEN，mergeable** | **紧急催促 merge**，今日 #67076 + #67074 继续报告同根因 |
+| **#55008** docs(cli/message) clarify plugin extensibility | ⚠️ **Greptile P1 regression**：意外移除 feishu skills；需 EronFan 确认 revert | |
+| **#55013** docs(channels/feishu) routing fallback clarification | ✅ **Greptile 5/5 Safe to merge**；maintainer 已修复所有 P1 | |
+
+### 新创建 PR（2026-04-15 今日）
+
+- **#67080** fix(sessions): restore compacted sessions to non-deleted state — size M by vincentkoc
+- **#67077** fix(auth-profiles): make post-success bookkeeping saves non-fatal — size M by ademczuk (fixes #62099)
+- **#67073** fix(dreaming): use isolated sessionTarget instead of main — size XS by ttomiczek (fixes #67021)
+- **#67069** feat(feishu): pass thread_id as MessageThreadId in inbound context — size XS by Etoilelune
+- **#67066** fix(dreaming): use ingestion date for dayBucket — size XS by leaderlemon
+- **#67063** fix(plugins): include memory slot plugin in primary wiki CLI scope — size S by sahilsatralkar (fixes #66082)
