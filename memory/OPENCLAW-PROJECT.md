@@ -6487,3 +6487,11 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P60233 | [#66830](https://github.com/openclaw/openclaw/issues/66830) | 🟠 **S**: Compaction dead zone — reserveTokens vs reserveTokensFloor 不对称 | 提升 reserveTokens 以提前触发 compaction 无效；长运行会话卡在 fallback 模型上；根因：memoryFlush threshold 对 floor 而非实际 reserveTokens 计算；**建议 aoao 派出 fix** |
 | P60234 | [#66848](https://github.com/openclaw/openclaw/issues/66848) | 🟠 **S crash**: TypeError: Cannot read properties of undefined (reading 'trim') | 崩溃 bug；同根因已在多个 PR 修过（#66653 等）；trim guard pattern 已成熟；**建议 aoao 派出 fix，参照 #66653** |
 | P60235 | [#66832](https://github.com/openclaw/openclaw/issues/66832) | 🔒 **S security**: logs.tail credential redaction 未覆盖 5 类格式 | JWT、X-OpenClaw-Token、x-pomerium-jwt-assertion、Basic auth 等 5 类格式可能通过 logs.tail 泄漏给 operator.read 客户端；正则 redaction 只覆盖部分格式；**建议 aoao 派出 security fix** |
+
+## 2026-04-15 09:49 CST 新发现（方向1 GitHub 第128轮）
+
+| P60236 | [#66926](https://github.com/openclaw/openclaw/issues/66926) | 🔥 **S regression**: google-generative-ai tagged reasoning mode breaks tool calling | google-generative-ai BUILTIN_REASONING_OUTPUT_MODES 硬编码 "tagged" 格式，导致模型把 tool calls 写成文本而非实际调用；Gemma 4 26B / Gemini 2.5 Flash 100% 复现；**根因清晰，2 行可修**；**建议 aoao 派单修复**
+| P60237 | [#66925](https://github.com/openclaw/openclaw/issues/66925) | 🔥 **S**: registerMemoryCapability is overwrite-only — active-memory 覆盖 memory-core 的 publicArtifacts | active-memory 后加载时完全覆盖 memory-core 的 publicArtifacts，导致 wiki bridge import 返回 0 artifacts；**根因在 merge vs overwrite**；**建议 aoao 派单修复**
+| P60238 | [#66916](https://github.com/openclaw/openclaw/issues/66916) | 🔥 **S regression**: Slack approval button 对长命令失效 + sessions.resolve 误判 Slack user ID | 2026.4.14 更新后 Slack approval buttons 对含空格的长命令完全失效；sessions.resolve 把 Slack user ID 当作 session key 导致路由失败；**建议 aoao 派单修复**
+| P60239 | [#66923](https://github.com/openclaw/openclaw/issues/66923) | 🟠 **S**: GPT-4.1 family passes through unmanaged | gpt-4.1-nano/mini 不在 registry 里，用户配置后无 exec profile/optimizations，静默降级；**建议审查 registry 补录**
+| P60240 | [#66927](https://github.com/openclaw/openclaw/issues/66927) | 🟠 **Feature**: deterministic handoff from user-invocable skills to plugin tools | 新功能请求：无 user 触发 skill 可预测调度到 plugin tools；低优先级
