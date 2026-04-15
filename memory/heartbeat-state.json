@@ -1,76 +1,48 @@
 {
-  "updatedAt": "2026-04-15T03:20:00Z",
-  "note": "4个fix v3已派出。v2版build被kill问题已解决策略。无PR创建成功。",
-  "lastXixiScan": "2026-04-15T02:53:00Z",
+  "updatedAt": "2026-04-15T05:07:00Z",
+  "note": "4个fix subagent正在运行（13:07 CST）。全部因gateway 1006断开重启。",
+  "lastXixiScan": "2026-04-15T05:00:00Z",
   "lastPrCreatedAt": null,
   "xixiScan": {
-    "label": "xixi-129",
-    "completedAt": "2026-04-15T02:53:00Z",
-    "lastCompletedRound": 129
+    "label": "xixi-131",
+    "completedAt": "2026-04-15T05:00:00Z",
+    "lastCompletedRound": 131
   },
   "inProgressFixes": [
     {
-      "id": "fix-66786",
-      "issue": "#66786",
-      "desc": "System Prompt 不尊重 OPENCLAW_WORKSPACE_DIR regression",
-      "severity": "S",
-      "spawnedAt": "2026-04-15T03:17:00Z",
-      "runId": "76a4c8c0-2733-4936-aa85-236886dab0b1"
-    },
-    {
       "id": "fix-66940",
       "issue": "#66940",
-      "desc": "MCP streamable-http 缺少 Accept header（1行 fix）",
+      "desc": "MCP streamable-http 缺少 Accept header",
       "severity": "S",
-      "spawnedAt": "2026-04-15T03:17:00Z",
-      "runId": "812a65fe-d0cb-4e6b-a070-357b534b282f"
+      "spawnedAt": "2026-04-15T05:00:00Z",
+      "note": "测试已过，正在提交PR"
     },
     {
-      "id": "fix-66925",
-      "issue": "#66925",
-      "desc": "registerMemoryCapability 直接赋值覆盖而非合并",
-      "severity": "B",
-      "spawnedAt": "2026-04-15T03:17:00Z",
-      "runId": "27697367-5e48-419f-b7c5-64e111e7d414"
-    },
-    {
-      "id": "fix-66937",
-      "issue": "#66937",
-      "desc": "lmstudio api key强制要求",
-      "commit": "470a34927",
-      "status": "COMMITTED_NO_PUSH",
-      "note": "commit完成但push失败(403)"
-    },
-    {
-      "id": "fix-66936-v3",
-      "issue": "#66936",
-      "desc": "CLI SecretRef + 进程不退出",
-      "spawnedAt": "2026-04-15T03:18:00Z",
-      "strategy": "无build，直接静态分析+最小fix"
-    },
-    {
-      "id": "fix-66941-v3",
-      "issue": "#66941",
-      "desc": "QClaw wechat-access无法连接，Gateway进程不启动",
+      "id": "fix-66887",
+      "issue": "#66887",
+      "desc": "单插件失败导致全Gateway宕机",
       "severity": "S-crash",
-      "spawnedAt": "2026-04-15T03:18:00Z",
-      "note": "v2 failed，v3重启"
+      "spawnedAt": "2026-04-15T05:00:00Z",
+      "note": "根因已定位(registry.ts)，正在写fix"
     },
     {
-      "id": "fix-66934-v3",
-      "issue": "#66934",
-      "desc": "Webchat sender label缺失",
-      "spawnedAt": "2026-04-15T03:18:00Z"
+      "id": "fix-66941",
+      "issue": "#66941",
+      "desc": "QClaw/WeChat渠道导致Gateway进程退出",
+      "severity": "S-crash",
+      "spawnedAt": "2026-04-15T05:00:00Z",
+      "note": "重新调研channel位置"
     },
     {
-      "id": "fix-whatsapp-v3",
-      "issue": "#66920 + #66917",
-      "desc": "WhatsApp群消息回归 + 408/499重连（同根）",
-      "spawnedAt": "2026-04-15T03:18:00Z"
+      "id": "fix-66946",
+      "issue": "#66946",
+      "desc": "Control UI __openclaw__ 路径重复导致404",
+      "severity": "S",
+      "spawnedAt": "2026-04-15T05:00:00Z",
+      "note": "刚开始"
     }
   ],
-  "alert": {
-    "level": "HIGH",
-    "msg": "5个fix全部无PR落地。fix-66937已commit但push 403。机器build持续被kill，改为无build策略重派v3。"
-  }
+  "subagentFailures": [],
+  "subagentSuccesses": [],
+  "alert": null
 }
