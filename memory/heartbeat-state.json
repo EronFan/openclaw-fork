@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-04-15T03:03:00Z",
-  "note": "fix-66936超时已重派(v2)，提供更明确的调试策略",
+  "updatedAt": "2026-04-15T03:05:00Z",
+  "note": "fix-66937已commit本地(470a34927)但无写权限push。fix-66936-v2运行中。",
   "lastXixiScan": "2026-04-15T02:53:00Z",
   "lastPrCreatedAt": null,
   "xixiScan": {
@@ -10,17 +10,18 @@
   },
   "inProgressFixes": [
     {
-      "id": "fix-66936-v2",
-      "issue": "#66936",
-      "desc": "CLI SecretRef + 进程不退出",
-      "spawnedAt": "2026-04-15T03:03:00Z",
-      "note": "v1超时(9m43s)，v2重派，提供setTimeout追踪策略"
-    },
-    {
       "id": "fix-66937",
       "issue": "#66937",
       "desc": "lmstudio api key强制要求",
-      "spawnedAt": "2026-04-15T02:50:00Z"
+      "commit": "470a34927",
+      "status": "COMMITTED_NO_PUSH",
+      "note": "commit完成但push失败(403 EronFan PAT无写权限)"
+    },
+    {
+      "id": "fix-66936-v2",
+      "issue": "#66936",
+      "desc": "CLI SecretRef + 进程不退出",
+      "spawnedAt": "2026-04-15T03:03:00Z"
     },
     {
       "id": "fix-whatsapp-66920-66917",
@@ -44,6 +45,6 @@
   ],
   "alert": {
     "level": "HIGH",
-    "msg": "fix-66936超时重派(v2)。PR #66599被CLOSED未合并。fix-66941已派出。"
+    "msg": "fix-66937已commit但无法push - GitHub PAT无写权限。需要获取有写权限的token或通过其他方式推送。"
   }
 }
