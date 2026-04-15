@@ -1,14 +1,4 @@
 {
-  "updatedAt": "2026-04-15T09:46:00Z",
-  "note": "范总指令：cron/subagent 模型从 MiniMax-M2.7 切换为 MiniMax-M2.5；blocked 任务待新模型验证后重试",
-  "modelStatus": {
-    "minimax/MiniMax-M2.5": "active",
-    "openai-codex/gpt-5.4": "rate_limited"
-  },
-  "blockedTasks": [
-    {"issue": "#66822", "task": "fix-66822", "note": "待 MiniMax-M2.5 验证后重试"},
-    {"issue": "#66849", "task": "fix-66849", "note": "待 MiniMax-M2.5 验证后重试"},
-    {"issue": "#66832", "task": "fix-66832", "note": "待 MiniMax-M2.5 验证后重试"}
-  ],
-  "subagentFailures": []
+  "updatedAt": "2026-04-15T01:54:00Z",
+  "note": "xixi 扫描正常(21:02 UTC, ~4.9h)"
 }
