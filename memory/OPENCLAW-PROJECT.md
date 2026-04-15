@@ -52,6 +52,12 @@
 | P60164 | [方向4] #66939 Greptile P2: consoleSpy 未在 finally 中 restore — 会泄漏到后续测试 | 👀 **新评论**(方向4 第129轮 10:40 CST) | `src/context-engine/context-engine.test.ts` 测试隔离问题；建议作者用 `afterEach(() => { vi.restoreAllMocks(); })` 修复 |
 | P60165 | [方向4] #66939 chatgpt-codex-connector P1+P2: pendingCompactionReplayBoundary reset 时机错误 + retry 无 partial 时 boundary 从未 resolve | 👀 **新评论**(方向4 第129轮 10:40 CST) | compaction retry 时 duplicate preview 会重新出现；建议作者响应 Greptile 和 bot 评论 |
 | P60166 | [#66930](https://github.com/openclaw/openclaw/pull/66930) **maintainer S** context-engine graceful degradation on third-party plugin failure | 🔍 **新发现**(方向1 GitHub 第129轮 10:40 CST) | maintainer 亲写 S 级 PR；2h 内无新评论；需跟进 merge 窗口；**建议确认** |
+| P60167 | [#66941](https://github.com/openclaw/openclaw/issues/66941) **🔴 S-crash** QClaw wechat-access 无法连接，Gateway进程不启动 | 🔍 **新发现**(方向1 GitHub 第130轮 10:53 CST) | **最高优先级 crash**；gateway 进程完全不启动；WeChat 接入层无法连接；7分钟前新鲜报告；⚠️ heartbeat 显示 fix-66941-v2 已派出 |
+| P60168 | [#66916](https://github.com/openclaw/openclaw/issues/66916) **🔴 S regression** Slack approval 按钮对长命令失效 | 🔍 **新发现**(方向1 GitHub 第130轮 10:53 CST) | 2026.4.14 regression；approval button 在长命令时 malformed；sessions_send 找不到 Slack session key；⚠️ heartbeat 显示 fix 已派出 |
+| P60169 | [#66786](https://github.com/openclaw/openclaw/issues/66786) **🔴 S regression** System Prompt 不尊重 OPENCLAW_WORKSPACE_DIR | 🔍 **新发现**(方向1 GitHub 第130轮 10:53 CST) | regression；workspace 路径解析逻辑变更导致；影响 headless Linux (EC2/ECS)；无 PR；**建议 aoao 接单** |
+| P60170 | [#66940](https://github.com/openclaw/openclaw/issues/66940) **S** MCP streamable-http 缺少 Accept header → 模型端无法解析响应 | 🔍 **新发现**(方向1 GitHub 第130轮 10:53 CST) | `Accept: application/json, text/event-stream` 缺失；curl 直接复现；1行 fix；**建议 aoao 接单** |
+| P60171 | [#66925](https://github.com/openclaw/openclaw/issues/66925) **B** memory plugin registerMemoryCapability 直接赋值覆盖而非合并 | 🔍 **新发现**(方向1 GitHub 第130轮 10:53 CST) | publicArtifacts 被 active-memory 覆盖导致 wiki bridge 返回 0 条目；赋值 vs 合并语义错误；**建议 aoao 接单** |
+| P60172 | [#66926](https://github.com/openclaw/openclaw/issues/66926) **M** google-generative-ai reasoning mode 破坏 tool calling — Gemma 4 26B | 🔍 **新发现**(方向1 GitHub 第130轮 10:53 CST) | reasoning_content 导致 tool call 参数格式错误；**建议 aoao 接单确认** |
 
 | P60154 | [方向4] #66697 config.get 安全漏洞 - **已关闭**，需确认是否修正后 reopen | 👀 **状态变化**(方向4 第128轮 10:21 CST) | Codex 指出 sourceConfig/runtimeConfig 映射错误；**需确认修正方案** |
 
