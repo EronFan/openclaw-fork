@@ -1,28 +1,4 @@
 {
-  "updatedAt": "2026-04-16T00:44:00Z",
-  "note": "xixi 00:44 CST: fix-67270-v2 failed (LLM timeout, 2nd failure) - re-dispatched v3 with tight scope; 4 subagents running (#67257-v2/70-v3/50/61); fix-67264→PR#67287 merged; fix-67267→PR#67289 created",
-  "lastPrCreatedAt": "2026-04-16T00:18:00Z",
-  "inProgressFixes": [
-    {"issue": 67264, "status": "PR_MERGED", "pr": 67287},
-    {"issue": 67267, "status": "PR_CREATED", "pr": 67289},
-    {"issue": 67270, "status": "REDISPATCHED_V3", "runId": "f7b27576-bd74-47eb-b913-da47e4a6cbd3"},
-    {"issue": 67261, "status": "in_progress", "runId": "19849908-a1d0-457d-842d-ed2258916969"},
-    {"issue": 67257, "status": "in_progress", "runId": "053f1ef8-4224-431a-a820-1b90b9dcb1d3"},
-    {"issue": 67250, "status": "in_progress", "runId": "6a215e6a-ba9f-497a-aae5-06d7ebd832fc"},
-    {"issue": 67273, "status": "open_pr", "desc": "PR #67273 still OPEN"},
-    {"issue": 67173, "status": "TIMEOUT", "desc": "PR#67258 (maintainer fallback) still OPEN"}
-  ],
-  "pendingIssues": [
-    {"issue": 67260, "desc": "Native Ollama primary falls back in long-lived Telegram session"},
-    {"issue": 67256, "desc": "WeCom MEDIA: instruction file sending fails"}
-  ],
-  "subagentFailures": [
-    {"label": "fix-67270", "failedAt": "2026-04-16T00:23:00Z", "retryCount": 1, "note": "Result incomplete (no PR), re-dispatched as v2"},
-    {"label": "fix-67270-v2", "failedAt": "2026-04-16T00:44:00Z", "retryCount": 2, "note": "LLM timeout, re-dispatched as v3"},
-    {"label": "fix-67257", "failedAt": "2026-04-16T00:35:00Z", "retryCount": 1, "note": "LLM timeout, re-dispatched as v2"}
-  ],
-  "subagentSuccesses": [
-    {"label": "fix-67264", "completedAt": "2026-04-16T00:18:00Z", "pr": 67287},
-    {"label": "fix-67267", "completedAt": "2026-04-16T00:28:00Z", "pr": 67289}
-  ]
+  "updatedAt": "2026-04-15T17:14:00Z",
+  "note": "xixi 扫描正常(~1h)"
 }
