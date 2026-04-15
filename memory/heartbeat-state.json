@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-04-15T03:05:00Z",
-  "note": "fix-66937已commit本地(470a34927)但无写权限push。fix-66936-v2运行中。",
+  "updatedAt": "2026-04-15T03:06:00Z",
+  "note": "3个超时fix已重派v2。fix-66937已commit待push。",
   "lastXixiScan": "2026-04-15T02:53:00Z",
   "lastPrCreatedAt": null,
   "xixiScan": {
@@ -24,27 +24,27 @@
       "spawnedAt": "2026-04-15T03:03:00Z"
     },
     {
-      "id": "fix-whatsapp-66920-66917",
-      "issue": "#66920 + #66917",
-      "desc": "WhatsApp群消息回归 + 408/499重连（同根）",
-      "spawnedAt": "2026-04-15T02:50:00Z"
-    },
-    {
-      "id": "fix-66934",
-      "issue": "#66934",
-      "desc": "Webchat sender label缺失",
-      "spawnedAt": "2026-04-15T02:50:00Z"
-    },
-    {
-      "id": "fix-66941",
+      "id": "fix-66941-v2",
       "issue": "#66941",
       "desc": "QClaw wechat-access无法连接，Gateway进程不启动",
       "severity": "S-crash",
-      "spawnedAt": "2026-04-15T02:55:00Z"
+      "spawnedAt": "2026-04-15T03:06:00Z"
+    },
+    {
+      "id": "fix-66934-v2",
+      "issue": "#66934",
+      "desc": "Webchat sender label缺失",
+      "spawnedAt": "2026-04-15T03:06:00Z"
+    },
+    {
+      "id": "fix-whatsapp-v2",
+      "issue": "#66920 + #66917",
+      "desc": "WhatsApp群消息回归 + 408/499重连（同根）",
+      "spawnedAt": "2026-04-15T03:06:00Z"
     }
   ],
   "alert": {
     "level": "HIGH",
-    "msg": "fix-66937已commit但无法push - GitHub PAT无写权限。需要获取有写权限的token或通过其他方式推送。"
+    "msg": "fix-66937已commit(470a34927)但push 403。需要写权限token。4个fix重派v2中。"
   }
 }
