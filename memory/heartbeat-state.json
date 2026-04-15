@@ -1,4 +1,60 @@
 {
-  "updatedAt": "2026-04-15T08:30:00Z",
-  "note": "xixi 扫描已更新"
+  "updatedAt": "2026-04-15T09:04:00Z",
+  "note": "第132轮全量扫描完成。新发现：#67092(S reasoning泄漏)、#67093(S Discord raw tool syntax)、#67084(S regression Active Memory+Codex)。#66653紧急催促merge。#66930和#66692已merge。",
+  "lastXixiScan": "2026-04-15T09:04:00Z",
+  "lastPrCreatedAt": "2026-04-15T08:29:00Z",
+  "xixiScan": {
+    "label": "xixi-132",
+    "completedAt": "2026-04-15T09:04:00Z",
+    "lastCompletedRound": 132
+  },
+  "inProgressFixes": [
+    {
+      "id": "fix-67057",
+      "issue": "#67057",
+      "desc": "dreaming-narrative 导致 Telegram 通讯严重阻塞",
+      "severity": "S-regression",
+      "spawnedAt": "2026-04-15T08:25:00Z"
+    }
+  ],
+  "completedPRs": [
+    {
+      "id": "fix-65428",
+      "issue": "#65428",
+      "pr": "#67071",
+      "desc": "OAuth session reset after token refresh",
+      "completedAt": "2026-04-15T08:19:00Z"
+    },
+    {
+      "id": "fix-66975",
+      "issue": "#66975",
+      "pr": "#67075",
+      "desc": "Telegram bot commands disappear after 2026.4.14 regression",
+      "completedAt": "2026-04-15T08:25:00Z"
+    },
+    {
+      "id": "fix-66885",
+      "issue": "#66885",
+      "pr": "#67083",
+      "desc": "Telegram polling HTTP/2+IPv6 stall on Windows",
+      "completedAt": "2026-04-15T08:29:00Z"
+    },
+    {
+      "id": "fix-66692",
+      "issue": "#66691",
+      "pr": "#66692",
+      "desc": "audio transcription allowPrivateNetwork regression",
+      "completedAt": "2026-04-15T02:36:00Z"
+    },
+    {
+      "id": "fix-66930",
+      "issue": "#66930",
+      "pr": "#66930",
+      "desc": "context-engine graceful degradation on third-party plugin failure",
+      "completedAt": "2026-04-15T07:02:00Z"
+    }
+  ],
+  "subagentFailures": [],
+  "subagentSuccesses": ["fix-65428", "fix-66975", "fix-66885", "fix-66692", "fix-66930"],
+  "alert": null
 }

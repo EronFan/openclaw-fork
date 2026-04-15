@@ -1,175 +1,103 @@
-# 全量扫描报告 2026-04-15 16:18 CST (08:18 UTC)
-
-## 扫描概况
-- 扫描时间：2026-04-15 16:18 CST
-- 扫描范围：openclaw/openclaw 主仓库（含 issues + PRs）
-- 策略：no-build（不做 pnpm test/build/check，纯代码定位 + 派单）
-
----
+# 全量扫描报告 2026-04-15 17:04 CST
 
 ## GitHub Issues（方向1）
 
-### 🔴 S 级 — 立即派单修复
+本次扫描（过去 2 小时）发现 **16 个新 open issue**，其中 **5 个 regression/bug** 需重点关注：
 
-#### 1. #66885 — Telegram polling stall + undici HTTP/2 root cause
-- **严重程度：S regression**
-- **根因：** 完全清晰。`allowH2: false` 在 4.7 被加到 web_fetch，但 **Telegram polling dispatcher 未应用**，导致 undici 在 Windows 上尝试 HTTP/2 + IPv6，90-200s 超时，event loop 完全冻结。
-- **关联：** 与 #67034（16-account Telegram avalanche）为同一根因的不同表现。
-- **修复方案：** 在 Telegram polling dispatcher 加上 `allowH2: false`（同 web_fetch 一样的 fix）。
-- **状态：** 无关联 PR，仍 open。
-- **建议：** 立即派单，根因+fix均明确，1-2小时可完成。
+### 🔴 Top Candidates（新发现，未追踪）
 
-#### 2. #67057 — 紧急：dreaming-narrative 导致 Telegram 通讯严重阻塞
-- **严重程度：S regression（阻塞核心通讯）**
-- **根因：** 完全清晰。77个 dreaming-narrative 会话（占82%活跃会话）持续消耗资源，Load Avg 达 45.67，消息处理被梦境会话阻塞，响应从秒级变为分钟级，最终完全阻塞。
-- **关键数据：** 94个活跃会话中77个是 dreaming-narrative，主 agent sessions.json 膨胀到 4.5MB。
-- **修复方案：** 需要：① 梦境会话自动清理机制；② 梦境并发数限制；③ 用户消息优先级高于梦境消息。
-- **状态：** 无关联 PR。
-- **建议：** 立即派单，这是功能性回归而非简单 bug。
+**1. #67092（S regression）— Malformed reasoning 输出泄漏进用户可见文本和持久化历史**
+- URL: https://github.com/openclaw/openclaw/issues/67092
+- 根因：`</think>` 标签只出现在结尾但无对应 `<think>` 开标签时，sanitizer 无法识别并清除 reasoning prose
+- 影响：Ollama 环境下用户看到原始 reasoning 内容 + 写入 session .jsonl 历史
+- 已有 workaround（社区提供）：取最后一个 `</think>` 后的文本作为 safe output
+- 建议：立即接单，1-2行 sanitizer 增强
 
-#### 3. #66975 — Telegram bot commands disappear after upgrading to 2026.4.14
-- **严重程度：S regression**
-- **根因：** 描述清晰。4.14 changelog 提到"Telegram/native commands: restore plugin-registry-backed auto defaults" 和 "keep Telegram command-sync cache process-local"，但升级后命令完全不显示，Bot Menu 按钮丢失。
-- **Workaround：** `/setmenubutton` + `/empty` 可恢复菜单按钮但无法恢复斜杠命令列表。
-- **状态：** 无关联 PR。
-- **建议：** 立即派单，changelog 相关性100%。
+**2. #67093（S）— Discord channel 泄漏原始 tool call XML 语法**
+- URL: https://github.com/openclaw/openclaw/issues/67093
+- 根因：Gateway 在 model fallback 时绕过了 response-parsing 层，Discord provider 收到原始 `<<parameterparameter>...</function>` 标签
+- 影响：Discord 用户看到系统内部 tool call 语法而非自然语言回复；Telegram 正常
+- 关联：`FailoverError: No API key for google` → fallback 到 OpenRouter 触发
+- 建议：立即接单，response parsing 路径检查
 
----
+**3. #67084（S regression）— Active Memory ON + Codex 导致 Session Timeout Spam**
+- URL: https://github.com/openclaw/openclaw/issues/67084
+- 根因：Active Memory 与 Codex OAuth refresh_token 冲突，embedded run 全部 terminated
+- 影响：webchat 每次 1 条消息后卡死，session 完全不可用；关闭 Active Memory 后恢复
+- 建议：立即接单（与 #66848 同根，AOAO 已派出 fix）
 
-### 🟡 M 级 — 清晰根因，可派单
+**4. #67076 + #67074（S regression x2）— Onboarding trim TypeError 持续出现**
+- #67076: https://github.com/openclaw/openclaw/issues/67076
+- #67074: https://github.com/openclaw/openclaw/issues/67074
+- 注意：根因已由 **PR #66653** 修复，但该 PR 至今未合并（mergeable 状态）
+- 今日又出现 2 个新 reporter 独立报告同类错误（Discord onboarding + 4.12 版 QuickStart Skip for now）
+- **最高优先级：催促 maintainer 合并 #66653**
 
-#### 4. #67035 — Windows chat UI regression (2026.4.14): input swallowed, streaming broken
-- **严重程度：M regression**
-- **根因：** 回归 2026.4.14，输入文字延迟/丢失，流式输出不实时渲染，需刷新页面才可见，typing indicator 闪一下就消失。
-- **关键线索：** 同 4.14 的 WebChat message disappear (#67028) 可能同一 root cause。
-- **状态：** 无关联 PR。
-- **建议：** 派单，与 #67028 合并处理。
+### 其他新发现 bug
 
-#### 5. #67034 — Telegram 16-account polling avalanche
-- **严重程度：M regression**
-- **根因：** 所有16个 Telegram 账号同时触发 `getUpdates` stall（110-136s timeout），然后级联重启，16个并发 WebSocket 重连 + 16个 transport 重建 + 16个 native-approvals 连接失败同时发生。根因同 #66885。
-- **状态：** 无关联 PR（与 #66885 同根因）。
-- **建议：** 与 #66885 合并派单。
-
-#### 6. #67028 — WebChat 消息短暂显示后消失（4.14 回归）
-- **严重程度：M regression**
-- **根因：** 与 #66316 描述的 history reload race condition 完全一致。消息短暂显示 → 消失 → 数秒后重新出现。触发 tool use 的多轮对话消息可能丢失。
-- **状态：** 无关联 PR。
-- **建议：** 派单，可参考 #66316 的分析。
-
-#### 7. #67021 — Main workspace excluded from dreaming schedule
-- **严重程度：M regression**
-- **根因：** `agents.list` 包含 main agent，但 dreaming 只处理 4个 agi-* workspace，跳过 main。main 有210条 short-term recall 但 DREAMS.md 过期（4月13日最后修改）。
-- **状态：** ⚠️ **有 PR #67021** — fix(dreaming): use ingestion date for dayBucket... 由 Etoilelune 创建于 08:12 UTC，reviewDecision 空，尚无 maintainer review。
-- **建议：** 等待/推动 #67021 merge。
-
-#### 8. #67019 — GLM-4.7 garbled output
-- **严重程度：M regression**
-- **根因：** GLM-4 模型所有响应都是乱码字符（"matth"、"仓"、"insurgency"），/clear、reinstall、换模型均无法解决。可能是 provider 路由或 model encoding 问题。
-- **状态：** 无关联 PR。
-- **建议：** 派单调查。
-
-#### 9. #67006 — main(9b1b56a) stuck at `[build-all] runtime-postbuild`
-- **严重程度：M regression**
-- **根因：** 不明确，但 build 停在 runtime-postbuild 阶段，package 变化（+5 -213）可能是诱因。
-- **状态：** 无关联 PR。
-- **建议：** 派单，需要本地复现。
-
----
-
-### 未归级但值得关注
-
-| # | Title | 备注 |
-|---|-------|------|
-| 67058 | [Feature] Add session list filter to hide dreaming/system sessions | enhancement，可做可不做 |
-| 67051 | Config validation error when disabling second skill | bug:behavior，config schema 相关 |
-| 67053/67052 | TUI streaming indicator stays active | UI bug，M 级潜在 |
-| 66988 | Raw mode silently disabled | regression，有详细 fix 建议 |
-| 66978 | sessions_spawn timeout while child completes | regression，orchestration layer 问题 |
+| Issue | 标题 | 标签 | 评估 |
+|-------|------|------|------|
+| #67085 | Managed HOOK.md hooks silently no-op on before/after_tool_call | - | M，建议观察 |
+| #67087 | Browser tool CDP mode downloads to temp instead of configured path | bug | M，文件名/路径逻辑问题 |
+| #67057 | dreaming-narrative 导致 Telegram 通讯严重阻塞 | bug | S，建议跟进（已在 P60157 区域） |
+| #67088 | dashboard falsely reports "No GUI detected" on macOS with SSH_* env | bug | L，macOS 特定 |
+| #67053 | TUI streaming indicator stays active after response finishes | bug | L |
 
 ---
 
 ## 插件仓库（方向2）
 
-- **openclaw/openclaw-plugin**：无 open issues
-- **openclaw/openclaw-plugin-weixin**：无 open issues
-- **Tencent/openclaw-weixin**：无新 activity
-- **结论：** 无需行动。
+**发现 2 个 weixin 插件新动态：**
+
+### weixin #53（Bug，已更新 2026-04-15 08:34 CST）
+- AI 承诺设置定时提醒后，实际未创建 cron 任务，且无法通过聊天记录回忆
+- 严重性：高（功能直接失效）
+- 建议：跟进 #53，排查 weixin 插件定时任务注册链路
+
+### weixin #50（Bug，已更新 2026-04-15 09:02 CST）
+- openclaw 定时推送无法在微信触发
+- 可能是 weixin 出站通知路由问题
+- 建议：确认是入站还是出站问题
+
+**已追踪项无变化：**
+- #66（P60173 区域）：微信消息重复，maintainer 已给精确根因分析，等待 fix PR
 
 ---
 
-## PR 反馈（方向4）
+## 贡献者文件区域（方向3）
 
-### ⚡ 新 PR — 需立即关注
+扫描 bottom 10 contributors（T5-AndyML, Anandesh-Sharma, alexfilatov, Alex-Alaniz, al3mart, akoscz, Aftabbs, aaronveklabs, AkashKobal, AI-Reviewer-QS）。
 
-| # | Title | Author | 状态 |
-|---|-------|--------|------|
-| **#67069** | feat(feishu): pass thread_id as MessageThreadId in inbound context | Etoilelune | greptile-apps commented (08:21 UTC) |
-| #67066 | fix(dreaming): use ingestion date for dayBucket... | leaderlemon | 无 review，刚更新 |
-| #67063 | fix(plugins): include memory slot plugin... | sahilsatralkar | 2 bots + author commented |
-
-### 🔍 PRs 大量 review activity — 可能需要 maintainer 介入
-
-| # | Title | Activity | 说明 |
-|---|-------|----------|------|
-| **#67047** | fix(media): allow host-local CSV and Markdown uploads via Slack | chatgpt-codex-connector 密集评论 + Unayung 回复 8次 | 最新 08:14 UTC，可能需要 maintainer review |
-| **#67037** | fix(ui): skip session.message reloads during active chat | chatgpt-codex-connector 4次评论 | web-ui 相关，可能与 #67028 同根因 |
-| **#67036** | fix(ui): filter leaked control ui transcript rows | 2 bots commented | UI leak fix |
-| **#67033** | fix(discord): unblock gateway CI checks | chatgpt-codex-connector 2次评论 | CI 相关 |
-
-### ✅ 已 reviewed 可 merge 的 PR（size ≤ M）
-
-| # | Title | Author | Size | 说明 |
-|---|-------|--------|------|------|
-| #67047 | fix(media): allow host-local CSV and Markdown via Slack | Unayung | S | 大量 review，需跟进 |
-| #67037 | fix(ui): skip session.message reloads during active chat | hansolo949 | M | 可能同时修 #67028 |
-| #67036 | fix(ui): filter leaked control ui transcript rows | hansolo949 | S | UI leak |
-| #67033 | fix(discord): unblock gateway CI checks | luoyanglang | S | CI unblock |
-| #67027 | fix(cli): explicitly skip plugin loading for cron | xl0shk | XS | cron subcommand |
-| #67025 | fix(plugins): register HTTP routes for setup-runtime | ly85206559 | XS | plugin deferred load |
+**分析结论：**
+- 该 10 位 contributors 贡献量极低（各 1-3 次 commit），历史 commit 几乎全部已覆盖
+- 未发现新的未被追踪的 open bug 关联到这些文件区域
+- 无需额外派出 fix
 
 ---
 
-## Top Candidate 派单汇总
+## 追踪 PR 反馈（方向4）
 
-| 优先级 | # | Title | Root Cause | 建议 |
-|--------|---|-------|------------|------|
-| **🔴 S** | **#66885** | Telegram polling stall (undici HTTP/2) | `allowH2: false` 未应用到 Telegram dispatcher | **立即派单** |
-| **🔴 S** | **#67057** | dreaming-narrative blocks Telegram | 无 session cleanup，77 sessions 耗尽资源 | **立即派单** |
-| **🔴 S** | **#66975** | Telegram bot commands disappear 4.14 | changelog 相关命令同步逻辑 regression | **立即派单** |
-| **🟡 M** | **#67035** | Windows chat UI regression | 与 #67028 同 root cause 群 | 派单，合并 #67028 |
-| **🟡 M** | **#67034** | Telegram 16-account avalanche | 同 #66885 | 与 #66885 合并 |
-| **🟡 M** | **#67028** | WebChat messages disappear (4.14) | history reload race condition (#66316) | 派单 |
-| **🟡 M** | **#67021** | Main workspace excluded from dreaming | agents.list/dreaming workspace filter bug | ⚠️ **有 PR #67021 待 merge** |
-| **🟡 M** | **#67019** | GLM-4.7 garbled output | provider routing 或 model encoding 问题 | 派单 |
-| **🟡 M** | **#67006** | build stuck at runtime-postbuild | 不明确 | 派单复现 |
+| PR | 标题 | 状态 | 新动态 |
+|----|------|------|--------|
+| **#66930** | context-engine graceful degradation | ✅ **已合并**（2026-04-15 07:02 UTC） | 3 reviews，maintainer PR，已 merge |
+| **#66692** | audio transcription allowPrivateNetwork | ✅ **已合并**（2026-04-15 02:36 UTC） | Greptile P2 评论无 regression test，已 merge |
+| **#66653** | Onboarding TypeError trim | 🔴 **仍 OPEN，mergeable** | **⚠️ 同根因 bug 持续出现新 reporter**；今日又出现 #67076 + #67074；**紧急催促 merge** |
+
+**结论：**
+- #66930 和 #66692 均已合并 ✅
+- **#66653 是最大阻塞**：该 PR 早已 mergeable，但 maintainer 未处理，导致 trim TypeError 持续出现新 reporter
 
 ---
 
-## 已追踪项状态
+## 结论
 
-| # | 状态 | 备注 |
-|---|------|------|
-| #66885 | ⚠️ 仍 open，无 PR | 上轮已识别，仍未修复，需重新派单 |
-| #66975 | ⚠️ 仍 open，无 PR | 上轮已识别，需立即派单 |
+**最高优先级：**
 
----
+1. **🔴 #66653 紧急催促 merge** — Onboarding TypeError trim，PR 已 open 超过 1 天，mergeable 但无人处理；今日 #67074 + #67076 继续报告同根因 bug
+2. **🔴 #67092（S regression）— reasoning 输出泄漏** — 1-2 行 sanitizer fix，建议立即接单
+3. **🔴 #67093（S）— Discord 泄漏原始 tool call** — response parsing 路径 regression，建议立即接单
+4. **🟠 #67084（S regression）— Active Memory + Codex timeout spam** — 与 #66848 同根，建议确认 aoao fix 状态
 
-## PR Merge 窗口期建议
-
-1. **#67021**（dreaming main workspace）- author Etoilelune，刚创建，快速 merge 减少阻塞
-2. **#67069**（feishu thread_id）- feat 类型，feishu 紧急需求，跟进 review
-3. **#67047**（media Slack CSV）- S 级，review 密集，可能快 merge 了
-
----
-
-## 输出结论
-
-**本轮发现 3个 S 级新候选（#66885、#67057、#66975），均无关联 PR，需立即派单修复。**
-
-**最紧急：**
-- #66885 和 #67034 是同一根因（telegram undici HTTP/2），合并派单
-- #67057 是资源泄漏导致的通讯阻塞，需紧急处理
-- #66975 是用户直接感知的 regression（命令消失）
-
-**本轮新增发现：** #67057（dreaming 阻塞 Telegram）之前未被追踪，是新发现的高危问题。
+**建议：**
+- 主线任务：派人接单 #67092 和 #67093（均为 regression，直接影响用户体验）
+- 阻塞疏通：联系 maintainer 催促合并 #66653

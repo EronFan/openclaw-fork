@@ -6629,6 +6629,14 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 
 | 优先级 | 任务 | 状态 | 备注 |
 |--------|------|------|------|
+| P60179 | [#67092](https://github.com/openclaw/openclaw/issues/67092) **🔴 S regression** reasoning 输出泄漏：trailing `</think>` 无开标签时 sanitizer 失效，Ollama 环境用户可见 reasoning prose + 写入 .jsonl 历史 | 🔍 **新发现**（方向1 第132轮 17:04 CST） | 已有社区 workaround（取最后 `</think>` 后文本）；1-2行 sanitizer 增强；**建议立即接单** |
+| P60180 | [#67093](https://github.com/openclaw/openclaw/issues/67093) **🔴 S** Discord channel 泄漏原始 tool call XML 语法（`<<parameterparameter>` 等）到用户界面 | 🔍 **新发现**（方向1 第132轮 17:04 CST） | model fallback 时 response parsing 层被绕过；Telegram 正常；关联 FailoverError google→OpenRouter；**建议立即接单** |
+| P60181 | [#67084](https://github.com/openclaw/openclaw/issues/67084) **🔴 S regression** Active Memory ON + Codex 导致 Session Timeout Spam，webchat 不可用 | 🔍 **新发现**（方向1 第132轮 17:04 CST） | 关闭 Active Memory 可恢复；已在 P60224/P60234 区域追踪同根因；**确认 aoao fix 状态** |
+| P60182 | [#67076](https://github.com/openclaw/openclaw/issues/67076) + [#67074](https://github.com/openclaw/openclaw/issues/67074) **S regression** Onboarding trim TypeError 新 reporter（Discord onboarding + 4.12 QuickStart Skip） | 🔍 **新发现**（方向1 第132轮 17:04 CST） | 根因已在 #66653 修复，但 PR 未 merge；今日又出现 2 个独立新 reporter；**紧急催促 merge #66653** |
+| P60183 | [#67085](https://github.com/openclaw/openclaw/issues/67085) **M** Managed HOOK.md hooks silently no-op on before_tool_call / after_tool_call | 🔍 **新发现**（方向1 第132轮 17:04 CST） | 钩子定义存在但对 tool lifecycle 事件完全不触发；无日志输出；**建议观察确认复现** |
+| P60184 | [Tencent/openclaw-weixin #53](https://github.com/Tencent/openclaw-weixin/issues/53) **S** AI 定时提醒未创建 cron 任务 | 🔍 **新发现**（方向2 插件 第132轮 17:04 CST） | weixin 插件；用户承诺设置定时提醒后 cron 未创建；**建议跟进根因** |
+| P60185 | [Tencent/openclaw-weixin #50](https://github.com/Tencent/openclaw-weixin/issues/50) **S** openclaw 定时推送无法在微信触发 | 🔍 **新发现**（方向2 插件 第132轮 17:04 CST） | weixin 插件；出站通知路由问题；**建议跟进** |
+
 | P60175 | [#66975](https://github.com/openclaw/openclaw/issues/66975) **🔴 S regression** Telegram bot commands 升级 2026.4.14 后全部消失，Bot Menu 按钮丢失 | ✅ **已合并**(#66730) | upstream/main 已合并修复；registry 缓存版本化 + process-local 命令同步已覆盖
 
 ### 方向4 PR 追踪更新（maintainer 已 review，关注 merge 窗口）
@@ -6638,8 +6646,12 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P60176 | [#67005](https://github.com/openclaw/openclaw/pull/67005) fix(ollama): simplify cloud onboarding | 🔍 **maintainer 已 review，随时可 merge**（方向4 第131轮 13:44 CST） | maintainer label + size M，comments=2，刚更新 05:47 UTC |
 | P60177 | [#67003](https://github.com/openclaw/openclaw/pull/67003) fix(security): 7 P1 hardening fixes | 🔍 **maintainer 已 review，随时可 merge**（方向4 第131轮 13:44 CST） | maintainer label + size L，comments=2，刚更新 05:47 UTC |
 | P60178 | [#66985](https://github.com/openclaw/openclaw/pull/66985) fix(agents): resolve requestedNode to canonical ID | 🔍 **新开，0 comments，关注 merge 时机**（方向4 第131轮 13:44 CST） | size M，外部 author，05:09 UTC |
+| ~~P60149~~ | ~~[#66653](https://github.com/openclaw/openclaw/pull/66653) Onboarding TypeError~~ | 🔴 **紧急催促 merge**（第132轮 17:04 CST） | PR 已 mergeable 超 1 天；今日 #67076 + #67074 继续报同根因；**需催促 maintainer** |
+| ~~P60150~~ | ~~[#66692](https://github.com/openclaw/openclaw/pull/66692) audio transcription allowPrivateNetwork~~ | ✅ **已合并**（2026-04-15 02:36 UTC） | 已 merge |
+| ~~P60166~~ | ~~[#66930](https://github.com/openclaw/openclaw/pull/66930) context-engine graceful degradation~~ | ✅ **已合并**（2026-04-15 07:02 UTC） | 已 merge，3 reviews |
 
 ### 结论
-- **最高优先级：#66975**（Telegram commands regression，2026.4.14 changelog 相关，Bot Menu 丢失）
-- 次高：**#65428**（OAuth session reset，根因清晰，已在 P59944 区域追踪）
-- 方向4 重点：**#67005** 和 **#67003** maintainer 已 review，随时可 approve 推 merge
+- **最高优先级：#67092**（S regression — reasoning 输出泄漏，1-2行 fix）和 **#67093**（S — Discord tool call 泄漏，建议立即接单）
+- **🔴 阻塞：#66653 紧急催促 merge**（trim TypeError，PR mergeable 但未处理，同根因 bug 持续出现新 reporter #67076/#67074）
+- 次高：#67084（Active Memory + Codex timeout spam，已在 P60224 区域同根因追踪）
+- 方向4：#67005 和 #67003 maintainer 已 review，随时可 approve
