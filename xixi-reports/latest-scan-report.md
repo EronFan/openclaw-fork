@@ -1,253 +1,198 @@
 # xixi Scan Report
-**Scan range:** issues #66800–#66950 | PRs #66800–#66950
-**Timestamp:** 2026-04-15T03:40 GMT+8
-**Scanner:** xixi-subagent (manual GitHub API)
+
+**Scanner:** xixi (autonomous issue scanner)
+**Scan Range:** #66951–#67200
+**Scanned:** 2026-04-15T13:15:00 GMT+8
+**Total Issues Found:** 116
 
 ---
 
-## Summary
+## ✅ Already Has PR
 
-- Issues scanned: ~130 (open, latest-updated in range)
-- PRs scanned: ~80 (open/merged/closed in range)
-- Top Candidates identified: **13 issues**
-- Security bugs (no PR): **1 unassigned**
-- Already covered by PRs: **3 issues**
-
----
-
-## ✅ Already Covered by Open/Merged PRs
-
-| Issue | Title | PR | Status |
-|-------|-------|----|--------|
-| #66947 | Dreaming system pollutes daily memory files | [#66948](https://github.com/openclaw/openclaw/pull/66948) | OPEN — fix(memory-core): default dreaming storage to "separate" |
-| #66916 | Malformed tool calls on longer requests for approval button on Slack | [#66918](https://github.com/openclaw/openclaw/pull/66918) | OPEN — Discord: ignore stale exec approval clicks |
-| #66832 | `logs.tail` likely fails to redact several credential formats | [#66896](https://github.com/openclaw/openclaw/pull/66896) | OPEN — fix: add redaction patterns for JWT, Basic auth, and custom header tokens |
-
-> ⚠️ **Coverage concern on #66916:** PR #66918 is for Discord stale clicks, but issue #66916 is about Slack malformed tool calls on longer commands. These are different channels/symptoms. Needs confirmation that the fix actually covers the Slack case.
-
----
-
-## 🔴 Top Candidates — Fix Immediately
-
-### 1. [#66946](https://github.com/openclaw/openclaw/issues/66946) — Control UI路径重复导致404错误，聊天功能无法使用
-
-| Field | Value |
-|-------|-------|
-| **Severity** | 🔴 P1 / Behavior |
-| **Labels** | `bug:behavior` |
-| **Author** | yndwx01 |
-| **Updated** | 2026-04-15T02:59:36Z |
-| **PR Coverage** | ❌ None |
-
-**Assessment:** OpenClaw Control UI前端路径拼接错误，`__openclaw__`路径重复导致`/__openclaw__/__openclaw/control-ui-config.json`返回404，聊天功能完全不可用。影响所有2026.4.14通过SSH隧道访问Control UI的用户。根因：前端路由拼接逻辑错误，概率100% repro。
+| Issue | Title | PR |
+|-------|-------|-----|
+| 66958 | Telegram native command menu cleared on startup | #67169 |
+| 66963 | openclaw agent crashes on startup (ReferenceError in buildPollSchema) | #67022 |
+| 67020 | Slack dmHistoryLimit defined but never wired | #67054 |
+| 67021 | Main workspace excluded from dreaming schedule | #67073 |
+| 67026 | Plugin loading crashes management commands | #67027 |
+| 67030 | Heartbeat isolated session relays in English without SOUL.md | #67059 |
+| 67057 | dreaming-narrative导致Telegram通讯严重阻塞 (critical!) | #67073 (partial) |
+| 67058 | Session list filter feature for dreaming sessions | #67155 |
+| 67061 | Dreaming dayBucket uses file date instead of ingestion date | #67091 |
+| 67068 | Feishu pass thread_id as MessageThreadId | #67069 |
+| 67088 | Dashboard falsely reports "No GUI detected" on macOS with SSH env | #67115, #67110 |
+| 67076 | Cannot read properties of undefined (reading 'trim') | #67086 |
+| 67061 | Dreaming dayBucket (dup) | #67066 |
+| 67130 | openclaw onboard crashes after channel selection (missing bundled metadata) | #67145 |
+| 67131 | openai-codex stale /backend-api/v1 baseUrl | #67159 |
+| 67172 | Cron classifier sets status=ok when summary contains denial tokens | #67186 |
 
 ---
 
-### 2. [#66945](https://github.com/openclaw/openclaw/issues/66945) — TypeError: Cannot read properties of undefined (reading 'trim') [onboard crash]
+## 🔴 Top Candidates (S/M with clear root cause, NO existing PR)
 
-| Field | Value |
-|-------|-------|
-| **Severity** | 🔴 P1 / Crash |
-| **Labels** | `bug`, `bug:crash` |
-| **Author** | tobemorelucky |
-| **Updated** | 2026-04-15T02:58:55Z |
-| **PR Coverage** | ❌ None |
+### CRITICAL / S — Immediate Action
 
-**Assessment:** 安装2026.4.14后运行`openclaw onboard --install-daemon`，选择channel时崩溃，TypeError: Cannot read properties of undefined (reading 'trim')。同根因还出现在#66942、#66848。全新安装完全阻塞，影响所有新用户。Reporter提供截图。
+#### 1. #67057 — dreaming-narrative会话累积导致Telegram通讯严重阻塞
+- **Severity:** S (system blockage, communication blackout)
+- **Root Cause:** 77个dreaming-narrative会话持续占用资源，消息队列阻塞，用户消息与梦境消息竞争处理
+- **Fix:** 需要限制dreaming并发数，或在Telegram channel禁用/限流dreaming会话
+- **Spawn:** YES → `fix-67057`
 
----
+#### 2. #67029 — memory-core dreaming cleanup fails with missing scope operator.admin
+- **Severity:** S (RBAC error blocks cleanup, sessions leak indefinitely)
+- **Root Cause:** dreaming cleanup操作需要`operator.admin` scope但缺少此权限
+- **Fix:** 在cleanup代码路径中添加正确的scope或使用有权限的session
+- **Spawn:** YES → `fix-67029`
 
-### 3. [#66941](https://github.com/openclaw/openclaw/issues/66941) — QClaw客服号(wechat-access)无法连接，Gateway进程不启动
+#### 3. #67173 — Queued messages silently dropped after agent run timeout
+- **Severity:** S (data loss, no error notification)
+- **Root Cause:** agent run超时被终止时，queued消息没有被followup drain处理，直接丢弃
+- **Fix:** timeout时触发followup drain处理队列
+- **Spawn:** YES → `fix-67173`
 
-| Field | Value |
-|-------|-------|
-| **Severity** | 🔴 P1 / Crash |
-| **Labels** | `bug`, `bug:crash` |
-| **Author** | join9461-coder |
-| **Updated** | 2026-04-15T02:46:25Z |
-| **PR Coverage** | ❌ None |
+### MEDIUM / M — High Value
 
-**Assessment:** wechat-access渠道无法连接，Gateway进程直接退出。关键渠道崩溃，所有通过微信接入的用户完全无法使用。根因待查，可能与2026.4.14引入的变更相关。
+#### 4. #67035 — Windows chat UI regression: input text swallowed, streamed replies invisible
+- **Severity:** M (regression, affects Windows users)
+- **Root Cause:** 2026.4.14 Windows特定UI问题，streamed replies不显示，input text被吞
+- **Spawn:** YES → `fix-67035`
 
----
+#### 5. #67091 — sessions_spawn defaults to thread-bound persistent mode
+- **Severity:** M (unexpected permanent bindings from one-shot tests)
+- **Root Cause:** sessions_spawn默认mode="run"但实际变成thread-bound persistent，导致测试用例创建永久绑定
+- **Spawn:** YES → `fix-67091`
 
-### 4. [#66887](https://github.com/openclaw/openclaw/issues/66887) — Single plugin failure causes complete gateway outage
+#### 6. #67136 — Write tool falsely reports successful write of X bytes but no file created
+- **Severity:** M (silent data loss)
+- **Root Cause:** Write tool报告成功但文件未实际创建
+- **Spawn:** YES → `fix-67136`
 
-| Field | Value |
-|-------|-------|
-| **Severity** | 🔴 P1 / Behavior |
-| **Labels** | `bug` |
-| **Author** | KarbonXX |
-| **Updated** | 2026-04-15T00:36:04Z |
-| **Comments** | 1 |
+#### 7. #67151 — Discord inbound messages containing `https` stripped before reaching agent
+- **Severity:** M (content modification, broken functionality)
+- **Root Cause:** Discord消息中的URL在被agent处理前被剥离
+- **Spawn:** YES → `fix-67151`
 
-**Assessment:** 第三方插件（如lossless-claw）初始化失败或版本不匹配时，整个Gateway崩溃，所有渠道（Telegram、Discord、webchat）全部离线。故障隔离完全失效。错误信息`info.id must match registered id "lossless-claw"`明确指出了插件注册验证失败。需要为每个插件包装try/catch，失败时禁用插件而非整个Gateway。
+#### 8. #67087 — Browser tool downloads to temp instead of configured downloads path
+- **Severity:** M (wrong behavior, not catastrophic)
+- **Root Cause:** CDP模式下browser tool下载到temp目录而非用户配置的downloads路径
+- **Spawn:** YES → `fix-67087`
 
----
+#### 9. #67092 — Malformed reasoning output leaks into user-visible text
+- **Severity:** M (data corruption visible to user)
+- **Root Cause:** reasoning输出格式错误时，trailing `</think>`无有效opening tag，内容泄露到用户可见文本
+- **Spawn:** YES → `fix-67092`
 
-### 5. [#66940](https://github.com/openclaw/openclaw/issues/66940) — MCP streamable-http: missing Accept header causes connection failure
+#### 10. #67093 — Discord Channel Leaking Raw Tool Call Syntax
+- **Severity:** M (broken Discord integration)
+- **Root Cause:** Discord channel暴露原始tool call语法给用户
+- **Spawn:** YES → `fix-67093`
 
-| Field | Value |
-|-------|-------|
-| **Severity** | 🔴 P1 / Behavior |
-| **Labels** | *(none)* |
-| **Author** | sl-wen |
-| **Updated** | 2026-04-15T02:58:29Z |
-| **Comments** | 1 |
-| **PR Coverage** | ❌ None |
-
-**Assessment:** MCP streamable-http客户端未发送`Accept: application/json, text/event-stream`头，导致Zhipu BigModel等MCP服务器拒绝连接。根因明确（curl测试已证明），fix简单——在所有streamable-http请求上添加Accept头。完全阻塞相关MCP工具。
-
----
-
-### 6. [#66885](https://github.com/openclaw/openclaw/issues/66885) — Telegram polling stall + subagent announce timeout on Windows (undici HTTP/2 root cause)
-
-| Field | Value |
-|-------|-------|
-| **Severity** | 🔴 P1 / Regression |
-| **Labels** | `bug`, `regression` |
-| **Author** | swissfone |
-| **Updated** | 2026-04-15T00:50:09Z |
-| **Comments** | 2 |
-| **PR Coverage** | ❌ None (partial: #66889 Telegram disable HTTP/2 polling transport) |
-
-**Assessment:** 2026.4.12开始，Windows上Telegram轮询每10-12分钟冻结90-200秒，根因是undici尝试HTTP/2+IPv6但Windows上IPv6不可达。子agent announce超时，cron任务结果丢失。**#66889已开PR禁用HTTP/2轮询传输**，需确认是否能完整覆盖此问题。回归链清晰：4.1正常→4.12 regressed。
+#### 11. #67081 — WebChat user message not displayed until assistant response
+- **Severity:** M (UX regression, appears frozen)
+- **Root Cause:** WebChat用户消息发送后不立即显示，要等assistant回复才出现
+- **Spawn:** YES → `fix-67081`
 
 ---
 
-### 7. [#66916](https://github.com/openclaw/openclaw/issues/66916) — Malformed tool calls on longer requests for approval button on Slack + bad session routing
-
-| Field | Value |
-|-------|-------|
-| **Severity** | 🟠 P2 / Regression |
-| **Labels** | `bug`, `regression` |
-| **Author** | awknode |
-| **Updated** | 2026-04-15T01:44:05Z |
-| **PR Coverage** | ⚠️ Partial (#66918 — Discord stale clicks, NOT Slack) |
-
-**Assessment:** 2026.4.14升级后，Slack上allow-once按钮遇到较长命令（如`echo Hello World!`）时产生畸形tool call，`sessions_send`无法找到session `U05TZU51VC1`。短命令`pwd`正常。回归点明确。**PR #66918针对Discord，与Slack问题不同，需单独fix或确认底层共享代码**。
-
----
-
-## 🟠 High Priority
-
-### 8. [#66942](https://github.com/openclaw/openclaw/issues/66942) — TypeError: Cannot read properties of undefined (reading 'trim')
-
-| Field | Value |
-|-------|-------|
-| **Severity** | 🟠 P2 / Crash |
-| **Labels** | `bug`, `bug:crash` |
-| **Author** | zillionare |
-| **Updated** | 2026-04-15T02:53:42Z |
-| **PR Coverage** | ❌ None (same root cause as #66945) |
-
-**Assessment:** 与#66945同根因（TypeError: Cannot read properties of undefined (reading 'trim')），发生在安装或onboard流程中。合并分析。
-
-### 9. [#66880](https://github.com/openclaw/openclaw/issues/66880) — Telegram Plugin Restart-Loop in 4.14 — deleteMyCommands failed
-
-| Field | Value |
-|-------|-------|
-| **Severity** | 🟠 P2 / Regression |
-| **Labels** | `bug` |
-| **Author** | BigWiLLi111 |
-| **Updated** | 2026-04-15T00:36:05Z |
-| **PR Coverage** | ❌ None (PR #66843 was closed, reopened?) |
-
-**Assessment:** 2026.4.14 Telegram插件重启循环，`deleteMyCommands`失败。#66843曾fix此问题（restore Telegram native commands），但状态为CLOSED。需确认是否在当前版本已merge或需要新PR。
-
-### 10. [#66947](https://github.com/openclaw/openclaw/issues/66947) — Dreaming system pollutes daily memory files (covered by #66948)
-
-| Field | Value |
-|-------|-------|
-| **Severity** | 🟠 P2 / Behavior |
-| **Labels** | *(none)* |
-| **Author** | jensenwang560-blip |
-| **Updated** | 2026-04-15T03:02:12Z |
-| **PR Coverage** | ✅ #66948 OPEN |
-
-### 11. [#66892](https://github.com/openclaw/openclaw/issues/66892) — [MiniMax Model] Tool call ID format error (code 2013) causes LCM compaction failure and session crash
-
-| Field | Value |
-|-------|-------|
-| **Severity** | 🟠 P2 / Crash |
-| **Labels** | `bug`, `bug:crash` |
-| **Author** | microsx |
-| **Updated** | 2026-04-15T00:53:49Z |
-| **PR Coverage** | ❌ None |
-
-**Assessment:** MiniMax-M2.7使用LCM compaction时生成畸形tool call ID，被API以error code 2013拒绝，导致~7分钟auth profile cooldown和session crash。所有MiniMax用户+LCM用户受影响，频率100%。
-
-### 12. [#66848](https://github.com/openclaw/openclaw/issues/66848) — TypeError: Cannot read properties of undefined (reading 'trim')
-
-| Field | Value |
-|-------|-------|
-| **Severity** | 🟠 P2 / Crash |
-| **Labels** | `bug`, `bug:crash` |
-| **Author** | phpweb |
-| **Updated** | 2026-04-15T00:19:26Z |
-| **PR Coverage** | ❌ None (same root cause as #66945) |
-
-### 13. [#66866](https://github.com/openclaw/openclaw/issues/66866) — Excessive RESUMEs from Discord Gateway integration (carbon)
-
-| Field | Value |
-|-------|-------|
-| **Severity** | 🟡 P2 / Regression |
-| **Labels** | `bug`, `regression` |
-| **Author** | daisyzhou |
-| **Updated** | 2026-04-14T23:18:27Z |
-| **PR Coverage** | ❌ None |
-
-**Assessment:** Discord Gateway产生过多RESUME事件，导致carbon token快速消耗。与2026.4.14变更相关，影响Discord用户成本和可用性。
-
----
-
-## 🟡 Medium Priority (Notable but less urgent)
+## 🟡 Unclear / Needs More Info
 
 | Issue | Title | Notes |
 |-------|-------|-------|
-| #66950 | Telegram native command menu disappears after upgrade to 2026.4.14 | Same as #66880 family |
-| #66936 | `openclaw agents list` fails with unresolved SecretRef; CLI hangs | Blocking CLI |
-| #66893 | Critical: Progression Difficulty Spike | Likely game-related, not OpenClaw |
-| #66900 | Task can end without final failure summary when tool execution fails | Missing error surfacing |
-| #66907 | Control UI: input text reappears briefly when streaming response begins | UI flicker |
-| #66864 | /new session reset doesn't purge system-events queue | Covered by PR #66868 (drain system events) |
-| #66908 | npm link gets broken after openclaw update via Control UI | Update mechanism issue |
+| 66971 | exec call hardcodes security=allowlist | Need to check if this is intentional or a bug |
+| 66977 | sqlite-vec extension cannot load on macOS | OMIT_LOAD_EXTENSION compile flag issue, may need build fix |
+| 66982 | Exec completion relay creates orphan sessions | Need more diagnostic info |
+| 67013 | Browser control heartbeat logs errors for expected unavailability | Expected behavior? Needs clarification |
+| 67040 | Performance: Optimize CLI startup by persisting plugin discovery cache | Enhancement, not bug |
+| 67044 | subagent-registry.runtime.js missing from dist output | Build issue, need repro |
+| 67045 | Sticky model fallback after compaction-triggered tool_use formatting error | Need log trace |
+| 67052 | TUI streaming indicator stays active long after response finishes | Can be visual-only, L candidate |
+| 67053 | TUI streaming indicator (duplicate of 67052) | Dup |
+| 67057 noted above |
+| 67065 | Managed media workflows need session-scoped next-turn suppression | Enhancement |
+| 67071 | ${VAR} substitution sentinels stripped by config set | Need clarification on scope |
+| 67074 | TypeError: Cannot read properties of undefined (reading 'trim') | Likely dup of 67076/66945, already has PR |
+| 67078 | /new initialized wrong model on fresh Telegram DM | Need more info |
+| 67084 | Session Timeout Spam with Codex and Active Memory ON | Need context |
+| 67085 | HOOK.md hooks silently no-op on before_tool_call / after_tool_call | Needs investigation |
+| 67097 | models.json bundled plugins bypass onboard lifecycle | Enhancement/discrepancy |
+| 67099 | Empty title | Blank |
+| 67102 | Bug Tool Calls sans Suite avec OpenRouter | Need body |
+| 67106 | Control UI / Webchat text disappears in Safari | Safari-specific regression |
+| 67107 | Blank title bug | Empty |
+| 67109 | Control UI / Webchat does not render inbound images | Enhancement |
+| 67113 | QMD on ARM (Pi 5): qmd embed timeout loop | Platform-specific |
+| 67114 | openclaw status / health hangs on Windows | Windows startup issue |
+| 67118 | Cron isolated agentTurn may not advance to model fallback | Need log trace |
+| 67121 | MiniMax Portal OAuth completes but credentials not saved | Auth issue, need logs |
+| 67122 | pdf/image tools reject sub-agent workspace paths | Workspace path blacklist issue |
+| 67133 | hooks未触发和定时任务执行历史缺失 | Need more info |
+| 67135 | Webchat context meter shows false overflow after /new | Need context |
+| 67139-67141 | TKT tickets | Internal tracking |
+| 67152 | memory-core dreaming uses request-scoped subagent runtime outside gateway | Architecture issue |
+| 67158 | openai-codex gpt-5.1/5.2/5.3 rejected | OAuth scope issue |
+| 67160 | TUI: chat.history unavailable during gateway startup | Race condition |
+| 67161 | ACP agent sessions terminated with ACP_TURN_FAILED during gateway restart | Need logs |
+| 67162 | Blank title bug | Empty |
+| 67164 | Allow 1-hour cache TTL for custom Anthropic-compatible providers | Enhancement |
+| 67165 | SSRF blocking searxng/browsers | Enhancement/security |
+| 67166 | Feature Request: Display user-sent images inline in WebChat | Enhancement |
+| 67167 | Session Lifecycle Hooks (PreCompact + Stop hooks) | Enhancement |
+| 67168 | logging.file config is read but not applied | Config not honored |
+| 67170 | talk-voice plugin audio delivery failure to Telegram | Audio pipeline issue |
+| 67171 | config set writes resolved values stripping ${VAR} sentinels | Config serialization issue |
+| 67177 | MS Teams inbound file attachments fail silently | Graph API URL rewrite missing |
+| 67178 | Context Engine Turn Maintenance Loop | Internal tracking |
+| 67181 | Discord async completion leaks internal resume-fallback message | Discord integration bug |
+| 67182 | Telegram file download fails: unresolved token in URL | URL construction issue |
+| 67187 | ekcli: macOS identity + EventKit privacy keys | macOS-specific enhancement |
+| 67188 | TTS bug | Blank title |
+| 67189 | LCM 0.9.0: Empty assistant messages accumulate from tool-only turns | Message accumulation |
+| 67190 | memory-wiki CLI returns 0 artifacts but gateway call works | CLI vs gateway discrepancy |
+| 67191 | BOOT.md messages not delivered to user | deliver:false flag issue |
 
 ---
 
-## 📋 Fix Queue (Recommended Order)
+## 🟢 Small Issues (L)
 
-| Priority | Issue | Why |
-|----------|-------|-----|
-| 1 | #66946 | P1 — Control UI completely broken for tunnel users |
-| 2 | #66945/#66942/#66848 | P1 — Onboarding完全崩溃，新用户阻塞 |
-| 3 | #66941 | P1 — Gateway进程退出，微信渠道完全不可用 |
-| 4 | #66887 | P1 — 单插件故障导致全Gateway宕机 |
-| 5 | #66940 | P1 — MCP streamable-http完全不可用 |
-| 6 | #66885 | P1 regression — Telegram每12分钟冻结3分钟 |
-| 7 | #66916 | P2 regression — Slack approval buttons长命令全坏 |
-| 8 | #66880/#66950 | P2 — Telegram菜单/命令丢失 |
-| 9 | #66892 | P2 — MiniMax+LCM用户session crash |
-| 10 | #66866 | P2 — Discord carbon过度消耗 |
-| 11 | #66832 | P2 — 日志redaction缺失 credential泄露风险 |
-
----
-
-## 🚨 Immediate Action Items
-
-1. **#66946 (#66946) — Control UI路径重复** — 立即派单，前端路由拼接错误，fix简单但影响严重
-2. **TypeError trim三连 (#66945/#66942/#66848)** — 立即分析onboard流程中所有`.trim()`调用，env/config解析相关
-3. **#66941 — QClaw Gateway崩溃** — 检查wechat-access插件注册代码
-4. **#66887 — 插件故障隔离** — 这是一个架构级问题，需要在plugin loader中增加isolate wrapper
-5. **#66940 — MCP Accept头** — fix极小，但影响大
-
----
-
-## inProgressFixes (from this scan)
-
-- **#66940** (MCP Accept header): No PR yet — needs owner
-- **#66885** (Telegram HTTP/2): PR #66889 exists — needs review/merge
+| Issue | Title | Notes |
+|-------|-------|-------|
+| 66965 | WhatsApp: expose messageTimeoutMs as config option | Enhancement, small |
+| 66979 | Feature: sandbox limit | Enhancement |
+| 66983 | Feature: web canvas node support | Enhancement |
+| 66992 | macOS: gateway plist should set ProcessType: Interactive | Small platform fix |
+| 66994 | Exec approval prompts persist despite tools.exec.ask: off | M? Actually could be M |
+| 67000 | Feature: Warm-up / session reuse for embedded agents | Enhancement |
+| 67002 | Feature: Independent workspace for every channel | Enhancement |
+| 67014 | QQ Bot streaming mode配置无效 | Enhancement |
+| 67016 | Dreaming UI lacks status information | Enhancement |
+| 67052 | TUI streaming indicator stays active (also in Unclear) | Low priority |
+| 67060 | Feature: Provider requests ignore env proxy → silent timeout | Enhancement |
+| 67062 | Feature: Add channels.qqbot.mediaAllowHosts for SSRF policy | Enhancement |
+| 67067 | Feature: Time-Aware Active Memory with Schedule Management | Enhancement |
+| 67116 | Feature: openclaw logs --follow use local time by default | Enhancement |
+| 67117 | Feature: Support Parallel Dispatch for Multiple Bot Accounts | Enhancement |
+| 67120 | Feature: Feishu voice messages not transcribed | Enhancement |
+| 67128 | Feature: /usage command or session stats panel in Telegram | Enhancement |
+| 67129 | Blank feature request | Empty |
+| 67154 | Feature: Separate runtime tracking from allowlist | Enhancement |
+| 67164 | Allow 1-hour cache TTL for custom providers | Enhancement |
+| 67165 | SSRF blocking searxng / browser CDP | Enhancement |
 
 ---
 
-*Report generated by xixi-subagent — 2026-04-15T03:40 GMT+8*
+## 📋 Summary
+
+- **Total Issues Scanned:** 116
+- **Already Has PR:** 16
+- **Top Candidates (S/M, clear root cause, no PR):** 11
+- **Unclear/Needs Info:** ~50
+- **Feature Requests (L/enhancement):** ~25
+- **Spam/Duplicate/Blank:** ~10
+
+**Subagents Spawned:** 11 (for top candidates without PR)
+
+---
+
+*Report generated by xixi at 2026-04-15T13:15:00 GMT+8*

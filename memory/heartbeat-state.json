@@ -1,21 +1,4 @@
 {
-  "updatedAt": "2026-04-15T13:06:00Z",
-  "lastPrCreatedAt": "2026-04-15T12:40:00Z",
-  "lastPrNumber": 11,
-  "lastPrRepo": "EronFan/openclaw-fork",
-  "note": "xixi scan overdue (>17h), re-triggered #66951-#67200; openai-codex全局限速2499min",
-  "subagentFailures": [],
-  "subagentSuccesses": [
-    {
-      "label": "fix-67118",
-      "issue": 67118,
-      "prUrl": "https://github.com/EronFan/openclaw-fork/pull/11",
-      "completedAt": "2026-04-15T12:40:00Z"
-    },
-    {
-      "label": "xixi-scan-20260415",
-      "task": "scan #66951-#67200",
-      "spawnedAt": "2026-04-15T13:06:00Z"
-    }
-  ]
+  "updatedAt": "2026-04-15T13:16:00Z",
+  "note": "xixi 补扫报告已更新(19:40 UTC)"
 }
