@@ -6922,3 +6922,36 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 - **P60309 #67349**：ElevenLabs TTS Accept header PR
 - **P60310 #67329**：memory-wiki 0 artifacts PR
 - **P60311 #67311**：amazon-bedrock-mantle discovery gate PR
+
+---
+
+## 更新记录 (第139轮 05:31 CST)
+
+### 末段 contributors 文件区（方向3 第139轮 05:31 CST）
+- **末段 10 contributors**：chilu18/sliverp/clawdinator[bot]/lml2468/Whoaa512/darkamenosa/BruceMacD/davidrudduck/pandego/joaohlisboa — **8/10 无最近 commits；2个有 commits 的用户文件变更返回空**；**本轮无新发现**
+
+### 方向4 PR 反馈更新
+- **P60223 #67253 (models authStatus)**：omarshahine (maintainer) 已响应 Greptile P2 并在 commit 04fbbf06c2 中修复 — **无需跟进**
+- **#67186 (cron classifier fix for #67172)**：**仍 Open 未 merge**；#67377（inverse bug: status=error on success）未解决
+- **#67376 P1**：`chatgpt-codex-connector[bot]` 报 P1 race condition — `clearActiveMcpLoopbackRuntime()` 无条件清全局，close 期间可被新 server 调用覆盖；**需 maintainer 确认 fix 状态**
+
+### xixi 第139轮新发现（05:31 CST）
+| ID | Issue/PR | 优先级 | 状态 | 备注 |
+|----|----------|--------|------|------|
+| P60318 | [#67394](https://github.com/openclaw/openclaw/issues/67394) WhatsApp group auto-reply silently fails — reply generates but never delivers | 🔴 S regression | 🔍 **新发现**(方向1 第139轮 05:31 CST) | bug+regression；2026.4.14；DM 正常但 group 失败；静默无 log；**建议接单** |
+| P60319 | [#67393](https://github.com/openclaw/openclaw/issues/67393) Massive VM bloat (22GB+ VIRT) on Gateway startup — 同 #6413（之前被标记 won't-fix 但问题持续） | 🔴 S crash | 🔍 **新发现**(方向1 第139轮 05:31 CST) | bug+crash；0评论；与 #66886 可能同根（内存泄漏）；**建议评估是否重新 open #6413** |
+| P60320 | [#67402](https://github.com/openclaw/openclaw/issues/67402) Internal control/update messages leak into normal chat sessions after gateway restarts | 🟠 S | 🔍 **新发现**(方向1 第139轮 05:31 CST) | 内部消息混入用户会话，assistant 误回复内部事件；无 label；**建议接单** |
+| P60321 | [#67400](https://github.com/openclaw/openclaw/issues/67400) Persistent sub-agent sessions circular dependency — mode="session" requires thread=true, thread=true requires mode="session" | 🟠 S bug | 🔍 **新发现**(方向1 第139轮 05:31 CST) | ACP persistent spawn 功能完全破坏；**建议接单** |
+| P60322 | [#67399](https://github.com/openclaw/openclaw/issues/67399) Circuit breaker for repeated tool failures — agent 无限重试同一失败工具，burns tokens | 🟠 S | 🔍 **新发现**(方向1 第139轮 05:31 CST) | 设计缺失；用户真实案例：WebSearch 不存在但 agent 无限重试；**建议接单** |
+| P60323 | [#67397](https://github.com/openclaw/openclaw/issues/67397) Dreaming cron skipped by heartbeat activeHours — 夜间 03:00 dreaming 被 activeHours 窗口阻断 | 🟠 S | 🔍 **新发现**(方向1 第139轮 05:31 CST) | docs 默认示例就是 03:00，但 activeHours 窗口常在 08:00-22:00；**建议接单** |
+| P60324 | [#67396](https://github.com/openclaw/openclaw/issues/67396) Telegram silently drops messages > 4096 chars — 无 error 无截断无 partial | 🟠 S | 🔍 **新发现**(方向1 第139轮 05:31 CST) | 静默失败；agent 正常完成但用户收不到消息；**建议接单** |
+| P60325 | [#67377](https://github.com/openclaw/openclaw/issues/67377) Cron classifier sets status=error when run summary narrates success（与 #67172 相反，inverse bug） | 🟡 M | 🔍 **新发现**(方向1 第139轮 05:31 CST) | #67186 fix 未 merge；inverse bug 出现；需同 author 处理 |
+| P60326 | [#67376](https://github.com/openclaw/openclaw/issues/67376) MCP loopback runtime race condition — P1 from chatgpt-codex-connector[bot] | 🟠 S | ⚠️ **PR P1 review 阻塞中**(方向4 第139轮 05:31 CST) | P1: clearActiveMcpLoopbackRuntime race condition；P2: token revocation skipped on cleanup exception；**需 maintainer 确认已处理** |
+| P60327 | [#67379](https://github.com/openclaw/openclaw/issues/67379) qmd scope denies subagent sessions — channel/chatType resolve to undefined | 🟡 M | 🔍 **新发现**(方向1 第139轮 05:31 CST) | subagent 降级到 builtin MEMORY.md；无声退化；**建议接单** |
+| P60328 | [#67363](https://github.com/openclaw/openclaw/issues/67363) memory-core dreaming deep phase promotes raw verbatim daily-log snippets to MEMORY.md without distillation | 🟡 B | 🔍 **新发现**(方向1 第139轮 05:31 CST) | 污染 MEMORY.md；无总结/蒸馏；**建议 aoao 接单** |
+| P60329 | [#67362](https://github.com/openclaw/openclaw/issues/67362) memory-core dreaming cron reconciliation depends on stale one-time startup cron reference | 🟡 B | 🔍 **新发现**(方向1 第139轮 05:31 CST) | startupCronSource 只 capture 一次；null 时 reconcile 永远失败；**建议 aoao 接单** |
+| P60330 | [#67361](https://github.com/openclaw/openclaw/issues/67361) Hook-delivered messages lost on bootstrap-context:full — agent 无法记住自己发过的通知 | 🟡 B | 🔍 **新发现**(方向1 第139轮 05:31 CST) | bootstrap-context:full 覆盖 hook turn 上下文；**建议 aoao 接单** |
+
+### 插件仓库（方向2 第139轮 05:31 CST）
+- **Tencent/openclaw-weixin**: 45 open issues，repo 公开但 API 不可访问（可能 private 或需认证）；**无新发现**
+- 已有 P60220 追踪微信插件 #70 (IMA Knowledge Base)

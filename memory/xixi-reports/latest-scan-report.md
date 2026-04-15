@@ -1,117 +1,96 @@
-# 全量扫描报告 2026-04-16 03:26 CST
+# 全量扫描报告 2026-04-16T05:31 CST (21:31 UTC)
 
 ## GitHub Issues（方向1）
 
-**新发现 30+ open issues（近 2 小时更新）**，其中最高优先级候选：
+**新发现 X≈30+ 个 Open Issues（过去2小时内更新）**，其中最高优先级候选：
 
-### 🔴 最高优先级（新增）
+### 🔴 Regression / Crash 类（建议立即接单）
+| # | 标题 | 标签 | 优先级 |
+|---|------|------|--------|
+| **67394** | WhatsApp group auto-reply silently fails — reply generates but never delivers | bug+regression | **S** |
+| **67393** | Massive VM bloat (22GB+) immediately on Gateway startup — 同 #6413（之前被标记 won't-fix 但问题仍存在） | bug+crash | **S** |
 
-| # | 标题 | 标签 | 分析 |
-|---|------|------|------|
-| **#67353** | Onboarding `trim()` crash — 无法跳过 channel selection | bug, bug:crash | 0评论；用户选 channel 或点"Skip"都崩；阻断所有新用户配置；v2026.4.14 regression；**根因：与 #67347/#67291 同簇，`trim()` 在 undefined 上调用** |
-| **#67343** | TTS `[[/tts:text]]` closing tag leaks into Telegram voice note caption | 无标签 | 1评论；用户已提供精确格式证据；PR #67352（hclsys）已开修同一根因；**可立即 review + approve** |
-| **#67323** | MSTeams DM messages appear duplicated in agent session context（队列重放未去重） | 无标签 | 1评论；与 P60239 完全同根；**已在追踪，合并处理** |
-
-### 🟠 S级新增
-
-| # | 标题 | 分析 |
+### 🟠 功能/行为类新 Issue
+| # | 标题 | 备注 |
 |---|------|------|
-| **#67237** | WhatsApp 向联系人发送错误消息（内部 reply 路由到 contact） | 隐私安全事故；用户证据具体；与 P60237 不同角度（行为 bug vs 安全权限）；**确认 P60237 已覆盖此簇** |
-| **#67342** | BlueBubbles: `runtime not initialized` on gateway startup (v2026.4.14) | bug+regression；v2026.4.14 新引入；0评论 |
-| **#67340** | ElevenLabs TTS Telephony mode: hardcoded Accept header conflict | TTS delivery bug；PR #67349（ViseonDev）已修；**可 review** |
-| **#67336** | macOS Remote over SSH rewrites browser path to discovered ws:// host URL | bug:crash；browser 功能完全破坏；0评论 |
-| **#67334** | Ollama timeout persists after updating to 2026.4.14 | bug+bug:crash；embedded agent session timeout；0评论 |
-| **#67296** | Memory Consolidation overwrites Dreaming output in `memory/YYYY-MM-DD.md` | memory/dreaming 冲突；0评论；与 #65834 相关 |
-| **#67295** | `openclaw agents add` writes wrong baseUrls — 同时破坏 OpenRouter/Arcee/OpenAI-Codex/GitHub Copilot | 跨多个 provider 的配置写入 bug；0评论 |
-| **#67288** | amazon-bedrock-mantle 缺少 `config.discovery.enabled` gate | bug；**PR #67311（hclsys）已修**；也可 review |
+| **67402** | Internal control/update messages leak into normal chat sessions after gateway restarts | 内部消息混入用户会话，导致 assistant 误回复内部事件 |
+| **67400** | The agent is unable to create persistent sub-agent sessions — circular dependency mode="session" vs thread=true | bug label，regression |
+| **67399** | Circuit breaker for repeated tool failures — agent 无限重试同一失败工具，烧tokens | 纯设计缺失，无 circuit breaker |
+| **67397** | Dreaming cron skipped by heartbeat activeHours（夜间 03:00 dreaming 被 activeHours 窗口阻断） | docs 默认示例就是 03:00，矛盾 |
+| **67396** | Telegram silently drops messages > 4096 chars — 无 error 无截断无 partial | 静默失败，用户体验差 |
+| **67379** | qmd scope denies subagent sessions — channel/chatType resolve to undefined | subagent 降级到 builtin MEMORY.md，无声退化 |
+| **67377** | Cron classifier sets status=error when run summary narrates success（与 #67172 相反，inverse bug） | #67186（fix for #67172）尚未 merge |
+| **67363** | memory-core dreaming deep phase promotes raw verbatim daily-log snippets to MEMORY.md without distillation | 污染 MEMORY.md |
+| **67362** | memory-core dreaming cron reconciliation depends on stale one-time startup cron reference | 运行时 reconcile 永远失败 |
+| **67361** | Hook-delivered messages lost on bootstrap-context:full — agent 无法记住自己发过的通知 | bootstrap-context:full 覆盖了 hook turn 的上下文 |
 
-### 其他新增（已覆盖/无需追踪）
-
-- **#67347**: `trim()` TypeError — 同 #67353 根因，无需重复追踪
-- **#67291**: Onboarding `trim()` crash — 同 #67353 根因，无需重复追踪
-- **#67352**: PR fix TTS closing tag leak — **review 机会**
+**已有追踪勿重复**: #54952 #54964 #55008 #55013 #55153 #55137 #55466 #55458 #55479 #67237 #67314 #67323 等
 
 ---
 
 ## 插件仓库（方向2）
 
-**Tencent/openclaw-weixin**：发现 18 个 open issues
+**Tencent/openclaw-weixin**: 45 个 open issues（repo 公开但 issues 不可通过 API 访问，可能为 private 或中文）
 
-### 新发现（近 2 小时）
+→ 无需新增追踪项，已在 P60220 追踪微信插件问题
 
-| # | 标题 | 分析 |
-|---|------|------|
-| **#70** | IMA Knowledge Base: cannot read note content — returns 210005 not author error | 已追踪为 P60220；更新于 2026-04-15T14:46:11Z；**状态待确认** |
-| **#69** | getUpdates 返回 errcode=-14 的情况咨询 | 功能咨询，非 bug |
-| **#68** | 微信消息接收乱序（网页端能收到，微信收不到） | 已追踪为 #65（P60113）；无新进展 |
-| **#66** | 微信消息重复（用户发1条，openclaw 处理并回复2次） | 已追踪为 P60173；根因已定位（ACK 机制缺失） |
-| **#53** | AI承诺设置定时提醒后未创建 cron 任务 | 已追踪；更新于 2026-04-15T08:34:22Z |
-
-### 结论
-WeChat 插件 issue 列表无重大新变化；已有追踪项（#66 ACK 问题、#70 IMA 问题）状态无更新。
+**openclaw 相关插件**: 未发现新的高优先级 open issues
 
 ---
 
 ## 贡献者文件区域（方向3）
 
-**Bottom 10 contributors（近 100 名，排除 EronFan）：**
+扫描了排名最末的 10 个贡献者（chilu18, sliverp, clawdinator[bot], lml2468, Whoaa512, darkamenosa, BruceMacD, davidrudduck, pandego, joaohlisboa）：
 
-| 排名 | Login | Commits | 备注 |
-|------|-------|---------|------|
-| 1 | chilu18 | ~11 | 新发现，历史无追踪 |
-| 2 | sliverp | ~10 | 新发现 |
-| 3 | clawdinator[bot] | ~10 | Bot，自动忽略 |
-| 4 | **lml2468** | ~10 | ⚠️ **历史高频出现在 P59907/P59897/P59898**（compaction/memoryflush、gateway restart、OOM/memory泄漏）；本轮无新 commit |
-| 5 | Whoaa512 | ~10 | 新发现 |
-| 6 | darkamenosa | ~9 | 新发现 |
-| 7 | BruceMacD | ~9 | 新发现 |
-| 8 | **davidrudduck** | ~9 | ⚠️ **历史出现在 P59894/P59907**（timeout-compaction、memory flush）；本轮无新 commit |
-| 9 | pandego | ~9 | 新发现 |
-| 10 | joaohlisboa | ~9 | 新发现 |
+- **8/10 无最近 commits**，无文件可扫描
+- 2 个有 commits 的用户（sliverp, lml2468 等）— API 查询文件变更返回空
 
-**分析**：
-- lml2468 和 davidrudduck 历史 commit 均命中高风险代码区（compaction/gateway/memory），但本轮 API 未检出新 commit
-- 其余 8 人为本轮新出现的末段贡献者，commit 数量极少（9-11），建议下次扫描取更多页（如 300）后取真实末段 10 人
-- 本轮无新文件区可关联到 open bug
+→ **无新发现**，无需追加追踪项
 
 ---
 
 ## 追踪 PR 反馈（方向4）
 
-### 关键 PR 状态
+### 重大新反馈
 
-| PR | 追踪项 | 本轮状态 | 分析 |
-|----|--------|---------|------|
-| **#67279** | P60221 WhatsApp harden creds saves | ⚠️ **mergeable=UNKNOWN，Greptile COMMENTED** | 已持续追踪；Greptile 评正面但 maintainer 未 review；**mergeable 显示 UNKNOWN**（可能 CI 未通过或 branch 有冲突）；建议确认 |
-| **#67277** | P60222 context-window Tighten | Takhoffman maintainer 主动响应 review feedback | 接近 merge 窗口 |
-| **#67281** | P60223 dedupe exec.finished node events | ⚠️ Security review 待确认 | aisle-research-bot 报 Medium DoS 问题；Greptile 评正面；**需确认已解决才能 merge** |
-| **#67352** | TTS closing tag leak (#67343) | **刚创建**（hclsys） | ⚡ 修复方向正确；review 成本低，建议立即 approve |
-| **#67330** | heartbeat model bleed (#67314) | **刚创建**（shahyashish） | 追踪项 P60238 有外部 PR；需确认 fix 质量 |
-| **#67329** | memory-wiki 0 artifacts (#67327) | **刚创建**（shahyashish） | 新发现；与 memory consolidation 问题相关 |
-| **#67318** | Discord raw tool call leak (#67093) | **刚创建**（joelnishanth） | 已追踪 P60175；修复者来自末段 contributor（14 commits） |
-| **#67311** | amazon-bedrock-mantle discovery gate (#67288) | **刚创建**（hclsys） | 已追踪 P60240；修复者活跃 |
-| **#67349** | ElevenLabs TTS Accept header (#67340) | **刚创建**（ViseonDev） | 新发现；修复及时 |
+| PR | 新评论 | 严重度 | 建议 |
+|----|--------|--------|------|
+| **#67376** (MCP loopback bearer token bind) | `chatgpt-codex-connector[bot]` P1: `clearActiveMcpLoopbackRuntime()` 无条件清除全局 runtime，race with `closeMcpLoopbackServer()`，`ensureMcpLoopbackServer()` 可在 close 期间启动新 server 然后被旧 close 回调清掉 | **P1** | 需 maintainer 或作者确认 fix |
+| **#67376** (same PR) | P2: `runPreparedCliAgent` 中 token revocation 在 `cleanup?.()` 之后，cleanup 异常时 unregister 不执行 → bearer token 泄漏 | P2 | 同上 |
+| **#67253** (models authStatus) | `omarshahine` (maintainer) 已响应 Greptile/bot P2 评论并 fix (04fbbf06c2) | 已修复 | 无需跟进 |
+| **#67186** (cron classifier fix for denial tokens) | **仍 Open，未 merge** — #67377（inverse bug: status=error on success）待同作者处理 | 阻塞 | 需跟进 |
 
-### 结论
-**#67279 长期未 merge（mergeable=UNKNOWN）** 是最大阻塞；外部 PR 生态活跃（2小时内 14+ 新 PR），但我们的追踪 PR 无推进。
+### maintainer PRs 状态
+- **#67401** (stability: session skills snapshot, tool-loop guard, LM Studio preload backoff) — size:L, gateway+agents labels，无新评论
+- **#67372** (docs gateway protocol) — maintainer + docs label，已有 maintainer review
+- **#67395** (Windows pnpm.exe + Lobster fallback) — 有评论，需 review
 
 ---
 
 ## 结论
 
-### 最高优先级
+**最高优先级**：
+1. 🔴 **#67394** WhatsApp group auto-reply silently fails（regression，2026.4.14）
+2. 🔴 **#67393** VM bloat 22GB+（之前被标记 won't-fix 但持续存在）
+3. 🟠 **#67400** persistent sub-agent sessions circular dependency（bug，block ACP 功能）
+4. 🟠 **#67376 P1** MCP loopback runtime race condition（需 confirm fix 未 in-flight）
+5. 🟠 **#67396** Telegram 4096 silent drop（usability gap）
+6. 🟠 **#67399** circuit breaker design gap（token burn 风险）
 
-1. **🔴 P60237/#67237 WhatsApp 安全事故**：内部 reply 被误发到外部 contact——这不是"使用困难"，是隐私安全事故。Artyomkun 已标记为安全事件并 @ 负责人，但未见 fix。**建议立即派出 aoao 接单**。
+**建议**：
+- **aoao 接单** #67394 + #67396（Telegram/WhatsApp 渠道问题，size:S 可快速修）
+- **跟进 #67376 P1** — 确认 maintainer 是否已处理 MCP loopback race
+- **跟进 #67186** — cron classifier fix 未 merge，#67377 inverse bug 又来，需合并处理
+- **#67393** 重新评估 — 之前 won't-fix，但用户仍在报，根因可能与 #66886 内存泄漏相关
 
-2. **🔴 #67353 Onboarding trim() crash**：0评论，阻断所有新用户配置。已有 PR #67347 在修同根因。**建议 review 确认是否完整覆盖**。
+---
 
-3. **⚡ #67352 PR review**：TTS closing tag leak，hclsys 已提 PR，修复方向正确，size 小。**建议立即 approve 推 merge**。
+## inProgressFixes（本次扫描确认）
 
-4. **⚠️ #67279 mergeable=UNKNOWN**：WhatsApp harden creds 长期未 merge，Greptile 已 approve 但 maintainer 无响应。**需确认 branch 状态**。
+| ID | 状态 | 备注 |
+|----|------|------|
+| fix-67173 | 待确认 | queued messages dropped after timeout |
+| fix-67270 v3 | LLM timeout retry | exec preflight scanner |
+| fix-67261/67257/67250 | 待确认 | various Telegram/onboarding regressions |
 
-### 建议
-
-- **立即 review**：#67352（TTS leak）、#67318（Discord leak，关联 P60175）
-- **确认 #67279 branch 状态**：mergeable UNKNOWN 原因不明
-- **方向3**：下次取更多 contributors 页数（300+）以找到真实底部 10 人
-- **xixi 链路**：本轮 gh API 访问正常，但 heartbeat 显示 72 次 AxiosError(400)，说明 subagent 侧网络仍有问题；主会话侧正常
+**heartbeat-state.json**: lastPrCreatedAt 约 2026-04-15T21:11 UTC（约 4 小时前无新 PR）— 需确认是否有 PR 在跑
