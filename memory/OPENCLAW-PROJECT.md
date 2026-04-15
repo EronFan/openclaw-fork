@@ -32,6 +32,7 @@
 
 | 优先级 | 任务 | 状态 | 备注 |
 |--------|------|------|------|
+| P60220 | [Tencent/openclaw-weixin #70](https://github.com/Tencent/openclaw-weixin/issues/70) **S** IMA Knowledge Base 无法读取笔记内容 - 返回 210005 not author error | 🔍 **新发现**(方向2 插件 第133轮 01:11 CST) | 0评论；可能是 feishu wiki API 差异问题，与已追踪 feishu issue 同簇；**建议确认根因** |
 | P60146 | [#66522](https://github.com/openclaw/openclaw/issues/66522) **🔴 S** Session index 重启后重建，历史 session 全部消失（磁盘文件还在但索引丢失） | 🔍 待处理 | 磁盘文件存在但 sessions.json 索引丢失，数据丢失级别；**建议立即接单** |
 | P60147 | [#66936](https://github.com/openclaw/openclaw/issues/66936) **S** CLI: `openclaw agents list` fails with unresolved SecretRef; CLI process hangs after completion | 🔍 **新发现**(方向1 GitHub 第128轮 10:21 CST) | Bug1: buildProviderStatusIndex() 无法解析 SecretRef → agents list 失败；Bug2: 所有 agents 子命令完成后进程不退出（unclosed handles）；**根因清晰，建议接单** |
 | P60148 | [#66937](https://github.com/openclaw/openclaw/issues/66937) **S** lmstudio provider does not allow to skip api key | 🔍 **新发现**(方向1 GitHub 第128轮 10:21 CST) | 本地 LM Studio 不需要 API key，但 onboarding 强制要求；阻断本地开发者使用；**建议接单** |
@@ -72,6 +73,10 @@
 | P60184 | [#67170](https://github.com/openclaw/openclaw/issues/67170) **🟠 S** talk-voice audio delivery failure to Telegram | 🔍 **新发现**(第132轮 20:21 CST) | ElevenLabs 生成的音频无法送达 Telegram，ffmpeg 已安装，无明确 error；根因不明确，需调研 delivery path |
 | P60185 | [#67152](https://github.com/openclaw/openclaw/issues/67152) **🟡 B** memory-core dreaming uses request-scoped subagent outside gateway request | 🔍 **新发现**(第132轮 20:21 CST) | dreaming narrative 生成在 gateway request 作用域外，导致 fallback generation + cleanup warnings；建议 aoao 接单 |
 | P60186 | [#67151](https://github.com/openclaw/openclaw/issues/67151) **🟡 S regression** Discord inbound messages containing `https` stripped | 🔍 **新发现**(第132轮 20:21 CST) | Discord 消息含 `https` 时被剥离，URL 不到达 agent；需回归检查 |
+| P60179b | **inProgressFixes 更新**(第133轮 01:11 CST) | ✅ fix-67264 → **PR#67287 merged** (00:18 UTC)；✅ fix-67267 → **PR#67289 created** (00:28 UTC)；🔄 fix-67270 v3 运行中（LLM timeout 重试），runId f7b27576；🔄 fix-67261/67257/67250 仍在跑 |
+| P60221 | [#67279](https://github.com/openclaw/openclaw/pull/67279) **S** WhatsApp: harden creds saves during reconnects | ✅ **mergeable=true**(方向4 第133轮 01:11 CST) | mergeable=true，等待 final approve；**建议 approve 推 merge** |
+| P60222 | [#67277](https://github.com/openclaw/openclaw/pull/67277) **S** context-window Tighten + bound memory excerpts | 🔍 **接近 merge**(方向4 第133轮 01:11 CST) | Takhoffman (maintainer) 主动响应 review feedback (`133ae99a6d`)；⚠️ aisle-research-bot 报 2 个 High severity 问题需确认已解决；**接近 merge 窗口** |
+| P60223 | [#67281](https://github.com/openclaw/openclaw/pull/67281) **S** dedupe exec.finished node events | ⚠️ **Security review**(方向4 第133轮 01:11 CST) | aisle-research-bot 报 1 个 Medium security 问题；需确认已解决后再 approve |
 
 | P60154 | [方向4] #66697 config.get 安全漏洞 - **已关闭**，需确认是否修正后 reopen | 👀 **状态变化**(方向4 第128轮 10:21 CST) | Codex 指出 sourceConfig/runtimeConfig 映射错误；**需确认修正方案** |
 
@@ -6781,7 +6786,7 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P60196 | [Tencent/openclaw-weixin #63](https://github.com/Tencent/openclaw-weixin/pull/63) **S** fix(inbound): preserve quoted context for voice messages with ref_msg | 🔍 **新发现**(方向2 插件 第133轮 22:54 CST) | draix PR，0 comments；与 #49 解决同一问题；**建议 aoao 确认合并意向** |
 | P60197 | [方向4 第133轮 22:54 CST] **PR #67200** fix(plugins): stabilize bundled setup runtimes — gumadeiras，4 comments，maintainer 活跃 review 中，接近 merge | 🔍 **Review 机会**(方向4 第133轮 22:54 CST) | 建议确认 maintainer 评论是否已响应 |
 
-| P60198 | [#67267](https://github.com/openclaw/openclaw/issues/67267) **🔴 S regression** System: message feedback loop in web UI chat | 🔍 **新发现**(方向1 GitHub 第134轮 00:01 CST) | 2026.4.14 regression；用户消息后系统 internal message 被标记为 "you"，导致 exec completion 错误路由到 web UI session，Agent 重复执行相同任务形成死循环；**crash-level 体验问题**；**建议立即派出 fix** |
+| P60198 | [#67267](https://github.com/openclaw/openclaw/issues/67267) **🔴 S regression** System: message feedback loop in web UI chat | ✅ **PR [#67319](https://github.com/openclaw/openclaw/pull/67319) 已创建** | 2026.4.14 regression；exec events 错误路由到 web UI session 导致死循环；修复：改用 `node-${nodeId}` system session 路由；29 tests pass；**fix-67267 已完成** |
 | P60199 | [#67270](https://github.com/openclaw/openclaw/issues/67270) **🔴 S** Exec preflight scanner false positives: python3 -c and cd && python3 blocked as obfuscated | 🔍 **新发现**(方向1 GitHub 第134轮 00:01 CST) | `python3 -c "import..."` 和 `cd && python3` 被误判为 obfuscated payload 导致 approval timeout；常见自动化 idiom 被误杀；**建议接单** |
 | P60200 | [#67264](https://github.com/openclaw/openclaw/issues/67264) **🔴 S crash** Gateway tilde-expands browser executablePath under $HOME, causing ENOENT | 🔍 **新发现**(方向1 GitHub 第134轮 00:01 CST) | `~/.local/chromium/...` 被 tilde-shortened 后 spawn() 无法展开导致 browser 无法启动；**crash bug**；**建议立即派出 fix** |
 | P60201 | [#67261](https://github.com/openclaw/openclaw/issues/67261) **🔴 S crash** Venice model responses missing id/status cause crash: Cannot read properties of undefined (reading 'id') | 🔍 **新发现**(方向1 GitHub 第134轮 00:01 CST) | Venice API response 缺少必需字段导致 crash；`Cannot read properties of undefined (reading 'id')`；**crash bug**；**建议立即派出 fix** |
@@ -6795,4 +6800,9 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P60209 | [方向4 第135轮 01:11 CST] **PR #67277** (context-window Tighten + bound memory excerpts): Takhoffman 主动在分支 `133ae99a6d` 响应 review feedback，**接近 merge 窗口**；⚠️ aisle-research-bot 报 2 个 High severity 问题待确认解决 | 🔍 **maintainer 主动跟进中**(方向4 第135轮 01:11 CST) | **建议确认 High severity 问题已解决后 approve 推 merge** |
 | P60210 | [方向4 第135轮 01:11 CST] **PR #67279** (whatsapp: harden creds saves during reconnects): mergeable=true，等待 final approve | 🔍 **mergeable=true**(方向4 第135轮 01:11 CST) | **建议 approve 推 merge** |
 | P60211 | [方向4 第135轮 01:11 CST] **PR #67273** (heartbeat async exec delivery leaks): PR 仍 OPEN，无 maintainer review，Greptile 已确认；fix-67270-v3 重试中 | 🔍 **无 maintainer review**(方向4 第135轮 01:11 CST) | **关注 fix-67270-v3 run 结果** |
-| P60212 | [方向4 第135轮 01:11 CST] **inProgressFixes 状态**：fix-67264→PR#67287 ✅ merged；fix-67267→PR#67289 ✅ created；fix-67270-v3 🔄 running (runId f7b27576)；fix-67261 🔄 running (runId 19849908)；fix-67257 🔄 running (runId 053f1ef8)；fix-67250 🔄 running (runId 6a215e6a)；PR#67258 (maintainer fallback #67173) 仍 OPEN | 🔄 **运行中**(方向4 第135轮 01:11 CST) | 关注各 fix run 结果 |
+| P60212 | [方向4 第135轮 01:11 CST] **inProgressFixes 状态**：fix-67264→PR#67287 ✅ merged；**fix-67267→PR#67319 ✅ created**；fix-67270-v3 🔄 running (runId f7b27576)；fix-67261 🔄 running (runId 19849908)；fix-67257 🔄 running (runId 053f1ef8)；fix-67250 🔄 running (runId 6a215e6a)；PR#67258 (maintainer fallback #67173) 仍 OPEN | 🔄 **运行中**(方向4 第135轮 01:11 CST) | 关注各 fix run 结果 |
+
+| P60213 | [方向4 第135轮 01:11 CST] **PR #67281** (dedupe exec.finished node events): aisle-research-bot 报了 1 个 Medium security 问题；merge 前需确认 security 问题已解决 | 🔍 **Security review 阻塞中**(方向4 第135轮 01:11 CST) | **建议确认 aisle-research-bot Medium 已解决后再 approve** |
+| P60214 | [cron反馈检查 2026-04-16 01:32 CST] **PR #55008** (docs(cli/message)): Greptile P1 regression → EronFan 修复完成，5 comments，**PR ready to merge**，无 maintainer merge 动作 | 🔍 **待 maintainer approve**(cron反馈 2026-04-16 01:32 CST) | 文档 PR，size XS；maintainer 应可见；如持续无响应可再次 bump |
+| P60215 | [cron反馈检查 2026-04-16 01:32 CST] **PR #55013** (docs(channels/feishu)): Greptile 5/5 safe to merge，EronFan 已响应 P1 concerns，**PR ready to merge**，无 maintainer merge 动作 | 🔍 **待 maintainer approve**(cron反馈 2026-04-16 01:32 CST) | 文档 PR，size S；maintainer 应可见；如持续无响应可再次 bump |
+| P60216 | [cron反馈检查 2026-04-16 01:32 CST] **#54952 / #54964** 仍 open，0 comments，无变化 | 🔍 **无变化**(cron反馈 2026-04-16 01:32 CST) | 继续追踪 |
