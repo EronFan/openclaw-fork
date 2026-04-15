@@ -32,6 +32,11 @@
 
 | 优先级 | 任务 | 状态 | 备注 |
 |--------|------|------|------|
+| P60237 | [#67237](https://github.com/openclaw/openclaw/issues/67237) **🔴 P0 安全事故** WhatsApp 向联系人发送未经请求的消息 | 🔥 **aoao 派出**(第134轮 02:15 CST) | maintainer（Artyomkun）已标记为安全事件并 @ 负责人；根因：WhatsApp AUTO REPLY MODE 默认开启但权限边界未正确限制——允许向任何人发消息而非仅限自己的设备；**这是安全/合规事故，不是普通 bug**；**建议立即接单** |
+| P60238 | [#67314](https://github.com/openclaw/openclaw/issues/67314) **🟠 S** Misleading "Context limit exceeded" 错误（heartbeat model bleed） | 🔥 **aoao 派出**(第134轮 02:15 CST) | 心跳模型覆盖（Ollama 32k 本地）渗入主 session，用户看到误导性错误"请增大 compaction buffer"，实际根因是 heartbeat 模型守卫缺失；**建议接单** |
+| P60239 | [#67323](https://github.com/openclaw/openclaw/issues/67323) **🟠 S** MSTeams DM 消息重复（队列重放未去重） | 🔍 **新发现**(第134轮 02:15 CST) | MSTeams DM 每条消息在 agent session context 中出现两次（直接入站 + 队列重放）；队列重放逻辑未去重；**建议接单** |
+| P60240 | [#67288](https://github.com/openclaw/openclaw/issues/67288) **🟡 S** amazon-bedrock-mantle 缺少 config.discovery.enabled gate | 🔍 **新发现**(第134轮 02:15 CST) | amazon-bedrock-mantle 插件无 config.discovery.enabled 门控，导致不必要的 discovery 调用；4 行内可修；**建议接单** |
+| P60241 | [#67308](https://github.com/openclaw/openclaw/issues/67308) **🟡 M** Heartbeat 每天烧掉 3 亿 tokens（与 P60146/P46 合并追踪） | 🔍 **新发现**(第134轮 02:15 CST) | heartbeat:{} config 被忽略，每日 $6+ 成本；相关 P46 追踪 heartbeat:{} config 忽略问题；**合并追踪，建议 aoao 接单** |
 | P60220 | [Tencent/openclaw-weixin #70](https://github.com/Tencent/openclaw-weixin/issues/70) **S** IMA Knowledge Base 无法读取笔记内容 - 返回 210005 not author error | 🔍 **新发现**(方向2 插件 第133轮 01:11 CST) | 0评论；可能是 feishu wiki API 差异问题，与已追踪 feishu issue 同簇；**建议确认根因** |
 | P60146 | [#66522](https://github.com/openclaw/openclaw/issues/66522) **🔴 S** Session index 重启后重建，历史 session 全部消失（磁盘文件还在但索引丢失） | 🔍 待处理 | 磁盘文件存在但 sessions.json 索引丢失，数据丢失级别；**建议立即接单** |
 | P60147 | [#66936](https://github.com/openclaw/openclaw/issues/66936) **S** CLI: `openclaw agents list` fails with unresolved SecretRef; CLI process hangs after completion | 🔍 **新发现**(方向1 GitHub 第128轮 10:21 CST) | Bug1: buildProviderStatusIndex() 无法解析 SecretRef → agents list 失败；Bug2: 所有 agents 子命令完成后进程不退出（unclosed handles）；**根因清晰，建议接单** |
@@ -74,9 +79,9 @@
 | P60185 | [#67152](https://github.com/openclaw/openclaw/issues/67152) **🟡 B** memory-core dreaming uses request-scoped subagent outside gateway request | 🔍 **新发现**(第132轮 20:21 CST) | dreaming narrative 生成在 gateway request 作用域外，导致 fallback generation + cleanup warnings；建议 aoao 接单 |
 | P60186 | [#67151](https://github.com/openclaw/openclaw/issues/67151) **🟡 S regression** Discord inbound messages containing `https` stripped | 🔍 **新发现**(第132轮 20:21 CST) | Discord 消息含 `https` 时被剥离，URL 不到达 agent；需回归检查 |
 | P60179b | **inProgressFixes 更新**(第133轮 01:11 CST) | ✅ fix-67264 → **PR#67287 merged** (00:18 UTC)；✅ fix-67267 → **PR#67289 created** (00:28 UTC)；🔄 fix-67270 v3 运行中（LLM timeout 重试），runId f7b27576；🔄 fix-67261/67257/67250 仍在跑 |
-| P60221 | [#67279](https://github.com/openclaw/openclaw/pull/67279) **S** WhatsApp: harden creds saves during reconnects | ✅ **mergeable=true**(方向4 第133轮 01:11 CST) | mergeable=true，等待 final approve；**建议 approve 推 merge** |
+| P60221 | [#67279](https://github.com/openclaw/openclaw/pull/67279) **S** WhatsApp: harden creds saves during reconnects | ✅ **mergeable=true**(方向4 第134轮 02:15 CST) | mergeable=true，Greptile 评 ✅；**建议 approve 推 merge** |
 | P60222 | [#67277](https://github.com/openclaw/openclaw/pull/67277) **S** context-window Tighten + bound memory excerpts | 🔍 **接近 merge**(方向4 第133轮 01:11 CST) | Takhoffman (maintainer) 主动响应 review feedback (`133ae99a6d`)；⚠️ aisle-research-bot 报 2 个 High severity 问题需确认已解决；**接近 merge 窗口** |
-| P60223 | [#67281](https://github.com/openclaw/openclaw/pull/67281) **S** dedupe exec.finished node events | ⚠️ **Security review**(方向4 第133轮 01:11 CST) | aisle-research-bot 报 1 个 Medium security 问题；需确认已解决后再 approve |
+| P60223 | [#67281](https://github.com/openclaw/openclaw/pull/67281) **S** dedupe exec.finished node events | ⚠️ **Security review 待确认**(方向4 第134轮 02:15 CST) | aisle-research-bot 报 Medium — Memory/CPU DoS via unbounded exec.finished deduplication；Greptile 评正面；**需作者或 maintainer 确认无阻塞后才能 merge** |
 
 | P60154 | [方向4] #66697 config.get 安全漏洞 - **已关闭**，需确认是否修正后 reopen | 👀 **状态变化**(方向4 第128轮 10:21 CST) | Codex 指出 sourceConfig/runtimeConfig 映射错误；**需确认修正方案** |
 
@@ -6806,3 +6811,114 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P60214 | [cron反馈检查 2026-04-16 01:32 CST] **PR #55008** (docs(cli/message)): Greptile P1 regression → EronFan 修复完成，5 comments，**PR ready to merge**，无 maintainer merge 动作 | 🔍 **待 maintainer approve**(cron反馈 2026-04-16 01:32 CST) | 文档 PR，size XS；maintainer 应可见；如持续无响应可再次 bump |
 | P60215 | [cron反馈检查 2026-04-16 01:32 CST] **PR #55013** (docs(channels/feishu)): Greptile 5/5 safe to merge，EronFan 已响应 P1 concerns，**PR ready to merge**，无 maintainer merge 动作 | 🔍 **待 maintainer approve**(cron反馈 2026-04-16 01:32 CST) | 文档 PR，size S；maintainer 应可见；如持续无响应可再次 bump |
 | P60216 | [cron反馈检查 2026-04-16 01:32 CST] **#54952 / #54964** 仍 open，0 comments，无变化 | 🔍 **无变化**(cron反馈 2026-04-16 01:32 CST) | 继续追踪 |
+
+| P60217 | [#67237](https://github.com/openclaw/openclaw/issues/67237) **🔴🔴 P0 SECURITY INCIDENT** WhatsApp sends unsolicited messages to user's contacts — AUTO REPLY MODE permission boundary broken | 🚨 **紧急告警**(方向1 第136轮 02:15 CST) | **最高优先级——安全/隐私事故**：用户开启 WhatsApp 消息发送后，OpenClaw 向其联系人自动发送未经请求的消息；多名用户独立确认含截图；Artyomkun 已标记安全事件并 @ steipete/vincentkoc；根因：AUTO REPLY MODE 默认开启但权限边界未正确限制——允许向任何人发消息而非仅限自己设备；**⚠️ 建议立即派出 fix 或向范总告警** |
+| P60218 | [#67314](https://github.com/openclaw/openclaw/issues/67314) **🟠 S** Misleading "Context limit exceeded" error points to compaction when root cause is heartbeat model bleed | 🔍 **新发现**(方向1 第136轮 02:15 CST) | 心跳模型覆盖（Ollama 32k）渗入主 session，用户看到"Context limit exceeded，请增大 compaction buffer"，实际根因是模型上下文窗口不匹配；错误提示具有误导性；**建议接单修复错误提示 + heartbeat 模型守卫** |
+| P60219 | [#67323](https://github.com/openclaw/openclaw/issues/67323) **🟠 S** MSTeams DM inbound messages appear duplicated in agent session context | 🔍 **新发现**(方向1 第136轮 02:15 CST) | 每条 MSTeams DM 消息在 session context 中出现两次（一次直接入站，一次队列重放）；队列重放逻辑未去重；1 comment；**建议接单** |
+| P60220 | [#67288](https://github.com/openclaw/openclaw/issues/67288) **🟡 S** amazon-bedrock-mantle lacks config.discovery.enabled gate — unnecessary discovery calls | 🔍 **新发现**(方向1 第136轮 02:15 CST) | amazon-bedrock-mantle 插件无 config.discovery.enabled 门控，导致不必要的 discovery 调用；bug 标签，1 comment；**4 行内可修，建议接单** |
+| P60221 | [Tencent/openclaw-weixin PR #72](https://github.com/Tencent/openclaw-weixin/pull/72) **✅ mergeable=true,mergeable_state=clean** fix(pkg): ship compiled dist/ instead of TypeScript sources | ✅ **建议 Approve 推 merge**(方向2 第136轮 02:15 CST) | 发布编译后的 `dist/` 而非 TS 源码，解决 jiti 每次启动转译 34 个 TS 文件导致的 CPU 开销；修复 issue #71；**mergeable_state=clean，0 blocking issues；建议 Approve** |
+| P60222 | [#67308](https://github.com/openclaw/openclaw/issues/67308) **🟡 B** Heartbeat burns 300M tokens/day despite heartbeat:{} config — same as P46 heartbeat config ignored regression | 🔍 **新发现**(方向1 第136轮 02:15 CST) | 用户未做任何操作，heartbeat 每天烧掉 300M+ tokens；与 P46（heartbeat:{} config 被忽略）同簇；**建议与 P46 合并追踪** |
+| P60223 | [方向4 第136轮 02:15 CST] **PR #67279** (whatsapp: harden creds saves): mergeable=true, Greptile ✅；**建议 Approve 推 merge** | ✅ **mergeable 建议 approve**(方向4 第136轮 02:15 CST) | Greptile 正面评价；mergeable_state=unstable（Greptile 评影响稳定性但不 blocking）；**建议确认无新 blocking 后 approve** |
+| P60224 | [方向4 第136轮 02:15 CST] **PR #67281** (dedupe exec.finished node events): mergeable=true，⚠️ aisle-research-bot 报 🟡 Medium security — Memory/CPU DoS via unbounded dedupe；**需确认后 merge** | ⚠️ **Security review 阻塞中**(方向4 第136轮 02:15 CST) | aisle-research-bot 报告 unbounded exec.finished deduplication 可能导致 Memory/CPU DoS；需要作者或 maintainer 回应后再推 merge |
+| P60225 | [#67327](https://github.com/openclaw/openclaw/issues/67327) **🟡 B regression** memory-wiki wiki status reports 0 bridge artifacts despite populated memory-core | 🔍 **新发现**(方向1 第136轮 02:15 CST) | wiki status 和 wiki doctor 命令始终报告 0 exported bridge artifacts，实际 memory-core 有 14+ artifacts；与 #67190 同 bug 类；doctor 输出误报 bridge-artifacts-missing；**建议跟进修复** |
+| P60226 | [方向4 第136轮 02:15 CST] **PR #67277** (context-window Tighten + bound memory excerpts): ✅ **已合并** commit 4f00b769 | ✅ **已合并** | Takhoffman 分支 133ae99a6d 响应 review 后合并 |
+| P60227 | [方向3 第136轮 02:15 CST] **末段 contributors 文件区扫描**：hcl(terminal/CLI)、sliverp(qqbot)、lml2468(server-maintenance)、davidrudduck(telegram/compact) — 均有已有追踪项覆盖；**本轮无新发现未认领高优先级 bug** | ✅ **无新发现**(方向3 第136轮 02:15 CST) | 末段 10 位 contributors（darkamenosa/BruceMacD/davidrudduck/pandego/joaohlisboa/lml2468/Whoaa512/sliverp/hcl 等）活跃文件区均有已有追踪项覆盖 |
+
+| P60228 | [#67291](https://github.com/openclaw/openclaw/issues/67291) **🔴 S regression** Onboarding crashes — `"Cannot read properties of undefined (reading 'trim')"` when setting up channels | 🔍 **新发现**(方向1 GitHub 第137轮 02:33 CST) | 5条评论；onboarding 阶段直接崩溃阻断配置；2026.4.14 regression；与 #67162/#67100 同簇；根因：channel selection 步骤 `.trim()` 在 undefined 上调用；**建议接单** |
+| P60229 | [#67308](https://github.com/openclaw/openclaw/issues/67308) **🔴 S** Read HEARTBEAT.md burns 300M tokens/day — user did nothing yet tokens continuously consumed | 🔍 **新发现**(方向1 GitHub 第137轮 02:33 CST) | bug:behavior；用户无操作但 heartbeat 每天烧掉 300M+ tokens；根因路径待确认（heartbeat 配置/行为 vs 实际读取逻辑）；与 P46（heartbeat:{} config 忽略）同簇；**直接资金损失级 bug** |
+| P60230 | [#67286](https://github.com/openclaw/openclaw/issues/67286) **🔴 S** Isolated cron sessions silently fail when exec is blocked — no output delivered | 🔍 **新发现**(方向1 GitHub 第137轮 02:33 CST) | 0评论；isolated cron 核心功能静默失败，无任何输出投递；**建议接单确认根因** |
+| P60231 | [#67285](https://github.com/openclaw/openclaw/issues/67285) **🔴 S** Exec approval errors injected as raw messages into active Telegram channels | 🔍 **新发现**(方向1 GitHub 第137轮 02:33 CST) | exec 审批错误被注入到活跃 Telegram 频道；安全+行为 bug；**建议接单** |
+| P60232 | [#67334](https://github.com/openclaw/openclaw/issues/67334) **🔴 S crash** Ollama timeout persists after 2026.4.14 — embedded agent session timeout | 🔍 **新发现**(方向1 GitHub 第137轮 02:33 CST) | bug+bug:crash；0评论；Ollama timeout 在 2026.4.14 后持续；session 超时；**建议接单** |
+| P60233 | [#67247](https://github.com/openclaw/openclaw/issues/67247) **🟠 S regression** Telegram native command menu disappears after upgrade to 4.14 | 🔍 **新发现**(方向1 GitHub 第137轮 02:33 CST) | bug+regression；1评论；Telegram 命令菜单在 4.14 升级后消失；**建议接单** |
+| P60234 | [#67214](https://github.com/openclaw/openclaw/issues/67214) **🟠 S regression** v2026.4.14 cron jobs 集体崩溃 | 🔍 **新发现**(方向1 GitHub 第137轮 02:33 CST) | bug+regression；0评论；4.14 升级后 cron jobs 集体崩溃；**建议接单** |
+| P60235 | [#67251](https://github.com/openclaw/openclaw/issues/67251) **🟠 S** Windows CLI subcommands hang with SIGKILL in exec environment (2026.4.14) | 🔍 **新发现**(方向1 GitHub 第137轮 02:33 CST) | 0评论；Windows 环境下 CLI 子命令被 SIGKILL 终止；**建议接单** |
+| P60236 | [Tencent/openclaw-weixin #71](https://github.com/Tencent/openclaw-weixin/issues/71) **🟠 S** Published tarball ships TypeScript sources — forces jiti transpile on every host startup (~5s CPU) | 🔍 **新发现**(方向2 插件 第137轮 02:33 CST) | 与 #72 同根；每次启动额外 ~5s CPU 开销；PR #72 已开 mergeable=true；**建议跟进 #72 merge 状态** |
+| P60237 | [方向4 第137轮 02:33 CST] **PR #67300** (fix(security): block MINIMAX_API_HOST workspace env injection): pgondhi987 (author) 已响应 Codex/Greptile bot 评论并发布修复 commit a9570cb5a；**接近 merge 窗口** | 🔍 **maintainer PR 接近 merge**(方向4 第137轮 02:33 CST) | Greptile P2 已修复；Codex 多轮 review；**建议追踪确认 merge 时机** |
+| P60238 | [方向4 第137轮 02:33 CST] **PR #67303** (fix: tighten trusted tool media passthrough): Codex review 活跃，2个 P2 问题待 author 响应 | 🔍 **Codex review 进行中**(方向4 第137轮 02:33 CST) | **建议追踪 author 响应** |
+| P60239 | [方向4 第137轮 02:33 CST] **PR #67315** (fix(memory-core): skip dreaming transcript ingestion): Greptile P2 + Codex 多轮 review，author 持续 push 修复 commit；**接近可 merge** | 🔍 **maintainer PR 接近 merge**(方向4 第137轮 02:33 CST) | Takhoffman 主动持续响应；**接近 merge 窗口** |
+| P60240 | [方向4 第137轮 02:33 CST] **PR #67332** (agents: wire task/team tools with owner-only authorization): Greptile 报 P1×2（Type.Union 违反项目规范）+ P2×2；**新开 XL size，maintainer review 活跃** | 🔍 **Greptile P1 阻塞中**(方向4 第137轮 02:33 CST) | Greptile P1: Type.Union 违反 CLAUDE.md 规范；P1: workspace_boundary pattern 漏检；**作者需先响应 P1 问题** |
+| P60241 | [方向4 第137轮 02:33 CST] **PR #67331** (agents: standardize fs permission_denied): Greptile 报 P1（mount boundary 漏检）+ P2（mount-escape 错误分类）；**新开 size:M，maintainer review 活跃** | 🔍 **Greptile P1 阻塞中**(方向4 第137轮 02:33 CST) | Greptile P1: sandbox bridge mount 逃逸检测缺失；**作者需先响应 P1 问题** |
+| P60242 | [方向4 第138轮 03:26 CST] **PR #67279** (whatsapp: harden creds saves): ⚠️ **mergeable=UNKNOWN（较上次 mergeable=true 状态变化）**；Greptile COMMENTED；**需确认 UNKNOWN 原因（CI 失败 or branch 冲突）** | ⚠️ **mergeable=UNKNOWN**(方向4 第138轮 03:26 CST) | **立即需要确认 branch 状态** |
+| P60243 | [方向4 第137轮 02:33 CST] **PR #67281** (dedupe exec.finished node events): Security review 仍在进行；**需等 aisle-research-bot Medium 确认已解决** | ⚠️ **Security review 阻塞中**(方向4 第137轮 02:33 CST) | 持续追踪确认 |
+| P60244 | [方向3 第137轮 02:33 CST] **末段 10 contributors 文件区扫描**：huntharo/bmendonca3/mcaxtr/jalehman/onutc/eleqtrizit/osolmaz/Glucksberg/altaywtf/quotentiroler — **全部 gh api 返回空（无近期 commit）**；**本轮无新发现** | ✅ **无新发现**(方向3 第137轮 02:33 CST) | 末段 contributors 近期无活跃 commit，文件区无可关联新 bug |
+
+---
+
+## 更新记录 (第135轮 03:07 CST)
+
+### xixi 扫描报告处理 (2026-04-16 02:33 CST)
+- 新报告已处理：issues #67251–#67350
+- 无新反馈：#54952(0comments) #54964(0comments) #55008(5comments=上次已知) #55013(2comments=上次已知)
+
+### 新增高优先级发现
+| ID | Issue | 优先级 | 状态 | 备注 |
+|----|-------|--------|------|------|
+| P60289 | [#67291](https://github.com/openclaw/openclaw/issues/67291) 🔴 P0 Onboarding crashes — Cannot read properties of undefined (reading 'trim') | 🔴 P0 | 🔥 aoao 派出 | 5评论；2026.4.14 regression；channel selection undefined.trim；**建议立即接单** |
+| P60290 | [#67286](https://github.com/openclaw/openclaw/issues/67286) 🔴 Isolated cron sessions silently fail when exec is blocked | 🔴 P0 | 🔥 aoao 派出 | 0评论；isolated cron 核心功能静默失败；**建议立即接单** |
+| P60291 | [#67285](https://github.com/openclaw/openclaw/issues/67285) 🟠 Exec approval errors injected as raw messages into Telegram | 🟠 S | 🔥 aoao 派出 | 安全+行为 bug；exec 审批错误注入活跃频道；**建议立即接单** |
+| P60292 | [#67300](https://github.com/openclaw/openclaw/issues/67300) fix(security): block MINIMAX_API_HOST | 🟠 S | 👀 maintainer PR | maintainer size:XS 安全 PR；pgondhi987 响应积极；接近可 merge |
+| P60293 | [#67332](https://github.com/openclaw/openclaw/issues/67332) agents: wire task/team tools | 🟠 S | 👀 review 中 | Greptile P1×2(PType.Union违规)+P2×2；新开需追踪 |
+| P60294 | [#67333](https://github.com/openclaw/openclaw/issues/67333) doctor: add sandbox readiness probe | 🟠 S | 👀 新开 | Greptile P1×2(Type.Union违规)；size:XL |
+| P60295 | [#67330](https://github.com/openclaw/openclaw/issues/67330) Misleading "Context limit exceeded" error (heartbeat model bleed) | 🟡 M | 🔍 新发现 | 与 P60238/#67314 同簇；root cause 已给；**建议接单** |
+| P60296 | [#67260](https://github.com/openclaw/openclaw/issues/67260) Ollama primary falls back in long-lived Telegram session | 🟡 M | 🔍 新发现 | 4评论；Ollama 长 session 异常 fallback；与 #67314 同簇 |
+| P60297 | [#67257](https://github.com/openclaw/openclaw/issues/67257) Telegram plugin fails to load on 2026.4.14 | 🟡 M | 🔍 新发现 | regression；1评论 |
+| P60298 | [#67247](https://github.com/openclaw/openclaw/issues/67247) Telegram native command menu disappears after 4.14 | 🟡 M | 🔍 新发现 | regression；1评论 |
+| P60299 | [#67214](https://github.com/openclaw/openclaw/issues/67214) Cron jobs集体崩溃 (v2026.4.14) | 🟡 M | 🔍 新发现 | regression；0评论 |
+| P60300 | [#67251](https://github.com/openclaw/openclaw/issues/67251) Windows CLI subcommands hang with SIGKILL | 🟡 M | 🔍 新发现 | regression；0评论 |
+
+---
+
+## 更新记录 (第138轮 03:26 CST)
+
+### xixi 全量扫描发现 (2026-04-16 03:26 CST)
+
+| ID | Issue | 优先级 | 状态 | 备注 |
+|----|-------|--------|------|------|
+| P60301 | [#67353](https://github.com/openclaw/openclaw/issues/67353) Onboarding `trim()` crash — 无法跳过 channel selection | 🔴 P0 | 🔍 **新发现**(方向1 第138轮 03:26 CST) | 0评论；用户选 channel 或点"Skip"都崩；阻断所有新用户配置；v2026.4.14 regression；**根因：与 #67347/#67291 同簇，trim() 在 undefined 上调用**；**建议 review PR #67347 是否完整覆盖** |
+| P60302 | [#67343](https://github.com/openclaw/openclaw/issues/67343) TTS `[[/tts:text]]` closing tag leaks into Telegram voice note caption | 🟠 S | ⚡ **PR #67352 新开**（方向1 第138轮 03:26 CST） | 1评论；用户提供精确格式证据；PR #67352（hclsys）已开；**review 成本极低，建议立即 approve** |
+| P60303 | [#67237](https://github.com/openclaw/openclaw/issues/67237) WhatsApp 向外部 contact 发送内部 reply（隐私安全事故） | 🔴 P0 | 🔍 **新发现**(方向1 第138轮 03:26 CST) | 用户证据具体（发给 contact 而非发给用户自己的 reply）；标签为 bug:behavior；**与 P60237 不同角度（确认同簇）**；Artyomkun 已标记为安全事件 |
+| P60304 | [#67342](https://github.com/openclaw/openclaw/issues/67342) BlueBubbles: `runtime not initialized` on gateway startup (v2026.4.14) | 🟠 S | 🔍 **新发现**(方向1 第138轮 03:26 CST) | bug+regression；v2026.4.14 新引入；0评论 |
+| P60305 | [#67340](https://github.com/openclaw/openclaw/issues/67340) ElevenLabs TTS Telephony mode: hardcoded Accept header conflict | 🟠 S | ⚡ **PR #67349 新开**（方向1 第138轮 03:26 CST） | TTS delivery bug；PR #67349（ViseonDev）已修；**建议 review** |
+| P60306 | [#67336](https://github.com/openclaw/openclaw/issues/67336) macOS Remote over SSH rewrites browser path to discovered ws:// host URL | 🟠 S | 🔍 **新发现**(方向1 第138轮 03:26 CST) | bug:crash；browser 功能完全破坏；0评论 |
+| P60307 | [#67334](https://github.com/openclaw/openclaw/issues/67334) Ollama timeout persists — embedded agent session timeout (2026.4.14) | 🟠 S | 🔍 **新发现**(方向1 第138轮 03:26 CST) | bug+bug:crash；0评论 |
+| P60308 | [#67296](https://github.com/openclaw/openclaw/issues/67296) Memory Consolidation overwrites Dreaming output in `memory/YYYY-MM-DD.md` | 🟠 S | 🔍 **新发现**(方向1 第138轮 03:26 CST) | memory/dreaming 冲突；0评论；与 #65834 相关 |
+| P60309 | [#67295](https://github.com/openclaw/openclaw/issues/67295) `openclaw agents add` writes wrong baseUrls — 同时破坏 OpenRouter/Arcee/OpenAI-Codex/GitHub Copilot | 🟠 S | 🔍 **新发现**(方向1 第138轮 03:26 CST) | 跨多 provider 配置写入 bug；0评论 |
+| P60310 | [#67323](https://github.com/openclaw/openclaw/issues/67323) MSTeams DM messages duplicated in agent session context | 🟠 S | 🔍 **合并追踪**(方向1 第138轮 03:26 CST) | **与 P60239 同根（队列重放未去重），无需重复追踪**；仅确认覆盖 |
+| P60311 | [方向4 第138轮 03:26 CST] **PR #67352** (fix TTS closing tag leak #67343): hclsys 新开 | ⚡ **新 PR review 机会** | 修复方向正确，size 小；**建议立即 review + approve** |
+| P60312 | [方向4 第138轮 03:26 CST] **PR #67330** (fix heartbeat model bleed #67314): shahyashish 新开 | 👀 **新 PR** | 与 P60238/#67314 同簇；需确认 fix 质量 |
+| P60313 | [方向4 第138轮 03:26 CST] **PR #67318** (fix Discord raw tool call leak #67093): joelnishanth 新开 | 👀 **新 PR** | 关联 P60175 aoao 派出项；修复者来自末段 contributor（14 commits） |
+| P60314 | [方向4 第138轮 03:26 CST] **PR #67311** (fix amazon-bedrock-mantle discovery gate #67288): hclsys 新开 | 👀 **新 PR** | 关联 P60240；修复者活跃 |
+| P60315 | [方向4 第138轮 03:26 CST] **PR #67349** (fix ElevenLabs Accept header #67340): ViseonDev 新开 | 👀 **新 PR** | 新发现 TTS bug；修复及时 |
+| P60316 | [方向4 第138轮 03:26 CST] **PR #67329** (fix memory-wiki 0 artifacts #67327): shahyashish 新开 | 👀 **新 PR** | 新发现 memory bug |
+| P60317 | [方向3 第138轮 03:26 CST] **末段 10 contributors**：chilu18/sliverp/clawdinator[bot]/lml2468/Whoaa512/darkamenosa/BruceMacD/davidrudduck/pandego/joaohlisboa — **本轮 gh api 返回 100 条（可能需要更多页取底部真实末段）**；lml2468 和 davidrudduck 历史命中高风险代码区，本轮无新 commit | ✅ **无新发现**(方向3 第138轮 03:26 CST) | 建议下次取 300+ 页找到真实底部 10 人 |
+
+### 结论
+- **最高优先级**：#67353 Onboarding crash（阻断新用户）+ #67279 mergeable=UNKNOWN 需确认
+- **立即 review**：#67352（TTS leak，PR 成本极低）
+- **xixi 链路**：本轮 gh API 访问正常；但 heartbeat 仍显示 72 次 AxiosError(400) — subagent 侧网络故障持续
+
+---
+
+## 更新记录 (第139轮 03:37 CST)
+
+### cron反馈检查（#54952/#54964/#55008/#55013）
+- #54952: 0 comments — 无变化
+- #54964: 0 comments — 无变化
+- #55008: 5 comments — 无变化（仍待 maintainer merge）
+- #55013: 2 comments — 无变化（仍待 maintainer merge）
+
+### aoao 派出
+- **fix-67353**（runId 11cc26b8）：#67353 Onboarding trim() crash（阻断新用户配置）；fix-67291 之前被 aborted，根因明确（`.trim()` on undefined），**立即派出修复**
+
+### xixi 最新扫描发现
+- **P60301 #67353**：🔴 P0 Onboarding trim() crash — aoao 已派出（runId 11cc26b8）
+- **P60302 #67352**：⚡ TTS closing tag leak PR 可 review
+- **P60303 #67318**：Discord raw tool call leak PR review
+- **P60304 #67342**：BlueBubbles runtime not initialized（v2026.4.14）
+- **P60305 #67336**：macOS Remote browser path bug
+- **P60306 #67334**：Ollama timeout persists（v2026.4.14）
+- **P60307 #67296**：Memory Consolidation overwrites Dreaming output
+- **P60308 #67295**：openclaw agents add wrong baseUrls
+- **P60309 #67349**：ElevenLabs TTS Accept header PR
+- **P60310 #67329**：memory-wiki 0 artifacts PR
+- **P60311 #67311**：amazon-bedrock-mantle discovery gate PR
