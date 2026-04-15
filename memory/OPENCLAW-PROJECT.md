@@ -6579,7 +6579,7 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P60253 | [#66978](https://github.com/openclaw/openclaw/issues/66978) | 🔥🔥 **S regression**: sessions_spawn(mode="run") timeout — child Claude Code completes but parent never receives final completion payload | `mode="run"` 设计为一次性执行，孩子干完活爹不知道，父 session 无感知孩子完成；导致 parent 无限期等待或误判失败；根因：completion relay 未传回父 session；**最高优先级 regression**，**建议立即派出 fix** |
 | P60254 | [#66963](https://github.com/openclaw/openclaw/issues/66963) | 🔥🔥 **S crash**: agent crashes on startup — `ReferenceError: Cannot read properties of undefined (reading 'trim')` in buildPollSchema | Gateway 启动即崩，5分钟前新鲜报告；buildPollSchema 中 undefined.trim()；**建议优先派出 fix** |
 | P60255 | [#66971](https://github.com/openclaw/openclaw/issues/66971) | 🔒 **S security**: exec queue-health/surge-plan hardcodes `security=allowlist` — bypasses global exec security config | `security=allowlist` 硬编码在 exec 调用里，全局 `plugins.allow`/`exec.security` 配置被绕过；安全边界失效；无标签（漏标）；**建议加 bug+security 标签 + 派出 fix** |
-| P60256 | [#66975](https://github.com/openclaw/openclaw/issues/66975) + [#66950](https://github.com/openclaw/openclaw/issues/66950) | 🟠 **S regression**: Telegram bot commands disappear after upgrading to 2026.4.14 | 两个独立 reporter 确认同一问题；#66950 有 commit hash（323493f）；**疑似同根**：2026.4.14 升级后 setMyCommands 失效；#66939 (maintainer) 已 merge，**需确认是否完全覆盖** |
+| P60256 | [#66975](https://github.com/openclaw/openclaw/issues/66975) + [#66950](https://github.com/openclaw/openclaw/issues/66950) | ✅ **已合并**(#66730) | 两个独立 reporter；upstream/main 已合并 `fix: keep Telegram command sync process-local` + registry 缓存版本化修复；**已完全覆盖**
 | P60257 | [#66982](https://github.com/openclaw/openclaw/issues/66982) | 🟠 **S**: Exec completion relay creates orphan sessions with missing result context | exec 完成后 relay 未清理 session，导致 orphan session 累积；内存泄漏；**建议派出 fix** |
 | P60258 | [#66977](https://github.com/openclaw/openclaw/issues/66977) | 🟠 **S**: sqlite-vec extension cannot load on macOS — node:sqlite compiled with OMIT_LOAD_EXTENSION | macOS 上 sqlite-vec 扩展无法加载，向量搜索不可用；**建议派出 fix** |
 | P60259 | [#66973](https://github.com/openclaw/openclaw/issues/66973) | 🟡 **S bug:behavior**: sessions_spawn defaults to thread-bound persistent mode, turning one-shot tests into permanent bindings | `mode="run"` 应一次性，但实际默认 thread-bound persistent，导致测试用例变成永久绑定；**建议派出 fix** |
@@ -6618,5 +6618,28 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P60264 | [方向4] **PR #67005** fix(ollama): simplify cloud onboarding — maintainer label, size M, 2 comments, updated 05:47 UTC | 👀 **maintainer 已 review（方向4 第132轮 13:44 CST）** | **merge 窗口期，随时可 approve** |
 | P60265 | [方向4] **PR #67003** fix(security): 7 P1 hardening fixes — maintainer label, size L, 2 comments, updated 05:47 UTC | 👀 **maintainer 已 review（方向4 第132轮 13:44 CST）** | **merge 窗口期，随时可 approve** |
 | P60266 | [方向4] **PR #66976** fix(whatsapp): remove redundant root Baileys install blocker — 1 comment, maintainer=NO | 👀 **待 review（方向4 第132轮 13:44 CST）** | WhatsApp regression 相关；无 maintainer 标签；**建议 review** |
-| P60267 | [#66975](https://github.com/openclaw/openclaw/issues/66975) **🔴 S regression** Telegram bot commands disappear after upgrading to 2026.4.14 | 🔍 **新发现**(方向1 第132轮 13:44 CST) | Changelog 明确相关（"restore plugin-registry-backed auto defaults"）；命令完全不显示；Bot Menu 按钮丢失；2个 reporter；**建议立即派出 fix** |
+| P60267 | [#66975](https://github.com/openclaw/openclaw/issues/66975) **🔴 S regression** Telegram bot commands disappear after upgrading to 2026.4.14 | ✅ **已合并**(#66730) | upstream/main 已合并 `fix: keep Telegram command sync process-local` (#66730) 以及 registry 缓存版本化修复；确认问题已覆盖
 | P60268 | [#65428](https://github.com/openclaw/openclaw/issues/65428) **🔴 S** resolveCliAuthEpoch() hashes accessToken+refreshToken+expiresAt causing session reset on OAuth token refresh | 🔍 **新发现**(方向1 第132轮 13:44 CST) | OAuth token refresh 后 session 静默 reset；根因清晰（应只 hash refreshToken）；已在 P60144 区域追踪过但需确认是同 issue 还是新 activity；**建议跟进根因定位** |
+
+---
+
+## xixi 扫描报告 2026-04-15 13:44 CST（增量更新）
+
+### 新增优先级
+
+| 优先级 | 任务 | 状态 | 备注 |
+|--------|------|------|------|
+| P60175 | [#66975](https://github.com/openclaw/openclaw/issues/66975) **🔴 S regression** Telegram bot commands 升级 2026.4.14 后全部消失，Bot Menu 按钮丢失 | ✅ **已合并**(#66730) | upstream/main 已合并修复；registry 缓存版本化 + process-local 命令同步已覆盖
+
+### 方向4 PR 追踪更新（maintainer 已 review，关注 merge 窗口）
+
+| 优先级 | PR | 状态 | 备注 |
+|--------|-----|------|------|
+| P60176 | [#67005](https://github.com/openclaw/openclaw/pull/67005) fix(ollama): simplify cloud onboarding | 🔍 **maintainer 已 review，随时可 merge**（方向4 第131轮 13:44 CST） | maintainer label + size M，comments=2，刚更新 05:47 UTC |
+| P60177 | [#67003](https://github.com/openclaw/openclaw/pull/67003) fix(security): 7 P1 hardening fixes | 🔍 **maintainer 已 review，随时可 merge**（方向4 第131轮 13:44 CST） | maintainer label + size L，comments=2，刚更新 05:47 UTC |
+| P60178 | [#66985](https://github.com/openclaw/openclaw/pull/66985) fix(agents): resolve requestedNode to canonical ID | 🔍 **新开，0 comments，关注 merge 时机**（方向4 第131轮 13:44 CST） | size M，外部 author，05:09 UTC |
+
+### 结论
+- **最高优先级：#66975**（Telegram commands regression，2026.4.14 changelog 相关，Bot Menu 丢失）
+- 次高：**#65428**（OAuth session reset，根因清晰，已在 P59944 区域追踪）
+- 方向4 重点：**#67005** 和 **#67003** maintainer 已 review，随时可 approve 推 merge

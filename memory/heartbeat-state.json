@@ -1,4 +1,12 @@
 {
-  "updatedAt": "2026-04-15T07:22:00Z",
-  "note": "xixi 扫描已更新"
+  "updatedAt": "2026-04-15T15:40:00Z",
+  "note": "fix-66975: commit 97b60b99 already merged in upstream/main. Fix narrows runtime channel registry caching to version-based invalidation. Issue #66975 still open but fix confirmed present in main.",
+  "fixes": {
+    "66975": {
+      "status": "already-merged",
+      "commit": "97b60b992ca8cfed8c4fb683c3547fbd287e029f",
+      "note": "Already merged into upstream/main, confirmed via commands-registry.data.ts content match"
+    }
+  },
+  "lastPrCreatedAt": null
 }
