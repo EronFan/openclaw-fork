@@ -1,4 +1,12 @@
 {
-  "updatedAt": "2026-04-15T14:41:00Z",
-  "note": "xixi 扫描仍超6h(19h前); 已派补扫2次待响应"
+  "updatedAt": "2026-04-15T15:01:00Z",
+  "note": "xixi 22:54 CST scan done; fix-67173 PR #67258 created; openclaw-repo committed",
+  "inProgressFixes": [
+    {
+      "issue": 67173,
+      "pr": 67258,
+      "status": "open",
+      "desc": "followup drain on surface_error timeout"
+    }
+  ]
 }
