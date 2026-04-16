@@ -1,5 +1,11 @@
 export type SessionStateValue = "idle" | "processing" | "waiting";
 
+export type ToolFailureStreakEntry = {
+  count: number;
+  lastErrorHash: string;
+  errorMessage: string;
+};
+
 export type SessionState = {
   sessionId?: string;
   sessionKey?: string;
@@ -9,6 +15,8 @@ export type SessionState = {
   toolCallHistory?: ToolCallRecord[];
   toolLoopWarningBuckets?: Map<string, number>;
   commandPollCounts?: Map<string, { count: number; lastPollAt: number }>;
+  /** Tracks consecutive tool call failures per tool+error hash. */
+  toolFailureStreaks?: Record<string, ToolFailureStreakEntry>;
 };
 
 export type ToolCallRecord = {

@@ -4,6 +4,8 @@ import {
   detectToolCallLoop,
   recordToolCall,
   recordToolCallOutcome,
+  recordToolFailureStreak,
+  clearToolFailureStreak,
 } from "./tool-loop-detection.js";
 
 export const beforeToolCallRuntime = {
@@ -12,4 +14,6 @@ export const beforeToolCallRuntime = {
   detectToolCallLoop,
   recordToolCall,
   recordToolCallOutcome,
+  recordToolFailureStreak,
+  clearToolFailureStreak,
 };

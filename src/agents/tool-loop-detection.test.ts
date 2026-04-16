@@ -674,4 +674,162 @@ describe("tool-loop-detection", () => {
       expect(stats.mostFrequent?.count).toBe(7);
     });
   });
+
+  describe("circuit breaker for consecutive tool failures", () => {
+    it("does not block when tool has not reached consecutive failure threshold", () => {
+      const state = createState();
+      const config: ToolLoopDetectionConfig = {
+        enabled: true,
+        maxConsecutiveToolFailures: 3,
+      };
+
+      // Record 2 failures (below threshold of 3)
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 1);
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 2);
+
+      const result = detectToolCallLoop(state, "web_search", { query: "test" }, config);
+      expect(result.stuck).toBe(false);
+    });
+
+    it("blocks when tool fails N consecutive times with the same error", () => {
+      const state = createState();
+      const config: ToolLoopDetectionConfig = {
+        enabled: true,
+        maxConsecutiveToolFailures: 3,
+      };
+
+      // Record 3 failures (at threshold of 3)
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 1);
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 2);
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 3);
+
+      const result = detectToolCallLoop(state, "web_search", { query: "test" }, config);
+      expect(result.stuck).toBe(true);
+      expect(result.level).toBe("critical");
+      expect(result.detector).toBe("tool_failure_circuit_breaker");
+      expect(result.count).toBe(3);
+      expect(result.message).toContain("web_search");
+      expect(result.message).toContain("not configured");
+    });
+
+    it("does not block when consecutive failures have different errors", () => {
+      const state = createState();
+      const config: ToolLoopDetectionConfig = {
+        enabled: true,
+        maxConsecutiveToolFailures: 3,
+      };
+
+      // Record 3 failures with different error messages - streak should reset
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 1);
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("timeout"), 2);
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 3);
+
+      const result = detectToolCallLoop(state, "web_search", { query: "test" }, config);
+      expect(result.stuck).toBe(false);
+    });
+
+    it("resets failure streak on successful tool call", () => {
+      const state = createState();
+      const config: ToolLoopDetectionConfig = {
+        enabled: true,
+        maxConsecutiveToolFailures: 3,
+      };
+
+      // 2 failures
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 1);
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 2);
+      // Success - resets streak
+      recordSuccessfulCall(
+        state,
+        "web_search",
+        { query: "test" },
+        { content: [{ type: "text", text: "ok" }] },
+        3,
+      );
+      // Failure again (should start from 1, not 3)
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 4);
+
+      const result = detectToolCallLoop(state, "web_search", { query: "test" }, config);
+      expect(result.stuck).toBe(false);
+    });
+
+    it("uses default threshold of 3 when not configured", () => {
+      const state = createState();
+      const config: ToolLoopDetectionConfig = { enabled: true };
+
+      // 2 failures - below default threshold of 3
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 1);
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 2);
+
+      let result = detectToolCallLoop(state, "web_search", { query: "test" }, config);
+      expect(result.stuck).toBe(false);
+
+      // 3rd failure - at threshold
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 3);
+
+      result = detectToolCallLoop(state, "web_search", { query: "test" }, config);
+      expect(result.stuck).toBe(true);
+      expect(result.detector).toBe("tool_failure_circuit_breaker");
+    });
+
+    it("only affects the tool that failed, not other tools", () => {
+      const state = createState();
+      const config: ToolLoopDetectionConfig = {
+        enabled: true,
+        maxConsecutiveToolFailures: 2,
+      };
+
+      // web_search fails 2 times - at threshold
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 1);
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 2);
+
+      // Another tool (read) has not failed
+      const result = detectToolCallLoop(state, "read", { path: "/file.txt" }, config);
+      expect(result.stuck).toBe(false);
+    });
+
+    it("reports correct count in circuit breaker result", () => {
+      const state = createState();
+      const config: ToolLoopDetectionConfig = {
+        enabled: true,
+        maxConsecutiveToolFailures: 2,
+      };
+
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 1);
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 2);
+      recordFailedCall(state, "web_search", { query: "test" }, new Error("not configured"), 3);
+
+      const result = detectToolCallLoop(state, "web_search", { query: "test" }, config);
+      expect(result.stuck).toBe(true);
+      expect(result.count).toBe(3);
+    });
+
+    it("does not trigger for unknown-tool errors (let unknown_tool_repeat handle)", () => {
+      const state = createState();
+      const config: ToolLoopDetectionConfig = {
+        enabled: true,
+        maxConsecutiveToolFailures: 2,
+      };
+
+      // Record 2 failures with unknown-tool error - below unknown_tool threshold (10)
+      recordFailedCall(
+        state,
+        "nonexistent_tool",
+        {},
+        new Error("unknown tool: nonexistent_tool"),
+        1,
+      );
+      recordFailedCall(
+        state,
+        "nonexistent_tool",
+        {},
+        new Error("unknown tool: nonexistent_tool"),
+        2,
+      );
+
+      // Should NOT trigger circuit breaker - let unknown_tool_repeat handle it
+      const result = detectToolCallLoop(state, "nonexistent_tool", {}, config);
+      expect(result.stuck).toBe(false);
+    });
+  });
 });

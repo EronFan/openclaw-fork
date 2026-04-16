@@ -11,6 +11,7 @@ export type LoopDetectorKind =
   | "unknown_tool_repeat"
   | "known_poll_no_progress"
   | "global_circuit_breaker"
+  | "tool_failure_circuit_breaker"
   | "ping_pong";
 
 export type LoopDetectionResult =
@@ -30,6 +31,7 @@ export const WARNING_THRESHOLD = 10;
 export const UNKNOWN_TOOL_THRESHOLD = 10;
 export const CRITICAL_THRESHOLD = 20;
 export const GLOBAL_CIRCUIT_BREAKER_THRESHOLD = 30;
+export const DEFAULT_MAX_CONSECUTIVE_TOOL_FAILURES = 3;
 const DEFAULT_LOOP_DETECTION_CONFIG = {
   enabled: false,
   historySize: TOOL_CALL_HISTORY_SIZE,
@@ -37,6 +39,7 @@ const DEFAULT_LOOP_DETECTION_CONFIG = {
   unknownToolThreshold: UNKNOWN_TOOL_THRESHOLD,
   criticalThreshold: CRITICAL_THRESHOLD,
   globalCircuitBreakerThreshold: GLOBAL_CIRCUIT_BREAKER_THRESHOLD,
+  maxConsecutiveToolFailures: DEFAULT_MAX_CONSECUTIVE_TOOL_FAILURES,
   detectors: {
     genericRepeat: true,
     knownPollNoProgress: true,
@@ -51,6 +54,7 @@ type ResolvedLoopDetectionConfig = {
   unknownToolThreshold: number;
   criticalThreshold: number;
   globalCircuitBreakerThreshold: number;
+  maxConsecutiveToolFailures: number;
   detectors: {
     genericRepeat: boolean;
     knownPollNoProgress: boolean;
@@ -96,6 +100,10 @@ function resolveLoopDetectionConfig(config?: ToolLoopDetectionConfig): ResolvedL
     ),
     criticalThreshold,
     globalCircuitBreakerThreshold,
+    maxConsecutiveToolFailures: asPositiveInt(
+      config?.maxConsecutiveToolFailures,
+      DEFAULT_LOOP_DETECTION_CONFIG.maxConsecutiveToolFailures,
+    ),
     detectors: {
       genericRepeat:
         config?.detectors?.genericRepeat ?? DEFAULT_LOOP_DETECTION_CONFIG.detectors.genericRepeat,
@@ -422,6 +430,81 @@ function canonicalPairKey(signatureA: string, signatureB: string): string {
 }
 
 /**
+ * Check if the circuit breaker should trip for a given tool.
+ * Returns streak info if the threshold is met or exceeded.
+ * Skips unknown-tool errors so the unknown_tool_repeat detector handles those instead.
+ */
+function checkToolFailureCircuitBreaker(
+  state: SessionState,
+  toolName: string,
+  config: ResolvedLoopDetectionConfig,
+  currentError?: unknown,
+): { count: number; errorHash: string; errorMessage: string } | undefined {
+  // Skip if current error is an "unknown tool" error - let unknown_tool_repeat detector handle those
+  if (currentError !== undefined) {
+    const unknownToolName = extractUnknownToolName(currentError);
+    if (unknownToolName !== undefined) {
+      return undefined;
+    }
+  }
+
+  const streaks = state.toolFailureStreaks;
+  if (!streaks) {
+    return undefined;
+  }
+  const entry = streaks[toolName];
+  if (!entry) {
+    return undefined;
+  }
+  if (entry.count >= config.maxConsecutiveToolFailures) {
+    return {
+      count: entry.count,
+      errorHash: entry.lastErrorHash,
+      errorMessage: entry.errorMessage,
+    };
+  }
+  return undefined;
+}
+
+/**
+ * Record a tool call failure, incrementing the consecutive failure streak.
+ * Called from recordToolCallOutcome when a tool call returns an error.
+ */
+export function recordToolFailureStreak(
+  state: SessionState,
+  params: {
+    toolName: string;
+    error: unknown;
+  },
+): void {
+  if (!state.toolFailureStreaks) {
+    state.toolFailureStreaks = {};
+  }
+  const errorHash = digestStable(formatErrorForHash(params.error));
+  const errorMessage = formatErrorForHash(params.error);
+  const existing = state.toolFailureStreaks[params.toolName];
+  if (existing && existing.lastErrorHash === errorHash) {
+    existing.count += 1;
+    // errorMessage already set on first occurrence
+  } else {
+    state.toolFailureStreaks[params.toolName] = {
+      count: 1,
+      lastErrorHash: errorHash,
+      errorMessage,
+    };
+  }
+}
+
+/**
+ * Clear the consecutive failure streak for a tool (called on successful execution).
+ */
+export function clearToolFailureStreak(state: SessionState, toolName: string): void {
+  if (state.toolFailureStreaks) {
+    delete state.toolFailureStreaks[toolName];
+  }
+}
+
+/**
  * Detect if an agent is stuck in a repetitive tool call loop.
  * Checks if the same tool+params combination has been called excessively.
  */
@@ -435,6 +518,7 @@ export function detectToolCallLoop(
   if (!resolvedConfig.enabled) {
     return { stuck: false };
   }
+
   const history = state.toolCallHistory ?? [];
   const currentHash = hashToolCall(toolName, params);
   const unknownToolStreak = getUnknownToolRepeatStreak(history, toolName);
@@ -452,6 +536,25 @@ export function detectToolCallLoop(
       message: `CRITICAL: attempted unavailable tool ${unknownToolStreak.unknownToolName ?? toolName} ${unknownToolStreak.count} times. Stop retrying that missing tool and answer without it.`,
       warningKey: `unknown-tool:${toolName}:${unknownToolStreak.unknownToolName ?? "unknown"}`,
     };
+  }
+
+  // Circuit breaker: only for KNOWN tools (not unknown-tool repeats) —
+  // skip if this tool is flagged as unknown to let unknown_tool_repeat handle it
+  if (unknownToolStreak.count === 0) {
+    const circuitBreakerResult = checkToolFailureCircuitBreaker(state, toolName, resolvedConfig);
+    if (circuitBreakerResult) {
+      log.error(
+        `Circuit breaker triggered for ${toolName}: ${circuitBreakerResult.count} consecutive failures with same error`,
+      );
+      return {
+        stuck: true,
+        level: "critical",
+        detector: "tool_failure_circuit_breaker",
+        count: circuitBreakerResult.count,
+        message: `CRITICAL: ${toolName} has failed ${circuitBreakerResult.count} consecutive times with the same error: "${circuitBreakerResult.errorMessage}". Do not retry this tool again. Instead, respond to the user and explain that the tool is unavailable or misconfigured.`,
+        warningKey: `circuit-breaker:${toolName}:${circuitBreakerResult.errorHash}`,
+      };
+    }
   }
 
   if (noProgressStreak >= resolvedConfig.globalCircuitBreakerThreshold) {
@@ -592,6 +695,7 @@ export function recordToolCall(
 
 /**
  * Record a completed tool call outcome so loop detection can identify no-progress repeats.
+ * Also tracks consecutive failure streaks for the circuit breaker.
  */
 export function recordToolCallOutcome(
   state: SessionState,
@@ -605,6 +709,14 @@ export function recordToolCallOutcome(
   },
 ): void {
   const resolvedConfig = resolveLoopDetectionConfig(params.config);
+
+  // Track circuit breaker: record failure streak or clear on success
+  if (params.error !== undefined) {
+    recordToolFailureStreak(state, { toolName: params.toolName, error: params.error });
+  } else {
+    clearToolFailureStreak(state, params.toolName);
+  }
+
   const outcome = hashToolOutcome(params.toolName, params.toolParams, params.result, params.error);
   const resultHash = outcome.resultHash;
   if (!resultHash) {

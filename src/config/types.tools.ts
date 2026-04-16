@@ -175,6 +175,12 @@ export type ToolLoopDetectionConfig = {
   criticalThreshold?: number;
   /** Global no-progress breaker threshold (default: 30). */
   globalCircuitBreakerThreshold?: number;
+  /**
+   * Circuit breaker: block a tool after N consecutive failures with the same error (default: 3).
+   * When a tool fails N times in a row with the same error, the next call to that tool is blocked
+   * with a message instructing the model to stop retrying and explain the failure to the user.
+   */
+  maxConsecutiveToolFailures?: number;
   /** Detector toggles. */
   detectors?: ToolLoopDetectionDetectorConfig;
 };
