@@ -1,4 +1,38 @@
 {
-  "updatedAt": "2026-04-15T21:50:00Z",
-  "note": "xixi 补扫触发(21:38 UTC); 有新工作区 wt-fix-67399-circuit-breaker"
+  "updatedAt": "2026-04-18T01:56:00Z",
+  "note": "Heartbeat checked. No recent subagent failures. xixi latest scan report is stale (2026-04-15T13:15:00 GMT+8), likely offline. lastPrCreatedAt remains 2026-04-15T21:38:00Z.",
+  "xixiLastScanAt": "2026-04-15T05:15:00Z",
+  "xixiScanSpawnedAt": null,
+  "xixiScriptMissing": true,
+  "lastPrCreatedAt": "2026-04-15T21:38:00Z",
+  "diskFull": true,
+  "subagentFailures": [],
+  "subagentSuccesses": [],
+  "inProgressFixes": [
+    {
+      "issue": "#67399",
+      "title": "Circuit breaker for repeated tool failures in agent loop",
+      "worktree": "wt-fix-67399-circuit-breaker",
+      "status": "code_complete_tests_pass_but_cannot_commit_push",
+      "note": "31 tests pass. 5 files modified. Root fs full - exec broken. Need user help to free root fs disk space."
+    },
+    {
+      "issue": "#67394",
+      "title": "WhatsApp group auto-reply silently fails — agent reply generates but never delivers",
+      "session": "agent:main:subagent:c11c2100-7eab-401c-9f71-6ea8fd059e6d",
+      "branch": "fix/67394-whatsapp-group",
+      "worktree": "wt-fix-67394-whatsapp-group",
+      "status": "in_progress",
+      "note": "Running on MiniMax-M2.7"
+    },
+    {
+      "issue": "#67396",
+      "title": "Telegram channel: gateway silently drops messages exceeding 4096 chars",
+      "session": "agent:main:subagent:9d007915-6d7b-411f-8e87-fe3d0c9e7b6e",
+      "branch": "fix/67396-telegram-4096-chars",
+      "worktree": "wt-fix-67396-telegram-4096",
+      "status": "in_progress",
+      "note": "Running on MiniMax-M2.7"
+    }
+  ]
 }
