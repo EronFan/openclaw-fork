@@ -93,6 +93,18 @@ export async function sendTelegramPayloadMessages(params: {
     quoteText,
   };
 
+  // When audioAsVoice is set, bypass sendPayloadMediaSequenceOrFallback and send
+  // directly so the asVoice flag is properly forwarded to the Telegram API.
+  // sendPayloadMediaSequenceOrFallback does not support per-item options like asVoice.
+  if (params.payload.audioAsVoice && mediaUrls.length > 0) {
+    return await params.send(params.to, text, {
+      ...payloadOpts,
+      mediaUrl: mediaUrls[0]!,
+      asVoice: true,
+      buttons,
+    });
+  }
+
   // Telegram allows reply_markup on media; attach buttons only to the first send.
   return await sendPayloadMediaSequenceOrFallback({
     text,
@@ -158,6 +170,7 @@ export const telegramOutbound: ChannelOutboundAdapter = {
       threadId,
       forceDocument,
       gatewayClientScopes,
+      audioAsVoice,
     }) => {
       const { send, baseOpts } = await resolveTelegramSendContext({
         cfg,
@@ -173,6 +186,7 @@ export const telegramOutbound: ChannelOutboundAdapter = {
         mediaLocalRoots,
         mediaReadFile,
         forceDocument: forceDocument ?? false,
+        asVoice: audioAsVoice,
       });
     },
   }),
