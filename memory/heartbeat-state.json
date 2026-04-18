@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-04-18T01:56:00Z",
-  "note": "Heartbeat checked. No recent subagent failures. xixi latest scan report is stale (2026-04-15T13:15:00 GMT+8), likely offline. lastPrCreatedAt remains 2026-04-15T21:38:00Z.",
+  "updatedAt": "2026-04-18T15:13:00Z",
+  "note": "Night push started. No recent subagent failures in last 120m. xixi latest scan report remains stale since 2026-04-15T13:15:00 GMT+8, likely offline and needs respawn. lastPrCreatedAt remains 2026-04-15T21:38:00Z.",
   "xixiLastScanAt": "2026-04-15T05:15:00Z",
   "xixiScanSpawnedAt": null,
   "xixiScriptMissing": true,
@@ -17,22 +17,10 @@
       "note": "31 tests pass. 5 files modified. Root fs full - exec broken. Need user help to free root fs disk space."
     },
     {
-      "issue": "#67394",
-      "title": "WhatsApp group auto-reply silently fails — agent reply generates but never delivers",
-      "session": "agent:main:subagent:c11c2100-7eab-401c-9f71-6ea8fd059e6d",
-      "branch": "fix/67394-whatsapp-group",
-      "worktree": "wt-fix-67394-whatsapp-group",
-      "status": "in_progress",
-      "note": "Running on MiniMax-M2.7"
-    },
-    {
-      "issue": "#67396",
-      "title": "Telegram channel: gateway silently drops messages exceeding 4096 chars",
-      "session": "agent:main:subagent:9d007915-6d7b-411f-8e87-fe3d0c9e7b6e",
-      "branch": "fix/67396-telegram-4096-chars",
-      "worktree": "wt-fix-67396-telegram-4096",
-      "status": "in_progress",
-      "note": "Running on MiniMax-M2.7"
+      "issue": "#67237",
+      "title": "WhatsApp sends unsolicited messages to contacts",
+      "status": "queued_for_main_fix",
+      "note": "P0 security issue selected as top overnight target. Fresh main-run fix starts now."
     }
   ]
 }
