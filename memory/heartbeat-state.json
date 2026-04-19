@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-04-19T10:23:00Z",
-  "note": "Action heartbeat baseline established. Heartbeat cron switched to default model. main has completed #68610, #68847, #68841 and will continue with next top candidate when idle is detected.",
+  "updatedAt": "2026-04-19T12:01:00Z",
+  "note": "Heartbeat resumed execution instead of idle reporting. #68838 has been re-dispatched after stall was detected; xixi scan still within 6h threshold but already beyond 3h notify threshold.",
   "xixiLastScanAt": "2026-04-19T06:45:00Z",
   "xixiScanSpawnedAt": "2026-04-19T06:41:00Z",
   "xixiScriptMissing": false,
@@ -9,15 +9,15 @@
   "lastCommitAt": "2026-04-19T09:47:00Z",
   "lastPrCreatedAt": "2026-04-15T21:38:00Z",
   "lastXixiScanAt": "2026-04-19T06:45:00Z",
-  "lastActionHeartbeatAt": "2026-04-19T10:23:00Z",
-  "lastActionHeartbeatResult": "Rules upgraded to action heartbeat. Future heartbeat runs must resume currentIssue or directly claim the next top candidate instead of only reporting state.",
+  "lastActionHeartbeatAt": "2026-04-19T12:01:00Z",
+  "lastActionHeartbeatResult": "Detected stalled OpenClaw work: no active fix on currentIssue and PR idle >2h. Re-dispatched #68838 as subagent run f318ad63-0a9d-45e9-8cfe-afc57e1b05a3. xixi latest scan age is ~5h16m, so notify threshold crossed but rescan threshold not yet crossed.",
   "diskFull": false,
   "subagentFailures": [
     {
       "issue": "xixi-rescan",
       "failCount": 1,
       "firstFailedAt": "2026-04-18T15:16:00Z",
-      "note": "Historical failure before provider cleanup: MiniMax rate limit plus removed legacy provider auth failure; recovered by rerunning on openai-codex/gpt-5.4"
+      "note": "MiniMax rate limit and aigatehub 403 auth; recovered by rerunning on openai-codex/gpt-5.4"
     }
   ],
   "subagentSuccesses": [
@@ -32,7 +32,7 @@
       "issue": "#68838",
       "title": "followup drain queue identity race",
       "status": "in_progress",
-      "note": "Main selected as next top candidate after #68841."
+      "note": "Heartbeat re-dispatched stalled fix via subagent run f318ad63-0a9d-45e9-8cfe-afc57e1b05a3 at 2026-04-19T12:00:00Z."
     }
   ]
 }

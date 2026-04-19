@@ -1,198 +1,66 @@
-# xixi Scan Report
+# OpenClaw 高优先级 issue 复扫报告（xixi）
 
-**Scanner:** xixi (autonomous issue scanner)
-**Scan Range:** #66951–#67200
-**Scanned:** 2026-04-15T13:15:00 GMT+8
-**Total Issues Found:** 116
+- 扫描时间：2026-04-19 14:45 CST
+- 范围：`openclaw/openclaw` 最近活跃 open issues + 最近活跃 open PR/最近合并 PR
+- 结论口径：优先保留“根因已较清晰、当前无现成 PR 覆盖”的候选；已被 open PR/merged PR 覆盖的项单列到移除/降级区。
 
----
+## 1) Top 5 候选 issue
 
-## ✅ Already Has PR
+| 优先级 | Issue | 判断 | 原因 |
+|---|---|---|---|
+| 1 | [#68847](https://github.com/openclaw/openclaw/issues/68847) | 立即可做 | 根因非常清晰：`maybeWakeNodeWithApns` 在 registration check 前先 `nodeWakeById.set(...)`，`no-registration` 提前返回路径未 cleanup，属于很干净的 map 泄漏修复点；扫到的活跃 PR 中未见覆盖。 |
+| 2 | [#68841](https://github.com/openclaw/openclaw/issues/68841) | 立即可做 | 根因清晰：`costUsageCache` 仅靠 TTL 判 stale，但没有 prune/cap，`(startMs,endMs)` key 会持续累积；问题定位已在 issue 里写得很具体，未见现成 PR 覆盖。 |
+| 3 | [#68838](https://github.com/openclaw/openclaw/issues/68838) | 立即可做 | 根因清晰：followup drain 的 finally 仅按 key 删除 `FOLLOWUP_QUEUES`，未校验当前 queue identity，存在并发/竞态下误删新队列的风险；未见现成 PR 覆盖。 |
+| 4 | [#64947](https://github.com/openclaw/openclaw/issues/64947) | 高价值 | 问题稳定复现且根因指向明确：`openai-codex` OAuth scope 集合包含当前 client 不允许的 `model.request` / `api.responses.write`，导致 `invalid_scope`；近日报告仍持续复现，未见最近活跃 PR 覆盖。 |
+| 5 | [#66733](https://github.com/openclaw/openclaw/issues/66733) | 值得跟进 | Control UI streaming / typing indicator 回归已被多名用户持续确认（4.11 正常、4.12+ 异常、4.14 仍在），虽然根因不如前三个“单点式”清晰，但用户面广且仍无现成 PR 覆盖。 |
 
-| Issue | Title | PR |
-|-------|-------|-----|
-| 66958 | Telegram native command menu cleared on startup | #67169 |
-| 66963 | openclaw agent crashes on startup (ReferenceError in buildPollSchema) | #67022 |
-| 67020 | Slack dmHistoryLimit defined but never wired | #67054 |
-| 67021 | Main workspace excluded from dreaming schedule | #67073 |
-| 67026 | Plugin loading crashes management commands | #67027 |
-| 67030 | Heartbeat isolated session relays in English without SOUL.md | #67059 |
-| 67057 | dreaming-narrative导致Telegram通讯严重阻塞 (critical!) | #67073 (partial) |
-| 67058 | Session list filter feature for dreaming sessions | #67155 |
-| 67061 | Dreaming dayBucket uses file date instead of ingestion date | #67091 |
-| 67068 | Feishu pass thread_id as MessageThreadId | #67069 |
-| 67088 | Dashboard falsely reports "No GUI detected" on macOS with SSH env | #67115, #67110 |
-| 67076 | Cannot read properties of undefined (reading 'trim') | #67086 |
-| 67061 | Dreaming dayBucket (dup) | #67066 |
-| 67130 | openclaw onboard crashes after channel selection (missing bundled metadata) | #67145 |
-| 67131 | openai-codex stale /backend-api/v1 baseUrl | #67159 |
-| 67172 | Cron classifier sets status=ok when summary contains denial tokens | #67186 |
+## 2) maintainer / reviewer 新评论是否需要我们响应
 
----
+**结论：没有看到明确的 maintainer 新评论在等我们立刻回复。**
 
-## 🔴 Top Candidates (S/M with clear root cause, NO existing PR)
+但有两类“值得盯住”的新动态：
 
-### CRITICAL / S — Immediate Action
+1. **PR #68349** `Ollama: honor Modelfile num_ctx and auto-detect tool support`
+   - 最新有人留言：`LGTM - happy to help this get merged once you resolve conflicts`
+   - 这更像“作者需要先解冲突”，不是我们必须马上下场回复的 maintainer blocking comment。
 
-#### 1. #67057 — dreaming-narrative会话累积导致Telegram通讯严重阻塞
-- **Severity:** S (system blockage, communication blackout)
-- **Root Cause:** 77个dreaming-narrative会话持续占用资源，消息队列阻塞，用户消息与梦境消息竞争处理
-- **Fix:** 需要限制dreaming并发数，或在Telegram channel禁用/限流dreaming会话
-- **Spawn:** YES → `fix-67057`
+2. **PR #68822** `feat(memory): make embedding retry/concurrency parameters configurable`
+   - 仍有 bot review 指出 schema / config 接线问题；作者已修了 getter 调用错误。
+   - 目前没看到 maintainer 人工评论，但这类 PR 还没完全稳定，暂不建议把相关 issue 当成空白待办再派单。
 
-#### 2. #67029 — memory-core dreaming cleanup fails with missing scope operator.admin
-- **Severity:** S (RBAC error blocks cleanup, sessions leak indefinitely)
-- **Root Cause:** dreaming cleanup操作需要`operator.admin` scope但缺少此权限
-- **Fix:** 在cleanup代码路径中添加正确的scope或使用有权限的session
-- **Spawn:** YES → `fix-67029`
+补充：
+- **PR #68834**（Discord ACP binding hang 修复）作者今天已连续处理 review comment，并回帖说明已修；当前不像缺回复，更像等待合并。
+- **PR #68441** 的新留言主要是作者/贡献者自更新与设计升级说明，不是我们要代答的 maintainer ping。
 
-#### 3. #67173 — Queued messages silently dropped after agent run timeout
-- **Severity:** S (data loss, no error notification)
-- **Root Cause:** agent run超时被终止时，queued消息没有被followup drain处理，直接丢弃
-- **Fix:** timeout时触发followup drain处理队列
-- **Spawn:** YES → `fix-67173`
+## 3) 已 merge / 已覆盖，可从待办移除或降级的项
 
-### MEDIUM / M — High Value
+### 可直接从“待修复候选”移除
 
-#### 4. #67035 — Windows chat UI regression: input text swallowed, streamed replies invisible
-- **Severity:** M (regression, affects Windows users)
-- **Root Cause:** 2026.4.14 Windows特定UI问题，streamed replies不显示，input text被吞
-- **Spawn:** YES → `fix-67035`
+1. **#68826** `bug(cron): --tools csv stores space-separated string instead of array on Windows (PowerShell)`
+   - 已有 **PR #68832**，且在本轮 recent closed PR 中显示 **已 merged**。
+   - 结论：可从待办移除。
 
-#### 5. #67091 — sessions_spawn defaults to thread-bound persistent mode
-- **Severity:** M (unexpected permanent bindings from one-shot tests)
-- **Root Cause:** sessions_spawn默认mode="run"但实际变成thread-bound persistent，导致测试用例创建永久绑定
-- **Spawn:** YES → `fix-67091`
+### 已被 open PR 覆盖，先从“可派单候选”降级
 
-#### 6. #67136 — Write tool falsely reports successful write of X bytes but no file created
-- **Severity:** M (silent data loss)
-- **Root Cause:** Write tool报告成功但文件未实际创建
-- **Spawn:** YES → `fix-67136`
+2. **#68776** `Discord inbound silently hangs in ensureConfiguredBindingRouteReady for type:"acp" bindings`
+   - issue 内已有贡献者留言“Working on a fix”。
+   - 最近活跃 open PR 中已有 **PR #68834** `fix: prevent Discord ACP binding silent hang on fresh gateway boot`，并且今天仍在处理 review。
+   - 结论：从待派单列表移除，转为“等 PR #68834 结果”。
 
-#### 7. #67151 — Discord inbound messages containing `https` stripped before reaching agent
-- **Severity:** M (content modification, broken functionality)
-- **Root Cause:** Discord消息中的URL在被agent处理前被剥离
-- **Spawn:** YES → `fix-67151`
+3. **#68373** `Cached plugin restore drops memory capability, breaks wiki bridge imports`
+   - issue 评论已明确交叉链接 **PR #68334 / #68041** 等多个重叠修复。
+   - 结论：从“空白候选”移除，避免重复派单。
 
-#### 8. #67087 — Browser tool downloads to temp instead of configured downloads path
-- **Severity:** M (wrong behavior, not catastrophic)
-- **Root Cause:** CDP模式下browser tool下载到temp目录而非用户配置的downloads路径
-- **Spawn:** YES → `fix-67087`
+4. **#68154** `security audit false positive: plugins.allow_phantom_entries flags bundled plugins as phantom`
+   - issue 评论明确指出已有 **PR #67978** 在修。
+   - 结论：从“空白候选”移除，转观察 PR 状态即可。
 
-#### 9. #67092 — Malformed reasoning output leaks into user-visible text
-- **Severity:** M (data corruption visible to user)
-- **Root Cause:** reasoning输出格式错误时，trailing `</think>`无有效opening tag，内容泄露到用户可见文本
-- **Spawn:** YES → `fix-67092`
+5. **#68827** `sessions_spawn: MCP child processes not reaped after spawned run ends`
+   - 最近活跃 open PR 中已有 **PR #68846** `fix: reap MCP child processes when spawned session run ends`。
+   - 结论：已覆盖，先不重复派单。
 
-#### 10. #67093 — Discord Channel Leaking Raw Tool Call Syntax
-- **Severity:** M (broken Discord integration)
-- **Root Cause:** Discord channel暴露原始tool call语法给用户
-- **Spawn:** YES → `fix-67093`
+## 简短建议
 
-#### 11. #67081 — WebChat user message not displayed until assistant response
-- **Severity:** M (UX regression, appears frozen)
-- **Root Cause:** WebChat用户消息发送后不立即显示，要等assistant回复才出现
-- **Spawn:** YES → `fix-67081`
-
----
-
-## 🟡 Unclear / Needs More Info
-
-| Issue | Title | Notes |
-|-------|-------|-------|
-| 66971 | exec call hardcodes security=allowlist | Need to check if this is intentional or a bug |
-| 66977 | sqlite-vec extension cannot load on macOS | OMIT_LOAD_EXTENSION compile flag issue, may need build fix |
-| 66982 | Exec completion relay creates orphan sessions | Need more diagnostic info |
-| 67013 | Browser control heartbeat logs errors for expected unavailability | Expected behavior? Needs clarification |
-| 67040 | Performance: Optimize CLI startup by persisting plugin discovery cache | Enhancement, not bug |
-| 67044 | subagent-registry.runtime.js missing from dist output | Build issue, need repro |
-| 67045 | Sticky model fallback after compaction-triggered tool_use formatting error | Need log trace |
-| 67052 | TUI streaming indicator stays active long after response finishes | Can be visual-only, L candidate |
-| 67053 | TUI streaming indicator (duplicate of 67052) | Dup |
-| 67057 noted above |
-| 67065 | Managed media workflows need session-scoped next-turn suppression | Enhancement |
-| 67071 | ${VAR} substitution sentinels stripped by config set | Need clarification on scope |
-| 67074 | TypeError: Cannot read properties of undefined (reading 'trim') | Likely dup of 67076/66945, already has PR |
-| 67078 | /new initialized wrong model on fresh Telegram DM | Need more info |
-| 67084 | Session Timeout Spam with Codex and Active Memory ON | Need context |
-| 67085 | HOOK.md hooks silently no-op on before_tool_call / after_tool_call | Needs investigation |
-| 67097 | models.json bundled plugins bypass onboard lifecycle | Enhancement/discrepancy |
-| 67099 | Empty title | Blank |
-| 67102 | Bug Tool Calls sans Suite avec OpenRouter | Need body |
-| 67106 | Control UI / Webchat text disappears in Safari | Safari-specific regression |
-| 67107 | Blank title bug | Empty |
-| 67109 | Control UI / Webchat does not render inbound images | Enhancement |
-| 67113 | QMD on ARM (Pi 5): qmd embed timeout loop | Platform-specific |
-| 67114 | openclaw status / health hangs on Windows | Windows startup issue |
-| 67118 | Cron isolated agentTurn may not advance to model fallback | Need log trace |
-| 67121 | MiniMax Portal OAuth completes but credentials not saved | Auth issue, need logs |
-| 67122 | pdf/image tools reject sub-agent workspace paths | Workspace path blacklist issue |
-| 67133 | hooks未触发和定时任务执行历史缺失 | Need more info |
-| 67135 | Webchat context meter shows false overflow after /new | Need context |
-| 67139-67141 | TKT tickets | Internal tracking |
-| 67152 | memory-core dreaming uses request-scoped subagent runtime outside gateway | Architecture issue |
-| 67158 | openai-codex gpt-5.1/5.2/5.3 rejected | OAuth scope issue |
-| 67160 | TUI: chat.history unavailable during gateway startup | Race condition |
-| 67161 | ACP agent sessions terminated with ACP_TURN_FAILED during gateway restart | Need logs |
-| 67162 | Blank title bug | Empty |
-| 67164 | Allow 1-hour cache TTL for custom Anthropic-compatible providers | Enhancement |
-| 67165 | SSRF blocking searxng/browsers | Enhancement/security |
-| 67166 | Feature Request: Display user-sent images inline in WebChat | Enhancement |
-| 67167 | Session Lifecycle Hooks (PreCompact + Stop hooks) | Enhancement |
-| 67168 | logging.file config is read but not applied | Config not honored |
-| 67170 | talk-voice plugin audio delivery failure to Telegram | Audio pipeline issue |
-| 67171 | config set writes resolved values stripping ${VAR} sentinels | Config serialization issue |
-| 67177 | MS Teams inbound file attachments fail silently | Graph API URL rewrite missing |
-| 67178 | Context Engine Turn Maintenance Loop | Internal tracking |
-| 67181 | Discord async completion leaks internal resume-fallback message | Discord integration bug |
-| 67182 | Telegram file download fails: unresolved token in URL | URL construction issue |
-| 67187 | ekcli: macOS identity + EventKit privacy keys | macOS-specific enhancement |
-| 67188 | TTS bug | Blank title |
-| 67189 | LCM 0.9.0: Empty assistant messages accumulate from tool-only turns | Message accumulation |
-| 67190 | memory-wiki CLI returns 0 artifacts but gateway call works | CLI vs gateway discrepancy |
-| 67191 | BOOT.md messages not delivered to user | deliver:false flag issue |
-
----
-
-## 🟢 Small Issues (L)
-
-| Issue | Title | Notes |
-|-------|-------|-------|
-| 66965 | WhatsApp: expose messageTimeoutMs as config option | Enhancement, small |
-| 66979 | Feature: sandbox limit | Enhancement |
-| 66983 | Feature: web canvas node support | Enhancement |
-| 66992 | macOS: gateway plist should set ProcessType: Interactive | Small platform fix |
-| 66994 | Exec approval prompts persist despite tools.exec.ask: off | M? Actually could be M |
-| 67000 | Feature: Warm-up / session reuse for embedded agents | Enhancement |
-| 67002 | Feature: Independent workspace for every channel | Enhancement |
-| 67014 | QQ Bot streaming mode配置无效 | Enhancement |
-| 67016 | Dreaming UI lacks status information | Enhancement |
-| 67052 | TUI streaming indicator stays active (also in Unclear) | Low priority |
-| 67060 | Feature: Provider requests ignore env proxy → silent timeout | Enhancement |
-| 67062 | Feature: Add channels.qqbot.mediaAllowHosts for SSRF policy | Enhancement |
-| 67067 | Feature: Time-Aware Active Memory with Schedule Management | Enhancement |
-| 67116 | Feature: openclaw logs --follow use local time by default | Enhancement |
-| 67117 | Feature: Support Parallel Dispatch for Multiple Bot Accounts | Enhancement |
-| 67120 | Feature: Feishu voice messages not transcribed | Enhancement |
-| 67128 | Feature: /usage command or session stats panel in Telegram | Enhancement |
-| 67129 | Blank feature request | Empty |
-| 67154 | Feature: Separate runtime tracking from allowlist | Enhancement |
-| 67164 | Allow 1-hour cache TTL for custom providers | Enhancement |
-| 67165 | SSRF blocking searxng / browser CDP | Enhancement |
-
----
-
-## 📋 Summary
-
-- **Total Issues Scanned:** 116
-- **Already Has PR:** 16
-- **Top Candidates (S/M, clear root cause, no PR):** 11
-- **Unclear/Needs Info:** ~50
-- **Feature Requests (L/enhancement):** ~25
-- **Spam/Duplicate/Blank:** ~10
-
-**Subagents Spawned:** 11 (for top candidates without PR)
-
----
-
-*Report generated by xixi at 2026-04-15T13:15:00 GMT+8*
+- **最适合 aoao 直接接单的 3 个**：#68847 / #68841 / #68838
+- **高价值但需要一点验证/产品判断的 2 个**：#64947 / #66733
+- **今天先不要重复派单的覆盖项**：#68776 / #68373 / #68154 / #68827 / #68826
