@@ -28,6 +28,13 @@
 
 ---
 
+## 今夜推进更新（2026-04-18 23:17 CST）
+
+- xixi 复扫结论：今夜最值得 main 直接修的 3 个候选是 `#68610`、`#68587`、`#68593`
+- 首推：`#68610` `openclaw update leaves running gateway broken: stale ESM chunk paths cause ERR_MODULE_NOT_FOUND`
+- `#67237` 当前无新 PR、无 maintainer 新评论、无新实质进展，仍需关注，但今晚不作为首修首选
+- 当前活跃修复：`#67237` 已由 main 重派修复中
+
 ## 当前优先级
 
 | 优先级 | 任务 | 状态 | 备注 |
@@ -7016,3 +7023,5 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 - PR #67277 context-window Tighten → ✅ **merged** (原 P60222)
 - PR #67279 WhatsApp harden creds saves → P60221 maintainer 尚未 merge，mergeable=true
 
+
+- 2026-04-19 11:43 CST：main 接单处理 #68587。定位结果：问题不是 SDK 把 `tools/list` request 错发成 notification，而是 `openclaw mcp serve` 当前默认启动的是 channels bridge，和标准 MCP tool server 预期不一致。已落地修复：为 `mcp serve` 增加 `--bridge tools|channels`，其中 `--bridge tools` 直接启动 `servePluginToolsMcp()`；已补 CLI 测试覆盖两条路径，`pnpm test src/cli/mcp-cli.test.ts src/mcp/plugin-tools-serve.test.ts` 通过。后续可继续补默认行为/帮助文案或提交 issue comment 纠偏。
