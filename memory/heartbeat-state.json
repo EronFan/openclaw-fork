@@ -17,7 +17,7 @@
       "issue": "xixi-rescan",
       "failCount": 1,
       "firstFailedAt": "2026-04-18T15:16:00Z",
-      "note": "MiniMax rate limit and aigatehub 403 auth; recovered by rerunning on openai-codex/gpt-5.4"
+      "note": "Historical failure before provider cleanup: MiniMax rate limit plus removed legacy provider auth failure; recovered by rerunning on openai-codex/gpt-5.4"
     }
   ],
   "subagentSuccesses": [
