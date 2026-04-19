@@ -1,16 +1,16 @@
 {
-  "updatedAt": "2026-04-19T12:01:00Z",
-  "note": "Heartbeat resumed execution instead of idle reporting. #68838 has been re-dispatched after stall was detected; xixi scan still within 6h threshold but already beyond 3h notify threshold.",
+  "updatedAt": "2026-04-19T13:01:00Z",
+  "note": "Heartbeat resumed execution again after detecting new stall: #68838 had no active fix, and xixi scan exceeded the 6h rescan threshold, so both fix and scan were re-dispatched.",
   "xixiLastScanAt": "2026-04-19T06:45:00Z",
-  "xixiScanSpawnedAt": "2026-04-19T06:41:00Z",
+  "xixiScanSpawnedAt": "2026-04-19T13:01:00Z",
   "xixiScriptMissing": false,
   "currentIssue": "#68838",
   "currentBranch": "fix/67084-session-timeout-oauth",
   "lastCommitAt": "2026-04-19T09:47:00Z",
   "lastPrCreatedAt": "2026-04-15T21:38:00Z",
   "lastXixiScanAt": "2026-04-19T06:45:00Z",
-  "lastActionHeartbeatAt": "2026-04-19T12:01:00Z",
-  "lastActionHeartbeatResult": "Detected stalled OpenClaw work: no active fix on currentIssue and PR idle >2h. Re-dispatched #68838 as subagent run f318ad63-0a9d-45e9-8cfe-afc57e1b05a3. xixi latest scan age is ~5h16m, so notify threshold crossed but rescan threshold not yet crossed.",
+  "lastActionHeartbeatAt": "2026-04-19T13:01:00Z",
+  "lastActionHeartbeatResult": "Detected stalled OpenClaw work again: currentIssue #68838 still had no active fix, PR creation was idle, and xixi latest scan age exceeded 6h. Re-dispatched #68838 as subagent run 4d91ddb0-d4e4-4a23-9827-006f8c36785e and re-triggered xixi rescan as subagent run 18d814eb-d155-47ee-96ec-e69ae7588d72.",
   "diskFull": false,
   "subagentFailures": [
     {
@@ -32,7 +32,7 @@
       "issue": "#68838",
       "title": "followup drain queue identity race",
       "status": "in_progress",
-      "note": "Heartbeat re-dispatched stalled fix via subagent run f318ad63-0a9d-45e9-8cfe-afc57e1b05a3 at 2026-04-19T12:00:00Z."
+      "note": "Heartbeat re-dispatched stalled fix via subagent runs f318ad63-0a9d-45e9-8cfe-afc57e1b05a3 at 2026-04-19T12:00:00Z and 4d91ddb0-d4e4-4a23-9827-006f8c36785e at 2026-04-19T13:01:00Z."
     }
   ]
 }

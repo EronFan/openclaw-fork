@@ -6,6 +6,13 @@
 
 ---
 
+## 今夜推进更新（2026-04-19 21:01 CST）
+
+- heartbeat 检测到 OpenClaw 主线再次停滞：`currentIssue=#68838` 仍在推进列表里，但最近 2 小时没有活跃 subagent，且 `lastPrCreatedAt` 仍停在 2026-04-16 前后，已命中 action heartbeat 恢复条件。
+- 已直接重派 **aoao** 修复 `#68838 followup drain queue identity race`，本轮 runId：`4d91ddb0-d4e4-4a23-9827-006f8c36785e`。
+- 已直接重派 **xixi** 做新一轮高价值 issue/PR 复扫，原因是 `xixi-reports/latest-scan-report.md` 时间仍为 `2026-04-19 14:45 CST`，到当前 heartbeat 已超过 6 小时；本轮 runId：`18d814eb-d155-47ee-96ec-e69ae7588d72`。
+- 本轮 heartbeat 结论：`inProgressFixes` 继续聚焦 `#68838`，并同步触发 xixi rescan，避免主线空转。
+
 ## 🔄 明日(2026-03-27)启动检查清单
 
 如果你在 2026-03-27 读到这个文件,按以下顺序检查:
@@ -44,6 +51,10 @@
 | P60239 | [#67323](https://github.com/openclaw/openclaw/issues/67323) **🟠 S** MSTeams DM 消息重复（队列重放未去重） | 🔍 **新发现**(第134轮 02:15 CST) | MSTeams DM 每条消息在 agent session context 中出现两次（直接入站 + 队列重放）；队列重放逻辑未去重；**建议接单** |
 | P60240 | [#67288](https://github.com/openclaw/openclaw/issues/67288) **🟡 S** amazon-bedrock-mantle 缺少 config.discovery.enabled gate | 🔍 **新发现**(第134轮 02:15 CST) | amazon-bedrock-mantle 插件无 config.discovery.enabled 门控，导致不必要的 discovery 调用；4 行内可修；**建议接单** |
 | P60241 | [#67308](https://github.com/openclaw/openclaw/issues/67308) **🟡 M** Heartbeat 每天烧掉 3 亿 tokens（与 P60146/P46 合并追踪） | 🔍 **新发现**(第134轮 02:15 CST) | heartbeat:{} config 被忽略，每日 $6+ 成本；相关 P46 追踪 heartbeat:{} config 忽略问题；**合并追踪，建议 aoao 接单** |
+| P60242 | [#68931](https://github.com/openclaw/openclaw/issues/68931) **🔴 S regression** Webchat 用户消息发送后短暂出现又消失 | 🔍 **新发现**(方向1 GitHub 第135轮 20:37 CST) | 根因分析完整：`up()` 用服务端历史全量覆盖本地 `chatMessages`，与 `emitUserTranscriptUpdate()` 异步持久化形成 race；模型报错/重连时更容易触发；**用户会误以为消息没发出去，建议优先接单** |
+| P60243 | [#68944](https://github.com/openclaw/openclaw/issues/68944) **🟠 S** CLI 所有需 gateway 的命令卡死在 WebSocket handshake | 🔍 **新发现**(方向1 GitHub 第135轮 20:37 CST) | Windows Server 2022 + Node 24.13.1；CLI 收到 `connect.challenge` 但从不发 `connect.reply`，`sessions/cron/status/models/agents` 全挂；根因指向设备签名/握手回复路径静默失败；**建议接单** |
+| P60244 | [#68921](https://github.com/openclaw/openclaw/issues/68921) **🟠 S regression** browser `refs=aria` 依赖 Playwright 私有 `_snapshotForAI`，1.53+ 全部失效 | 🔍 **新发现**(方向1 GitHub 第135轮 20:37 CST) | `pw-ai-*` 仍调用已废弃私有 API；Playwright 1.59 下所有 `refs=aria` snapshot 直接报错，还误导用户“重启 gateway”；修复方向清晰：优先 `ariaSnapshot()`，兼容旧 `_snapshotForAI`；**建议接单** |
+| P60245 | [Tencent/openclaw-weixin #78](https://github.com/Tencent/openclaw-weixin/issues/78) **XS feature gap** 微信插件不支持发送原生语音消息（绿色语音条） | 🔍 **新发现**(方向2 插件 第135轮 20:37 CST) | issue 给出精确实现路径：`send-media.ts` 缺少 voice route，现有 API/types + silk 依赖都已具备；**非 bug，低优先级记录** |
 | P60220 | [Tencent/openclaw-weixin #70](https://github.com/Tencent/openclaw-weixin/issues/70) **S** IMA Knowledge Base 无法读取笔记内容 - 返回 210005 not author error | 🔍 **新发现**(方向2 插件 第133轮 01:11 CST) | 0评论；可能是 feishu wiki API 差异问题，与已追踪 feishu issue 同簇；**建议确认根因** |
 | P60146 | [#66522](https://github.com/openclaw/openclaw/issues/66522) **🔴 S** Session index 重启后重建，历史 session 全部消失（磁盘文件还在但索引丢失） | 🔍 待处理 | 磁盘文件存在但 sessions.json 索引丢失，数据丢失级别；**建议立即接单** |
 | P60147 | [#66936](https://github.com/openclaw/openclaw/issues/66936) **S** CLI: `openclaw agents list` fails with unresolved SecretRef; CLI process hangs after completion | 🔍 **新发现**(方向1 GitHub 第128轮 10:21 CST) | Bug1: buildProviderStatusIndex() 无法解析 SecretRef → agents list 失败；Bug2: 所有 agents 子命令完成后进程不退出（unclosed handles）；**根因清晰，建议接单** |

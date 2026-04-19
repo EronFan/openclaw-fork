@@ -1,0 +1,84 @@
+{
+  "Tencent/openclaw-weixin": {
+    "total_count": 1,
+    "incomplete_results": false,
+    "items": [
+      {
+        "url": "https://api.github.com/repos/Tencent/openclaw-weixin/issues/78",
+        "repository_url": "https://api.github.com/repos/Tencent/openclaw-weixin",
+        "labels_url": "https://api.github.com/repos/Tencent/openclaw-weixin/issues/78/labels{/name}",
+        "comments_url": "https://api.github.com/repos/Tencent/openclaw-weixin/issues/78/comments",
+        "events_url": "https://api.github.com/repos/Tencent/openclaw-weixin/issues/78/events",
+        "html_url": "https://github.com/Tencent/openclaw-weixin/issues/78",
+        "id": 4287809536,
+        "node_id": "I_kwDORyPHB87_ksgA",
+        "number": 78,
+        "title": "[Feature Request] 支持发送微信原生语音消息（绿色语音条）",
+        "user": {
+          "login": "manong-MAX",
+          "id": 266251028,
+          "node_id": "U_kgDOD96rFA",
+          "avatar_url": "https://avatars.githubusercontent.com/u/266251028?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/manong-MAX",
+          "html_url": "https://github.com/manong-MAX",
+          "followers_url": "https://api.github.com/users/manong-MAX/followers",
+          "following_url": "https://api.github.com/users/manong-MAX/following{/other_user}",
+          "gists_url": "https://api.github.com/users/manong-MAX/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/manong-MAX/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/manong-MAX/subscriptions",
+          "organizations_url": "https://api.github.com/users/manong-MAX/orgs",
+          "repos_url": "https://api.github.com/users/manong-MAX/repos",
+          "events_url": "https://api.github.com/users/manong-MAX/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/manong-MAX/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "labels": [],
+        "state": "open",
+        "locked": false,
+        "assignees": [],
+        "milestone": null,
+        "comments": 1,
+        "created_at": "2026-04-18T11:32:34Z",
+        "updated_at": "2026-04-19T10:48:43Z",
+        "closed_at": null,
+        "assignee": null,
+        "author_association": "NONE",
+        "type": null,
+        "active_lock_reason": null,
+        "sub_issues_summary": {
+          "total": 0,
+          "completed": 0,
+          "percent_completed": 0
+        },
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "total_blocked_by": 0,
+          "blocking": 0,
+          "total_blocking": 0
+        },
+        "body": "## 功能请求：支持发送微信原生语音消息（绿色语音条）\n\n### 背景\n当前版本（2.1.7）的 openclaw-weixin 插件发送音频时，会将音频作为**文件附件**发送，显示为蓝色进度条附件，而非微信原生语音消息（绿色语音条）。\n\n### 期望行为\n用户希望 AI 助手用 TTS（文字转语音）生成的语音，能够以**微信原生语音消息**的格式发送，显示为绿色进度条，可直接播放。\n\n### 技术分析\n根据插件源码 (src/api/types.ts)，API 已支持原生语音消息格式：\n- MessageItem.type = 3 (VOICE)\n- VoiceItem.encode_type = 6 (SILK)\n- 采样率：sample_rate = 24000\n- 需要先上传到 CDN，再发送\n\n但 send-media.ts 中所有非图片/视频的媒体都被路由到**文件附件**通道（sendFileMessageWeixin），缺少语音消息的发送路径。\n\n### 已有基础设施\n- silk-wasm npm 包已内置于插件依赖中，可用于 SILK 编码/解码\n- src/media/silk-transcode.ts 已实现 SILK → WAV 解码（用于接收语音）\n- edge-tts 可生成高质量中文 TTS\n\n### 建议实现方案\n1. 新增 sendVoiceMessageWeixin 函数，构造 VoiceItem 并通过 CDN 上传 SILK 数据\n2. 在 send-media.ts 中新增 MIME 类型路由：^Gudio/* → sendVoiceMessageWeixin\n3. 或新增 \u000boice 消息类型，与 \text、image、\u000bideo 并列\n\n### 参考\n- 插件版本：2.1.7\n- OpenClaw 版本：2026.4.15",
+        "reactions": {
+          "url": "https://api.github.com/repos/Tencent/openclaw-weixin/issues/78/reactions",
+          "total_count": 0,
+          "+1": 0,
+          "-1": 0,
+          "laugh": 0,
+          "hooray": 0,
+          "confused": 0,
+          "heart": 0,
+          "rocket": 0,
+          "eyes": 0
+        },
+        "timeline_url": "https://api.github.com/repos/Tencent/openclaw-weixin/issues/78/timeline",
+        "performed_via_github_app": null,
+        "state_reason": null,
+        "pinned_comment": null,
+        "score": 1.0
+      }
+    ],
+    "search_type": "lexical"
+  }
+}
