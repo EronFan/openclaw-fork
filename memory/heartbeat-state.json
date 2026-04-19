@@ -1,23 +1,23 @@
 {
-  "updatedAt": "2026-04-19T13:01:00Z",
-  "note": "Heartbeat resumed execution again after detecting new stall: #68838 had no active fix, and xixi scan exceeded the 6h rescan threshold, so both fix and scan were re-dispatched.",
+  "updatedAt": "2026-04-19T15:30:00Z",
+  "note": "Heartbeat detected idle OpenClaw execution again: there were no active/recent subagents, the prior focus issue #68838 was already covered by open PRs, and xixi's latest 21:30 CST scan surfaced a new uncovered top candidate, so the fix focus was switched and re-dispatched immediately.",
   "xixiLastScanAt": "2026-04-19T06:45:00Z",
-  "xixiScanSpawnedAt": "2026-04-19T13:01:00Z",
+  "xixiScanSpawnedAt": "2026-04-19T13:30:00Z",
   "xixiScriptMissing": false,
-  "currentIssue": "#68838",
-  "currentBranch": "fix/67084-session-timeout-oauth",
+  "currentIssue": "#68965",
+  "currentBranch": "fix/68965-models-replace-implicit-providers",
   "lastCommitAt": "2026-04-19T09:47:00Z",
   "lastPrCreatedAt": "2026-04-15T21:38:00Z",
-  "lastXixiScanAt": "2026-04-19T06:45:00Z",
-  "lastActionHeartbeatAt": "2026-04-19T13:01:00Z",
-  "lastActionHeartbeatResult": "Detected stalled OpenClaw work again: currentIssue #68838 still had no active fix, PR creation was idle, and xixi latest scan age exceeded 6h. Re-dispatched #68838 as subagent run 4d91ddb0-d4e4-4a23-9827-006f8c36785e and re-triggered xixi rescan as subagent run 18d814eb-d155-47ee-96ec-e69ae7588d72.",
+  "lastXixiScanAt": "2026-04-19T13:30:00Z",
+  "lastActionHeartbeatAt": "2026-04-19T15:30:00Z",
+  "lastActionHeartbeatResult": "Detected stalled OpenClaw work: there were no active or recent subagents in the last 120 minutes, previous focus issue #68838 was no longer the right heartbeat target because xixi latest scan showed it already covered by open PRs, and xixi's 21:30 CST report surfaced a new uncovered top candidate. Switched currentIssue to #68965 and dispatched aoao subagent run 3e36070c-9595-47ce-a102-e9c5a5ed369e to reproduce, fix, test, and prepare a PR.",
   "diskFull": false,
   "subagentFailures": [
     {
       "issue": "xixi-rescan",
-      "failCount": 1,
+      "failCount": 2,
       "firstFailedAt": "2026-04-18T15:16:00Z",
-      "note": "MiniMax rate limit and aigatehub 403 auth; recovered by rerunning on openai-codex/gpt-5.4"
+      "note": "Previous failure was MiniMax rate limit and aigatehub 403 auth; latest failure at 2026-04-19T13:06:00Z was API rate limit during xixi-rescan-2026-04-19-2101. Retry should use narrower incremental scan to reduce API load."
     }
   ],
   "subagentSuccesses": [
@@ -29,10 +29,10 @@
   ],
   "inProgressFixes": [
     {
-      "issue": "#68838",
-      "title": "followup drain queue identity race",
+      "issue": "#68965",
+      "title": "models.mode=replace still loads bundled implicit providers",
       "status": "in_progress",
-      "note": "Heartbeat re-dispatched stalled fix via subagent runs f318ad63-0a9d-45e9-8cfe-afc57e1b05a3 at 2026-04-19T12:00:00Z and 4d91ddb0-d4e4-4a23-9827-006f8c36785e at 2026-04-19T13:01:00Z."
+      "note": "Heartbeat switched focus to xixi latest top candidate and dispatched aoao via subagent run 3e36070c-9595-47ce-a102-e9c5a5ed369e at 2026-04-19T15:30:00Z to reproduce, fix, test, and prepare a PR. Previous issue #68838 was removed from active focus because xixi latest scan reported open PR coverage."
     }
   ]
 }

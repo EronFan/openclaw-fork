@@ -6,6 +6,20 @@
 
 ---
 
+## 今夜推进更新（2026-04-19 23:30 CST）
+
+- heartbeat 检测确认：最近 120 分钟 **无 active / recent subagent**，主线已再次空转；上一轮焦点 `#68838` 不再适合作为 heartbeat 续跑目标，因为 xixi 21:30 CST 增量复扫已明确其存在 open PR 覆盖（`#68908`，更早还有 `#68839`）。
+- xixi 最新扫描报告时间为 **2026-04-19 21:30 CST**，未超过重扫阈值，但已经给出新的未覆盖 Top Candidate：`#68965 > #67441 > #64947`。
+- 已按 action heartbeat 规则直接切换当前修复焦点到 **#68965**（`models.mode=replace` 仍错误加载 bundled implicit providers），并派出 **aoao** 处理，runId：`3e36070c-9595-47ce-a102-e9c5a5ed369e`。
+- 本轮 heartbeat 结论：`inProgressFixes` 已从 `#68838` 切到 `#68965`，避免继续在已被 PR 覆盖的问题上空转。
+
+## 今夜推进更新（2026-04-19 21:03 CST）
+
+- cron 反馈检查确认：`#54952`、`#54964` 仍是 0 comments，无新反馈；`#55008` 仍停在 5 comments、最后更新 `2026-03-30T01:23:46Z`；`#55013` 仍停在 2 comments、最后更新 `2026-04-06T11:54:11Z`。本轮 **无新的主人关注级 feedback**。
+- xixi 最新扫描报告已确认是**全新报告**（相对 `last-processed-report.md` 的旧结论已变更），当前 Top Candidate 已切到：`#68931` > `#68944` > `#68921`。
+- 已按规则直接派出 **aoao** 处理 `#68931 Webchat 用户消息发送后短暂出现又消失`，runId：`538fa60b-a02d-4824-b525-53485171bd8a`。
+- 当前优先级表已包含 `#68931`、`#68944`、`#68921` 与插件候选 `openclaw-weixin #78`，本轮无需重复改表，仅补充处理记录。
+
 ## 今夜推进更新（2026-04-19 21:01 CST）
 
 - heartbeat 检测到 OpenClaw 主线再次停滞：`currentIssue=#68838` 仍在推进列表里，但最近 2 小时没有活跃 subagent，且 `lastPrCreatedAt` 仍停在 2026-04-16 前后，已命中 action heartbeat 恢复条件。
@@ -7050,4 +7064,6 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 - 2026-04-19 18:23 CST：继续推进 heartbeat 机制升级。已将 `HEARTBEAT.md` 从“被动巡检”升级为 **action heartbeat** 规则：新增 OpenClaw 项目停滞监控，要求每次 heartbeat 必查 `currentIssue / currentBranch / lastCommitAt / lastPrCreatedAt / lastXixiScanAt / inProgressFixes`，命中停滞阈值（45 分钟无 commit、2 小时无 PR 且无 active fix、xixi 新候选无人接单等）后必须直接恢复执行，而不是只汇报。同步重写 `memory/heartbeat-state.json` 基线字段，当前主线 `currentIssue` 设为 `#68838`，为下一轮自动续跑做准备。
 
 - 2026-04-19 20:00 CST：按范总指令开始彻底清除 `aigatehub`。已定位根因在 `/root/.openclaw/openclaw.json`：`models.providers.aigatehub` 残留、`agents.defaults.model.primary = aigatehub/gpt-5`、`main.model = aigatehub/gpt-5`，导致 cron/job 即使写了 default，运行时仍落回坏 fallback。已删除 `aigatehub` provider，改默认主模型为 `openai-codex/gpt-5.4`，fallback 改为 `minimax/MiniMax-M2.5`，heartbeat 默认模型改为 `openai-codex/gpt-5.4`，并把关键 cron（心跳维护 / 反馈检查 / xixi 全量扫描）显式改绑 `openai-codex/gpt-5.4`。已执行 `openclaw cron run 876c182c-a702-4cab-be21-9ab43c2c652c --expect-final`，结果至少确认手动 run 成功入队，说明心跳任务已不再卡在旧 aigatehub fallback 上。
-- 2026-04-19 20:34 CST：继续处理 `#68838`（auto-reply followup queue identity race）。已在 `src/auto-reply/reply/queue/drain.ts` 的 finally 分支加入 identity guard：仅当 `FOLLOWUP_QUEUES.get(key) === queue` 时才删除 map entry / clear callback，避免旧 drain 在 `/stop`/clear 后误删新队列。已补测试 `src/auto-reply/reply/queue.drain-restart.test.ts`，覆盖“旧 drain 结束时不删除 replacement queue” 场景；窄测 `pnpm test src/auto-reply/reply/queue.drain-restart.test.ts` 已通过。
+- 2026-04-19 20:34 CST：继续处理 `#68838`（auto-reply followup queue identity race）。已在 `src/auto-reply/reply/queue/drain.ts` 的 finally 分支加入 identity guard：仅当 `FOLLOWUP_QUEUES.get(key) === queue` 时才删除 map entry / clear callback，避免旧 drain 在 `/stop`/clear 后误删新队列。已补测试 `src/auto-reply/reply/queue.drain-restart.test.ts`，覆盖“旧 drain 结束时不删除 replacement queue” 场景；窄测 `pnpm test src/auto-reply/reply/queue.drain-restart.test.ts` 已通过.
+
+- 2026-04-19 21:30 CST：action heartbeat 再次触发停滞恢复。检查结果：`memory/heartbeat-state.json` 里的 `currentIssue` 仍为 `#68838`，但最近 120 分钟无 active subagent，`lastCommitAt=2026-04-19T09:47:00Z` 已超过 45 分钟阈值，`lastPrCreatedAt=2026-04-15T21:38:00Z` 也远超 2 小时阈值；同时 `xixi-reports/latest-scan-report.md` 最新扫描时间仍是 `2026-04-19 14:45 CST`，已超过 6 小时复扫阈值。heartbeat 已直接重派两个动作：1) issue `#68838` 修复 run `d1f3d09f-9ecf-42f9-b7e8-35df68ecbdbc`；2) 增量 xixi 复扫 run `1dcb620e-ab03-4e0b-928a-46b9b612af91`。当前 `inProgressFixes` 维持 `#68838`，等待两个子任务回传结果后继续推进/更新 PR 队列。
