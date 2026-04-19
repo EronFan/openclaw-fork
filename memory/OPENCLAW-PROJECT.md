@@ -7025,3 +7025,5 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 
 
 - 2026-04-19 11:43 CST：main 接单处理 #68587。定位结果：问题不是 SDK 把 `tools/list` request 错发成 notification，而是 `openclaw mcp serve` 当前默认启动的是 channels bridge，和标准 MCP tool server 预期不一致。已落地修复：为 `mcp serve` 增加 `--bridge tools|channels`，其中 `--bridge tools` 直接启动 `servePluginToolsMcp()`；已补 CLI 测试覆盖两条路径，`pnpm test src/cli/mcp-cli.test.ts src/mcp/plugin-tools-serve.test.ts` 通过。后续可继续补默认行为/帮助文案或提交 issue comment 纠偏。
+
+- 2026-04-19 14:40 CST：main 继续推进，已着手修 #68610（openclaw update 后运行中的 gateway 因 stale ESM chunk 路径崩溃）。定位到现有 update 流程虽会执行 restart helper，但 macOS launchd 脚本是“先 kickstart，失败再 bootstrap”，不足以在 npm 更新后强制刷新 LaunchAgent 对应 entrypoint。已改为：先 `launchctl enable` + best-effort `bootstrap` 刷新服务定义，再 `kickstart -k`；失败时再二次 bootstrap + kickstart 兜底。已补 `src/cli/update-cli/restart-helper.test.ts` 断言并通过 `pnpm test src/cli/update-cli/restart-helper.test.ts src/cli/update-cli.test.ts`（66 passed）。xixi 复扫子任务已重新派出，等待回传。
