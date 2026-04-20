@@ -81,6 +81,7 @@
 | P60194 | [方向4 第133轮 20:26 CST] 已追踪 PR 暂无 maintainer 新评论；heartbeat-state 中 inProgressFixes = #69214(PR#16)、#67252(PR#17) 均未见新状态变化 | 👀 **状态检查** | `OPENCLAW-PROJECT.md` 已追踪 openclaw/openclaw issue/PR 在最近 2 小时无新增状态跳变；当前追踪项整体**无**新反馈 |
 | P60195 | [xixi 2026-04-20 21:00 CST] 新一轮扫描已完成：发现 #69300/#69296/#69294/#69286/#69289 等 S 级新问题，其中 #69296、#69300 已派出 subagent；未见 xixi 掉线 | ✅ **扫描正常** | `xixi-reports/latest-scan-report.md` 已更新至 2026-04-20 21:00 CST；当前需继续跟进已派出的 fix-69296 / fix-69300，其他高优先级候选待后续分派 |
 | P60196 | [heartbeat 2026-04-20 21:11 CST] subagent 状态检查：fix-69296、fix-69300 均仍在运行，最近 2 小时无 failed/done 记录 | ✅ **heartbeat 已检查** | `subagents(action=list, recentMinutes=120)` 返回 2 个 running、0 个 failed、0 个 done；本轮无需失败重试，继续观察 |
+| P60197 | [heartbeat 2026-04-20 21:25 CST] xixi 高优先级建议跟进：#69294（ACP plugin crashes gateway on Windows 11）已派 aoao 快速研判 | 🔥 **aoao 已派出**(runId f6ab5330) | 依据 `xixi-reports/latest-scan-report.md` 的未处理 S 级建议，已立即派出 `aoao-fix-69294-from-heartbeat` 做根因确认与可修复性评估；等待回传结论 |
 
 | P60154 | [方向4] #66697 config.get 安全漏洞 - **已关闭**，需确认是否修正后 reopen | 👀 **状态变化**(方向4 第128轮 10:21 CST) | Codex 指出 sourceConfig/runtimeConfig 映射错误；**需确认修正方案** |
 
