@@ -89,6 +89,7 @@
 | P60203 | [方向4 第134轮 21:37 CST] 已追踪 upstream PR 暂无 maintainer 新评论；heartbeat-state 中 `#69296` 仍 running，`#69300` 的 fork PR#18 无 upstream 新状态 | 👀 **状态检查** | 本轮扫描窗口内未发现 `OPENCLAW-PROJECT.md` 已追踪 upstream PR/issue 的新人工 maintainer 反馈；当前仍以跟进运行中 fix 为主 |
 | P60204 | [cron 2026-04-20 21:41 CST] 反馈检查 + xixi 新报告处理完成 | ✅ **已处理** | `gh api` 确认 #54952 / #54964 仍是 0 comments，PR #55008 / #55013 无新反馈，当前**无需要主人关注的新反馈**；xixi 21:37 CST 新报告已处理，已派 aoao 修复 #69343（runId 3096138c），`last-processed-report.md` 已更新 |
 | P60205 | [heartbeat 2026-04-20 22:15 CST] subagent / xixi 状态复检：最近 2 小时无 subagent failed/done，xixi 21:00 CST 扫描仍在 3 小时阈值内 | ✅ **heartbeat 已检查** | `subagents(action=list, recentMinutes=120)` 返回 active/recent 均为空；`xixi-reports/latest-scan-report.md` 仍为 2026-04-20 21:00 CST，`OPENCLAW-PROJECT.md` 中最近 xixi 记录已处理且暂无新的未处理高优建议；本轮无须重试或派单 |
+| P60206 | [heartbeat 2026-04-20 22:39 CST] subagent / xixi 状态复检：最近 2 小时无 subagent failed/done，xixi 21:00 CST 扫描仍在 3 小时阈值内 | ✅ **heartbeat 已检查** | `subagents(action=list, recentMinutes=120)` 返回 active/recent 均为空；`xixi-reports/latest-scan-report.md` 仍为 2026-04-20 21:00 CST，`OPENCLAW-PROJECT.md` 中最近 xixi 记录已处理且暂无新的未处理高优建议；本轮无须重试或派单 |
 
 | P60154 | [方向4] #66697 config.get 安全漏洞 - **已关闭**，需确认是否修正后 reopen | 👀 **状态变化**(方向4 第128轮 10:21 CST) | Codex 指出 sourceConfig/runtimeConfig 映射错误；**需确认修正方案** |
 
