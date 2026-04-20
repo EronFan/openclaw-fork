@@ -48,12 +48,17 @@ const loadedAuthStoreCache = new Map<
   }
 >();
 
-function resolveRuntimeStoreKey(agentDir?: string): string {
-  return resolveAuthStorePath(agentDir);
-}
-
 function cloneAuthProfileStore(store: AuthProfileStore): AuthProfileStore {
   return structuredClone(store);
+}
+
+// Snapshot key is the raw agentDir value (undefined for main agent, or the
+// original agentDir string path). We do NOT resolve through
+// resolveAuthStorePath because that would make main and a sub-agent collide
+// when OPENCLAW_AGENT_DIR is set to the sub-agent's dir (both resolve to the
+// same path), causing the sub-agent to incorrectly receive main's auth store.
+function runtimeSnapshotKey(agentDir?: string): string {
+  return agentDir ?? "__main__";
 }
 
 function resolveRuntimeAuthProfileStore(agentDir?: string): AuthProfileStore | null {
@@ -61,11 +66,12 @@ function resolveRuntimeAuthProfileStore(agentDir?: string): AuthProfileStore | n
     return null;
   }
 
-  const mainKey = resolveRuntimeStoreKey(undefined);
-  const requestedKey = resolveRuntimeStoreKey(agentDir);
+  const mainKey = runtimeSnapshotKey(undefined);
+  const requestedKey = runtimeSnapshotKey(agentDir);
   const mainStore = runtimeAuthStoreSnapshots.get(mainKey);
   const requestedStore = runtimeAuthStoreSnapshots.get(requestedKey);
 
+  // When agentDir is undefined (main) or both keys are the same, return main store only.
   if (!agentDir || requestedKey === mainKey) {
     if (!mainStore) {
       return null;
@@ -103,7 +109,7 @@ export function replaceRuntimeAuthProfileStoreSnapshots(
   runtimeAuthStoreSnapshots.clear();
   for (const entry of entries) {
     runtimeAuthStoreSnapshots.set(
-      resolveRuntimeStoreKey(entry.agentDir),
+      runtimeSnapshotKey(entry.agentDir),
       cloneAuthProfileStore(entry.store),
     );
   }
@@ -413,7 +419,7 @@ export function saveAuthProfileStore(
 ): void {
   const authPath = resolveAuthStorePath(agentDir);
   const statePath = resolveAuthStatePath(agentDir);
-  const runtimeKey = resolveRuntimeStoreKey(agentDir);
+  const runtimeKey = runtimeSnapshotKey(agentDir);
   const payload = buildPersistedAuthProfileSecretsStore(store, ({ profileId, credential }) => {
     if (credential.type !== "oauth") {
       return true;
