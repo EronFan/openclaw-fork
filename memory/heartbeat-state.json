@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-04-20T13:32:35Z",
-  "note": "PR #16 for #69214, PR #17 for #67252 (feishu docx pagination). Both targeting main. #67247 (Telegram command menu regression) needs deeper investigation.",
+  "updatedAt": "2026-04-20T13:33:00Z",
+  "note": "aoao-fix-69294 #69294 完成，fix-69296-acp-client-hang-v2 仍在运行。PR #16 for #69214, PR #17 for #67252 (feishu docx pagination). Both targeting main.",
   "inProgressFixes": [
     {
       "issue": 69214,
@@ -13,12 +13,17 @@
       "pr": 17,
       "status": "open",
       "desc": "feishu clearDocumentContent pagination"
+    },
+    {
+      "issue": 69296,
+      "status": "running",
+      "desc": "ACP client hangs on slash commands regression 2026.4.15"
     }
   ],
   "xixiLastScanAt": "2026-04-20T13:00:00Z",
   "xixiScanReportMtime": "2026-04-20T21:00:00+08:00",
   "currentIssue": "67247",
-  "lastCommitAt": "2026-04-20T19:19:00+08:00",
+  "lastCommitAt": "2026-04-20T13:32:00+08:00",
   "lastPrCreatedAt": "2026-04-20T18:33:00Z",
   "cronJobsInError": [
     {
@@ -59,17 +64,17 @@
       "sessionKey": "agent:main:subagent:77877b53-2f20-4c92-8433-ec514beb8191",
       "runId": "f4000cba-3b69-4a36-a517-44e35b34cdda",
       "recordedAt": "2026-04-20T13:26:00Z"
-    }
-  ],
-  "lastXixiCheckAt": "2026-04-20T13:32:35Z",
-  "pendingXixiSuggestions": [
+    },
     {
+      "label": "aoao-fix-69294-from-heartbeat",
+      "sessionKey": "agent:aoao:subagent:ef0efa7d-d6d5-4584-a115-18e1c22ec12f",
+      "runId": "f6ab5330-9356-436b-891c-b23a4c81e010",
       "issue": 69294,
-      "priority": "high",
-      "status": "assigned_to_aoao",
-      "assignedRunId": "f6ab5330-9356-436b-891c-b23a4c81e010",
-      "recordedAt": "2026-04-20T13:25:00Z"
+      "desc": "ACP plugin crashes gateway on Windows 11 - acpx startup probe skip on win32",
+      "recordedAt": "2026-04-20T13:33:00Z"
     }
   ],
-  "lastHeartbeatWindow": "2026-04-20T13:32:35Z"
+  "lastXixiCheckAt": "2026-04-20T13:33:00Z",
+  "pendingXixiSuggestions": [],
+  "lastHeartbeatWindow": "2026-04-20T13:33:00Z"
 }
