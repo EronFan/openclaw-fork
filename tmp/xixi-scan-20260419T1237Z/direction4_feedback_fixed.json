@@ -1,0 +1,546 @@
+{
+  "prs": [
+    {
+      "number": 56203,
+      "title": "fix(sessions_send): prefer sessionKey over label when both are present (AI-assisted)",
+      "state": "open",
+      "updated_at": "2026-03-29T16:57:24Z",
+      "mergeable": false,
+      "latest_comment_author": "EronFan",
+      "latest_comment_at": "2026-03-28T07:14:06Z",
+      "latest_review_author": "greptile-apps[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-03-28T05:43:20Z"
+    },
+    {
+      "number": 56234,
+      "title": "fix(security): extend audit to flag dmPolicy=open and session.dmScope=main (#55612, #55578)",
+      "state": "closed",
+      "updated_at": "2026-03-28T07:22:00Z",
+      "mergeable": null,
+      "latest_comment_author": "ninglinLiu",
+      "latest_comment_at": "2026-03-28T07:21:23Z",
+      "latest_review_author": "chatgpt-codex-connector[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-03-28T06:46:02Z"
+    },
+    {
+      "number": 61090,
+      "title": "fix(skills): exclude .git and node_modules when copying skills to workspace",
+      "state": "closed",
+      "updated_at": "2026-04-05T03:13:10Z",
+      "mergeable": null,
+      "latest_comment_author": "obviyus",
+      "latest_comment_at": "2026-04-05T03:13:10Z",
+      "latest_review_author": "obviyus",
+      "latest_review_state": "APPROVED",
+      "latest_review_at": "2026-04-05T03:12:56Z"
+    },
+    {
+      "number": 62734,
+      "title": "fix: revert channels/ids to leaf module to prevent ERR_INTERNAL_ASSERTION",
+      "state": "closed",
+      "updated_at": "2026-04-07T22:35:00Z",
+      "mergeable": null,
+      "latest_comment_author": "greptile-apps[bot]",
+      "latest_comment_at": "2026-04-07T22:34:55Z",
+      "latest_review_author": "greptile-apps[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-07T22:35:00Z"
+    },
+    {
+      "number": 62866,
+      "title": "fix: use curl instead of node -e fetch in HEALTHCHECK",
+      "state": "closed",
+      "updated_at": "2026-04-08T03:03:19Z",
+      "mergeable": null,
+      "latest_comment_author": "greptile-apps[bot]",
+      "latest_comment_at": "2026-04-08T03:03:19Z",
+      "latest_review_author": null,
+      "latest_review_state": null,
+      "latest_review_at": null
+    },
+    {
+      "number": 64657,
+      "title": "Slack: route subagent completion messages to originating thread",
+      "state": "closed",
+      "updated_at": "2026-04-14T15:57:38Z",
+      "mergeable": null,
+      "latest_comment_author": "jaredar1232",
+      "latest_comment_at": "2026-04-14T15:57:37Z",
+      "latest_review_author": "jaredar1232",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-13T03:20:21Z"
+    },
+    {
+      "number": 64681,
+      "title": "test(qa): (GPT 5.4 Parity vs. Opus Agentic) gate parity prose scenarios on real tool calls",
+      "state": "closed",
+      "updated_at": "2026-04-12T06:56:50Z",
+      "mergeable": null,
+      "latest_comment_author": "100yenadmin",
+      "latest_comment_at": "2026-04-12T06:56:49Z",
+      "latest_review_author": "100yenadmin",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-11T12:14:40Z"
+    },
+    {
+      "number": 65012,
+      "title": "fix(memory-wiki): pass app config into CLI metadata registrar",
+      "state": "closed",
+      "updated_at": "2026-04-12T16:30:55Z",
+      "mergeable": null,
+      "latest_comment_author": "vincentkoc",
+      "latest_comment_at": "2026-04-12T15:48:29Z",
+      "latest_review_author": "leonardsellem",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-12T09:58:06Z"
+    },
+    {
+      "number": 65016,
+      "title": "Fix/cron announce no reply",
+      "state": "closed",
+      "updated_at": "2026-04-16T16:07:20Z",
+      "mergeable": null,
+      "latest_comment_author": "obviyus",
+      "latest_comment_at": "2026-04-16T16:07:20Z",
+      "latest_review_author": "chatgpt-codex-connector[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-15T23:16:24Z"
+    },
+    {
+      "number": 65021,
+      "title": "fix(telegram): enable interrupt/steer message delivery during active runs",
+      "state": "closed",
+      "updated_at": "2026-04-12T07:06:47Z",
+      "mergeable": null,
+      "latest_comment_author": "jetd1",
+      "latest_comment_at": "2026-04-12T07:06:47Z",
+      "latest_review_author": "jetd1",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-12T03:07:28Z"
+    },
+    {
+      "number": 65144,
+      "title": "fix(gateway): generate synthetic error text on context overflow with zero payloads",
+      "state": "closed",
+      "updated_at": "2026-04-12T03:47:08Z",
+      "mergeable": false,
+      "latest_comment_author": "greptile-apps[bot]",
+      "latest_comment_at": "2026-04-12T03:47:08Z",
+      "latest_review_author": "greptile-apps[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-12T03:47:07Z"
+    },
+    {
+      "number": 65146,
+      "title": "fix(gmail): set stopped=true on addressInUse to prevent duplicate watcher restart",
+      "state": "closed",
+      "updated_at": "2026-04-12T03:46:43Z",
+      "mergeable": false,
+      "latest_comment_author": "greptile-apps[bot]",
+      "latest_comment_at": "2026-04-12T03:46:43Z",
+      "latest_review_author": "chatgpt-codex-connector[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-12T03:43:25Z"
+    },
+    {
+      "number": 66653,
+      "title": "fix(telegram): add null safety to .trim() calls in setup flow",
+      "state": "open",
+      "updated_at": "2026-04-14T16:06:43Z",
+      "mergeable": true,
+      "latest_comment_author": "greptile-apps[bot]",
+      "latest_comment_at": "2026-04-14T16:06:39Z",
+      "latest_review_author": "greptile-apps[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-14T16:06:43Z"
+    },
+    {
+      "number": 66663,
+      "title": "fix: filter binary content from Telegram captions to prevent token explosion",
+      "state": "closed",
+      "updated_at": "2026-04-14T16:50:43Z",
+      "mergeable": null,
+      "latest_comment_author": "aisle-research-bot[bot]",
+      "latest_comment_at": "2026-04-14T16:50:43Z",
+      "latest_review_author": "obviyus",
+      "latest_review_state": "APPROVED",
+      "latest_review_at": "2026-04-14T16:44:49Z"
+    },
+    {
+      "number": 66680,
+      "title": "fix: remove info.id mismatch validation in context engine registry",
+      "state": "closed",
+      "updated_at": "2026-04-14T16:56:32Z",
+      "mergeable": null,
+      "latest_comment_author": "GodsBoy",
+      "latest_comment_at": "2026-04-14T16:56:32Z",
+      "latest_review_author": "chatgpt-codex-connector[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-14T16:53:07Z"
+    },
+    {
+      "number": 66689,
+      "title": "fix: allow workspace-rooted absolute media paths in auto-reply",
+      "state": "closed",
+      "updated_at": "2026-04-14T21:07:38Z",
+      "mergeable": null,
+      "latest_comment_author": "gumadeiras",
+      "latest_comment_at": "2026-04-14T21:04:35Z",
+      "latest_review_author": "chatgpt-codex-connector[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-14T20:27:46Z"
+    },
+    {
+      "number": 66692,
+      "title": "fix(audio): restore allowPrivateNetwork for self-hosted STT endpoints (v2026.4.14 regression)",
+      "state": "closed",
+      "updated_at": "2026-04-15T02:36:02Z",
+      "mergeable": null,
+      "latest_comment_author": "obviyus",
+      "latest_comment_at": "2026-04-15T02:36:02Z",
+      "latest_review_author": "obviyus",
+      "latest_review_state": "APPROVED",
+      "latest_review_at": "2026-04-15T02:35:36Z"
+    },
+    {
+      "number": 66697,
+      "title": "fix(config): correct sourceConfig/runtimeConfig assignment in redactConfigSnapshot",
+      "state": "closed",
+      "updated_at": "2026-04-14T17:22:28Z",
+      "mergeable": null,
+      "latest_comment_author": "greptile-apps[bot]",
+      "latest_comment_at": "2026-04-14T17:22:28Z",
+      "latest_review_author": "chatgpt-codex-connector[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-14T17:21:56Z"
+    },
+    {
+      "number": 66698,
+      "title": "fix(feishu): handle undefined content in @mention-only messages",
+      "state": "closed",
+      "updated_at": "2026-04-14T17:21:25Z",
+      "mergeable": null,
+      "latest_comment_author": "greptile-apps[bot]",
+      "latest_comment_at": "2026-04-14T17:21:20Z",
+      "latest_review_author": "greptile-apps[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-14T17:21:24Z"
+    },
+    {
+      "number": 66703,
+      "title": "fix(webchat): render user message image attachments from MediaPath/MediaPaths",
+      "state": "closed",
+      "updated_at": "2026-04-14T17:31:33Z",
+      "mergeable": null,
+      "latest_comment_author": "greptile-apps[bot]",
+      "latest_comment_at": "2026-04-14T17:30:28Z",
+      "latest_review_author": "chatgpt-codex-connector[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-14T17:31:33Z"
+    },
+    {
+      "number": 66704,
+      "title": "fix(plugins): delete files for path-based installs where installPath != sourcePath",
+      "state": "closed",
+      "updated_at": "2026-04-14T17:37:45Z",
+      "mergeable": null,
+      "latest_comment_author": "greptile-apps[bot]",
+      "latest_comment_at": "2026-04-14T17:37:45Z",
+      "latest_review_author": "chatgpt-codex-connector[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-14T17:31:53Z"
+    },
+    {
+      "number": 66930,
+      "title": "fix(context-engine): gracefully degrade to legacy engine on third-party plugin resolution failure",
+      "state": "closed",
+      "updated_at": "2026-04-15T07:02:43Z",
+      "mergeable": null,
+      "latest_comment_author": "openperf",
+      "latest_comment_at": "2026-04-15T06:59:41Z",
+      "latest_review_author": "chatgpt-codex-connector[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-15T06:57:37Z"
+    },
+    {
+      "number": 67277,
+      "title": "fix(context-window): Tighten context limits and bound memory excerpts",
+      "state": "closed",
+      "updated_at": "2026-04-15T18:07:20Z",
+      "mergeable": null,
+      "latest_comment_author": "Takhoffman",
+      "latest_comment_at": "2026-04-15T16:33:01Z",
+      "latest_review_author": "Takhoffman",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-15T16:56:11Z"
+    },
+    {
+      "number": 67279,
+      "title": "fix(whatsapp): harden creds saves during reconnects",
+      "state": "open",
+      "updated_at": "2026-04-15T16:23:06Z",
+      "mergeable": false,
+      "latest_comment_author": "greptile-apps[bot]",
+      "latest_comment_at": "2026-04-15T16:10:23Z",
+      "latest_review_author": "greptile-apps[bot]",
+      "latest_review_state": "COMMENTED",
+      "latest_review_at": "2026-04-15T16:10:27Z"
+    },
+    {
+      "number": 67281,
+      "title": "fix: dedupe replayed exec.finished node events",
+      "state": "closed",
+      "updated_at": "2026-04-15T20:06:22Z",
+      "mergeable": null,
+      "latest_comment_author": "greptile-apps[bot]",
+      "latest_comment_at": "2026-04-15T16:35:53Z",
+      "latest_review_author": null,
+      "latest_review_state": null,
+      "latest_review_at": null
+    }
+  ],
+  "issues": [
+    {
+      "number": 31583,
+      "title": "[Bug]: `exec` tool does not inherit `skills.entries.*.env` environment variables",
+      "state": "open",
+      "updated_at": "2026-04-13T08:35:20Z",
+      "comments": 9
+    },
+    {
+      "number": 43767,
+      "title": "[Bug]: Heartbeat ignores lightContext: true, loads full agent context + unbounded session history",
+      "state": "open",
+      "updated_at": "2026-04-14T06:52:29Z",
+      "comments": 4
+    },
+    {
+      "number": 55679,
+      "title": "[Bug]: memoryFlush never triggers — token projection underestimates by ignoring output tokens",
+      "state": "open",
+      "updated_at": "2026-03-27T08:47:48Z",
+      "comments": 0
+    },
+    {
+      "number": 56173,
+      "title": "[Security]: /pair approve bypasses admin scope guard via plugin command path",
+      "state": "open",
+      "updated_at": "2026-03-28T04:44:57Z",
+      "comments": 0
+    },
+    {
+      "number": 57157,
+      "title": "[Bug] /summary command hardcodes qwen3.3-30B as default model, cannot be configured via openclaw.json",
+      "state": "open",
+      "updated_at": "2026-03-29T16:32:57Z",
+      "comments": 0
+    },
+    {
+      "number": 57186,
+      "title": "voice-call: EADDRINUSE on port 3334 — tool/CLI tries to start webhook server already owned by gateway",
+      "state": "open",
+      "updated_at": "2026-03-29T17:10:39Z",
+      "comments": 0
+    },
+    {
+      "number": 57188,
+      "title": "[Bug]: 2026.3.28 update breaks gateway on Linux VPS/systemd — recovery fails, required snapshot restore",
+      "state": "open",
+      "updated_at": "2026-03-30T11:54:38Z",
+      "comments": 1
+    },
+    {
+      "number": 57973,
+      "title": "[Bug]: edit tool 100% failure in 2026.3.30 — CLAUDE_PARAM_GROUPS.edit validation rejects edits[] array format",
+      "state": "open",
+      "updated_at": "2026-04-02T08:24:36Z",
+      "comments": 3
+    },
+    {
+      "number": 57974,
+      "title": "control-ui sessions.list polling saturates gateway with many conversations",
+      "state": "open",
+      "updated_at": "2026-03-30T22:53:51Z",
+      "comments": 0
+    },
+    {
+      "number": 57975,
+      "title": "[Bug]: The search for the AI ​​is not working, it does not search",
+      "state": "open",
+      "updated_at": "2026-03-30T22:54:42Z",
+      "comments": 0
+    },
+    {
+      "number": 57981,
+      "title": "[Bug]: xAI/openai-responses crashes with 422 when tool results include image blocks from read(image)",
+      "state": "closed",
+      "updated_at": "2026-04-03T04:14:25Z",
+      "comments": 1
+    },
+    {
+      "number": 57988,
+      "title": "Bug: Heartbeat read tool called without path",
+      "state": "open",
+      "updated_at": "2026-04-01T09:38:46Z",
+      "comments": 1
+    },
+    {
+      "number": 57989,
+      "title": "Bug: WhatsApp linked device does not receive group messages (DMs work fine)",
+      "state": "closed",
+      "updated_at": "2026-04-03T04:14:26Z",
+      "comments": 1
+    },
+    {
+      "number": 57994,
+      "title": "[Bug]: browser.request unknown method — browser plugin loads but method never registers",
+      "state": "open",
+      "updated_at": "2026-04-02T16:26:50Z",
+      "comments": 2
+    },
+    {
+      "number": 58006,
+      "title": "[Bug] inconsistent file visibility across tools",
+      "state": "closed",
+      "updated_at": "2026-04-03T04:13:59Z",
+      "comments": 4
+    },
+    {
+      "number": 59796,
+      "title": "[Bug]: The command openclaw logs --follow is failing. Could you please help me check what's wrong?",
+      "state": "open",
+      "updated_at": "2026-04-05T07:02:35Z",
+      "comments": 2
+    },
+    {
+      "number": 59850,
+      "title": "[Bug] grammy module not installed causes ERR_MODULE_NOT_FOUND for all users regardless of Telegram usage",
+      "state": "open",
+      "updated_at": "2026-04-05T07:58:41Z",
+      "comments": 5
+    },
+    {
+      "number": 60921,
+      "title": "[Bug] Isolated cron session delivery fails with 'Channel is required' even when delivery.channel is explicitly set",
+      "state": "open",
+      "updated_at": "2026-04-04T15:25:49Z",
+      "comments": 0
+    },
+    {
+      "number": 60926,
+      "title": "[Bug]: Heartbeat injects into active sub-agent sessions, terminating them with HEARTBEAT_OK",
+      "state": "open",
+      "updated_at": "2026-04-07T04:38:42Z",
+      "comments": 1
+    },
+    {
+      "number": 60930,
+      "title": "[Bug]: Control UI / WebChat local websocket disconnects with code=1001 during long-running tasks; reconnect recovers via chat.history instead of stable live updates",
+      "state": "open",
+      "updated_at": "2026-04-04T15:50:12Z",
+      "comments": 0
+    },
+    {
+      "number": 60936,
+      "title": "Beta blocker: voice-call - plugin loaded before OpenAI realtime transcription provider",
+      "state": "closed",
+      "updated_at": "2026-04-08T04:16:35Z",
+      "comments": 0
+    },
+    {
+      "number": 60959,
+      "title": "[Bug]: Google image generation returns HTTP 404 when provider baseUrl includes /openai suffix",
+      "state": "open",
+      "updated_at": "2026-04-04T16:43:17Z",
+      "comments": 0
+    },
+    {
+      "number": 60961,
+      "title": "[Bug]: OpenShell mirror mode write tool fails with \"tar: <dir>: Cannot open: File exists\" when writing file into existing subdirectory",
+      "state": "open",
+      "updated_at": "2026-04-04T16:46:48Z",
+      "comments": 0
+    },
+    {
+      "number": 60963,
+      "title": "[Bug]: plugins.entries.<id>.<config-key> rejected as unrecognized key — plugin config must nest under .config but this is undocumented",
+      "state": "open",
+      "updated_at": "2026-04-04T16:47:10Z",
+      "comments": 0
+    },
+    {
+      "number": 60970,
+      "title": "[Bug]: acpx 0.4.x — Silent Session Creation Failure",
+      "state": "closed",
+      "updated_at": "2026-04-14T04:20:15Z",
+      "comments": 0
+    }
+  ],
+  "weixin_issues": [
+    {
+      "number": 50,
+      "title": "openclaw 定时推送无法在微信触发",
+      "state": "open",
+      "updated_at": "2026-04-15T09:02:46Z",
+      "comments": 3
+    },
+    {
+      "number": 52,
+      "title": "能以我个人账户的身份登录吗  而不是作为bot",
+      "state": "open",
+      "updated_at": "2026-04-15T02:41:50Z",
+      "comments": 1
+    },
+    {
+      "number": 53,
+      "title": "Bug: AI承诺设置定时提醒后，实际未创建cron任务，且无法通过聊天记录回忆",
+      "state": "open",
+      "updated_at": "2026-04-15T08:34:22Z",
+      "comments": 1
+    },
+    {
+      "number": 54,
+      "title": "Bug: 图片查看功能完全不可用（sharp模块缺失）",
+      "state": "open",
+      "updated_at": "2026-04-11T14:03:13Z",
+      "comments": 0
+    },
+    {
+      "number": 55,
+      "title": "[Feature] Support ACP thread binding so mode=\"session\" works on WeChat channel",
+      "state": "open",
+      "updated_at": "2026-04-11T16:59:47Z",
+      "comments": 0
+    },
+    {
+      "number": 57,
+      "title": "unable to uninstall",
+      "state": "open",
+      "updated_at": "2026-04-12T09:18:05Z",
+      "comments": 0
+    },
+    {
+      "number": 65,
+      "title": "微信消息接收乱序，有的消息网页端可以收到微信收不到。",
+      "state": "open",
+      "updated_at": "2026-04-14T09:33:06Z",
+      "comments": 0
+    },
+    {
+      "number": 66,
+      "title": "通过微信与openclaw对话，从web端发现用户发送的信息会重复出现1次，导致openclaw处理并回复2次",
+      "state": "open",
+      "updated_at": "2026-04-15T04:01:07Z",
+      "comments": 1
+    },
+    {
+      "number": 70,
+      "title": "IMA Knowledge Base: cannot read note content via get_doc_content - returns 210005 not author error",
+      "state": "open",
+      "updated_at": "2026-04-15T14:46:11Z",
+      "comments": 0
+    }
+  ]
+}

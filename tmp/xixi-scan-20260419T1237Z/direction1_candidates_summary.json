@@ -1,0 +1,601 @@
+[
+  {
+    "number": 68955,
+    "is_pr": false,
+    "title": "[Feature]: Slash commands like /new should trigger ack reaction and typing indicator",
+    "updated_at": "2026-04-19T12:28:23Z",
+    "url": "https://github.com/openclaw/openclaw/issues/68955",
+    "labels": [
+      "enhancement"
+    ],
+    "comments": 0
+  },
+  {
+    "number": 68954,
+    "is_pr": true,
+    "title": "fix(slack): tolerate unresolved channel SecretRef on outbound send path",
+    "updated_at": "2026-04-19T12:36:04Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68954",
+    "labels": [
+      "channel: slack",
+      "maintainer",
+      "size: s"
+    ],
+    "comments": 2
+  },
+  {
+    "number": 68953,
+    "is_pr": true,
+    "title": "fix: tolerate partial Discord slash channels",
+    "updated_at": "2026-04-19T12:25:42Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68953",
+    "labels": [
+      "channel: discord",
+      "size: xs"
+    ],
+    "comments": 1
+  },
+  {
+    "number": 68951,
+    "is_pr": false,
+    "title": "│\n◇  Config warnings ───────────────────────────────────────────────────────╮\n│                                                                         │\n│  - plugins.entries.memory-lancedb: plugin disabled (memory slot set to  │\n│    \"memory-core\") but config is present                                 │\n│  - plugins.entries.memory-lancedb.config.embedding.apiKey: Missing env  │\n│    var \"OPENAI_API_KEY\" - feature using this value will be unavailable  │\n│                                                                         │\n├─────────────────────────────────────────────────────────────────────────╯ writes dream output into main workspace instead of agent workspace",
+    "updated_at": "2026-04-19T12:20:30Z",
+    "url": "https://github.com/openclaw/openclaw/issues/68951",
+    "labels": [],
+    "comments": 0
+  },
+  {
+    "number": 68950,
+    "is_pr": false,
+    "title": "OAuth users cannot enable memory-lancedb auto-recall/capture without separate OPENAI_API_KEY",
+    "updated_at": "2026-04-19T12:20:14Z",
+    "url": "https://github.com/openclaw/openclaw/issues/68950",
+    "labels": [],
+    "comments": 0
+  },
+  {
+    "number": 68949,
+    "is_pr": true,
+    "title": "fix: enable MCP tools in Pi runtime for coding/messaging profiles (#68875)",
+    "updated_at": "2026-04-19T12:35:41Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68949",
+    "labels": [
+      "agents",
+      "size: s"
+    ],
+    "comments": 1
+  },
+  {
+    "number": 68947,
+    "is_pr": true,
+    "title": "fix(reply): restore export-session inline scripts",
+    "updated_at": "2026-04-19T12:30:03Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68947",
+    "labels": [
+      "size: s"
+    ],
+    "comments": 2
+  },
+  {
+    "number": 68946,
+    "is_pr": false,
+    "title": "Bug: Agent loops on identical tool calls without stopping",
+    "updated_at": "2026-04-19T11:59:18Z",
+    "url": "https://github.com/openclaw/openclaw/issues/68946",
+    "labels": [],
+    "comments": 0
+  },
+  {
+    "number": 68945,
+    "is_pr": false,
+    "title": "[Bug]: Telegram: humanDelay is not applied between streamed block replies",
+    "updated_at": "2026-04-19T11:58:39Z",
+    "url": "https://github.com/openclaw/openclaw/issues/68945",
+    "labels": [
+      "bug",
+      "regression"
+    ],
+    "comments": 0
+  },
+  {
+    "number": 68944,
+    "is_pr": false,
+    "title": "CLI commands hang at WebSocket gateway handshake (OpenClaw 2026.4.15)",
+    "updated_at": "2026-04-19T11:56:16Z",
+    "url": "https://github.com/openclaw/openclaw/issues/68944",
+    "labels": [],
+    "comments": 0
+  },
+  {
+    "number": 68943,
+    "is_pr": true,
+    "title": "fix: skip Homebrew prompt on FreeBSD",
+    "updated_at": "2026-04-19T11:49:03Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68943",
+    "labels": [
+      "commands",
+      "size: xs"
+    ],
+    "comments": 1
+  },
+  {
+    "number": 68940,
+    "is_pr": false,
+    "title": "[Bug]: CLI Backends quick-start command fails on 2026.4.15 — `openclaw agent` has no `--model` flag",
+    "updated_at": "2026-04-19T11:44:19Z",
+    "url": "https://github.com/openclaw/openclaw/issues/68940",
+    "labels": [
+      "bug",
+      "bug:behavior"
+    ],
+    "comments": 0
+  },
+  {
+    "number": 68939,
+    "is_pr": true,
+    "title": "feat(plan-mode): full rollout + iter-1/2/3 hardening (consolidates PRs A/B/C/D/E/F/7/8/10/11)",
+    "updated_at": "2026-04-19T12:37:00Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68939",
+    "labels": [
+      "docs",
+      "channel: telegram",
+      "app: macos",
+      "app: web-ui",
+      "gateway",
+      "agents",
+      "size: xl",
+      "extensions: openai"
+    ],
+    "comments": 5
+  },
+  {
+    "number": 68938,
+    "is_pr": false,
+    "title": "Web UI: Voice input button fails + image upload broken (2026.4.15)",
+    "updated_at": "2026-04-19T11:37:31Z",
+    "url": "https://github.com/openclaw/openclaw/issues/68938",
+    "labels": [],
+    "comments": 0
+  },
+  {
+    "number": 68935,
+    "is_pr": true,
+    "title": "add SSE incremental transmission for OpenAI Responses API",
+    "updated_at": "2026-04-19T11:44:20Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68935",
+    "labels": [
+      "docs",
+      "agents",
+      "size: l"
+    ],
+    "comments": 1
+  },
+  {
+    "number": 68934,
+    "is_pr": true,
+    "title": "fix(canvas-host): dedupe signal-polyfill in a2ui bundle",
+    "updated_at": "2026-04-19T11:14:18Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68934",
+    "labels": [
+      "size: xs"
+    ],
+    "comments": 1
+  },
+  {
+    "number": 68931,
+    "is_pr": false,
+    "title": "[Bug]: Webchat user messages disappear due to race condition between chat history reload and transcript persistence",
+    "updated_at": "2026-04-19T11:05:38Z",
+    "url": "https://github.com/openclaw/openclaw/issues/68931",
+    "labels": [],
+    "comments": 0
+  },
+  {
+    "number": 68923,
+    "is_pr": false,
+    "title": "Bug: Agent loops on identical tool calls without stopping",
+    "updated_at": "2026-04-19T10:53:24Z",
+    "url": "https://github.com/openclaw/openclaw/issues/68923",
+    "labels": [],
+    "comments": 0
+  },
+  {
+    "number": 68922,
+    "is_pr": true,
+    "title": "fix(discord): honor native command allowlists",
+    "updated_at": "2026-04-19T10:53:22Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68922",
+    "labels": [
+      "channel: discord",
+      "size: xs"
+    ],
+    "comments": 1
+  },
+  {
+    "number": 68921,
+    "is_pr": false,
+    "title": "Browser plugin: _snapshotForAI missing against Playwright 1.53+ (ariaSnapshot); 'Restart the gateway' error is misleading for dep mismatches",
+    "updated_at": "2026-04-19T10:48:47Z",
+    "url": "https://github.com/openclaw/openclaw/issues/68921",
+    "labels": [],
+    "comments": 0
+  },
+  {
+    "number": 68920,
+    "is_pr": false,
+    "title": "HTTP /v1/chat/completions: 10-15s TTFB due to full agent context assembly — needs lightContext/voice mode",
+    "updated_at": "2026-04-19T11:52:10Z",
+    "url": "https://github.com/openclaw/openclaw/issues/68920",
+    "labels": [],
+    "comments": 1
+  },
+  {
+    "number": 68919,
+    "is_pr": true,
+    "title": "fix(tools): remove provider prefix from vision model config lookup",
+    "updated_at": "2026-04-19T12:26:03Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68919",
+    "labels": [
+      "size: xs"
+    ],
+    "comments": 3
+  },
+  {
+    "number": 68918,
+    "is_pr": true,
+    "title": "fix(telegram): require explicit exec approvers",
+    "updated_at": "2026-04-19T10:53:48Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68918",
+    "labels": [
+      "channel: telegram",
+      "size: s"
+    ],
+    "comments": 1
+  },
+  {
+    "number": 68906,
+    "is_pr": true,
+    "title": "fix(media): avoid double-prefixing qualified image models",
+    "updated_at": "2026-04-19T10:37:48Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68906",
+    "labels": [
+      "size: s"
+    ],
+    "comments": 1
+  },
+  {
+    "number": 68854,
+    "is_pr": true,
+    "title": "fix(security): allow quoted heredocs in allowlist mode without extra approval",
+    "updated_at": "2026-04-19T12:26:48Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68854",
+    "labels": [
+      "agents",
+      "size: xs"
+    ],
+    "comments": 2
+  },
+  {
+    "number": 68834,
+    "is_pr": true,
+    "title": "fix: prevent Discord ACP binding silent hang on fresh gateway boot",
+    "updated_at": "2026-04-19T12:14:39Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68834",
+    "labels": [
+      "docs",
+      "gateway",
+      "agents",
+      "size: m",
+      "extensions: acpx"
+    ],
+    "comments": 2
+  },
+  {
+    "number": 68724,
+    "is_pr": true,
+    "title": "fix(bluebubbles): preserve pinned dispatcher for media fetches",
+    "updated_at": "2026-04-19T10:54:13Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68724",
+    "labels": [
+      "channel: bluebubbles",
+      "size: s"
+    ],
+    "comments": 1
+  },
+  {
+    "number": 68721,
+    "is_pr": true,
+    "title": "fix(codex): default app-server approvals to on-request",
+    "updated_at": "2026-04-19T10:54:36Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68721",
+    "labels": [
+      "docs",
+      "size: xs",
+      "extensions: codex"
+    ],
+    "comments": 1
+  },
+  {
+    "number": 68718,
+    "is_pr": true,
+    "title": "minions: durable SQLite-backed job queue for subagents, ACP, CLI, and cron",
+    "updated_at": "2026-04-19T11:15:16Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68718",
+    "labels": [
+      "docs",
+      "app: web-ui",
+      "gateway",
+      "cli",
+      "scripts",
+      "agents",
+      "size: xl"
+    ],
+    "comments": 10
+  },
+  {
+    "number": 68694,
+    "is_pr": true,
+    "title": "FEAT: Add tts and image generation support to xai extension",
+    "updated_at": "2026-04-19T12:33:17Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68694",
+    "labels": [
+      "size: l"
+    ],
+    "comments": 1
+  },
+  {
+    "number": 68653,
+    "is_pr": false,
+    "title": "Bug:  overwrites existing model catalog entries",
+    "updated_at": "2026-04-19T10:43:43Z",
+    "url": "https://github.com/openclaw/openclaw/issues/68653",
+    "labels": [],
+    "comments": 1
+  },
+  {
+    "number": 68651,
+    "is_pr": true,
+    "title": "Gateway/config: add models.pricing.enabled to skip pricing bootstrap",
+    "updated_at": "2026-04-19T10:43:44Z",
+    "url": "https://github.com/openclaw/openclaw/pull/68651",
+    "labels": [
+      "docs",
+      "gateway",
+      "size: s"
+    ],
+    "comments": 2
+  },
+  {
+    "number": 67996,
+    "is_pr": false,
+    "title": "Codex harness holds session lane lock after run completes — blocks all subsequent messages",
+    "updated_at": "2026-04-19T11:28:29Z",
+    "url": "https://github.com/openclaw/openclaw/issues/67996",
+    "labels": [],
+    "comments": 2
+  },
+  {
+    "number": 67657,
+    "is_pr": true,
+    "title": "Yuanbo",
+    "updated_at": "2026-04-19T12:37:29Z",
+    "url": "https://github.com/openclaw/openclaw/pull/67657",
+    "labels": [
+      "docs",
+      "scripts",
+      "docker",
+      "size: xl"
+    ],
+    "comments": 2
+  },
+  {
+    "number": 67439,
+    "is_pr": false,
+    "title": "Cron CLI commands extremely slow (~20s) and exit abnormally after successful mutations",
+    "updated_at": "2026-04-19T11:13:51Z",
+    "url": "https://github.com/openclaw/openclaw/issues/67439",
+    "labels": [],
+    "comments": 2
+  },
+  {
+    "number": 67366,
+    "is_pr": false,
+    "title": "TypeError during `openclaw onboard` when replacing Telegram token",
+    "updated_at": "2026-04-19T11:25:59Z",
+    "url": "https://github.com/openclaw/openclaw/issues/67366",
+    "labels": [],
+    "comments": 6
+  },
+  {
+    "number": 67174,
+    "is_pr": true,
+    "title": "Teams: support separate graphTenantId for cross-tenant Graph API access",
+    "updated_at": "2026-04-19T12:02:11Z",
+    "url": "https://github.com/openclaw/openclaw/pull/67174",
+    "labels": [
+      "docs",
+      "channel: msteams",
+      "size: l"
+    ],
+    "comments": 1
+  },
+  {
+    "number": 67063,
+    "is_pr": true,
+    "title": "fix(plugins): include memory slot plugin in primary wiki CLI scope",
+    "updated_at": "2026-04-19T11:07:18Z",
+    "url": "https://github.com/openclaw/openclaw/pull/67063",
+    "labels": [
+      "size: s"
+    ],
+    "comments": 2
+  },
+  {
+    "number": 66137,
+    "is_pr": true,
+    "title": "fix(ajv): validate MCP tool schemas against draft/2020-12 [AI-assisted]",
+    "updated_at": "2026-04-19T11:54:04Z",
+    "url": "https://github.com/openclaw/openclaw/pull/66137",
+    "labels": [
+      "app: web-ui",
+      "gateway",
+      "extensions: llm-task",
+      "scripts",
+      "size: m"
+    ],
+    "comments": 7
+  },
+  {
+    "number": 66082,
+    "is_pr": false,
+    "title": "[Bug]: memory-wiki bridge mode reports 0 exported artifacts even though memory-core has MEMORY.md / memory/*.md available",
+    "updated_at": "2026-04-19T11:06:08Z",
+    "url": "https://github.com/openclaw/openclaw/issues/66082",
+    "labels": [
+      "bug"
+    ],
+    "comments": 5
+  },
+  {
+    "number": 65359,
+    "is_pr": true,
+    "title": "fix(config): allow historyLimit: 0 in GroupChatSchema",
+    "updated_at": "2026-04-19T11:58:14Z",
+    "url": "https://github.com/openclaw/openclaw/pull/65359",
+    "labels": [
+      "size: xs"
+    ],
+    "comments": 1
+  },
+  {
+    "number": 65161,
+    "is_pr": false,
+    "title": "Heartbeat isolated mode: cadence stalls, 'heartbeat last' mislabels exec-events, lightContext stays heavy, heartbeat-state writer appears missing",
+    "updated_at": "2026-04-19T11:18:01Z",
+    "url": "https://github.com/openclaw/openclaw/issues/65161",
+    "labels": [],
+    "comments": 6
+  },
+  {
+    "number": 65067,
+    "is_pr": false,
+    "title": "[Bug]: Not able to use 'openclaw onboard' on windows",
+    "updated_at": "2026-04-19T11:47:04Z",
+    "url": "https://github.com/openclaw/openclaw/issues/65067",
+    "labels": [
+      "bug",
+      "regression"
+    ],
+    "comments": 2
+  },
+  {
+    "number": 64661,
+    "is_pr": true,
+    "title": "fix(exec): apply Windows codepage-aware output decoding in runExec and spawn-based callers [AI-assisted]",
+    "updated_at": "2026-04-19T11:25:29Z",
+    "url": "https://github.com/openclaw/openclaw/pull/64661",
+    "labels": [
+      "size: l"
+    ],
+    "comments": 2
+  },
+  {
+    "number": 63871,
+    "is_pr": true,
+    "title": "fix(cron): honor deleteAfterRun for recurring jobs",
+    "updated_at": "2026-04-19T12:11:48Z",
+    "url": "https://github.com/openclaw/openclaw/pull/63871",
+    "labels": [
+      "size: m"
+    ],
+    "comments": 4
+  },
+  {
+    "number": 62921,
+    "is_pr": false,
+    "title": "v2026.4.7: Telegram extension missing src/channel.setup.js — config invalid on upgrade",
+    "updated_at": "2026-04-19T11:26:15Z",
+    "url": "https://github.com/openclaw/openclaw/issues/62921",
+    "labels": [],
+    "comments": 1
+  },
+  {
+    "number": 61237,
+    "is_pr": false,
+    "title": "Agent repeatedly acts autonomously despite explicit rules in memory/context files",
+    "updated_at": "2026-04-19T10:38:26Z",
+    "url": "https://github.com/openclaw/openclaw/issues/61237",
+    "labels": [],
+    "comments": 2
+  },
+  {
+    "number": 59841,
+    "is_pr": true,
+    "title": "Fixes #58115 - voice-call: prevent EADDRINUSE by sharing runtime across contexts",
+    "updated_at": "2026-04-19T11:18:08Z",
+    "url": "https://github.com/openclaw/openclaw/pull/59841",
+    "labels": [
+      "channel: voice-call",
+      "size: m"
+    ],
+    "comments": 13
+  },
+  {
+    "number": 57669,
+    "is_pr": false,
+    "title": "[Bug]: windows telegram can't work",
+    "updated_at": "2026-04-19T11:42:32Z",
+    "url": "https://github.com/openclaw/openclaw/issues/57669",
+    "labels": [
+      "bug"
+    ],
+    "comments": 1
+  },
+  {
+    "number": 55761,
+    "is_pr": true,
+    "title": "fix(hooks): suppress silent shared-hook fallback while preserving error surfacing",
+    "updated_at": "2026-04-19T10:45:04Z",
+    "url": "https://github.com/openclaw/openclaw/pull/55761",
+    "labels": [
+      "gateway",
+      "size: m"
+    ],
+    "comments": 4
+  },
+  {
+    "number": 53805,
+    "is_pr": true,
+    "title": "[Feature]: Support DeepInfra as an LLM provider ",
+    "updated_at": "2026-04-19T12:30:59Z",
+    "url": "https://github.com/openclaw/openclaw/pull/53805",
+    "labels": [
+      "docs",
+      "commands",
+      "agents",
+      "size: xl"
+    ],
+    "comments": 5
+  },
+  {
+    "number": 52235,
+    "is_pr": false,
+    "title": "Context counter shows 0/200k with LiteLLM proxy — compaction never triggers",
+    "updated_at": "2026-04-19T10:57:09Z",
+    "url": "https://github.com/openclaw/openclaw/issues/52235",
+    "labels": [],
+    "comments": 3
+  },
+  {
+    "number": 47643,
+    "is_pr": false,
+    "title": "[Bug]: Persistent Telegram Channel Issues: Sync Failures, Loops, and Config Changes Not Applying on Windows",
+    "updated_at": "2026-04-19T11:26:21Z",
+    "url": "https://github.com/openclaw/openclaw/issues/47643",
+    "labels": [
+      "bug",
+      "regression"
+    ],
+    "comments": 2
+  }
+]

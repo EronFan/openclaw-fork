@@ -1,0 +1,499 @@
+[
+  {
+    "pattern": ".github/labeler.yml",
+    "items": [
+      {
+        "number": 65861,
+        "title": "[Bug]: labeler.yml rule `extensions: minimax-portal-auth` points to nonexistent directory",
+        "html_url": "https://github.com/openclaw/openclaw/issues/65861",
+        "updated_at": "2026-04-16T20:50:12Z"
+      }
+    ]
+  },
+  {
+    "pattern": "AGENTS.md",
+    "items": [
+      {
+        "number": 48222,
+        "title": "[Bug]: openclaw not respecting/remembering agents.md",
+        "html_url": "https://github.com/openclaw/openclaw/issues/48222",
+        "updated_at": "2026-03-16T17:59:57Z"
+      },
+      {
+        "number": 57945,
+        "title": "Bug: Isolated agentTurn cron jobs fail - docs/reference/templates not bundled in npm package",
+        "html_url": "https://github.com/openclaw/openclaw/issues/57945",
+        "updated_at": "2026-03-30T21:19:03Z"
+      },
+      {
+        "number": 34404,
+        "title": "Bug: Symlinked bootstrap files in agent workspace show [MISSING] due to boundary path check",
+        "html_url": "https://github.com/openclaw/openclaw/issues/34404",
+        "updated_at": "2026-04-14T04:30:18Z"
+      },
+      {
+        "number": 64173,
+        "title": "[Bug]: Workspace bootstrap files not loaded on /new session start",
+        "html_url": "https://github.com/openclaw/openclaw/issues/64173",
+        "updated_at": "2026-04-10T07:33:11Z"
+      },
+      {
+        "number": 54623,
+        "title": "[Bug]: Workspace bootstrap files silently truncated at 20,000 chars — agent receives incomplete context with no warning",
+        "html_url": "https://github.com/openclaw/openclaw/issues/54623",
+        "updated_at": "2026-04-01T23:39:18Z"
+      }
+    ]
+  },
+  {
+    "pattern": "CHANGELOG.md",
+    "items": [
+      {
+        "number": 39587,
+        "title": "[Bug]: Documentation search does not work",
+        "html_url": "https://github.com/openclaw/openclaw/issues/39587",
+        "updated_at": "2026-03-08T07:22:38Z"
+      },
+      {
+        "number": 49418,
+        "title": "[Bug]: [Bug]: Windows: Missing changelog.js causes CLI failure (pi-coding-agent module)",
+        "html_url": "https://github.com/openclaw/openclaw/issues/49418",
+        "updated_at": "2026-03-18T03:40:21Z"
+      },
+      {
+        "number": 63815,
+        "title": "npm package missing qa/ assets causes completion cache failure",
+        "html_url": "https://github.com/openclaw/openclaw/issues/63815",
+        "updated_at": "2026-04-10T07:03:23Z"
+      },
+      {
+        "number": 43028,
+        "title": "[Feature Request] Cron 任务自动化改进：熔断机制 + 自动清理 + Changelog 记录",
+        "html_url": "https://github.com/openclaw/openclaw/issues/43028",
+        "updated_at": "2026-03-11T09:42:57Z"
+      },
+      {
+        "number": 62806,
+        "title": "[Bug]: 2026.4.5 — bundled provider plugins still hit stack overflow despite facade recursion guard",
+        "html_url": "https://github.com/openclaw/openclaw/issues/62806",
+        "updated_at": "2026-04-08T01:16:18Z"
+      }
+    ]
+  },
+  {
+    "pattern": "CONTRIBUTING.md",
+    "items": [
+      {
+        "number": 59737,
+        "title": "GitHub: Create two PR templates (small fixes vs substantial changes)",
+        "html_url": "https://github.com/openclaw/openclaw/issues/59737",
+        "updated_at": "2026-04-14T14:49:27Z"
+      },
+      {
+        "number": 66595,
+        "title": "Async relay heartbeat can emit 'result shown above' without payload",
+        "html_url": "https://github.com/openclaw/openclaw/issues/66595",
+        "updated_at": "2026-04-19T07:21:51Z"
+      },
+      {
+        "number": 65594,
+        "title": "packaging: runtime dist build does not emit control-ui/ when only pnpm build is run",
+        "html_url": "https://github.com/openclaw/openclaw/issues/65594",
+        "updated_at": "2026-04-12T23:39:37Z"
+      },
+      {
+        "number": 60367,
+        "title": "models auth login --provider anthropic \"Claude CLI\" method does not persist credentials to auth-profiles.json",
+        "html_url": "https://github.com/openclaw/openclaw/issues/60367",
+        "updated_at": "2026-04-04T11:59:50Z"
+      },
+      {
+        "number": 42999,
+        "title": "Feature: Dynamic Context Window Token Budget (Metabolic Token Management)",
+        "html_url": "https://github.com/openclaw/openclaw/issues/42999",
+        "updated_at": "2026-03-11T13:24:46Z"
+      }
+    ]
+  },
+  {
+    "pattern": "Dockerfile",
+    "items": [
+      {
+        "number": 49498,
+        "title": "Dockerfile: WhatsApp extension fails — missing src/ and apps/ in runtime image",
+        "html_url": "https://github.com/openclaw/openclaw/issues/49498",
+        "updated_at": "2026-03-24T14:48:19Z"
+      },
+      {
+        "number": 61279,
+        "title": "[Bug]: Docker EACCES: permission denied, open '/home/node/.openclaw/openclaw.json'",
+        "html_url": "https://github.com/openclaw/openclaw/issues/61279",
+        "updated_at": "2026-04-09T22:48:51Z"
+      },
+      {
+        "number": 38771,
+        "title": "[Bug]: Docker build fails due to invalid node:22-bookworm digest",
+        "html_url": "https://github.com/openclaw/openclaw/issues/38771",
+        "updated_at": "2026-03-07T10:33:00Z"
+      },
+      {
+        "number": 48552,
+        "title": "[Bug]: Docker self-build from `main` broken — gateway fails to start after channel-to-extension migration",
+        "html_url": "https://github.com/openclaw/openclaw/issues/48552",
+        "updated_at": "2026-03-30T21:17:56Z"
+      },
+      {
+        "number": 34166,
+        "title": "[Bug]: Gateway failed to start: Error: non-loopback Control UI requires gateway.controlUi.allowedOrigins (set explicit origins), or set gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true to use Host-header origin fallback mode",
+        "html_url": "https://github.com/openclaw/openclaw/issues/34166",
+        "updated_at": "2026-04-13T04:38:38Z"
+      }
+    ]
+  },
+  {
+    "pattern": "README.md",
+    "items": [
+      {
+        "number": 68797,
+        "title": "[Bug]: BUG_REPORT_subagent_context_leakage.md",
+        "html_url": "https://github.com/openclaw/openclaw/issues/68797",
+        "updated_at": "2026-04-19T03:58:24Z"
+      },
+      {
+        "number": 61455,
+        "title": "[Bug]: Tool calling timeouts.",
+        "html_url": "https://github.com/openclaw/openclaw/issues/61455",
+        "updated_at": "2026-04-15T13:00:13Z"
+      },
+      {
+        "number": 47088,
+        "title": "[Bugfix]: [DEP0040] DeprecationWarning: The `punycode` module is deprecated.",
+        "html_url": "https://github.com/openclaw/openclaw/issues/47088",
+        "updated_at": "2026-03-15T08:29:25Z"
+      },
+      {
+        "number": 63815,
+        "title": "npm package missing qa/ assets causes completion cache failure",
+        "html_url": "https://github.com/openclaw/openclaw/issues/63815",
+        "updated_at": "2026-04-10T07:03:23Z"
+      },
+      {
+        "number": 63773,
+        "title": "Bug: Subagent session JSONL does not record token usage (usage fields always 0)",
+        "html_url": "https://github.com/openclaw/openclaw/issues/63773",
+        "updated_at": "2026-04-09T13:56:05Z"
+      }
+    ]
+  },
+  {
+    "pattern": "apps/android",
+    "items": [
+      {
+        "number": 50229,
+        "title": "[Bug]: Android App (Unreleased Build) Stuck on 'Pairing Required' Despite Gateway Approval",
+        "html_url": "https://github.com/openclaw/openclaw/issues/50229",
+        "updated_at": "2026-03-24T18:02:57Z"
+      },
+      {
+        "number": 48926,
+        "title": "Android app: setup code pairing broken — reads \"token\" but gateway emits \"bootstrapToken\"",
+        "html_url": "https://github.com/openclaw/openclaw/issues/48926",
+        "updated_at": "2026-04-02T23:36:42Z"
+      },
+      {
+        "number": 9443,
+        "title": "Request: Prebuilt Android APK releases",
+        "html_url": "https://github.com/openclaw/openclaw/issues/9443",
+        "updated_at": "2026-03-23T08:40:38Z"
+      },
+      {
+        "number": 61762,
+        "title": "[Bug]: `cron add` fails with \"pairing required\" on local loopback mode (macOS)",
+        "html_url": "https://github.com/openclaw/openclaw/issues/61762",
+        "updated_at": "2026-04-07T07:48:01Z"
+      },
+      {
+        "number": 75,
+        "title": "Linux/Windows Clawdbot Apps",
+        "html_url": "https://github.com/openclaw/openclaw/issues/75",
+        "updated_at": "2026-04-19T04:52:27Z"
+      }
+    ]
+  },
+  {
+    "pattern": "apps/macos",
+    "items": [
+      {
+        "number": 64973,
+        "title": "[Bug]: macOS Talk Mode can trigger stale config.set, gateway token mismatch, and local gateway restart",
+        "html_url": "https://github.com/openclaw/openclaw/issues/64973",
+        "updated_at": "2026-04-11T18:48:47Z"
+      },
+      {
+        "number": 52471,
+        "title": "Control UI: Model selector uses wrong provider prefix (ollama/ instead of ollama-remote/)",
+        "html_url": "https://github.com/openclaw/openclaw/issues/52471",
+        "updated_at": "2026-03-30T21:23:35Z"
+      },
+      {
+        "number": 46632,
+        "title": "Chat UI shows incorrect token count (647.6k vs actual 173k)",
+        "html_url": "https://github.com/openclaw/openclaw/issues/46632",
+        "updated_at": "2026-03-15T00:02:46Z"
+      },
+      {
+        "number": 52474,
+        "title": "Desktop UI model dropdown prepends 'anthropic/' to all non-Anthropic models",
+        "html_url": "https://github.com/openclaw/openclaw/issues/52474",
+        "updated_at": "2026-03-30T21:23:37Z"
+      },
+      {
+        "number": 59268,
+        "title": "bug: macOS app chat picker shows wrong node label when multiple Macs are paired",
+        "html_url": "https://github.com/openclaw/openclaw/issues/59268",
+        "updated_at": "2026-04-01T22:05:30Z"
+      }
+    ]
+  },
+  {
+    "pattern": "apps/shared",
+    "items": [
+      {
+        "number": 67547,
+        "title": "[Bug]: A2UI bundle/hash depends on ui/node_modules presence",
+        "html_url": "https://github.com/openclaw/openclaw/issues/67547",
+        "updated_at": "2026-04-19T04:30:04Z"
+      },
+      {
+        "number": 52089,
+        "title": "[Bug]: OpenClaw Control UI: Slash Command Menu Position Bug",
+        "html_url": "https://github.com/openclaw/openclaw/issues/52089",
+        "updated_at": "2026-03-30T21:23:06Z"
+      },
+      {
+        "number": 35585,
+        "title": "[Bug]: Double-click-drag to extend word selection not working in webchat composer (macOS)",
+        "html_url": "https://github.com/openclaw/openclaw/issues/35585",
+        "updated_at": "2026-04-16T04:33:46Z"
+      },
+      {
+        "number": 52127,
+        "title": "[Bug] Control UI 选择 DeepSeek 模型时错误添加 moonshot/ 前缀",
+        "html_url": "https://github.com/openclaw/openclaw/issues/52127",
+        "updated_at": "2026-03-30T21:23:08Z"
+      },
+      {
+        "number": 49498,
+        "title": "Dockerfile: WhatsApp extension fails — missing src/ and apps/ in runtime image",
+        "html_url": "https://github.com/openclaw/openclaw/issues/49498",
+        "updated_at": "2026-03-24T14:48:19Z"
+      }
+    ]
+  },
+  {
+    "pattern": "docs/.generated",
+    "items": [
+      {
+        "number": 51694,
+        "title": "[Bug]: channels.googlechat.accounts is now non-optional, docs indicate optional",
+        "html_url": "https://github.com/openclaw/openclaw/issues/51694",
+        "updated_at": "2026-03-24T14:51:31Z"
+      },
+      {
+        "number": 53433,
+        "title": "[Bug]: remote CDP URLs bypass config redaction and leak credentials",
+        "html_url": "https://github.com/openclaw/openclaw/issues/53433",
+        "updated_at": "2026-03-31T16:53:29Z"
+      },
+      {
+        "number": 63541,
+        "title": "qa-lab: completion cache update crashes on global npm install — qa/scenarios/index.md missing from published dist",
+        "html_url": "https://github.com/openclaw/openclaw/issues/63541",
+        "updated_at": "2026-04-11T15:18:53Z"
+      },
+      {
+        "number": 68139,
+        "title": "[Bug]: Broken provider links on localized docs page openclaw-ai.com/de/docs/providers/index",
+        "html_url": "https://github.com/openclaw/openclaw/issues/68139",
+        "updated_at": "2026-04-18T10:27:44Z"
+      },
+      {
+        "number": 13700,
+        "title": "[Feature Request]: Session snapshots — save and load context checkpoints (/session save|load)",
+        "html_url": "https://github.com/openclaw/openclaw/issues/13700",
+        "updated_at": "2026-03-20T12:38:48Z"
+      }
+    ]
+  },
+  {
+    "pattern": "docs/.generated/config-baseline.json",
+    "items": [
+      {
+        "number": 51694,
+        "title": "[Bug]: channels.googlechat.accounts is now non-optional, docs indicate optional",
+        "html_url": "https://github.com/openclaw/openclaw/issues/51694",
+        "updated_at": "2026-03-24T14:51:31Z"
+      }
+    ]
+  },
+  {
+    "pattern": "docs/.generated/config-baseline.jsonl",
+    "items": [
+      {
+        "number": 53433,
+        "title": "[Bug]: remote CDP URLs bypass config redaction and leak credentials",
+        "html_url": "https://github.com/openclaw/openclaw/issues/53433",
+        "updated_at": "2026-03-31T16:53:29Z"
+      }
+    ]
+  },
+  {
+    "pattern": "docs/channels",
+    "items": [
+      {
+        "number": 65864,
+        "title": "[Feature]: Document ZALOUSER_PROFILE and ZCA_PROFILE env vars in Zalo Personal channel docs",
+        "html_url": "https://github.com/openclaw/openclaw/issues/65864",
+        "updated_at": "2026-04-16T20:50:11Z"
+      },
+      {
+        "number": 66356,
+        "title": "[Bug]: Discord guided setup says \"not enabled\" and skips token input in configure wizard",
+        "html_url": "https://github.com/openclaw/openclaw/issues/66356",
+        "updated_at": "2026-04-14T05:25:04Z"
+      },
+      {
+        "number": 58538,
+        "title": "Bug: `enrichGroupParticipantsFromContacts` schema inconsistency - config.schema.lookup shows valid but config validation rejects it",
+        "html_url": "https://github.com/openclaw/openclaw/issues/58538",
+        "updated_at": "2026-03-31T19:23:24Z"
+      },
+      {
+        "number": 62610,
+        "title": "[Bug]: Telegram channel missing from npm installs on macOS",
+        "html_url": "https://github.com/openclaw/openclaw/issues/62610",
+        "updated_at": "2026-04-07T17:01:21Z"
+      },
+      {
+        "number": 63477,
+        "title": "[Bug]: Slack socket mode connects successfully, but public channel events are not received",
+        "html_url": "https://github.com/openclaw/openclaw/issues/63477",
+        "updated_at": "2026-04-09T05:31:41Z"
+      }
+    ]
+  },
+  {
+    "pattern": "docs/channels/discord.md",
+    "items": [
+      {
+        "number": 66356,
+        "title": "[Bug]: Discord guided setup says \"not enabled\" and skips token input in configure wizard",
+        "html_url": "https://github.com/openclaw/openclaw/issues/66356",
+        "updated_at": "2026-04-14T05:25:04Z"
+      },
+      {
+        "number": 57362,
+        "title": "Discord plain-text agent messages can be delivered as interactive modal/form payloads",
+        "html_url": "https://github.com/openclaw/openclaw/issues/57362",
+        "updated_at": "2026-03-30T00:37:53Z"
+      }
+    ]
+  },
+  {
+    "pattern": "docs/channels/qqbot.md",
+    "items": [
+      {
+        "number": 65864,
+        "title": "[Feature]: Document ZALOUSER_PROFILE and ZCA_PROFILE env vars in Zalo Personal channel docs",
+        "html_url": "https://github.com/openclaw/openclaw/issues/65864",
+        "updated_at": "2026-04-16T20:50:11Z"
+      }
+    ]
+  },
+  {
+    "pattern": "docs/channels/telegram.md",
+    "items": [
+      {
+        "number": 62610,
+        "title": "[Bug]: Telegram channel missing from npm installs on macOS",
+        "html_url": "https://github.com/openclaw/openclaw/issues/62610",
+        "updated_at": "2026-04-07T17:01:21Z"
+      },
+      {
+        "number": 52328,
+        "title": "[Bug]: Telegram extension silently fails with no guidance when OPENCLAW_EXTENSIONS=telegram is not set",
+        "html_url": "https://github.com/openclaw/openclaw/issues/52328",
+        "updated_at": "2026-04-17T00:59:38Z"
+      },
+      {
+        "number": 52073,
+        "title": "[Bug]: Agent becomes completely unresponsive during Skill installation and does not report task completion",
+        "html_url": "https://github.com/openclaw/openclaw/issues/52073",
+        "updated_at": "2026-04-02T06:45:33Z"
+      }
+    ]
+  },
+  {
+    "pattern": "docs/concepts",
+    "items": [
+      {
+        "number": 59952,
+        "title": "Companion app: Anthropic provider usage/limits not visible while OpenAI Codex appears in Usage providers",
+        "html_url": "https://github.com/openclaw/openclaw/issues/59952",
+        "updated_at": "2026-04-02T23:42:52Z"
+      },
+      {
+        "number": 67397,
+        "title": "[Bug]: Dreaming cron skipped by heartbeat activeHours (cannot run outside active window)",
+        "html_url": "https://github.com/openclaw/openclaw/issues/67397",
+        "updated_at": "2026-04-15T21:23:48Z"
+      },
+      {
+        "number": 55063,
+        "title": "[Bug]: /new and /reset preserve session model override; reset banner default can differ from agents.defaults.model.primary",
+        "html_url": "https://github.com/openclaw/openclaw/issues/55063",
+        "updated_at": "2026-03-26T09:17:45Z"
+      },
+      {
+        "number": 66126,
+        "title": "[Bug]: Compaction-retry re-injects cron/system prompts as new user input, causing infinite tool-call loops",
+        "html_url": "https://github.com/openclaw/openclaw/issues/66126",
+        "updated_at": "2026-04-14T04:57:36Z"
+      },
+      {
+        "number": 56193,
+        "title": "[Bug]: sessions_spawn(runtime=\"subagent\") can receive ACP-only streamTo from the current tool-call bridge",
+        "html_url": "https://github.com/openclaw/openclaw/issues/56193",
+        "updated_at": "2026-04-18T04:22:52Z"
+      }
+    ]
+  },
+  {
+    "pattern": "docs/concepts/models.md",
+    "items": [
+      {
+        "number": 44276,
+        "title": "[Bug] imageModel not invoked when primary model lacks vision capability",
+        "html_url": "https://github.com/openclaw/openclaw/issues/44276",
+        "updated_at": "2026-03-18T02:17:05Z"
+      },
+      {
+        "number": 38795,
+        "title": "Bug Report: imageModel 自动切换未生效",
+        "html_url": "https://github.com/openclaw/openclaw/issues/38795",
+        "updated_at": "2026-04-11T04:25:52Z"
+      }
+    ]
+  },
+  {
+    "pattern": "docs/cron.md",
+    "items": [
+      {
+        "number": 34530,
+        "title": "[Bug] Cron jobs skip scheduled runs after gateway restart",
+        "html_url": "https://github.com/openclaw/openclaw/issues/34530",
+        "updated_at": "2026-04-14T04:31:26Z"
+      }
+    ]
+  }
+]

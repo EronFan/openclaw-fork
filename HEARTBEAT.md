@@ -3,18 +3,23 @@
 ## 目标
 只做低打扰、高价值的周期检查；没新情况就返回 `HEARTBEAT_OK`。
 
+**新增总原则：heartbeat 是 action heartbeat，不是被动提醒器。**
+
+发现停滞、失败、断流、待接单候选时：**直接恢复执行 / 直接派单 / 直接重试**，不要只汇报状态。
+
 ## 检查顺序
 每次 heartbeat 最多做 1-2 项，避免无意义刷屏：
 
 1. 看 `memory/heartbeat-state.json`
 2. **【必须】检查 subagent 失败状态**（见下方规则）
 3. **【必须】检查 xixi 扫描状态**（见下方规则）
-4. 优先检查距离上次最久、且最有价值的项目：
+4. **【必须】检查 OpenClaw 项目是否停滞**（见下方规则）
+5. 优先检查距离上次最久、且最有价值的项目：
    - calendar
    - email
    - mentions
    - weather
-5. 如果没有可检查项、或不适合打扰，就直接 `HEARTBEAT_OK`
+6. 如果没有可检查项、或不适合打扰，就直接 `HEARTBEAT_OK`
 
 ## 主动提醒条件
 只在下面情况主动发消息：
@@ -22,6 +27,7 @@
 - 收到明显重要/紧急的新消息
 - 距离上次主动汇报已超过 8 小时，且确实有新信息
 - 发现需要尽快处理的异常
+- action heartbeat 已自动恢复推进，需要给范总一个结果回执
 
 ## Subagent 失败监控规则（必须执行）
 
@@ -58,12 +64,36 @@
 - xixi cron 任务走本规则（检查扫描报告文件时间戳）
 - 两者独立，都必须检查
 
+## OpenClaw 项目停滞监控规则（必须执行）
+
+**每次 heartbeat 必须检查项目是否停滞；停滞就直接恢复执行。**
+
+1. 从 `memory/heartbeat-state.json` 读取并维护以下字段：
+   - `currentIssue`
+   - `currentBranch`
+   - `lastCommitAt`
+   - `lastPrCreatedAt`
+   - `lastXixiScanAt`
+   - `inProgressFixes[]`
+2. 读取 `memory/OPENCLAW-PROJECT.md` 与 `xixi-reports/latest-scan-report.md`，确认当前最高优先级候选是否已有人处理。
+3. 命中任一条件即视为停滞：
+   - 超过 **45 分钟** 无新 commit、且 `inProgressFixes` 没有实质更新
+   - 超过 **2 小时** 无新 PR、且没有 active fix
+   - `currentIssue` 存在，但没有继续推进记录
+   - xixi 有新 Top candidate，但主线无人接单
+4. 停滞后的动作（**直接执行，不询问**）：
+   - 有 `currentIssue` → 继续该 issue
+   - 无 `currentIssue` 但有高优先级候选 → 直接接下一单
+   - 如存在可重试子任务 → 直接重派
+5. 汇报必须包含：当前 `currentIssue`、`inProgressFixes`、以及本次 heartbeat 采取的恢复动作。
+
 ## 不打扰条件
 出现任一情况，优先 `HEARTBEAT_OK`：
 - 23:00-08:00，且无紧急事项
 - 30 分钟内刚检查过同类项目
 - 没有任何新增信息
 - 只是重复旧提醒
+- 当前已有 active fix 正在稳定推进，且无需 heartbeat 额外插手
 
 ## 记账规则（必须执行）
 每次 heartbeat 完成后，**必须**更新 `memory/heartbeat-state.json`：
@@ -72,7 +102,16 @@
 3. 如果有检查 calendar/email/mentions/weather，更新对应时间戳
 4. 如果有主动提醒，更新 `lastProactiveReachoutAt`
 5. 记录 subagent 失败/成功状态（见上方规则）
-6. 写入文件（**直接执行，不询问**）
+6. 维护 OpenClaw 项目推进字段：
+   - `currentIssue`
+   - `currentBranch`
+   - `lastCommitAt`
+   - `lastPrCreatedAt`
+   - `lastXixiScanAt`
+   - `inProgressFixes[]`
+   - `lastActionHeartbeatAt`
+   - `lastActionHeartbeatResult`
+7. 写入文件（**直接执行，不询问**）
 
 ## 自动收口规则（必须执行）
 每次 heartbeat 完成后，**必须**检查 workspace 是否有未提交文件：

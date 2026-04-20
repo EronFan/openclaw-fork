@@ -1,42 +1,40 @@
-# 全量扫描报告 2026-04-15 22:54 CST (第133轮)
+# 全量扫描报告 [2026-04-19 20:37 CST]
 
 ## GitHub Issues（方向1）
-- **发现了 8 个新候选**（最近 2 小时内创建/活跃）
-- **最重要的是：**
-  - 🔴 **#67252** feishu_doc write action 缺少分页，无法清空大文档所有 blocks（S级，14:54 UTC，10分钟前）— 根因清晰，`clearDocumentContent` 无循环处理
-  - 🔴 **#67251** Windows CLI 子命令在 exec 环境挂死并收到 SIGKILL（2026.4.14 regression，14:51 UTC）— 影响所有 Windows 用户 CLI 体验
-  - 🔴 **#67250** Control UI: streaming text disappears when tool calls display is hidden（4.14 regression，14:51 UTC）— streaming 逻辑回归
-  - 🔴 **#67248** sessions_spawn(runtime="subagent") 仍失败（2026.4.14，14:51 UTC）— 已有历史追踪但仍未修复
-  - 🟠 **#67247** Telegram Native command menu disappears after upgrade to 4.14（bug+regression，14:49 UTC）— regressions，命令菜单丢失
-  - 🟠 **#67241** BlueBubbles attachment downloads fail silently on Node 22.20+（bug，14:38 UTC）— invalid onRequestStart method
+- 近 2 小时主仓 open issues/PRs 共扫描 68 条更新。
+- 发现了 4 个值得动作的新候选，其中最重要的是：
+  - `#68931` Webchat 用户消息发送后短暂出现又消失。报告已给出高置信根因：前端 `up()` 用服务端历史全量覆盖本地 `chatMessages`，而 gateway 的 `emitUserTranscriptUpdate()` 是异步写入，形成 race；模型报错/重连时更容易触发。这个问题会直接让用户怀疑消息没发出去，优先级最高。
+  - `#68944` CLI 所有依赖 gateway 的命令卡死在 WebSocket handshake。Windows + Node 24.13.1 环境下，CLI 收到 `connect.challenge` 却不发 `connect.reply`，`sessions/cron/status/models/agents` 全挂，属于明显可操作的 transport/签名路径 bug。
+  - `#68921` browser `refs=aria` 路径仍依赖 Playwright 私有 `_snapshotForAI`，在 1.53+ / 1.59.1 下直接失效，还把依赖不兼容误导成“重启 gateway”。
+- 另外两条：
+  - `#68945` Telegram `humanDelay` 不生效，根因清晰；但已在扫描窗口内被 PR `#68956` 直接覆盖，不重复列为新优先级。
+  - `#68938` Web UI 语音按钮失效 + 图片上传失败，证据尚浅，先观察，不压过上面 3 条。
 
 ## 插件仓库（方向2）
-- Tencent/openclaw-weixin 发现了 **10+ open issues/PRs**
-- **#49 fix: preserve quote context (ref_msg) for voice messages**（PR，by gaoyangz77，1 comment，14 Apr 09:46 UTC）— 与 #63 解决同一问题但来自不同贡献者，存在重复
-- **#63 fix(inbound): preserve quoted context for voice messages with ref_msg**（PR，by draix，0 comments，14 Apr 04:35 UTC）— 与 #49 内容可能重叠，需确认合并意向
-- **#66 微信消息重复：用户1条→处理2次**（issue，updated 15 Apr 04:01 UTC）— 已追踪 P60173，上轮已定位根因
-- Tencent openclaw-weixin 新增 **#62 feat: support sending voice messages (SILK/MP3/OGG)**（PR，by lemoncat7，0 comments，14 Apr 03:46 UTC）
+- 扫描 `Tencent/openclaw-weixin` 最近更新项 1 条。
+- 新发现：`openclaw-weixin #78` 请求支持发送微信原生语音消息（绿色语音条）。
+- 结论：这是 feature gap，不是 bug。issue 已给出精确实现路径：`send-media.ts` 缺少 voice route，现有 API/types 与 silk 依赖都已具备。已记录为低优先级 XS，不建议挤占 core bug 修复窗口。
 
 ## 贡献者文件区域（方向3）
-- gh contributors API 返回空数据（rate limit 或认证问题），本轮无法完成
-- **注：** 建议排查 `gh auth refresh` 或使用 token 直接调用
+- 扫描了排名最末的 10 个 contributors，共收集最近 20 条 commit 去重后 324 个文件区域。
+- 从这些文件区搜索到了 19 组相关 open bug 线索，但本轮没有发现比当前优先级表更强的新高置信未认领项。
+- 本轮最接近可行动的重叠区：
+  - `README.md` / docs 区继续映射到 `#68797`、`#63815` 等已有 open 项；
+  - `apps/macos` / `apps/shared` / `apps/android` 区有旧问题簇，但没有新近 2h 内更新且根因更清晰的目标；
+  - 结论：方向3 本轮 **无新增高优先级候选**，但文件区重叠仍说明 docs / app / packaging 区存在持续积压。
 
 ## 追踪 PR 反馈（方向4）
-- **PR #67200** fix(plugins): stabilize bundled setup runtimes（gumadeiras，4 comments）— maintainer 有活跃评论，接近可 merge
-- **PR #67234** fix: extend isMinimaxVlmModel to support M2.5/M2.7/M2.7-highspeed（zhengyuliu047-rgb，1 comment）— 新增 MiniMax VLM 模型支持
-- **PR #67245** fix(docs): correct imageGenerationModel → imageModel（notamicrodose，2 comments）— 文档修正，maintainer 已有反馈
-- **PR #67254** fix(google): respect allowPrivateNetwork config for SSRF policy（Joel-Claw，0 comments）— 5分钟前新开，值得关注
-- **PR #67255** feat: add yuanbao extension plugin（loongfay，1 comment）— **本轮最新 PR**，1分钟前创建
-- 已追踪 PR 本轮无新 maintainer 人工反馈；现有追踪项均保持原状态
+- 本轮未发现当前追踪 PR 的 maintainer 新评论，方向4 的“新反馈”结论是：**无**。
+- 但状态变化有 3 个：
+  - `#67277` 已 closed（不再是“接近 merge”状态）。
+  - `#67281` 已 closed（不再是“security review 待确认”状态）。
+  - `#67279` 仍 open，`mergeable=false`，最近更新时间停在 `2026-04-15T16:23:06Z`，窗口明显变冷。
+- `OPENCLAW-PROJECT.md` 当前高优先级 issue 中：
+  - `#68838` 仍 open，heartbeat-state.json 显示已在 12:00 UTC 重新派出修复；
+  - `#67314`、`#67323`、`#67288` 仍 open，无本轮新动态。
 
 ## 结论
-**最高优先级是：**
-1. 🔴 **#67252 feishu_doc write 缺分页**（根因清晰，S级，maintainer 可直接 review）
-2. 🟠 **#67251 Windows SIGKILL exec**（regression，影响 CLI 核心路径）
-3. 🟠 **#67247 Telegram command menu regression**（4.14 引入，影响核心交互）
-4. 🔴 **#67200 PR maintainer 正在 review**（4 comments，接近 merge 窗口）
-
-**建议：**
-- feishu_doc #67252：fix 简单（加循环分页），可直接提 PR
-- #67247 Telegram regression：maintainer PR 正在活跃 review，建议协助测试确认 regression 根因
-- Tencent openclaw-weixin #49 vs #63：建议确认是否需要合并避免重复 work
+- 最高优先级是 `#68931`。这是直接伤用户信任的 webchat regression，而且根因已经被 reporter 说透，值得 main/aoao 优先接单。
+- 第二优先级是 `#68944`。它让整条 CLI→gateway 管理链半瘫痪，影响面大。
+- 第三优先级是 `#68921`。browser `refs=aria` 失效属于明显 regression，修复路径也很清楚。
+- 插件方向本轮只有功能缺口，没有比 core 主仓更值得立即动手的 bug。

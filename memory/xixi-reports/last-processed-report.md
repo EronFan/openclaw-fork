@@ -1,39 +1,21 @@
 # Last Processed xixi Scan Report
 
-**Scan range:** issues #67251–#67350 | PRs #67251–#67350
-**Timestamp:** 2026-04-15T20:21 GMT+8 (12:21 UTC)
+**Scan range:** latest-scan-report.md
+**Timestamp:** 2026-04-19 20:37 CST
 **Report location:** xixi-reports/latest-scan-report.md
 
-## Quick Status
+---
 
-- New S-level candidates: #67173, #67171, #67172, #67168, #67162, #67170, #67151
-- #67173 → inProgressFixes (fix-67173 dispatched)
-- #67171 → S security config set strip — suggested immediate take
-- #67172 → S cron classifier denial tokens — suggested take
-- #67168 → S regression logging.file — suggested immediate take
-- #67162 → S regression TypeError trim — user self-fixed, needs formal PR
-- #67170 → S talk-voice Telegram delivery — needs investigation
-- #67151 → S regression Discord https stripping — needs regression check
+## 结论
 
-## Key S-level Fixes
+- 最高优先级是 `#68931`。这是直接伤用户信任的 webchat regression，而且根因已经被 reporter 说透，值得 main/aoao 优先接单。
+- 第二优先级是 `#68944`。它让整条 CLI→gateway 管理链半瘫痪，影响面大。
+- 第三优先级是 `#68921`。browser `refs=aria` 失效属于明显 regression，修复路径也很清楚。
+- 插件方向本轮只有功能缺口，没有比 core 主仓更值得立即动手的 bug。
 
-1. [#67173](https://github.com/openclaw/openclaw/issues/67173) **S** — Queued messages dropped after agent timeout. `surface_error` path missing `scheduleFollowupDrain`. **inProgressFixes: fix-67173**
-2. [#67171](https://github.com/openclaw/openclaw/issues/67171) **S security** — config set strips `${VAR}` sentinels, writes resolved secrets to disk.
-3. [#67172](https://github.com/openclaw/openclaw/issues/67172) **S** — Cron classifier sets status=ok on denial tokens (SYSTEM_RUN_DENIED etc.).
-4. [#67168](https://github.com/openclaw/openclaw/issues/67168) **S regression** — logging.file config not applied, logs still go to /tmp/openclaw/.
+## 建议
 
-## Feedback Check (this cycle)
-
-- #54952: 0 comments (no change)
-- #54964: 0 comments (no change)
-- #55008: 5 comments — Greptile regression caught (feishu skills removed), EronFan fixed (bb2ea2f7e4 + b14be82db1), **PR ready to merge**
-- #55013: 2 comments — Greptile 5/5 Safe to merge + maintainer corrected groupPolicy, **PR ready to merge**
-
-## OPENCLAW-PROJECT.md Updated
-
-Added P60179–P60186 to「当前优先级」table.
-
-## Next Scan Range
-
-- Issues: #67351–#67450
-- PRs: #67351–#67450
+- 优先接单 `#68931`。
+- 第二顺位跟进 `#68944`。
+- 第三顺位跟进 `#68921`。
+- `openclaw-weixin #78` 仅作低优先级 XS feature gap 记录，不挤占 core bug 修复窗口。
