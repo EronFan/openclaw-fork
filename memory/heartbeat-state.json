@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-04-20T16:09:00Z",
-  "note": "No subagent failures in last 120min. xixi scan 21:00 CST still within 3h threshold. Manual xixi scan triggered (xixi had no active subagent). git auto-committed.",
+  "updatedAt": "2026-04-20T16:20:00Z",
+  "note": "3 subagents running (69326 wechat-routing, 69289 browser-aria-refs, 69286 compaction-totalTokens). xixi scan fresh (00:15 CST). git: submodule changes could not be auto-committed (no .gitmodules url).",
   "inProgressFixes": [
     {
       "issue": 69214,
@@ -16,7 +16,7 @@
     }
   ],
   "xixiLastScanAt": "2026-04-20T13:00:00Z",
-  "xixiScanReportMtime": "2026-04-20T21:00:00+08:00",
+  "xixiScanReportMtime": "2026-04-21T00:15:11+08:00",
   "currentIssue": "67247",
   "lastCommitAt": "2026-04-21T00:11:00+08:00",
   "lastPrCreatedAt": "2026-04-20T18:33:00Z",
@@ -55,6 +55,27 @@
   "subagentFailures": [],
   "subagentSuccesses": [
     {
+      "label": "fix-69326-wechat-routing",
+      "sessionKey": "agent:main:subagent:ef7c208b-f929-4f4f-a512-e201cc061565",
+      "runId": "f76c451b-c0c2-4a14-9541-30251264dddc",
+      "recordedAt": "2026-04-20T16:20:00Z",
+      "status": "running"
+    },
+    {
+      "label": "fix-69289-browser-aria-refs",
+      "sessionKey": "agent:main:subagent:135f3d7e-d387-4c98-ab06-c589e163f08e",
+      "runId": "fe46bf56-c821-4d7e-970c-da2ebbd2c32f",
+      "recordedAt": "2026-04-20T16:20:00Z",
+      "status": "running"
+    },
+    {
+      "label": "fix-69286-compaction-totalTokens",
+      "sessionKey": "agent:main:subagent:1973d89e-7188-45d6-b2e3-e92ad43f282d",
+      "runId": "3875e18e-ccc4-495d-9ebf-46f206836726",
+      "recordedAt": "2026-04-20T16:20:00Z",
+      "status": "running"
+    },
+    {
       "label": "fix-69300-compaction-memory-flush",
       "sessionKey": "agent:main:subagent:77877b53-2f20-4c92-8433-ec514beb8191",
       "runId": "f4000cba-3b69-4a36-a517-44e35b34cdda",
@@ -78,13 +99,7 @@
       "recordedAt": "2026-04-20T13:43:00Z"
     }
   ],
-  "lastXixiCheckAt": "2026-04-20T16:09:00Z",
+  "lastXixiCheckAt": "2026-04-20T16:20:00Z",
   "pendingXixiSuggestions": [],
-  "lastHeartbeatWindow": "2026-04-20T16:09:00Z",
-  "xixiManualScanTriggered": {
-    "runId": "0f4f430f-ff93-46a7-92cb-b75b77e05ff9",
-    "childSessionKey": "agent:main:subagent:085c33b4-a6ea-40cf-8ce1-eb5879f982cc",
-    "triggeredAt": "2026-04-20T16:09:00Z",
-    "reason": "xixi cron had no running subagent and last scan was 21:00 CST (over 3h ago in UTC terms) — manual scan triggered per heartbeat rules"
-  }
+  "lastHeartbeatWindow": "2026-04-20T16:20:00Z"
 }
