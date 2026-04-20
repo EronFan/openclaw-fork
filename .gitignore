@@ -35,3 +35,7 @@ memory/2026-05-*.md
 Thumbs.db
 *.tmp
 AGENTS.md.bak
+
+# Build outputs from nested repos
+openclaw/dist/
+openclaw-repo/dist/
