@@ -1,12 +1,14 @@
 {
-  "lastHeartbeat": "2026-04-15T02:53:00Z",
-  "lastXixiScan": "2026-04-15T02:53:00Z",
+  "lastHeartbeat": "2026-04-21T00:14:00Z",
+  "lastXixiScan": "2026-04-21T00:14:00Z",
   "lastPrCreatedAt": null,
   "inProgressFixes": [
-    "fix-66941 @ 2026-04-15T02:53 — WeChat (wechat-access) gateway crash — NEEDS TRIAGE"
+    "fix-69300 @ 2026-04-20 — Compaction memory flush short-circuit — COMPLETED (PR#18 on fork)",
+    "fix-69296 @ 2026-04-20 — ACP client hangs regression 2026.4.15 — in progress",
+    "aoao-fix-69294 @ 2026-04-20 — ACP plugin Windows 11 crash — in progress (patched)"
   ],
   "staleDays": 0,
-  "alert": "PR #66599 (fix-66561 AbortError/timeout) was CLOSED without merge. WeChat crash issue #66941 is fresh (7min ago) and appears related. Main agent should triage ASAP.",
-  "notes": "fix-66561 (PR #66599) was closed without merge — regression not resolved. #66941 (WeChat crash) is likely same root cause family. Top candidates: #66941, #66916, #66786",
-  "updatedAt": "2026-04-15T02:53:00Z"
+  "alert": null,
+  "notes": "xixi scan 2026-04-21T00:14 GMT+8: 5 new S-tier bugs with no PR (#69294, #69296, #69286, #69289, #69300). 5 new M-tier candidates (#69327, #69326, #69332, #69304, #69290). #69300 completed (fork PR#18). #69294 patched by aoao. Top priority: #69286 (infinite loop), #69289 (browser automation broken), #69327 (sandbox env leak).",
+  "updatedAt": "2026-04-21T00:14:00Z"
 }

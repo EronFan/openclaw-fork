@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-04-20T15:39:00Z",
-  "note": "No subagent failures in last 120min. xixi scan 21:00 CST still within 3h threshold.",
+  "updatedAt": "2026-04-20T16:09:00Z",
+  "note": "No subagent failures in last 120min. xixi scan 21:00 CST still within 3h threshold. Manual xixi scan triggered (xixi had no active subagent). git auto-committed.",
   "inProgressFixes": [
     {
       "issue": 69214,
@@ -18,7 +18,7 @@
   "xixiLastScanAt": "2026-04-20T13:00:00Z",
   "xixiScanReportMtime": "2026-04-20T21:00:00+08:00",
   "currentIssue": "67247",
-  "lastCommitAt": "2026-04-20T13:43:00+08:00",
+  "lastCommitAt": "2026-04-21T00:11:00+08:00",
   "lastPrCreatedAt": "2026-04-20T18:33:00Z",
   "cronJobsInError": [
     {
@@ -78,7 +78,13 @@
       "recordedAt": "2026-04-20T13:43:00Z"
     }
   ],
-  "lastXixiCheckAt": "2026-04-20T15:39:00Z",
+  "lastXixiCheckAt": "2026-04-20T16:09:00Z",
   "pendingXixiSuggestions": [],
-  "lastHeartbeatWindow": "2026-04-20T15:39:00Z"
+  "lastHeartbeatWindow": "2026-04-20T16:09:00Z",
+  "xixiManualScanTriggered": {
+    "runId": "0f4f430f-ff93-46a7-92cb-b75b77e05ff9",
+    "childSessionKey": "agent:main:subagent:085c33b4-a6ea-40cf-8ce1-eb5879f982cc",
+    "triggeredAt": "2026-04-20T16:09:00Z",
+    "reason": "xixi cron had no running subagent and last scan was 21:00 CST (over 3h ago in UTC terms) — manual scan triggered per heartbeat rules"
+  }
 }
