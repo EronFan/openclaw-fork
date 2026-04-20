@@ -2,6 +2,7 @@ import {
   GATEWAY_EVENT_UPDATE_AVAILABLE,
   type GatewayUpdateAvailableEventPayload,
 } from "../../../src/gateway/events.js";
+import { ConnectErrorDetailCodes } from "../../../src/gateway/protocol/connect-error-details.js";
 import {
   CHAT_SESSIONS_ACTIVE_MINUTES,
   clearPendingQueueItemsForRun,
@@ -95,6 +96,10 @@ type GatewayHost = {
   execApprovalQueue: ExecApprovalRequest[];
   execApprovalError: string | null;
   updateAvailable: UpdateAvailable | null;
+};
+
+type GatewayHostWithDeferredSessionMessageReload = GatewayHost & {
+  pendingSessionMessageReloadSessionKey?: string | null;
 };
 
 type SessionDefaultsSnapshot = {
@@ -303,7 +308,9 @@ export function connectGateway(host: GatewayHost, options?: ConnectGatewayOption
       if (code !== 1012) {
         if (error?.message) {
           host.lastError =
-            host.lastErrorCode && isGenericBrowserFetchFailure(error.message)
+            host.lastErrorCode &&
+            (host.lastErrorCode === ConnectErrorDetailCodes.PAIRING_REQUIRED ||
+              isGenericBrowserFetchFailure(error.message))
               ? formatConnectError({
                   message: error.message,
                   details: error.details,
@@ -409,7 +416,25 @@ function handleChatGatewayEvent(host: GatewayHost, payload: ChatEventPayload | u
   }
   const state = handleChatEvent(host as unknown as ChatState, payload);
   const historyReloaded = handleTerminalChatEvent(host, payload, state);
+  const deferredReloadHost = host as GatewayHostWithDeferredSessionMessageReload;
+  const deferredSessionKey = deferredReloadHost.pendingSessionMessageReloadSessionKey?.trim();
+  const payloadSessionKey = payload?.sessionKey?.trim();
+  const shouldReplayDeferredSessionMessageReload = Boolean(
+    deferredSessionKey &&
+    payloadSessionKey &&
+    deferredSessionKey === payloadSessionKey &&
+    isTerminalChatState(state) &&
+    payloadSessionKey === host.sessionKey &&
+    !host.chatRunId,
+  );
+  if (deferredSessionKey && payloadSessionKey && deferredSessionKey === payloadSessionKey) {
+    deferredReloadHost.pendingSessionMessageReloadSessionKey = null;
+  }
   if (state === "final" && !historyReloaded && shouldReloadHistoryForFinalEvent(payload)) {
+    void loadChatHistory(host as unknown as ChatState);
+    return;
+  }
+  if (shouldReplayDeferredSessionMessageReload && !historyReloaded) {
     void loadChatHistory(host as unknown as ChatState);
   }
 }
@@ -418,10 +443,21 @@ function handleSessionMessageGatewayEvent(
   host: GatewayHost,
   payload: { sessionKey?: string } | undefined,
 ) {
+  const deferredReloadHost = host as GatewayHostWithDeferredSessionMessageReload;
   const sessionKey = payload?.sessionKey?.trim();
   if (!sessionKey || sessionKey !== host.sessionKey) {
     return;
   }
+  // Skip history reload while a chat run is active. The chat event handler
+  // manages streaming state and appends the final assistant message. Reloading
+  // history mid-run races with the optimistic user-message update and resets
+  // chatStream, which delays the user message card from appearing until the
+  // first LLM delta arrives.
+  if (host.chatRunId) {
+    deferredReloadHost.pendingSessionMessageReloadSessionKey = sessionKey;
+    return;
+  }
+  deferredReloadHost.pendingSessionMessageReloadSessionKey = null;
   void loadChatHistory(host as unknown as ChatState);
 }
 
