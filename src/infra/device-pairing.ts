@@ -491,6 +491,55 @@ export async function requestDevicePairing(
     const pendingForDevice = Object.values(state.pendingById)
       .filter((pending) => pending.deviceId === deviceId)
       .toSorted((left, right) => right.ts - left.ts);
+
+    // Fast path: device is already paired and requested scopes are a subset of
+    // what is already approved. Return the existing pending (if any) without
+    // rebuilding so the approval loop cannot be restarted by a reconnect that
+    // carries the same scopes the device already has approval for.
+    if (isRepair && pendingForDevice.length === 1) {
+      const existingPending = pendingForDevice[0];
+      if (samePendingApprovalSnapshot(existingPending, req)) {
+        const refreshed = refreshPendingDevicePairingRequest(existingPending, req, isRepair);
+        state.pendingById[refreshed.requestId] = refreshed;
+        await persistState(state, baseDir);
+        return { status: "pending", request: refreshed, created: false };
+      }
+    }
+
+    // Guard against repair-loop: if the device is already paired and all
+    // requested scopes are already approved, allow the reconnection without
+    // creating a new pending request. This prevents the infinite
+    // "new pending after approval" cycle when a device reconnects with the
+    // same (or a subset of) scopes it already has approval for.
+    if (isRepair) {
+      const paired = state.pairedByDeviceId[deviceId];
+      if (
+        paired &&
+        scopesWithinApprovedDeviceBaseline({
+          role: req.role ?? paired.role ?? "",
+          scopes: req.scopes ?? [],
+          approvedScopes: paired.approvedScopes ?? paired.scopes ?? null,
+        })
+      ) {
+        return {
+          status: "pending",
+          request: pendingForDevice[0] ?? {
+            requestId: "",
+            deviceId,
+            ts: Date.now(),
+            isRepair: true,
+            scopes: req.scopes ?? [],
+            roles: req.roles,
+            role: req.role,
+            publicKey: req.publicKey,
+            displayName: req.displayName,
+            silent: true,
+          },
+          created: false,
+        };
+      }
+    }
+
     return await reconcilePendingPairingRequests({
       pendingById: state.pendingById,
       existing: pendingForDevice,
