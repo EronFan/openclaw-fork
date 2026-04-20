@@ -1,12 +1,23 @@
 {
-  "updatedAt": "2026-04-20T10:40:00Z",
+  "updatedAt": "2026-04-20T11:18:00Z",
   "note": "PR #16 for #69214, PR #17 for #67252 (feishu docx pagination). Both targeting main. #67247 (Telegram command menu regression) needs deeper investigation.",
   "inProgressFixes": [
     { "issue": 69214, "pr": 16, "status": "open", "desc": "scope-upgrade repair loop" },
     { "issue": 67252, "pr": 17, "status": "open", "desc": "feishu clearDocumentContent pagination" }
   ],
-  "xixiLastScanAt": "2026-04-20T07:51:00Z",
+  "xixiLastScanAt": "2026-04-20T10:11:00Z",
+  "xixiScanReportMtime": "2026-04-20T10:11:35+08:00",
   "currentIssue": "67247",
-  "lastCommitAt": "2026-04-20T18:33:00+08:00",
-  "lastPrCreatedAt": "2026-04-20T18:33:00Z"
+  "lastCommitAt": "2026-04-20T19:19:00+08:00",
+  "lastPrCreatedAt": "2026-04-20T18:33:00Z",
+  "cronJobsInError": [
+    { "name": "OpenClaw Xixi 全量扫描", "lastOk": "54m ago", "id": "6d35b411-e65c-4253-bcf4-cb20bb2f030a" },
+    { "name": "OpenClaw 反馈检查", "lastOk": "50m ago", "id": "57a448ff-1805-4a54-a6cd-3fcdbb5fb8f3" },
+    { "name": "Capability Evolver 自我进化", "lastOk": "1h ago", "id": "f3d13268-5c79-436e-a3f8-c86149d29b69" },
+    { "name": "健康检查：channels status", "lastOk": "10h ago", "id": "101c9dde-289c-4a02-ab6a-dc23ea5e5dc2" },
+    { "name": "健康检查：status --deep", "lastOk": "10h ago", "id": "1c7c832a-4ebe-42dd-91f3-06c476d3717a" },
+    { "name": "健康检查：gateway status", "lastOk": "10h ago", "id": "af699c11-8e0b-4959-99ad-517f6e90af72" }
+  ],
+  "subagentFailures": [],
+  "subagentSuccesses": []
 }
