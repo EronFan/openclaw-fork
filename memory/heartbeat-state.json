@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-20T13:03:00Z",
+  "updatedAt": "2026-04-20T13:10:00Z",
   "note": "PR #16 for #69214, PR #17 for #67252 (feishu docx pagination). Both targeting main. #67247 (Telegram command menu regression) needs deeper investigation.",
   "inProgressFixes": [
     {
@@ -15,8 +15,8 @@
       "desc": "feishu clearDocumentContent pagination"
     }
   ],
-  "xixiLastScanAt": "2026-04-15T05:15:00Z",
-  "xixiScanReportMtime": "2026-04-15T13:15:00+08:00",
+  "xixiLastScanAt": "2026-04-20T13:00:00Z",
+  "xixiScanReportMtime": "2026-04-20T21:00:00+08:00",
   "currentIssue": "67247",
   "lastCommitAt": "2026-04-20T19:19:00+08:00",
   "lastPrCreatedAt": "2026-04-20T18:33:00Z",

@@ -1,198 +1,339 @@
 # xixi Scan Report
 
 **Scanner:** xixi (autonomous issue scanner)
-**Scan Range:** #66951–#67200
-**Scanned:** 2026-04-15T13:15:00 GMT+8
-**Total Issues Found:** 116
+**Scan Range:** #69150–#69336 (open issues + open PRs as of scan)
+**Scanned:** 2026-04-20T21:00:00 GMT+8
+**Previous Scan:** 2026-04-15T13:15:00 GMT+8 (report covered #66951–#67200)
+**Delta:** ~5 days of new activity
 
 ---
 
-## ✅ Already Has PR
+## 🔴 CRITICAL — Active S-Tier (no PR yet)
 
-| Issue | Title | PR |
-|-------|-------|-----|
-| 66958 | Telegram native command menu cleared on startup | #67169 |
-| 66963 | openclaw agent crashes on startup (ReferenceError in buildPollSchema) | #67022 |
-| 67020 | Slack dmHistoryLimit defined but never wired | #67054 |
-| 67021 | Main workspace excluded from dreaming schedule | #67073 |
-| 67026 | Plugin loading crashes management commands | #67027 |
-| 67030 | Heartbeat isolated session relays in English without SOUL.md | #67059 |
-| 67057 | dreaming-narrative导致Telegram通讯严重阻塞 (critical!) | #67073 (partial) |
-| 67058 | Session list filter feature for dreaming sessions | #67155 |
-| 67061 | Dreaming dayBucket uses file date instead of ingestion date | #67091 |
-| 67068 | Feishu pass thread_id as MessageThreadId | #67069 |
-| 67088 | Dashboard falsely reports "No GUI detected" on macOS with SSH env | #67115, #67110 |
-| 67076 | Cannot read properties of undefined (reading 'trim') | #67086 |
-| 67061 | Dreaming dayBucket (dup) | #67066 |
-| 67130 | openclaw onboard crashes after channel selection (missing bundled metadata) | #67145 |
-| 67131 | openai-codex stale /backend-api/v1 baseUrl | #67159 |
-| 67172 | Cron classifier sets status=ok when summary contains denial tokens | #67186 |
+### 1. #69300 — Agent harness compaction short-circuits memory flush + session bookkeeping
+- **Severity:** S
+- **Labels:** bug (no other label — but severity is systemic)
+- **Updated:** 2026-04-20 10:34 UTC
+- **Root Cause:** When OpenClaw is used as agent harness (e.g. Codex, Claude CLI), compaction short-circuits the memory flush and session bookkeeping, leaving session state unbounded. This is a data-leak / resource-exhaustion bug.
+- **Impact:** Every compaction run silently leaks session state; over time gateway memory grows unbounded.
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69300`
 
----
+### 2. #69296 — ACP client hangs on slash commands and normal prompts in 2026.4.15
+- **Severity:** S
+- **Labels:** `bug`, `regression`
+- **Updated:** 2026-04-20 10:19 UTC
+- **Root Cause:** Regression introduced in 2026.4.15 (recent release). ACP client completely hangs on slash commands and normal prompts.
+- **Impact:** Users on 2026.4.15 cannot use ACP functionality at all.
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69296`
 
-## 🔴 Top Candidates (S/M with clear root cause, NO existing PR)
+### 3. #69294 — ACP plugin crashes gateway on Windows 11
+- **Severity:** S
+- **Labels:** `bug`, `bug:crash`
+- **Updated:** 2026-04-20 10:15 UTC
+- **Root Cause:** ACP plugin probe fails on Windows 11, causing full gateway crash.
+- **Impact:** Complete service outage on Windows 11.
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69294`
 
-### CRITICAL / S — Immediate Action
+### 4. #69286 — session totalTokens not reset after compaction causes infinite safeguard loop
+- **Severity:** S
+- **Labels:** (unlabeled but clearly S — infinite loop + data loss)
+- **Updated:** 2026-04-20 (with ongoing activity note)
+- **Root Cause:** After compaction, `totalTokens` is not reset; the session believes it has massive token usage and triggers the compaction safeguard loop repeatedly — consuming infinite resources with no useful output.
+- **Related:** #69287 (token count not reset), #69269 (compaction breaks session invariants)
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69286`
 
-#### 1. #67057 — dreaming-narrative会话累积导致Telegram通讯严重阻塞
-- **Severity:** S (system blockage, communication blackout)
-- **Root Cause:** 77个dreaming-narrative会话持续占用资源，消息队列阻塞，用户消息与梦境消息竞争处理
-- **Fix:** 需要限制dreaming并发数，或在Telegram channel禁用/限流dreaming会话
-- **Spawn:** YES → `fix-67057`
-
-#### 2. #67029 — memory-core dreaming cleanup fails with missing scope operator.admin
-- **Severity:** S (RBAC error blocks cleanup, sessions leak indefinitely)
-- **Root Cause:** dreaming cleanup操作需要`operator.admin` scope但缺少此权限
-- **Fix:** 在cleanup代码路径中添加正确的scope或使用有权限的session
-- **Spawn:** YES → `fix-67029`
-
-#### 3. #67173 — Queued messages silently dropped after agent run timeout
-- **Severity:** S (data loss, no error notification)
-- **Root Cause:** agent run超时被终止时，queued消息没有被followup drain处理，直接丢弃
-- **Fix:** timeout时触发followup drain处理队列
-- **Spawn:** YES → `fix-67173`
-
-### MEDIUM / M — High Value
-
-#### 4. #67035 — Windows chat UI regression: input text swallowed, streamed replies invisible
-- **Severity:** M (regression, affects Windows users)
-- **Root Cause:** 2026.4.14 Windows特定UI问题，streamed replies不显示，input text被吞
-- **Spawn:** YES → `fix-67035`
-
-#### 5. #67091 — sessions_spawn defaults to thread-bound persistent mode
-- **Severity:** M (unexpected permanent bindings from one-shot tests)
-- **Root Cause:** sessions_spawn默认mode="run"但实际变成thread-bound persistent，导致测试用例创建永久绑定
-- **Spawn:** YES → `fix-67091`
-
-#### 6. #67136 — Write tool falsely reports successful write of X bytes but no file created
-- **Severity:** M (silent data loss)
-- **Root Cause:** Write tool报告成功但文件未实际创建
-- **Spawn:** YES → `fix-67136`
-
-#### 7. #67151 — Discord inbound messages containing `https` stripped before reaching agent
-- **Severity:** M (content modification, broken functionality)
-- **Root Cause:** Discord消息中的URL在被agent处理前被剥离
-- **Spawn:** YES → `fix-67151`
-
-#### 8. #67087 — Browser tool downloads to temp instead of configured downloads path
-- **Severity:** M (wrong behavior, not catastrophic)
-- **Root Cause:** CDP模式下browser tool下载到temp目录而非用户配置的downloads路径
-- **Spawn:** YES → `fix-67087`
-
-#### 9. #67092 — Malformed reasoning output leaks into user-visible text
-- **Severity:** M (data corruption visible to user)
-- **Root Cause:** reasoning输出格式错误时，trailing `</think>`无有效opening tag，内容泄露到用户可见文本
-- **Spawn:** YES → `fix-67092`
-
-#### 10. #67093 — Discord Channel Leaking Raw Tool Call Syntax
-- **Severity:** M (broken Discord integration)
-- **Root Cause:** Discord channel暴露原始tool call语法给用户
-- **Spawn:** YES → `fix-67093`
-
-#### 11. #67081 — WebChat user message not displayed until assistant response
-- **Severity:** M (UX regression, appears frozen)
-- **Root Cause:** WebChat用户消息发送后不立即显示，要等assistant回复才出现
-- **Spawn:** YES → `fix-67081`
+### 5. #69289 — Browser aria snapshot refs resolve in snapshots but fail in follow-up actions
+- **Severity:** S
+- **Labels:** `bug`, `regression`
+- **Updated:** 2026-04-20 09:59 UTC
+- **Root Cause:** Regression — aria snapshot refs work in initial snapshot but break when used in subsequent actions within the same session. Browser automation is completely broken for multi-step flows.
+- **Impact:** All browser automation workflows fail after first step.
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69289`
 
 ---
 
-## 🟡 Unclear / Needs More Info
+## 🟠 HIGH — M-Tier Bugs with Clear Root Cause, No PR
+
+### 6. #69329 — exec runtime surfaces "completed" from lifecycle with no seam for artifact-gated closure
+- **Severity:** M (behavior)
+- **Labels:** `bug`, `bug:behavior`
+- **Updated:** 2026-04-20 12:35 UTC
+- **Root Cause:** exec runtime prematurely surfaces "completed" state based purely on lifecycle events, without waiting for artifact-gated closure. Tool results / artifacts may still be pending when the run is marked complete.
+- **Impact:** Race conditions in exec-dependent workflows, potential data loss.
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69329`
+
+### 7. #69327 — Subagent sandbox does not propagate sandbox.docker.env, reuses stale workspace state
+- **Severity:** M (behavior)
+- **Labels:** `bug`, `bug:behavior`
+- **Updated:** 2026-04-20 12:28 UTC
+- **Root Cause:** `sandbox.docker.env` settings are not propagated to subagent sandbox processes. Additionally, after sandbox recreation, stale workspace/bootstrap state can be reused.
+- **Impact:** Subagent isolation is broken; docker env vars leak or are missing.
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69327`
+
+### 8. #69287 — Session token count not reset after compaction
+- **Severity:** M
+- **Updated:** 2026-04-20 09:55 UTC
+- **Root Cause:** Token accounting not reset after compaction. Related to #69286 and #69269.
+- **Has PR:** No open PR found.
+- **Consider:** Merge with #69286 fix.
+
+### 9. #69303 — Inbound dedupe released on error path can replay same message_id after provider failure
+- **Severity:** M
+- **Updated:** 2026-04-20 11:03 UTC
+- **Root Cause:** Deduplication mechanism releases the dedupe key on error paths, allowing the same message_id to be replayed after a provider failure.
+- **Impact:** Message duplication; potential duplicate processing consequences.
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69303`
+
+### 10. #69330 — MCP server leak: duplicate processes accumulate on gateway reconnect
+- **Severity:** M (resource leak)
+- **Updated:** 2026-04-20 12:41 UTC (very fresh — within hours of scan)
+- **Root Cause:** On WhatsApp 499, MCP server processes duplicate on gateway reconnect and are never cleaned up. Each reconnect adds more orphaned processes.
+- **Impact:** Process leak → eventual resource exhaustion.
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69330`
+
+### 11. #69284 — Gateway recurring pairing required error — subagent sessions fail
+- **Severity:** M
+- **Updated:** 2026-04-20 09:43 UTC
+- **Root Cause:** Gateway keeps requesting pairing re-authentication for recurring sessions; subagent sessions fail with pairing required error.
+- **Impact:** Cron / recurring subagent tasks fail repeatedly.
+- **Has PR:** No open PR found. Related to PRs #69226/#69221/#69227 (merged 2026-04-20) which addressed similar pairing issues.
+- **Spawn candidate:** YES → `fix-69284`
+
+### 12. #69326 — WeChat replies not routed back when message originates from webchat UI
+- **Severity:** M
+- **Updated:** 2026-04-20 12:22 UTC (fresh)
+- **Root Cause:** When a message comes through webchat UI and should route back to WeChat, the reply routing fails.
+- **Impact:** WeChat users receive no reply when message originates from webchat.
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69326`
+
+### 13. #69255 — Feishu WebSocket fails to reconnect after token timeout during gateway restart
+- **Severity:** M
+- **Updated:** 2026-04-20 (active)
+- **Root Cause:** Feishu WebSocket connection fails to reconnect when token expires during gateway restart/bootstrap.
+- **Impact:** Feishu integration permanently breaks after gateway restart.
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69255`
+
+### 14. #69254 — IM channels (Telegram/QQ) do not get recovery-aware gateway restart behavior
+- **Severity:** M
+- **Updated:** 2026-04-20 07:32 UTC
+- **Root Cause:** Unlike other channels, Telegram/QQ do not implement the recovery-aware restart behavior, so in-flight messages are lost on restart.
+- **Related:** #69304 (Telegram 409 on restart), #69249 (Discord abort on restart)
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69254`
+
+### 15. #69269 — Compaction/reset paths break session invariants (messageProvider + token accounting)
+- **Severity:** M (umbrella for compaction invariants)
+- **Updated:** 2026-04-20 12:16 UTC (recent activity)
+- **Root Cause:** Both compaction and reset paths leave sessions in an inconsistent state regarding messageProvider and token accounting.
+- **Has PR:** PR #69270 (fix: restore session invariants across compaction and reset) — open, not yet merged.
+- **Status:** PR EXISTS — monitor for merge.
+
+### 16. #69251 — exec host=node SYSTEM_RUN_DENIED for all file-referencing commands
+- **Severity:** M
+- **Updated:** 2026-04-20 (active)
+- **Root Cause:** `exec host=node` denies all file-referencing commands because of `/bin/sh -lc` wrapping. All find/grep/disk commands blocked.
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69251`
+
+### 17. #69242 — exec tool on Linux intermittently SIGKILLs broad find/grep commands without OOM evidence
+- **Severity:** M
+- **Updated:** 2026-04-20 07:05 UTC
+- **Root Cause:** Linux exec tool occasionally kills broad find/grep discovery commands with SIGKILL, even when no OOM evidence exists.
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69242`
+
+### 18. #69332 — AWS EC2 Linux instance fails to install on one-line install
+- **Severity:** M (crash)
+- **Labels:** `bug`, `bug:crash`
+- **Updated:** 2026-04-20 12:42 UTC (very fresh)
+- **Root Cause:** One-line install fails on AWS EC2 Linux.
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69332`
+
+### 19. #69280 — compaction.truncateAfterCompaction rejected by strict zod schema
+- **Severity:** M
+- **Updated:** 2026-04-20 09:18 UTC
+- **Root Cause:** `truncateAfterCompaction` config field is rejected by the Zod schema even though it's a documented config option.
+- **Has PR:** PR #69282 (fix: add truncateAfterCompaction to schema) — open, not merged.
+- **Status:** PR EXISTS — monitor.
+
+### 20. #69220 — Gemini text-tag reasoning conflicts with native thinking — produces unclosed <think>, empty post-tool turn, payloads=0
+- **Severity:** M
+- **Updated:** 2026-04-20
+- **Root Cause:** Gemini uses text-tag reasoning mode which conflicts with OpenClaw's native thinking format, producing malformed output.
+- **Has PR:** No open PR found.
+- **Spawn candidate:** YES → `fix-69220`
+
+---
+
+## ✅ Already Has Open PR
+
+| Issue | Title | PR | Status |
+|-------|-------|-----|--------|
+| 69269 | compaction breaks session invariants | **#69270** | Open (fix: restore session invariants) |
+| 69280 | truncateAfterCompaction rejected by schema | **#69282** | Open |
+| 69214 | Gateway client stuck in scope-upgrade repair loop (Telegram) | (analyzing — see memory) | In progress |
+| 67251 | Windows CLI SIGKILL | (subagent running) | In progress |
+| 69300 | Agent harness compaction short-circuits | (new, no PR) | — |
+| 69286 | totalTokens not reset after compaction | (new, no PR) | — |
+
+### Newly Merged PRs (since 2026-04-15 scan)
+- **#69226** — Surface pending scope upgrades in gateway auth errors
+- **#69221** — Explain pairing scope upgrades during reconnects
+- **#69227** — Fix pairing-required recovery details
+- **#69215** — Split gateway probe capability from reachability
+- **#69210** — Surface device pairing auth drift in doctor
+- **#69207** — Default GitHub Copilot onboarding to Claude Opus 4.6
+- **#69191** — fix(telegram): require numeric allowFrom ids in setup
+- **#69224** (external fork PR #15) — docker: include patches/ in published image
+- **#69229** (external fork PR #14) — tasks: clamp startedAt >= createdAt
+
+---
+
+## 🟡 Cluster: Compaction Invariants (related — consider cross-fix)
+
+Multiple issues all pointing to compaction breaking core session state:
+- **#69300** — memory flush + bookkeeping short-circuits
+- **#69286** — totalTokens not reset → infinite safeguard loop
+- **#69287** — session token count not reset after compaction
+- **#69269** — messageProvider + token accounting broken after compaction/reset
+- **#69202** — Compaction failure leaves session in permanent failed state
+
+→ **PR #69270** addresses #69269. #69300 may need to be bundled with #69270 or a follow-up. #69286/#69287 are subsets.
+
+---
+
+## 🟡 Cluster: ACP Issues (all introduced/changed in 2026.4.15)
+
+- **#69296** — ACP client hangs on slash commands (regression in 2026.4.15)
+- **#69294** — ACP plugin crashes gateway on Windows 11 (crash)
+- **#69290** — /new and /reset reply "ACP session reset in place" for non-ACP sessions (misleading)
+- **#69301** — Telegram direct session survives /new and /reset (persistence bug)
+- **#69304** — Telegram inbound 409 self-conflict after gateway restart
+
+→ These may share a common root in the 2026.4.15 ACP changes. Worth investigating together.
+
+---
+
+## 🟡 Cluster: MCP / Subprocess Leaks
+
+- **#69330** — MCP server duplicate processes on WhatsApp gateway reconnect (fresh today)
+- **#69145** — Bundle MCP runtime never released for isolated cron sessions
+
+---
+
+## 🟡 Unclear / Needs Investigation
 
 | Issue | Title | Notes |
 |-------|-------|-------|
-| 66971 | exec call hardcodes security=allowlist | Need to check if this is intentional or a bug |
-| 66977 | sqlite-vec extension cannot load on macOS | OMIT_LOAD_EXTENSION compile flag issue, may need build fix |
-| 66982 | Exec completion relay creates orphan sessions | Need more diagnostic info |
-| 67013 | Browser control heartbeat logs errors for expected unavailability | Expected behavior? Needs clarification |
-| 67040 | Performance: Optimize CLI startup by persisting plugin discovery cache | Enhancement, not bug |
-| 67044 | subagent-registry.runtime.js missing from dist output | Build issue, need repro |
-| 67045 | Sticky model fallback after compaction-triggered tool_use formatting error | Need log trace |
-| 67052 | TUI streaming indicator stays active long after response finishes | Can be visual-only, L candidate |
-| 67053 | TUI streaming indicator (duplicate of 67052) | Dup |
-| 67057 noted above |
-| 67065 | Managed media workflows need session-scoped next-turn suppression | Enhancement |
-| 67071 | ${VAR} substitution sentinels stripped by config set | Need clarification on scope |
-| 67074 | TypeError: Cannot read properties of undefined (reading 'trim') | Likely dup of 67076/66945, already has PR |
-| 67078 | /new initialized wrong model on fresh Telegram DM | Need more info |
-| 67084 | Session Timeout Spam with Codex and Active Memory ON | Need context |
-| 67085 | HOOK.md hooks silently no-op on before_tool_call / after_tool_call | Needs investigation |
-| 67097 | models.json bundled plugins bypass onboard lifecycle | Enhancement/discrepancy |
-| 67099 | Empty title | Blank |
-| 67102 | Bug Tool Calls sans Suite avec OpenRouter | Need body |
-| 67106 | Control UI / Webchat text disappears in Safari | Safari-specific regression |
-| 67107 | Blank title bug | Empty |
-| 67109 | Control UI / Webchat does not render inbound images | Enhancement |
-| 67113 | QMD on ARM (Pi 5): qmd embed timeout loop | Platform-specific |
-| 67114 | openclaw status / health hangs on Windows | Windows startup issue |
-| 67118 | Cron isolated agentTurn may not advance to model fallback | Need log trace |
-| 67121 | MiniMax Portal OAuth completes but credentials not saved | Auth issue, need logs |
-| 67122 | pdf/image tools reject sub-agent workspace paths | Workspace path blacklist issue |
-| 67133 | hooks未触发和定时任务执行历史缺失 | Need more info |
-| 67135 | Webchat context meter shows false overflow after /new | Need context |
-| 67139-67141 | TKT tickets | Internal tracking |
-| 67152 | memory-core dreaming uses request-scoped subagent runtime outside gateway | Architecture issue |
-| 67158 | openai-codex gpt-5.1/5.2/5.3 rejected | OAuth scope issue |
-| 67160 | TUI: chat.history unavailable during gateway startup | Race condition |
-| 67161 | ACP agent sessions terminated with ACP_TURN_FAILED during gateway restart | Need logs |
-| 67162 | Blank title bug | Empty |
-| 67164 | Allow 1-hour cache TTL for custom Anthropic-compatible providers | Enhancement |
-| 67165 | SSRF blocking searxng/browsers | Enhancement/security |
-| 67166 | Feature Request: Display user-sent images inline in WebChat | Enhancement |
-| 67167 | Session Lifecycle Hooks (PreCompact + Stop hooks) | Enhancement |
-| 67168 | logging.file config is read but not applied | Config not honored |
-| 67170 | talk-voice plugin audio delivery failure to Telegram | Audio pipeline issue |
-| 67171 | config set writes resolved values stripping ${VAR} sentinels | Config serialization issue |
-| 67177 | MS Teams inbound file attachments fail silently | Graph API URL rewrite missing |
-| 67178 | Context Engine Turn Maintenance Loop | Internal tracking |
-| 67181 | Discord async completion leaks internal resume-fallback message | Discord integration bug |
-| 67182 | Telegram file download fails: unresolved token in URL | URL construction issue |
-| 67187 | ekcli: macOS identity + EventKit privacy keys | macOS-specific enhancement |
-| 67188 | TTS bug | Blank title |
-| 67189 | LCM 0.9.0: Empty assistant messages accumulate from tool-only turns | Message accumulation |
-| 67190 | memory-wiki CLI returns 0 artifacts but gateway call works | CLI vs gateway discrepancy |
-| 67191 | BOOT.md messages not delivered to user | deliver:false flag issue |
-
----
-
-## 🟢 Small Issues (L)
-
-| Issue | Title | Notes |
-|-------|-------|-------|
-| 66965 | WhatsApp: expose messageTimeoutMs as config option | Enhancement, small |
-| 66979 | Feature: sandbox limit | Enhancement |
-| 66983 | Feature: web canvas node support | Enhancement |
-| 66992 | macOS: gateway plist should set ProcessType: Interactive | Small platform fix |
-| 66994 | Exec approval prompts persist despite tools.exec.ask: off | M? Actually could be M |
-| 67000 | Feature: Warm-up / session reuse for embedded agents | Enhancement |
-| 67002 | Feature: Independent workspace for every channel | Enhancement |
-| 67014 | QQ Bot streaming mode配置无效 | Enhancement |
-| 67016 | Dreaming UI lacks status information | Enhancement |
-| 67052 | TUI streaming indicator stays active (also in Unclear) | Low priority |
-| 67060 | Feature: Provider requests ignore env proxy → silent timeout | Enhancement |
-| 67062 | Feature: Add channels.qqbot.mediaAllowHosts for SSRF policy | Enhancement |
-| 67067 | Feature: Time-Aware Active Memory with Schedule Management | Enhancement |
-| 67116 | Feature: openclaw logs --follow use local time by default | Enhancement |
-| 67117 | Feature: Support Parallel Dispatch for Multiple Bot Accounts | Enhancement |
-| 67120 | Feature: Feishu voice messages not transcribed | Enhancement |
-| 67128 | Feature: /usage command or session stats panel in Telegram | Enhancement |
-| 67129 | Blank feature request | Empty |
-| 67154 | Feature: Separate runtime tracking from allowlist | Enhancement |
-| 67164 | Allow 1-hour cache TTL for custom providers | Enhancement |
-| 67165 | SSRF blocking searxng / browser CDP | Enhancement |
+| 69333 | Hubitat installed-app config discovery | Low-priority Todo |
+| 69331 | Venice.ai as image_generate provider | Enhancement |
+| 69320 | Dreaming cron hard-coded 10-minute timeout | Config hardening |
+| 69315 | Non-blocking TTS delivery | Enhancement |
+| 69314 | OPENCLAW_DOCKER_PLATFORM support | Enhancement |
+| 69311 | MEDIA: false-positive extraction from code blocks | Fix PR #69312 exists |
+| 69309 | MEDIA directive silently drops media | Fix PR #69310 exists |
+| 69307 | before_tts modifying hook | Enhancement |
+| 69306 | Control UI date separators | Enhancement |
+| 69302 | Image tool "Unknown model" for custom providers | Provider issue |
+| 69298 | Codex harness double-counts cached input | Token accounting |
+| 69293 | zsh completion for wiki ingest | CLI completion |
+| 69291 | Agent Behavior Principles proposal | Enhancement |
+| 69279 | Kokoro TTS as native provider | Enhancement |
+| 69274 | Qwen qwen3.6-plus blocked on Coding Plan Pro | Model config |
+| 69271 | Per-session delete/archive button in Control UI | Enhancement |
+| 69260 | Harden Gemini ACP integration | Security hardening |
+| 69250 | Gateway calls plugin register() ~30x per boot | Performance |
+| 69249 | Gateway restart silently aborts Discord turn | Discord integration |
+| 69246 | OpenClaw website loads indefinitely on MCP errors | Website/UI |
+| 69241 | GitHub Copilot: add Claude Opus 4.7 | PR #69318 exists |
+| 69239 | Image tool silently drops custom models when any provider lacks apiKey | Bug |
+| 69238 | Architecture: remove duplicate BlueBubbles schema | Maintainer |
+| 69235 | Opus/Sonnet reasoning leakage on Slack | Channel bug |
+| 69234 | Configurable compaction summarization base instructions | Enhancement |
+| 69233 | WhatsApp Group Admin Privacy Feature | PR #69297 exists |
+| 69229 | tasks audit false positive inconsistent_timestamps | PR merged (#14) |
+| 69224 | patches/ dir missing in published image | PR merged (#15) |
+| 69220 | Gemini text-tag reasoning conflicts with native thinking | M (see above) |
+| 69216 | openclaw doctor/upgrade should backup .env and openclaw.json | Enhancement |
+| 69208 | Umbrella: duplicate transcript, replay, context assembly | Architectural |
+| 69206 | Telegram /dock_discord falls through to normal chat | Regression |
+| 69205 | Heartbeat configuration: no documented schema | Docs |
+| 69204 | Cron isolated session agent-turn ends prematurely after 4.15 upgrade | Cron regression |
+| 69202 | Compaction failure leaves session in permanent failed state | Compaction cluster |
+| 69200 | Feishu message truncated with backticks/angle brackets | Streaming bug |
+| 69190 | Frequent timeouts & agent ignoring tool restrictions | Broad / needs repro |
+| 69188 | Cron Alert: Gemini CLI bridge OAuth pool | Cron-specific |
+| 69187 | memory-core dreaming deleteSession() fails 100% → sessions.json leak → OOM | Memory leak |
+| 69186 | Completion/success notification sound | Enhancement |
+| 69185 | Control UI file uploads (documents, zips) | Enhancement |
+| 69184 | feishu_drive tool: add download action | Enhancement |
+| 69183 | Local outbound media allowlist/staging regression | Media regression |
+| 69182 | active-memory plugin blocks chat replies up to ~5s | Performance regression |
+| 69181 | plugins install treats npm packages as hook packs | Bug |
+| 69180 | Unknown memory embedding provider: github-copilot | Regression |
+| 69171 | media-understanding ignores agents.defaults.imageModel | Bug |
+| 69167 | Automated bug-fix pipeline with Claude Code | Enhancement |
+| 69166 | sessions_spawn schema lacks runtime=acp hint | Schema issue |
+| 69165 | Outbound Telegram send queue with rate limiting | Enhancement |
+| 69162 | openclaw cron run (dry-run) semantics mismatch | Cron |
+| 69161 | Cron-context exec denials thrash verbose | Cron |
+| 69160 | Status false-positive plugin allowlist warnings in 2026.4.15 | Regression |
+| 69158 | spawn ENAMETOOLONG on Windows with claude-cli | Windows |
+| 69157 | Slack Socket Mode stale-socket health check | Slack |
+| 69156 | Session reset keeps old transcript file | Session management |
+| 69155 | Session token count reports 0% context | Bug |
+| 69147 | Telegram long-poll stalls cause delayed/missing replies | Telegram |
+| 69142 | DEP0190 DeprecationWarning passing args to child process | Deprecation |
+| 69141 | Adler ACP: model outputs raw tool_call JSON + empty post-tool turn | ACP bug |
+| 69137 | Paperclip adapter sends root-level field schema rejects | Integration bug |
+| 69135 | gateway probe false positive "multiple reachable gateways" | Probe bug |
 
 ---
 
 ## 📋 Summary
 
-- **Total Issues Scanned:** 116
-- **Already Has PR:** 16
-- **Top Candidates (S/M, clear root cause, no PR):** 11
-- **Unclear/Needs Info:** ~50
-- **Feature Requests (L/enhancement):** ~25
-- **Spam/Duplicate/Blank:** ~10
+| Category | Count |
+|----------|-------|
+| Total open issues scanned | ~80 |
+| **New S-tier (no PR)** | 5 |
+| **New M-tier bug candidates (no PR)** | ~15 |
+| **Has open PR (track for merge)** | 2 (compaction invariants + schema) |
+| **Recently merged (since last scan)** | 9 |
+| **Enhancement / feature request** | ~20 |
+| **Needs investigation** | ~30 |
 
-**Subagents Spawned:** 11 (for top candidates without PR)
+**Top subagent spawn list:**
+1. `fix-69300` — compaction short-circuits memory flush (S)
+2. `fix-69296` — ACP client hangs regression 2026.4.15 (S)
+3. `fix-69294` — ACP plugin crashes gateway Windows 11 (S)
+4. `fix-69286` — totalTokens not reset → infinite loop (S)
+5. `fix-69289` — Browser aria refs fail in follow-up actions (S)
+6. `fix-69329` — exec runtime premature "completed" surfacing (M)
+7. `fix-69327` — Subagent sandbox stale workspace state (M)
+8. `fix-69303` — Dedup replay on error path (M)
+9. `fix-69330` — MCP server process leak on reconnect (M)
+10. `fix-69284` — Recurring pairing required error (M)
+11. `fix-69326` — WeChat routing failure from webchat origin (M)
+12. `fix-69255` — Feishu WebSocket reconnection failure (M)
+13. `fix-69254` — IM channels no recovery-aware restart (M)
+14. `fix-69251` — exec host=node SYSTEM_RUN_DENIED (M)
+15. `fix-69242` — exec SIGKILL without OOM evidence (M)
+16. `fix-69332` — AWS EC2 install crash (M)
+
+**Monitor for merge:** PR #69270 (compaction invariants), PR #69282 (truncateAfterCompaction schema), PR #69328 (ACP false zero-diff failures), PR #69312 (MEDIA false-positive), PR #69310 (MEDIA silent drop), PR #69318 (GitHub Copilot model list)
 
 ---
 
-*Report generated by xixi at 2026-04-15T13:15:00 GMT+8*
+*Report generated by xixi at 2026-04-20T21:00:00 GMT+8*

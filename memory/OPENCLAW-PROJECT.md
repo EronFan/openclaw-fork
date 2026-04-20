@@ -79,6 +79,7 @@
 | P60192 | contributor-area: `src/agents/pi-embedded-runner/*` / `src/cron/isolated-agent/run.ts` ↔ [#69320](https://github.com/openclaw/openclaw/issues/69320) Dreaming cron timeout | 🔍 **新发现**(方向3 文件区 第133轮 20:26 CST) | 末位 contributor `davidrudduck` 最近 20 commits 高度集中在 compaction / embedded runner / isolated cron；与 dreaming systemEvent timeout、overflow/cron 调度路径直接同区，属未认领高优先级 bug |
 | P60193 | contributor-area: `src/gateway/*` / `src/auto-reply/reply/agent-runner-memory.ts` ↔ [#69303](https://github.com/openclaw/openclaw/issues/69303) inbound dedupe replay | 🔍 **新发现**(方向3 文件区 第133轮 20:26 CST) | 末位 contributor `lml2468` 最近改动集中在 gateway session / agent-runner-memory / dedupe 相邻路径；与 error-path replay 现象高度同区，未见认领，适合继续盯根因 |
 | P60194 | [方向4 第133轮 20:26 CST] 已追踪 PR 暂无 maintainer 新评论；heartbeat-state 中 inProgressFixes = #69214(PR#16)、#67252(PR#17) 均未见新状态变化 | 👀 **状态检查** | `OPENCLAW-PROJECT.md` 已追踪 openclaw/openclaw issue/PR 在最近 2 小时无新增状态跳变；当前追踪项整体**无**新反馈 |
+| P60195 | [xixi 2026-04-20 21:00 CST] 新一轮扫描已完成：发现 #69300/#69296/#69294/#69286/#69289 等 S 级新问题，其中 #69296、#69300 已派出 subagent；未见 xixi 掉线 | ✅ **扫描正常** | `xixi-reports/latest-scan-report.md` 已更新至 2026-04-20 21:00 CST；当前需继续跟进已派出的 fix-69296 / fix-69300，其他高优先级候选待后续分派 |
 
 | P60154 | [方向4] #66697 config.get 安全漏洞 - **已关闭**，需确认是否修正后 reopen | 👀 **状态变化**(方向4 第128轮 10:21 CST) | Codex 指出 sourceConfig/runtimeConfig 映射错误；**需确认修正方案** |
 
@@ -6787,3 +6788,28 @@ P597 | [#64252](https://github.com/openclaw/openclaw/issues/64252) **S** | A2UI_
 | P60195 | [Tencent/openclaw-weixin #49](https://github.com/Tencent/openclaw-weixin/pull/49) **S** fix: preserve quote context (ref_msg) for voice messages | 🔍 **新发现**(方向2 插件 第133轮 22:54 CST) | gaoyangz77 PR，1 comment；与 #63 可能重复（不同 author）；**建议确认是否需要合并** |
 | P60196 | [Tencent/openclaw-weixin #63](https://github.com/Tencent/openclaw-weixin/pull/63) **S** fix(inbound): preserve quoted context for voice messages with ref_msg | 🔍 **新发现**(方向2 插件 第133轮 22:54 CST) | draix PR，0 comments；与 #49 解决同一问题；**建议 aoao 确认合并意向** |
 | P60197 | [方向4 第133轮 22:54 CST] **PR #67200** fix(plugins): stabilize bundled setup runtimes — gumadeiras，4 comments，maintainer 活跃 review 中，接近 merge | 🔍 **Review 机会**(方向4 第133轮 22:54 CST) | 建议确认 maintainer 评论是否已响应 |
+
+---
+
+## 新增扫描发现（xixi 2026-04-20 21:04 GMT+8）
+
+| 优先级 | Issue | 描述 | 状态 | 备注 |
+|--------|-------|------|------|------|
+| P60195 | [#69300](https://github.com/openclaw/openclaw/issues/69300) **🔴 S** Agent harness compaction 短路 memory flush，session 状态无界增长（资源泄漏） | 🔍 **已派出 fix-69300** (runId f4000cba 第134轮 21:04 CST) | 🔥 已派出修复 |
+| P60196 | [#69296](https://github.com/openclaw/openclaw/issues/69296) **🔴 S regression** ACP client 在 2026.4.15 中 hang，slash command 和 prompt 全部失效 | 🔍 **已派出 fix-69296** (runId 711a62ab 第134轮 21:04 CST) | 🔥 已派出修复 |
+| P60197 | [#69294](https://github.com/openclaw/openclaw/issues/69294) **🔴 S** ACP plugin 在 Windows 11 上导致 gateway 崩溃 | 🔍 新发现 | 待接单 |
+| P60198 | [#69286](https://github.com/openclaw/openclaw/issues/69286) **🔴 S** Compaction 后 totalTokens 不重置，触发无限 safeguard loop | 🔍 新发现(方向1 GitHub 第134轮 21:04 CST) | 与 #69300 同 cluster，fix-69300 可能覆盖 |
+| P60199 | [#69289](https://github.com/openclaw/openclaw/issues/69289) **🔴 S regression** Browser aria snapshot refs 在后续 action 中失效 | 🔍 新发现(方向1 GitHub 第134轮 21:04 CST) | 待接单 |
+| P60200 | [#69330](https://github.com/openclaw/openclaw/issues/69330) **🟠 M** MCP server 在 WhatsApp reconnect 时进程泄漏 | 🔍 **今日新鲜** 新发现(方向1 GitHub 第134轮 21:04 CST) | 待接单 |
+| P60201 | [#69327](https://github.com/openclaw/openclaw/issues/69327) **🔴 S** Subagent sandbox 不传播 sandbox.docker.env，复用车间 stale workspace 状态 | 🔍 新发现(方向1 GitHub 第134轮 21:04 CST) | 之前已追踪 P60187 |
+| P60202 | [#69326](https://github.com/openclaw/openclaw/issues/69326) **🟠 S** Webchat 发往 WeChat session 的回复未回投微信 | 🔍 **今日新鲜** 新发现(方向1 GitHub 第134轮 21:04 CST) | 待接单 |
+| P60203 | [#69329](https://github.com/openclaw/openclaw/issues/69329) **🟡 M** exec runtime 在 artifact-gated closure 完成前就 surface "completed" | 🔍 新发现(方向1 GitHub 第134轮 21:04 CST) | 待接单 |
+| P60204 | [#69303](https://github.com/openclaw/openclaw/issues/69303) **🔴 S** Inbound dedupe 在 error path release 后可重放同一 message_id | 🔍 新发现(方向1 GitHub 第134轮 21:04 CST) | 之前已追踪 P60193 |
+
+**Cluster 分析（建议一起修）：**
+1. **Compaction 不变量 cluster** — #69300 / #69286 / #69287 / #69269 互相相关
+2. **ACP 2026.4.15 回归 cluster** — #69296 / #69294 / #69290 / #69304 全部在 2026.4.15 后出现
+3. **MCP/子进程泄漏 cluster** — #69330 / #69145
+
+**已合并 PR（上次扫描以来）：** 9 个（pairing 修复 #69226/21/27、Copilot Opus 4.6 default、compaction invariants #69270、truncateAfterCompaction schema #69282 等）
+
