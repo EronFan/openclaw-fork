@@ -1,40 +1,37 @@
 # Last Processed xixi Scan Report
 
-**Scan range:** issues #69251–#69350 | PRs #69251–#69350
-**Timestamp:** 2026-04-20 20:26 CST (12:26 UTC)
+**Scan range:** issues #69301–#69350 | PRs #69301–#69350
+**Timestamp:** 2026-04-20 21:37 CST (13:37 UTC)
 **Report location:** xixi-reports/latest-scan-report.md
 
 ## Quick Status
 
-- New S-level candidates: #69327, #69326, #69320, #69304, #69303
-- #69327 → highest priority, aoao dispatched (runId 37ec889f-f9b7-4aef-8f69-f49d1139e706)
-- #69303 → inbound dedupe replay on error-path release
-- #69320 → dreaming cron hardcoded 600s timeout
-- #69326 → webchat→WeChat reply routing gap
-- #69304 → Telegram restart/update self-conflict on getUpdates 409
+- New top candidate: #69343
+- #69343 → highest priority, aoao dispatched (runId 3096138c-5806-4909-ab2f-1ce18e01577b)
+- #69341 → docs/CLI gap, low-cost cleanup candidate
+- contributor-area follow-up: #66809 remains relevant but not higher priority than current GitHub candidates
 
 ## Key S-level Fixes
 
-1. [#69327](https://github.com/openclaw/openclaw/issues/69327) **S** — sandboxed subagent fails to pick up sandbox.docker.env / setupCommand / workspace updates; likely stale runtime/bootstrap reuse. **inProgressFixes: aoao dispatched**
-2. [#69303](https://github.com/openclaw/openclaw/issues/69303) **S** — inbound dedupe only releases on error path without durable commit, allowing replay of same `message_id`.
-3. [#69320](https://github.com/openclaw/openclaw/issues/69320) **S** — Dreaming cron hardcoded to 600s timeout and misclassified as error; systemEvent timeout not configurable.
+1. [#69343](https://github.com/openclaw/openclaw/issues/69343) **S** — Telegram CLI `message thread create` still emits `thread-create` instead of Telegram-native `topic-create`, so forum topic creation fails 100%.
 
 ## Feedback Check (this cycle)
 
 - #54952: 0 comments (no change)
 - #54964: 0 comments (no change)
-- #55008: no new comments since prior processed report; still open and ready to merge
-- #55013: no new comments since prior processed report; still open and ready to merge
+- #55008: no new feedback; still open
+- #55013: no new feedback; still open
 
 ## OPENCLAW-PROJECT.md Updated
 
 - Confirmed latest xixi GitHub candidates are already present in 「当前优先级」table.
-- Updated P60187 to reflect aoao dispatch for #69327.
+- Updated P60200 to reflect aoao dispatch for #69343.
+- Added cron record for feedback check + xixi report handling.
 
 ## Conclusion
 
-Highest priority remains [#69327](https://github.com/openclaw/openclaw/issues/69327), because it breaks sandboxed subagent environment propagation and invalidates sandbox orchestration. Next are [#69303](https://github.com/openclaw/openclaw/issues/69303) and [#69320](https://github.com/openclaw/openclaw/issues/69320).
+Highest priority is [#69343](https://github.com/openclaw/openclaw/issues/69343), because it is root-cause clear, 100% reproducible, and small-scope in the CLI bridge layer.
 
 ## Suggestions
 
-Prioritize in this order: sandbox runtime propagation (#69327) → inbound dedupe replay (#69303) → dreaming timeout (#69320).
+Prioritize in this order: #69343 → #69341.

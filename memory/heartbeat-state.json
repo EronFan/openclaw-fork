@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-04-20T13:33:00Z",
-  "note": "aoao-fix-69294 #69294 完成，fix-69296-acp-client-hang-v2 仍在运行。PR #16 for #69214, PR #17 for #67252 (feishu docx pagination). Both targeting main.",
+  "updatedAt": "2026-04-20T13:43:00Z",
+  "note": "fix-69296 调研完成未产出 PR，需 main 自行跟进。PR #16 for #69214, PR #17 for #67252 (feishu docx pagination). Both targeting main.",
   "inProgressFixes": [
     {
       "issue": 69214,
@@ -13,32 +13,27 @@
       "pr": 17,
       "status": "open",
       "desc": "feishu clearDocumentContent pagination"
-    },
-    {
-      "issue": 69296,
-      "status": "running",
-      "desc": "ACP client hangs on slash commands regression 2026.4.15"
     }
   ],
   "xixiLastScanAt": "2026-04-20T13:00:00Z",
   "xixiScanReportMtime": "2026-04-20T21:00:00+08:00",
   "currentIssue": "67247",
-  "lastCommitAt": "2026-04-20T13:32:00+08:00",
+  "lastCommitAt": "2026-04-20T13:43:00+08:00",
   "lastPrCreatedAt": "2026-04-20T18:33:00Z",
   "cronJobsInError": [
     {
       "name": "OpenClaw Xixi 全量扫描",
-      "lastOk": "54m ago",
+      "lastOk": "43m ago",
       "id": "6d35b411-e65c-4253-bcf4-cb20bb2f030a"
     },
     {
       "name": "OpenClaw 反馈检查",
-      "lastOk": "50m ago",
+      "lastOk": "39m ago",
       "id": "57a448ff-1805-4a54-a6cd-3fcdbb5fb8f3"
     },
     {
       "name": "Capability Evolver 自我进化",
-      "lastOk": "1h ago",
+      "lastOk": "49m ago",
       "id": "f3d13268-5c79-436e-a3f8-c86149d29b69"
     },
     {
@@ -72,9 +67,18 @@
       "issue": 69294,
       "desc": "ACP plugin crashes gateway on Windows 11 - acpx startup probe skip on win32",
       "recordedAt": "2026-04-20T13:33:00Z"
+    },
+    {
+      "label": "fix-69296-acp-client-hang-v2",
+      "sessionKey": "agent:main:subagent:6468db40-85ce-429a-bb22-356d97b9533d",
+      "runId": "2672af82-5ad8-45b9-a44e-5b5aa50a2d3f",
+      "issue": 69296,
+      "desc": "ACP client hang regression 2026.4.15 - investigated but no PR produced",
+      "status": "investigated_no_pr",
+      "recordedAt": "2026-04-20T13:43:00Z"
     }
   ],
-  "lastXixiCheckAt": "2026-04-20T13:33:00Z",
+  "lastXixiCheckAt": "2026-04-20T13:43:00Z",
   "pendingXixiSuggestions": [],
-  "lastHeartbeatWindow": "2026-04-20T13:33:00Z"
+  "lastHeartbeatWindow": "2026-04-20T13:43:00Z"
 }
