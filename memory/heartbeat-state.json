@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-04-15T15:01:00Z",
-  "note": "xixi 22:54 CST scan done; fix-67173 PR #67258 created; openclaw-repo committed",
+  "updatedAt": "2026-04-20T10:40:00Z",
+  "note": "PR #16 for #69214, PR #17 for #67252 (feishu docx pagination). Both targeting main. #67247 (Telegram command menu regression) needs deeper investigation.",
   "inProgressFixes": [
-    {
-      "issue": 67173,
-      "pr": 67258,
-      "status": "open",
-      "desc": "followup drain on surface_error timeout"
-    }
-  ]
+    { "issue": 69214, "pr": 16, "status": "open", "desc": "scope-upgrade repair loop" },
+    { "issue": 67252, "pr": 17, "status": "open", "desc": "feishu clearDocumentContent pagination" }
+  ],
+  "xixiLastScanAt": "2026-04-20T07:51:00Z",
+  "currentIssue": "67247",
+  "lastCommitAt": "2026-04-20T18:33:00+08:00",
+  "lastPrCreatedAt": "2026-04-20T18:33:00Z"
 }
