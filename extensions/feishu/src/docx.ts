@@ -473,17 +473,26 @@ async function insertBlocksWithDescendant(
 }
 
 async function clearDocumentContent(client: Lark.Client, docToken: string) {
-  const existing = await client.docx.documentBlock.list({
-    path: { document_id: docToken },
-  });
-  if (existing.code !== 0) {
-    throw new Error(existing.msg);
-  }
-
-  const childIds =
-    existing.data?.items
-      ?.filter((b) => b.parent_id === docToken && b.block_type !== 1)
-      .map((b) => b.block_id) ?? [];
+  // Paginate through all root-level blocks to ensure we collect all of them.
+  // documentBlock.list returns a single page; large documents need multiple
+  // requests using page_token.
+  const childIds: string[] = [];
+  let pageToken: string | undefined;
+  do {
+    const existing = await client.docx.documentBlock.list({
+      path: { document_id: docToken },
+      params: pageToken ? { page_token: pageToken } : {},
+    });
+    if (existing.code !== 0) {
+      throw new Error(existing.msg);
+    }
+    const ids =
+      existing.data?.items
+        ?.filter((b) => b.parent_id === docToken && b.block_type !== 1)
+        .map((b) => b.block_id) ?? [];
+    childIds.push(...ids);
+    pageToken = existing.data?.page_token ?? undefined;
+  } while (pageToken);
 
   if (childIds.length > 0) {
     const res = await client.docx.documentBlockChildren.batchDelete({
