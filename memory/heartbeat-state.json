@@ -1,6 +1,26 @@
 {
   "updatedAt": "2026-04-20T16:25:00Z",
-  "note": "3 subagents running (69326 wechat-routing, 69289 browser-aria-refs, 69286 compaction-totalTokens). xixi scan fresh (~10m ago). git: heartbeat-state.json committed.",
+  "note": "PR#69393 created for #69286 (compaction totalTokens reset). 3 subagents running (69326 wechat-routing, 69289 browser-aria-refs). xixi scan fresh (~10m ago).",
+  "inProgressFixes": [
+    {
+      "issue": 69214,
+      "pr": 16,
+      "status": "open",
+      "desc": "scope-upgrade repair loop"
+    },
+    {
+      "issue": 67252,
+      "pr": 17,
+      "status": "open",
+      "desc": "feishu clearDocumentContent pagination"
+    },
+    {
+      "issue": 69286,
+      "pr": 69393,
+      "status": "open",
+      "desc": "compaction totalTokens infinite loop fix"
+    }
+  ],
   "inProgressFixes": [
     {
       "issue": 69214,
@@ -19,7 +39,7 @@
   "xixiScanReportMtime": "2026-04-21T00:14:00+08:00",
   "currentIssue": "67247",
   "lastCommitAt": "2026-04-21T00:24:00+08:00",
-  "lastPrCreatedAt": "2026-04-20T18:33:00Z",
+  "lastPrCreatedAt": "2026-04-20T16:27:00Z",
   "cronJobsInError": [
     {
       "name": "OpenClaw Xixi 全量扫描",
