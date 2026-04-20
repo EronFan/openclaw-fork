@@ -97,6 +97,7 @@ export function subscribeEmbeddedPiSession(params: SubscribeEmbeddedPiSessionPar
     lastBlockReplyText: undefined,
     reasoningStreamOpen: false,
     assistantMessageIndex: 0,
+    lastAssistantStreamItemId: undefined,
     lastAssistantTextMessageIndex: -1,
     lastAssistantTextNormalized: undefined,
     lastAssistantTextTrimmed: undefined,
@@ -206,6 +207,7 @@ export function subscribeEmbeddedPiSession(params: SubscribeEmbeddedPiSessionPar
     state.reasoningStreamOpen = false;
     state.suppressBlockChunks = false;
     state.assistantMessageIndex += 1;
+    state.lastAssistantStreamItemId = undefined;
     state.lastAssistantTextMessageIndex = -1;
     state.lastAssistantTextNormalized = undefined;
     state.lastAssistantTextTrimmed = undefined;
@@ -322,26 +324,26 @@ export function subscribeEmbeddedPiSession(params: SubscribeEmbeddedPiSessionPar
     ensureCompactionPromise();
   };
 
+  const resolveCompactionPromiseIfIdle = () => {
+    if (state.pendingCompactionRetry !== 0 || state.compactionInFlight) {
+      return;
+    }
+    state.compactionRetryResolve?.();
+    state.compactionRetryResolve = undefined;
+    state.compactionRetryReject = undefined;
+    state.compactionRetryPromise = null;
+  };
+
   const resolveCompactionRetry = () => {
     if (state.pendingCompactionRetry <= 0) {
       return;
     }
     state.pendingCompactionRetry -= 1;
-    if (state.pendingCompactionRetry === 0 && !state.compactionInFlight) {
-      state.compactionRetryResolve?.();
-      state.compactionRetryResolve = undefined;
-      state.compactionRetryReject = undefined;
-      state.compactionRetryPromise = null;
-    }
+    resolveCompactionPromiseIfIdle();
   };
 
   const maybeResolveCompactionWait = () => {
-    if (state.pendingCompactionRetry === 0 && !state.compactionInFlight) {
-      state.compactionRetryResolve?.();
-      state.compactionRetryResolve = undefined;
-      state.compactionRetryReject = undefined;
-      state.compactionRetryPromise = null;
-    }
+    resolveCompactionPromiseIfIdle();
   };
   const recordAssistantUsage = (usageLike: unknown) => {
     const usage = normalizeUsage((usageLike ?? undefined) as UsageLike | undefined);
@@ -376,6 +378,13 @@ export function subscribeEmbeddedPiSession(params: SubscribeEmbeddedPiSessionPar
       cacheWrite: usageTotals.cacheWrite || undefined,
       total: usageTotals.total || derivedTotal || undefined,
     };
+  };
+  const resetUsageTotals = () => {
+    usageTotals.input = 0;
+    usageTotals.output = 0;
+    usageTotals.cacheRead = 0;
+    usageTotals.cacheWrite = 0;
+    usageTotals.total = 0;
   };
   const incrementCompactionCount = () => {
     compactionCount += 1;
@@ -743,6 +752,7 @@ export function subscribeEmbeddedPiSession(params: SubscribeEmbeddedPiSessionPar
     resolveCompactionRetry,
     maybeResolveCompactionWait,
     recordAssistantUsage,
+    resetUsageTotals,
     incrementCompactionCount,
     getUsageTotals,
     getCompactionCount: () => compactionCount,
