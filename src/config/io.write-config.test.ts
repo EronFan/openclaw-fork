@@ -1,9 +1,14 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import type { PluginManifestRegistry } from "../plugins/manifest-registry.js";
 import { createSuiteTempRootTracker } from "../test-helpers/temp-dir.js";
-import { createConfigIO } from "./io.js";
+import {
+  createConfigIO,
+  resetConfigRuntimeState,
+  setRuntimeConfigSnapshot,
+  writeConfigFile,
+} from "./io.js";
 
 // Mock the plugin manifest registry so we can register a fake channel whose
 // AJV JSON Schema carries a `default` value.  This lets the #56772 regression
@@ -65,7 +70,12 @@ describe("config io write", () => {
     } satisfies PluginManifestRegistry);
   });
 
+  afterEach(() => {
+    resetConfigRuntimeState();
+  });
+
   afterAll(async () => {
+    resetConfigRuntimeState();
     await suiteRootTracker.cleanup();
   });
 
@@ -78,6 +88,26 @@ describe("config io write", () => {
       commands?: Record<string, unknown>;
     };
     return persisted.commands;
+  };
+
+  const createFastConfigIO = (home: string) =>
+    createConfigIO({
+      env: { OPENCLAW_TEST_FAST: "1" } as NodeJS.ProcessEnv,
+      homedir: () => home,
+      logger: silentLogger,
+    });
+
+  const writeGatewayPortAndReadConfig = async (home: string, configPath: string) => {
+    const io = createFastConfigIO(home);
+
+    await io.writeConfigFile({
+      gateway: { mode: "local", port: 18789 },
+    });
+
+    return JSON.parse(await fs.readFile(configPath, "utf-8")) as {
+      $schema?: string;
+      gateway?: { mode?: string; port?: number };
+    };
   };
 
   it.runIf(process.platform !== "win32")(
@@ -190,6 +220,83 @@ describe("config io write", () => {
     });
   });
 
+  it("preserves root $schema during partial writes", async () => {
+    await withSuiteHome(async (home) => {
+      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      await fs.mkdir(path.dirname(configPath), { recursive: true });
+      await fs.writeFile(
+        configPath,
+        `${JSON.stringify(
+          {
+            $schema: "https://openclaw.ai/config.json",
+            gateway: { mode: "local" },
+          },
+          null,
+          2,
+        )}\n`,
+        "utf-8",
+      );
+
+      const persisted = await writeGatewayPortAndReadConfig(home, configPath);
+      expect(persisted.$schema).toBe("https://openclaw.ai/config.json");
+      expect(persisted.gateway).toEqual({ mode: "local", port: 18789 });
+    });
+  });
+
+  it("rejects destructive internal writes before replacing the config", async () => {
+    await withSuiteHome(async (home) => {
+      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      await fs.mkdir(path.dirname(configPath), { recursive: true });
+      const original = {
+        gateway: { mode: "local" },
+        channels: { telegram: { enabled: true, dmPolicy: "pairing" } },
+        agents: { list: [{ id: "main", default: true, workspace: "/tmp/openclaw-main" }] },
+        tools: { profile: "safe" },
+        commands: { ownerDisplay: "hash" },
+      };
+      await fs.writeFile(configPath, `${JSON.stringify(original, null, 2)}\n`, "utf-8");
+      const warn = vi.fn();
+      const io = createConfigIO({
+        env: { VITEST: "true" } as NodeJS.ProcessEnv,
+        homedir: () => home,
+        logger: { warn, error: vi.fn() },
+      });
+
+      await expect(io.writeConfigFile({ update: { channel: "beta" } })).rejects.toMatchObject({
+        code: "CONFIG_WRITE_REJECTED",
+      });
+
+      await expect(fs.readFile(configPath, "utf-8")).resolves.toBe(
+        `${JSON.stringify(original, null, 2)}\n`,
+      );
+      const entries = await fs.readdir(path.dirname(configPath));
+      expect(entries.some((entry) => entry.includes(".rejected."))).toBe(true);
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("Config write rejected:"));
+    });
+  });
+
+  it("does not inject include-only $schema into the root config during partial writes", async () => {
+    await withSuiteHome(async (home) => {
+      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const includePath = path.join(home, ".openclaw", "extra.json5");
+      await fs.mkdir(path.dirname(configPath), { recursive: true });
+      await fs.writeFile(
+        includePath,
+        `${JSON.stringify({ $schema: "https://openclaw.ai/config-from-include.json" }, null, 2)}\n`,
+        "utf-8",
+      );
+      await fs.writeFile(
+        configPath,
+        `{\n  "$include": "./extra.json5",\n  "gateway": { "mode": "local" }\n}\n`,
+        "utf-8",
+      );
+
+      const persisted = await writeGatewayPortAndReadConfig(home, configPath);
+      expect(persisted).not.toHaveProperty("$schema");
+      expect(persisted.gateway).toEqual({ mode: "local", port: 18789 });
+    });
+  });
+
   it("writes disabled plugin entries without requiring plugin config", async () => {
     mockLoadPluginManifestRegistry.mockReturnValue({
       diagnostics: [],
@@ -242,5 +349,131 @@ describe("config io write", () => {
       diagnostics: [],
       plugins: [],
     } satisfies PluginManifestRegistry);
+  });
+
+  it("preserves symlinked config files instead of renaming over the symlink path", async () => {
+    await withSuiteHome(async (home) => {
+      const stateDir = path.join(home, ".openclaw");
+      const trackedDir = path.join(home, "workspace", "config");
+      const targetPath = path.join(trackedDir, "openclaw.json");
+      const symlinkPath = path.join(stateDir, "openclaw.json");
+      await fs.mkdir(trackedDir, { recursive: true });
+      await fs.mkdir(stateDir, { recursive: true });
+      await fs.writeFile(
+        targetPath,
+        `${JSON.stringify({ gateway: { mode: "local" } }, null, 2)}\n`,
+        "utf-8",
+      );
+      await fs.symlink(targetPath, symlinkPath);
+
+      const io = createConfigIO({
+        env: {} as NodeJS.ProcessEnv,
+        homedir: () => home,
+        logger: silentLogger,
+      });
+
+      await io.writeConfigFile({ gateway: { mode: "local", port: 18789 } });
+
+      const symlinkStat = await fs.lstat(symlinkPath);
+      expect(symlinkStat.isSymbolicLink()).toBe(true);
+      expect(await fs.readlink(symlinkPath)).toBe(targetPath);
+      expect(JSON.parse(await fs.readFile(targetPath, "utf-8"))).toMatchObject({
+        gateway: { mode: "local", port: 18789 },
+      });
+    });
+  });
+
+  it("writes runtime-derived edits back to source SecretRef markers", async () => {
+    await withSuiteHome(async (home) => {
+      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const previousConfigPath = process.env.OPENCLAW_CONFIG_PATH;
+      process.env.OPENCLAW_CONFIG_PATH = configPath;
+      await fs.mkdir(path.dirname(configPath), { recursive: true });
+      await fs.writeFile(
+        configPath,
+        `${JSON.stringify(
+          {
+            gateway: { mode: "local" },
+            models: {
+              providers: {
+                openai: {
+                  baseUrl: "https://api.openai.com/v1",
+                  apiKey: { source: "env", provider: "default", id: "OPENAI_API_KEY" },
+                  models: [],
+                },
+              },
+            },
+          },
+          null,
+          2,
+        )}\n`,
+        "utf-8",
+      );
+
+      try {
+        setRuntimeConfigSnapshot(
+          {
+            gateway: { mode: "local" },
+            models: {
+              providers: {
+                openai: {
+                  baseUrl: "https://api.openai.com/v1",
+                  apiKey: "sk-runtime-resolved", // pragma: allowlist secret
+                  models: [],
+                },
+              },
+            },
+          },
+          {
+            gateway: { mode: "local" },
+            models: {
+              providers: {
+                openai: {
+                  baseUrl: "https://api.openai.com/v1",
+                  apiKey: { source: "env", provider: "default", id: "OPENAI_API_KEY" },
+                  models: [],
+                },
+              },
+            },
+          },
+        );
+
+        await writeConfigFile({
+          gateway: { mode: "local", port: 18789 },
+          models: {
+            providers: {
+              openai: {
+                baseUrl: "https://api.openai.com/v1",
+                apiKey: "sk-runtime-resolved", // pragma: allowlist secret
+                models: [],
+              },
+            },
+          },
+        });
+
+        expect(JSON.parse(await fs.readFile(configPath, "utf-8"))).toEqual({
+          gateway: { mode: "local", port: 18789 },
+          models: {
+            providers: {
+              openai: {
+                baseUrl: "https://api.openai.com/v1",
+                apiKey: { source: "env", provider: "default", id: "OPENAI_API_KEY" },
+                models: [],
+              },
+            },
+          },
+          meta: {
+            lastTouchedAt: expect.any(String),
+            lastTouchedVersion: expect.any(String),
+          },
+        });
+      } finally {
+        if (previousConfigPath === undefined) {
+          delete process.env.OPENCLAW_CONFIG_PATH;
+        } else {
+          process.env.OPENCLAW_CONFIG_PATH = previousConfigPath;
+        }
+      }
+    });
   });
 });

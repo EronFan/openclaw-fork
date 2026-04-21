@@ -129,15 +129,16 @@ export async function searchVector(params: {
           `       vec_distance_cosine(v.embedding, ?) AS dist\n` +
           `  FROM ${params.vectorTable} v\n` +
           `  JOIN chunks c ON c.id = v.id\n` +
-          ` WHERE c.model = ?${params.sourceFilterVec.sql}\n` +
-          ` ORDER BY dist ASC\n` +
-          ` LIMIT ?`,
+          ` WHERE v.embedding MATCH ? AND k = ?\n` +
+          `   AND c.model = ?${params.sourceFilterVec.sql}\n` +
+          ` ORDER BY dist ASC`,
       )
       .all(
         vectorToBlob(params.queryVec),
+        vectorToBlob(params.queryVec),
+        params.limit,
         params.providerModel,
         ...params.sourceFilterVec.params,
-        params.limit,
       ) as Array<{
       id: string;
       path: string;
