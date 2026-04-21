@@ -293,6 +293,25 @@ describe("applyMediaUnderstanding", () => {
         },
       };
     });
+    // Mock model catalog to report vision-capable models so runCapability
+    // skips image understanding (native vision path we are testing).
+    vi.doMock("../agents/model-catalog.js", async () => {
+      const actual = await vi.importActual<typeof import("../agents/model-catalog.js")>(
+        "../agents/model-catalog.js",
+      );
+      return {
+        ...actual,
+        loadModelCatalog: vi.fn(async () => [
+          {
+            id: "gpt-4.1",
+            name: "GPT-4.1",
+            provider: "openai",
+            input: ["text", "image"] as const,
+          },
+        ]),
+      };
+    });
+
     ({ applyMediaUnderstanding } = await import("./apply.js"));
     ({ clearMediaUnderstandingBinaryCacheForTests } = await import("./runner.js"));
 
@@ -317,7 +336,6 @@ describe("applyMediaUnderstanding", () => {
       contentType: "audio/ogg",
       fileName: "note.ogg",
     });
-    clearMediaUnderstandingBinaryCacheForTests();
   });
 
   afterAll(async () => {
@@ -653,6 +671,7 @@ describe("applyMediaUnderstanding", () => {
   });
 
   it("auto-detects sherpa for audio when binary and model files are available", async () => {
+    clearMediaUnderstandingBinaryCacheForTests();
     const binDir = await createTempMediaDir();
     const modelDir = await createTempMediaDir();
     await createMockExecutable(binDir, "sherpa-onnx-offline");
@@ -683,6 +702,7 @@ describe("applyMediaUnderstanding", () => {
   });
 
   it("auto-detects whisper-cli when sherpa is unavailable", async () => {
+    clearMediaUnderstandingBinaryCacheForTests();
     const binDir = await createTempMediaDir();
     const modelDir = await createTempMediaDir();
     await createMockExecutable(binDir, "whisper-cli");
@@ -711,6 +731,7 @@ describe("applyMediaUnderstanding", () => {
   });
 
   it("transcodes non-wav audio before auto-detected whisper-cli runs", async () => {
+    clearMediaUnderstandingBinaryCacheForTests();
     const binDir = await createTempMediaDir();
     const modelDir = await createTempMediaDir();
     await createMockExecutable(binDir, "whisper-cli");
@@ -770,6 +791,7 @@ describe("applyMediaUnderstanding", () => {
   });
 
   it("skips audio auto-detect when no supported binaries or provider keys are available", async () => {
+    clearMediaUnderstandingBinaryCacheForTests();
     const emptyBinDir = await createTempMediaDir();
     const isolatedAgentDir = await createTempMediaDir();
     const ctx = await createAudioCtx({
@@ -1092,6 +1114,125 @@ describe("applyMediaUnderstanding", () => {
     expectFileNotApplied({ ctx, result, body: "<media:audio>" });
   });
 
+  it("skips archive container attachments with +zip MIME types", async () => {
+    const pseudoEpub = Buffer.from(
+      "PK\u0003\u0004mimetypeapplication/epub+zipMETA-INF/container",
+      "utf8",
+    );
+    const filePath = await createTempMediaFile({
+      fileName: "book.epub",
+      content: pseudoEpub,
+    });
+
+    const { ctx, result } = await applyWithDisabledMedia({
+      body: "<media:file>",
+      mediaPath: filePath,
+      mediaType: "application/epub+zip",
+    });
+
+    expectFileNotApplied({ ctx, result, body: "<media:file>" });
+  });
+
+  it("does not coerce binary control-byte payloads into text/plain", async () => {
+    const pseudoZip = Buffer.from("PK\u0003\u0004mimetypeapplication/epub+zipcontent.opf", "utf8");
+    const filePath = await createTempMediaFile({
+      fileName: "payload.bin",
+      content: pseudoZip,
+    });
+
+    const { ctx, result } = await applyWithDisabledMedia({
+      body: "<media:file>",
+      mediaPath: filePath,
+    });
+
+    expectFileNotApplied({ ctx, result, body: "<media:file>" });
+  });
+
+  it("does not trust text file extensions when the buffer starts with a ZIP signature", async () => {
+    const spoofedZip = Buffer.from("PK\u0003\u0004mimetypeapplication/epub+zipcontent.opf", "utf8");
+    const filePath = await createTempMediaFile({
+      fileName: "payload.txt",
+      content: spoofedZip,
+    });
+
+    const { ctx, result } = await applyWithDisabledMedia({
+      body: "<media:file>",
+      mediaPath: filePath,
+    });
+
+    expectFileNotApplied({ ctx, result, body: "<media:file>" });
+  });
+
+  it("does not coerce real ZIP local headers into text/plain when UTF-16 guessing misfires", async () => {
+    const zipLikeHeader = Buffer.from([
+      0x50, 0x4b, 0x03, 0x04, 0x14, 0x00, 0x00, 0x00, 0x08, 0x00, 0x08, 0x29, 0xb9, 0x5a, 0x00,
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x66, 0x6f,
+      0x6f, 0x2e, 0x74, 0x78, 0x74,
+    ]);
+    const filePath = await createTempMediaFile({
+      fileName: "archive.bin",
+      content: zipLikeHeader,
+    });
+
+    const { ctx, result } = await applyWithDisabledMedia({
+      body: "<media:file>",
+      mediaPath: filePath,
+    });
+
+    expectFileNotApplied({ ctx, result, body: "<media:file>" });
+  });
+
+  it("does not coerce ZIP central-directory headers into text/plain", async () => {
+    const zipCentralDirectory = Buffer.from([
+      0x50, 0x4b, 0x01, 0x02, 0x14, 0x00, 0x14, 0x00, 0x00, 0x00, 0x08, 0x00, 0x08, 0x29, 0xb9,
+      0x5a, 0x00, 0x00, 0x00, 0x00,
+    ]);
+    const filePath = await createTempMediaFile({
+      fileName: "central-directory.bin",
+      content: zipCentralDirectory,
+    });
+
+    const { ctx, result } = await applyWithDisabledMedia({
+      body: "<media:file>",
+      mediaPath: filePath,
+    });
+
+    expectFileNotApplied({ ctx, result, body: "<media:file>" });
+  });
+
+  it("does not coerce empty ZIP end-of-central-directory headers into text/plain", async () => {
+    const emptyZip = Buffer.from([
+      0x50, 0x4b, 0x05, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    ]);
+    const filePath = await createTempMediaFile({
+      fileName: "empty-archive.bin",
+      content: emptyZip,
+    });
+
+    const { ctx, result } = await applyWithDisabledMedia({
+      body: "<media:file>",
+      mediaPath: filePath,
+    });
+
+    expectFileNotApplied({ ctx, result, body: "<media:file>" });
+  });
+
+  it("keeps utf16 text attachments eligible for extraction", async () => {
+    const utf16Text = Buffer.from("hello from utf16 text", "utf16le");
+    const filePath = await createTempMediaFile({
+      fileName: "notes.bin",
+      content: utf16Text,
+    });
+
+    const { ctx, result } = await applyWithDisabledMedia({
+      body: "<media:file>",
+      mediaPath: filePath,
+    });
+
+    expect(result.appliedFile).toBe(true);
+    expect(ctx.Body).toContain("hello from utf16 text");
+  });
+
   it("does not reclassify PDF attachments as text/plain", async () => {
     const pseudoPdf = Buffer.from("%PDF-1.7\n1 0 obj\n<< /Type /Catalog >>\nendobj\n", "utf8");
     const filePath = await createTempMediaFile({
@@ -1295,5 +1436,42 @@ describe("applyMediaUnderstanding", () => {
     expect(result.appliedFile).toBe(true);
     expect(ctx.Body).toContain("<file");
     expect(ctx.Body).toContain("vendor-json");
+  });
+
+  it("injects [media attached: media://inbound/<id>] into Body when image is skipped for native vision", async () => {
+    // Create a real PNG file to serve as the inbound media attachment.
+    // The file path will be something like <tmp>/openclaw-media-xxx/<hash>/image.png
+    // and will be stored under the "inbound" media subdir, so the media URI
+    // we expect in Body is media://inbound/<filename>.
+    const dir = await createTempMediaDir();
+    // Save directly to the media/inbound subdirectory structure so the path
+    // matches what resolveMedia would produce.
+    const inboundDir = path.join(dir, "inbound");
+    await fs.mkdir(inboundDir, { recursive: true });
+    const imageFilename = "test-image.png";
+    const imagePath = path.join(inboundDir, imageFilename);
+    // A minimal valid PNG (1x1 transparent pixel).
+    const pngBytes = Buffer.from(
+      "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d4944415478da63646800000000000000000000f8vfff30000000049454e44ae426082",
+      "hex",
+    );
+    await fs.writeFile(imagePath, pngBytes);
+
+    const ctx: MsgContext = {
+      Body: "",
+      MediaPath: imagePath,
+      MediaType: "image/png",
+    };
+
+    await applyMediaUnderstanding({
+      ctx,
+      cfg: {} as OpenClawConfig,
+      activeModel: { provider: "openai", model: "gpt-4.1" },
+    });
+
+    // When primary model supports native vision, runCapability skips image
+    // understanding. The fix injects a [media attached: media://inbound/<id>]
+    // marker so downstream detectAndLoadPromptImages can find and load the file.
+    expect(ctx.Body).toContain(`[media attached: media://inbound/${imageFilename}]`);
   });
 });

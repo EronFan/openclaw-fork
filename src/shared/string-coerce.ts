@@ -25,11 +25,31 @@ export function normalizeStringifiedOptionalString(value: unknown): string | und
 }
 
 export function normalizeOptionalLowercaseString(value: unknown): string | undefined {
+  if (typeof value !== "string") {
+    return undefined;
+  }
   return normalizeOptionalString(value)?.toLowerCase();
 }
 
 export function normalizeLowercaseStringOrEmpty(value: unknown): string {
   return normalizeOptionalLowercaseString(value) ?? "";
+}
+
+export function normalizeFastMode(raw?: string | boolean | null): boolean | undefined {
+  if (typeof raw === "boolean") {
+    return raw;
+  }
+  if (!raw) {
+    return undefined;
+  }
+  const key = normalizeLowercaseStringOrEmpty(raw);
+  if (["off", "false", "no", "0", "disable", "disabled", "normal"].includes(key)) {
+    return false;
+  }
+  if (["on", "true", "yes", "1", "enable", "enabled", "fast"].includes(key)) {
+    return true;
+  }
+  return undefined;
 }
 
 export function lowercasePreservingWhitespace(value: string): string {
