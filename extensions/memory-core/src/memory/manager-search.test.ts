@@ -4,7 +4,7 @@ import {
 } from "openclaw/plugin-sdk/memory-core-host-engine-storage";
 import { describe, expect, it } from "vitest";
 import { bm25RankToScore, buildFtsQuery } from "./hybrid.js";
-import { searchKeyword } from "./manager-search.js";
+import { searchKeyword, searchVector } from "./manager-search.js";
 
 describe("searchKeyword trigram fallback", () => {
   const { DatabaseSync } = requireNodeSqlite();
@@ -172,5 +172,163 @@ describe("searchKeyword trigram fallback", () => {
     });
 
     expect(repeated[0]?.score).toBe(unique[0]?.score);
+  });
+});
+
+describe("searchVector KNN index", () => {
+  const { DatabaseSync } = requireNodeSqlite();
+
+  const DIMS = 4;
+  const VECTOR_TABLE = "chunks_vec";
+
+  function supportsVec0(): boolean {
+    const db = new DatabaseSync(":memory:");
+    try {
+      db.exec(
+        `CREATE VIRTUAL TABLE IF NOT EXISTS ${VECTOR_TABLE} USING vec0(
+          id TEXT PRIMARY KEY,
+          embedding FLOAT[${DIMS}]
+        )`,
+      );
+      return true;
+    } catch {
+      return false;
+    } finally {
+      db.close();
+    }
+  }
+
+  function createDbWithVecTable() {
+    const db = new DatabaseSync(":memory:");
+    db.exec(
+      `CREATE VIRTUAL TABLE IF NOT EXISTS ${VECTOR_TABLE} USING vec0(
+        id TEXT PRIMARY KEY,
+        embedding FLOAT[${DIMS}]
+      )`,
+    );
+    db.exec(
+      `CREATE TABLE IF NOT EXISTS chunks (
+        id TEXT PRIMARY KEY,
+        path TEXT,
+        start_line INTEGER,
+        end_line INTEGER,
+        text TEXT,
+        source TEXT,
+        model TEXT,
+        embedding TEXT
+      )`,
+    );
+    return db;
+  }
+
+  function insertVecChunk(
+    db: InstanceType<typeof DatabaseSync>,
+    id: string,
+    path: string,
+    text: string,
+    embedding: number[],
+    model = "test-model",
+  ) {
+    db.prepare(
+      "INSERT OR REPLACE INTO chunks (id, path, start_line, end_line, text, source, model, embedding) VALUES (?, ?, 1, 1, ?, 'memory', ?, ?)",
+    ).run(id, path, text, model, JSON.stringify(embedding));
+    db.prepare("INSERT OR REPLACE INTO chunks_vec (id, embedding) VALUES (?, ?)").run(
+      id,
+      Buffer.from(new Float32Array(embedding).buffer),
+    );
+  }
+
+  const itWithVec0 = supportsVec0() ? it : it.skip;
+
+  itWithVec0("uses KNN index (MATCH + k) and returns results sorted by distance", async () => {
+    const db = createDbWithVecTable();
+
+    // Three vectors: one very close, one medium, one far from the query
+    const queryVec = [1.0, 0.0, 0.0, 0.0];
+    const veryClose = [0.99, 0.01, 0.0, 0.0]; // ~0.999 cosine sim
+    const medium = [0.7, 0.7, 0.0, 0.0]; // ~0.707 cosine sim
+    const far = [0.0, 1.0, 0.0, 0.0]; // ~0.0 cosine sim
+
+    insertVecChunk(db, "far", "memory/far.md", "Far chunk", far);
+    insertVecChunk(db, "medium", "memory/medium.md", "Medium chunk", medium);
+    insertVecChunk(db, "close", "memory/close.md", "Close chunk", veryClose);
+
+    const results = await searchVector({
+      db,
+      vectorTable: VECTOR_TABLE,
+      providerModel: "test-model",
+      queryVec,
+      limit: 3,
+      snippetMaxChars: 200,
+      ensureVectorReady: async () => true,
+      sourceFilterVec: { sql: "", params: [] },
+      sourceFilterChunks: { sql: "", params: [] },
+    });
+
+    expect(results).toHaveLength(3);
+    // Results must be ordered by ascending distance (highest similarity first)
+    expect(results[0].id).toBe("close");
+    expect(results[1].id).toBe("medium");
+    expect(results[2].id).toBe("far");
+    // Scores must be between 0 and 1 (1 = identical)
+    expect(results[0].score).toBeGreaterThan(results[1].score);
+    expect(results[1].score).toBeGreaterThan(results[2].score);
+
+    db.close();
+  });
+
+  itWithVec0("applies sourceFilter correctly with KNN query", async () => {
+    const db = createDbWithVecTable();
+
+    const queryVec = [1.0, 0.0, 0.0, 0.0];
+    const chunkA = [0.99, 0.01, 0.0, 0.0];
+    const chunkB = [0.98, 0.02, 0.0, 0.0];
+
+    insertVecChunk(db, "a-1", "memory/a.md", "A chunk A", chunkA, "model-a");
+    insertVecChunk(db, "b-1", "memory/b.md", "B chunk B", chunkB, "model-b");
+
+    const results = await searchVector({
+      db,
+      vectorTable: VECTOR_TABLE,
+      providerModel: "model-a",
+      queryVec,
+      limit: 10,
+      snippetMaxChars: 200,
+      ensureVectorReady: async () => true,
+      sourceFilterVec: { sql: "", params: [] },
+      sourceFilterChunks: { sql: "", params: [] },
+    });
+
+    // Only model-a chunks should be returned
+    expect(results.every((r) => r.id.startsWith("a-"))).toBe(true);
+    expect(results).toHaveLength(1);
+    expect(results[0].id).toBe("a-1");
+
+    db.close();
+  });
+
+  itWithVec0("respects limit parameter", async () => {
+    const db = createDbWithVecTable();
+    const queryVec = [1.0, 0.0, 0.0, 0.0];
+
+    for (let i = 0; i < 10; i++) {
+      const vec = [1.0 - i * 0.1, 0.0, 0.0, 0.0];
+      insertVecChunk(db, `chunk-${i}`, `memory/${i}.md`, `Chunk ${i}`, vec);
+    }
+
+    const results = await searchVector({
+      db,
+      vectorTable: VECTOR_TABLE,
+      providerModel: "test-model",
+      queryVec,
+      limit: 3,
+      snippetMaxChars: 200,
+      ensureVectorReady: async () => true,
+      sourceFilterVec: { sql: "", params: [] },
+      sourceFilterChunks: { sql: "", params: [] },
+    });
+
+    expect(results).toHaveLength(3);
+    db.close();
   });
 });
