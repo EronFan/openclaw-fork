@@ -3,6 +3,7 @@ import type { MsgContext } from "openclaw/plugin-sdk/reply-runtime";
 import { resolveAgentRoute } from "openclaw/plugin-sdk/routing";
 import { buildGroupHistoryKey } from "openclaw/plugin-sdk/routing";
 import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
+import { resolveWhatsAppGroupSessionRoute } from "../../group-session-key.js";
 import { getPrimaryIdentityId, getSenderIdentity } from "../../identity.js";
 import { normalizeE164 } from "../../text-runtime.js";
 import { loadConfig } from "../config.runtime.js";
@@ -65,7 +66,7 @@ export function createWebOnMessageHandler(params: {
     const conversationId = msg.conversationId ?? msg.from;
     const peerId = resolvePeerId(msg);
     // Fresh config for bindings lookup; other routing inputs are payload-derived.
-    const route = resolveAgentRoute({
+    const baseRoute = resolveAgentRoute({
       cfg: loadConfig(),
       channel: "whatsapp",
       accountId: msg.accountId,
@@ -74,6 +75,8 @@ export function createWebOnMessageHandler(params: {
         id: peerId,
       },
     });
+    const route =
+      msg.chatType === "group" ? resolveWhatsAppGroupSessionRoute(baseRoute) : baseRoute;
     const groupHistoryKey =
       msg.chatType === "group"
         ? buildGroupHistoryKey({
@@ -126,7 +129,7 @@ export function createWebOnMessageHandler(params: {
         warn: params.replyLogger.warn.bind(params.replyLogger),
       });
 
-      const gating = applyGroupGating({
+      const gating = await applyGroupGating({
         cfg: params.cfg,
         msg,
         conversationId,
@@ -154,6 +157,12 @@ export function createWebOnMessageHandler(params: {
           msg.senderE164 = normalized;
         }
       }
+    }
+
+    // When selfChatMode is false, skip self-messages to prevent the outbound
+    // self-loop from triggering agent model evaluation ($1+/day waste).
+    if (params.account.selfChatMode !== true && msg.fromMe === true) {
+      return;
     }
 
     // Broadcast groups: when we'd reply anyway, run multiple agents.

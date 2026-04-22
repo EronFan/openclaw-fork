@@ -49,6 +49,22 @@ import { buildTelegramGroupPeerId } from "./bot/helpers.js";
 import type { TelegramContext } from "./bot/types.js";
 import { isTelegramForumServiceMessage } from "./forum-service-message.js";
 
+type StickerVisionRuntime = typeof import("./sticker-vision.runtime.js");
+type MediaUnderstandingRuntime = typeof import("./media-understanding.runtime.js");
+
+let stickerVisionRuntimePromise: Promise<StickerVisionRuntime> | undefined;
+let mediaUnderstandingRuntimePromise: Promise<MediaUnderstandingRuntime> | undefined;
+
+function loadStickerVisionRuntime(): Promise<StickerVisionRuntime> {
+  stickerVisionRuntimePromise ??= import("./sticker-vision.runtime.js");
+  return stickerVisionRuntimePromise;
+}
+
+function loadMediaUnderstandingRuntime(): Promise<MediaUnderstandingRuntime> {
+  mediaUnderstandingRuntimePromise ??= import("./media-understanding.runtime.js");
+  return mediaUnderstandingRuntimePromise;
+}
+
 export type TelegramInboundBodyResult = {
   bodyText: string;
   rawBody: string;
@@ -66,7 +82,7 @@ async function resolveStickerVisionSupport(params: {
   agentId?: string;
 }): Promise<boolean> {
   try {
-    const { resolveStickerVisionSupportRuntime } = await import("./sticker-vision.runtime.js");
+    const { resolveStickerVisionSupportRuntime } = await loadStickerVisionRuntime();
     return await resolveStickerVisionSupportRuntime(params);
   } catch {
     return false;
@@ -193,7 +209,7 @@ export async function resolveTelegramInboundBody(params: {
 
   if (needsPreflightTranscription) {
     try {
-      const { transcribeFirstAudio } = await import("./media-understanding.runtime.js");
+      const { transcribeFirstAudio } = await loadMediaUnderstandingRuntime();
       const tempCtx: MsgContext = {
         MediaPaths: allMedia.length > 0 ? allMedia.map((m) => m.path) : undefined,
         MediaTypes:
@@ -219,7 +235,16 @@ export async function resolveTelegramInboundBody(params: {
     if (hasAudio) {
       bodyText = preflightTranscript || "<media:audio>";
     } else {
-      bodyText = `<media:image>${allMedia.length > 1 ? ` (${allMedia.length} images)` : ""}`;
+      // Determine correct placeholder based on actual content type, not assumption
+      const firstType = allMedia[0]?.contentType ?? "";
+      if (firstType.startsWith("video/")) {
+        bodyText = `<media:video>${allMedia.length > 1 ? ` (${allMedia.length} items)` : ""}`;
+      } else if (firstType.startsWith("image/")) {
+        bodyText = `<media:image>${allMedia.length > 1 ? ` (${allMedia.length} images)` : ""}`;
+      } else {
+        // audio/ handled above; treat everything else (document, application/*, etc.) as document
+        bodyText = `<media:document>${allMedia.length > 1 ? ` (${allMedia.length} files)` : ""}`;
+      }
     }
   }
 
