@@ -1,5 +1,6 @@
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
+import { getReplyPayloadMetadata, setReplyPayloadMetadata } from "../reply-payload.js";
 import { createBlockReplyContentKey } from "./block-reply-pipeline.js";
 import {
   createBlockReplyDeliveryHandler,
@@ -12,7 +13,13 @@ type BlockReplyPipelineLike = NonNullable<
 >;
 
 describe("createBlockReplyDeliveryHandler", () => {
-  it("sends media-bearing block replies even when block streaming is disabled", async () => {
+  it("accumulates media-bearing block replies for buildReplyPayloads when block streaming is disabled", async () => {
+    // When block streaming is disabled, media-bearing blocks must NOT be sent immediately via
+    // onBlockReply. Sending them immediately would invoke normalizeMediaPaths a second time
+    // (once in reply-delivery, once in buildReplyPayloads), producing different UUID outbound
+    // paths and defeating the deduplication key — resulting in duplicate media delivery.
+    // Instead, media blocks are accumulated and sent via buildReplyPayloads at end of run.
+    // See: https://github.com/openclaw/openclaw/issues/70085
     const onBlockReply = vi.fn(async () => {});
     const normalizeStreamingText = vi.fn((payload: { text?: string }) => ({
       text: payload.text,
@@ -39,24 +46,11 @@ describe("createBlockReplyDeliveryHandler", () => {
       replyToCurrent: true,
     });
 
-    expect(onBlockReply).toHaveBeenCalledWith({
-      text: undefined,
-      mediaUrl: "/tmp/generated.png",
-      mediaUrls: ["/tmp/generated.png"],
-      replyToCurrent: true,
-      replyToId: undefined,
-      replyToTag: undefined,
-      audioAsVoice: false,
-    });
-    expect(directlySentBlockKeys).toEqual(
-      new Set([
-        createBlockReplyContentKey({
-          text: "here's the vibe",
-          mediaUrls: ["/tmp/generated.png"],
-          replyToCurrent: true,
-        }),
-      ]),
-    );
+    // onBlockReply must NOT be called — media will be sent via buildReplyPayloads
+    expect(onBlockReply).not.toHaveBeenCalled();
+    // No content key tracked since nothing was sent
+    expect(directlySentBlockKeys).toEqual(new Set());
+    // Typing signal still sent for the text portion
     expect(typingSignals.signalTextDelta).toHaveBeenCalledWith("here's the vibe");
   });
 
@@ -157,6 +151,43 @@ describe("createBlockReplyDeliveryHandler", () => {
       replyToCurrent: false,
       replyToTag: false,
       audioAsVoice: false,
+    });
+  });
+
+  it("preserves reply payload metadata across block-reply normalization", async () => {
+    const enqueue = vi.fn();
+    const blockReplyPipeline = {
+      enqueue,
+    } as unknown as BlockReplyPipelineLike;
+
+    const handler = createBlockReplyDeliveryHandler({
+      onBlockReply: vi.fn(async () => {}),
+      normalizeStreamingText: (payload) => ({ text: payload.text, skip: false }),
+      applyReplyToMode: (payload) => ({ ...payload, replyToTag: true }),
+      typingSignals: {
+        signalTextDelta: vi.fn(async () => {}),
+      } as unknown as TypingSignaler,
+      blockStreamingEnabled: true,
+      blockReplyPipeline,
+      directlySentBlockKeys: new Set(),
+    });
+
+    const payload = setReplyPayloadMetadata({ text: "Alpha" }, { assistantMessageIndex: 7 });
+
+    await handler(payload);
+
+    const enqueuedPayload = enqueue.mock.calls[0]?.[0];
+    expect(enqueuedPayload).toEqual({
+      text: "Alpha",
+      mediaUrl: undefined,
+      replyToId: undefined,
+      replyToCurrent: undefined,
+      replyToTag: true,
+      audioAsVoice: false,
+      mediaUrls: undefined,
+    });
+    expect(getReplyPayloadMetadata(enqueuedPayload)).toEqual({
+      assistantMessageIndex: 7,
     });
   });
 });
