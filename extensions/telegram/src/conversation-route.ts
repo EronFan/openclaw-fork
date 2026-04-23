@@ -7,13 +7,11 @@ import {
 import {
   buildAgentSessionKey,
   deriveLastRoutePolicy,
-  normalizeAccountId,
   resolveAgentRoute,
 } from "openclaw/plugin-sdk/routing";
 import { buildAgentMainSessionKey, sanitizeAgentId } from "openclaw/plugin-sdk/routing";
 import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
 import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/text-runtime";
-import { resolveDefaultTelegramAccountId } from "./accounts.js";
 import {
   buildTelegramGroupPeerId,
   buildTelegramParentPeer,
@@ -149,13 +147,22 @@ export function resolveTelegramConversationBaseSessionKey(params: {
   isGroup: boolean;
   senderId?: string | number | null;
 }): string {
-  const routeAccountId = normalizeAccountId(params.route.accountId);
-  const defaultAccountId = normalizeAccountId(resolveDefaultTelegramAccountId(params.cfg));
-  const isNamedAccountFallback =
-    routeAccountId !== defaultAccountId && params.route.matchedBy === "default";
-  if (!isNamedAccountFallback || params.isGroup) {
+  // Explicit binding (e.g. ACP session binding): keep the bound session key
+  if (params.route.matchedBy === "binding.channel") {
     return params.route.sessionKey;
   }
+  // Group chats: use the route's group session key (not a DM key)
+  if (params.isGroup) {
+    return params.route.sessionKey;
+  }
+  // For direct chats, build a peer-scoped key so the session is sandboxed.
+  // If dmScope is "main", fall back to "per-account-channel-peer" to ensure
+  // the key differs from agent:main:main and shouldSandboxSession returns true.
+  const configuredDmScope = params.cfg.session?.dmScope;
+  const dmScope =
+    configuredDmScope != null && configuredDmScope !== "main"
+      ? configuredDmScope
+      : "per-account-channel-peer";
   return normalizeLowercaseStringOrEmpty(
     buildAgentSessionKey({
       agentId: params.route.agentId,
@@ -168,7 +175,7 @@ export function resolveTelegramConversationBaseSessionKey(params: {
           senderId: params.senderId,
         }),
       },
-      dmScope: "per-account-channel-peer",
+      dmScope,
       identityLinks: params.cfg.session?.identityLinks,
     }),
   );
