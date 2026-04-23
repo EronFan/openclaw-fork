@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import http from "node:http";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { createClientToolNameConflictError } from "../agents/pi-tool-definition-adapter.js";
 import { HISTORY_CONTEXT_MARKER } from "../auto-reply/reply/history.js";
 import { CURRENT_MESSAGE_MARKER } from "../auto-reply/reply/mentions.js";
 import { emitAgentEvent } from "../infra/agent-events.js";
@@ -322,6 +323,21 @@ describe("OpenResponses HTTP API (e2e)", () => {
       expect(invalidOverrideJson.error?.message).toBe("Invalid `x-openclaw-model`.");
       expect(agentCommand).toHaveBeenCalledTimes(0);
       await ensureResponseConsumed(resInvalidOverride);
+
+      agentCommand.mockClear();
+      agentCommand.mockRejectedValueOnce(createClientToolNameConflictError(["exec"]));
+      const resToolConflict = await postResponses(port, {
+        model: "openclaw",
+        input: "hi",
+        tools: WEATHER_TOOL,
+      });
+      expect(resToolConflict.status).toBe(400);
+      const toolConflictJson = (await resToolConflict.json()) as {
+        error?: { code?: string; message?: string };
+      };
+      expect(toolConflictJson.error?.code).toBe("invalid_request_error");
+      expect(toolConflictJson.error?.message).toBe("invalid tool configuration");
+      await ensureResponseConsumed(resToolConflict);
 
       mockAgentOnce([{ text: "hello" }]);
       const resUser = await postResponses(port, {
@@ -918,6 +934,55 @@ describe("OpenResponses HTTP API (e2e)", () => {
     ).toBe("Let me check that.");
     expect(response?.output?.[1]?.name).toBe("get_weather");
     expect(events.some((event) => event.data === "[DONE]")).toBe(true);
+  });
+
+  it("handles streamed function_call with array args containing special characters", async () => {
+    // Regression test for #70537 — array fields with quotes/newlines must not be double-escaped
+    const port = enabledPort;
+    agentCommand.mockClear();
+    agentCommand.mockResolvedValueOnce({
+      payloads: [{ text: "Processing..." }],
+      meta: {
+        stopReason: "tool_calls",
+        pendingToolCalls: [
+          {
+            id: "call_special",
+            name: "search",
+            // arguments is a JSON string; the array contains a quote and newline
+            arguments: '{"query":"hello\\nworld","tags":["foo"bar","baz"]}',
+          },
+        ],
+      },
+    } as never);
+
+    const res = await postResponses(port, {
+      stream: true,
+      model: "openclaw",
+      input: "search for something",
+    });
+
+    expect(res.status).toBe(200);
+    const text = await res.text();
+    const events = parseSseEvents(text);
+
+    // Find the output_item.added event for the function_call
+    const itemAdded = events.find(
+      (e) =>
+        e.event === "response.output_item.added" &&
+        (JSON.parse(e.data) as { item?: { type?: string } })?.item?.type === "function_call",
+    );
+    expect(itemAdded).toBeTruthy();
+
+    const item = (JSON.parse(itemAdded!.data) as { item?: Record<string, unknown> }).item!;
+    expect(item.type).toBe("function_call");
+    expect(item.name).toBe("search");
+
+    // The arguments field must be a valid JSON string (not double-encoded)
+    const argsStr = item.arguments as string;
+    expect(() => JSON.parse(argsStr)).not.toThrow();
+    const parsedArgs = JSON.parse(argsStr) as { query?: string; tags?: string[] };
+    expect(parsedArgs.query).toBe("hello\nworld");
+    expect(parsedArgs.tags).toEqual(['foo"bar', "baz"]);
   });
 
   it("reuses the prior session when previous_response_id is provided", async () => {
