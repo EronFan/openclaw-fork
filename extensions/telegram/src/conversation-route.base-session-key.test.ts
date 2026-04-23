@@ -6,10 +6,10 @@ import { resolveTelegramConversationBaseSessionKey } from "./conversation-route.
 describe("resolveTelegramConversationBaseSessionKey", () => {
   const cfg: OpenClawConfig = {};
 
-  it("keeps the routed session key for the default account", () => {
+  it("uses the peer-scoped key for default-account DMs so the session is sandboxed", () => {
     expect(
       resolveTelegramConversationBaseSessionKey({
-        cfg,
+        cfg: {},
         route: {
           agentId: "main",
           accountId: "default",
@@ -20,7 +20,34 @@ describe("resolveTelegramConversationBaseSessionKey", () => {
         isGroup: false,
         senderId: 12345,
       }),
-    ).toBe("agent:main:main");
+    ).toBe("agent:main:telegram:default:direct:12345");
+  });
+
+  it("uses the peer-scoped key for configured default-account DMs so the session is sandboxed", () => {
+    expect(
+      resolveTelegramConversationBaseSessionKey({
+        cfg: {
+          channels: {
+            telegram: {
+              defaultAccount: "work",
+              accounts: {
+                work: {},
+                personal: {},
+              },
+            },
+          },
+        },
+        route: {
+          agentId: "main",
+          accountId: "work",
+          matchedBy: "default",
+          sessionKey: "agent:main:main",
+        },
+        chatId: 12345,
+        isGroup: false,
+        senderId: 12345,
+      }),
+    ).toBe("agent:main:telegram:work:direct:12345");
   });
 
   it("uses the per-account fallback key for named-account DMs without an explicit binding", () => {
@@ -38,6 +65,23 @@ describe("resolveTelegramConversationBaseSessionKey", () => {
         senderId: 12345,
       }),
     ).toBe("agent:main:telegram:personal:direct:12345");
+  });
+
+  it("keeps explicit bound DM sessions intact", () => {
+    expect(
+      resolveTelegramConversationBaseSessionKey({
+        cfg,
+        route: {
+          agentId: "codex-acp",
+          accountId: "default",
+          matchedBy: "binding.channel",
+          sessionKey: "agent:codex-acp:session-dm",
+        },
+        chatId: 12345,
+        isGroup: false,
+        senderId: 12345,
+      }),
+    ).toBe("agent:codex-acp:session-dm");
   });
 
   it("keeps DM topic isolation on the named-account fallback key", () => {
