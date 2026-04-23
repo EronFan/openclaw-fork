@@ -1037,11 +1037,18 @@ export async function handleOpenResponsesHttpRequest(
         });
 
         const functionCallItemId = `call_${randomUUID()}`;
+        const parsedArguments = (() => {
+          try {
+            return JSON.parse(functionCall.arguments);
+          } catch {
+            return {};
+          }
+        })();
         const functionCallItem = createFunctionCallOutputItem({
           id: functionCallItemId,
           callId: functionCall.id,
           name: functionCall.name,
-          arguments: functionCall.arguments,
+          arguments: JSON.stringify(parsedArguments),
         });
         writeSseEvent(res, {
           type: "response.output_item.added",
@@ -1052,7 +1059,7 @@ export async function handleOpenResponsesHttpRequest(
           id: functionCallItemId,
           callId: functionCall.id,
           name: functionCall.name,
-          arguments: functionCall.arguments,
+          arguments: JSON.stringify(parsedArguments),
           status: "completed",
         });
         writeSseEvent(res, {
